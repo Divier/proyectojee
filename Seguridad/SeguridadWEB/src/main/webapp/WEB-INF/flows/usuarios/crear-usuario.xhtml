@@ -1,0 +1,178 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:event type="preRenderView"
+				listener="#{usuariosMB.cargarListaRolesActivos()}" />
+			<f:event type="preRenderView"
+				listener="#{usuariosMB.cargarListaGruposActivos()}" />
+			<f:event type="preRenderView"
+				listener="#{usuariosMB.validarPermiteLdap()}" />
+		</f:metadata>
+		<div>
+			<h2>
+				<h:outputText value="#{mensajesUsuario.titulo_registrar_usuario}"></h:outputText>
+			</h2>
+			<hr />
+			<h:form id="form-inicio">
+
+				<h:panelGroup id="panel-busqueda">
+					<h:panelGrid columns="3" cellpadding="5" id="panelBusquedaLdap"
+						styleClass="formulario-servicio">
+						<h:outputLabel value="#{mensajesUsuario.label_pregunta_ldap}"
+							styleClass="campo-obligatorio"
+							rendered="#{crearUsuarioFL.permiteLdap}" />
+						<p:selectOneMenu id="ldap" value="#{crearUsuarioFL.ldap}"
+							rendered="#{crearUsuarioFL.permiteLdap}">
+							<f:selectItems value="#{crearUsuarioFL.lSiNo}" />
+							<p:ajax event="valueChange" process="@this"
+								update=":form-content:panel-datos,:form-inicio:panel-busqueda"
+								listener="#{usuariosMB.seleccionarLdap}"></p:ajax>
+						</p:selectOneMenu>
+						<p:message for="ldap" rendered="#{crearUsuarioFL.permiteLdap}" />
+						<h:outputLabel
+							value="#{mensajesUsuario.label_valor_campo_busqueda}"
+							styleClass="campo-obligatorio" rendered="#{crearUsuarioFL.ldap}" />
+						<p:inputText id="valorBusquedaLdap"
+							label="#{mensajesUsuario.label_valor_campo_busqueda}"
+							value="#{crearUsuarioFL.valorCampoBusquedaLdap}" required="true"
+							rendered="#{crearUsuarioFL.ldap}" />
+						<p:message for="valorBusquedaLdap"
+							rendered="#{crearUsuarioFL.ldap}" />
+						<f:facet name="footer">
+							<p:commandButton action="#{usuariosMB.consultarUsuarioLdap()}"
+								value="#{mensajesUsuario.boton_consulta_ldap}"
+								update=":form-content:panel-datos,panelBusquedaLdap"
+								process="@this,:form-inicio:valorBusquedaLdap"
+								rendered="#{crearUsuarioFL.ldap}" />
+						</f:facet>
+					</h:panelGrid>
+				</h:panelGroup>
+			</h:form>
+			<h:form id="form-content">
+				<h:panelGroup id="panel-datos">
+					<p:panel header="#{mensajesUsuario.titulo_datos_usuario}"
+						toggleable="true" rendered="#{crearUsuarioFL.pedirDatos}">
+						<h:panelGrid columns="3" cellpadding="5" id="campos"
+							styleClass="formulario-servicio">
+							<h:outputLabel for="nombres"
+								value="#{mensajesUsuario.label_nombres_usuario}:"
+								styleClass="campo-obligatorio" />
+							<p:inputText id="nombres"
+								label="#{mensajesUsuario.label_nombres_usuario}"
+								value="#{crearUsuarioFL.nombres}" required="true" maxlength="60" />
+							<p:message for="nombres" />
+
+							<h:outputLabel for="apellidos"
+								value="#{mensajesUsuario.label_apellidos_usuario}:"
+								styleClass="campo-obligatorio" />
+							<p:inputText id="apellidos"
+								label="#{mensajesUsuario.label_apellidos_usuario}"
+								value="#{crearUsuarioFL.apellidos}" required="true"
+								maxlength="60" />
+							<p:message for="apellidos" />
+
+							<h:outputLabel for="email"
+								value="#{mensajesUsuario.label_correo}:"
+								styleClass="campo-obligatorio" />
+							<p:inputText id="email" label="#{mensajesUsuario.label_correo}"
+								value="#{crearUsuarioFL.email}" required="true"
+								validatorMessage="#{mensajesGeneral.mensaje_email_invalido}"
+								maxlength="256">
+								<f:validator
+									validatorId="co.com.datatools.util.jsf.EmailValidator" />
+								<p:ajax event="change" process="@this"></p:ajax>
+							</p:inputText>
+							<p:message for="email" />
+							<h:outputText value="#{mensajesUsuario.label_nombre_usuario}:"
+								styleClass="campo-obligatorio" />
+							<p:inputText value="#{crearUsuarioFL.login}"
+								label="#{mensajesUsuario.label_nombre_usuario}"
+								disabled="#{crearUsuarioFL.ldap}" maxlength="60" required="true"
+								rendered="#{crearUsuarioFL.ldap}">
+								<p:ajax event="blur" process="@this,nombreUsuario"
+									listener="#{usuariosMB.validarLoginIngresado()}" />
+							</p:inputText>
+							<h:panelGroup layout="block" styleClass="inline"
+								rendered="#{!crearUsuarioFL.ldap}">
+								<p:inputText id="nombreUsuario" value="#{crearUsuarioFL.login}"
+									label="#{mensajesUsuario.label_nombre_usuario}"
+									disabled="#{crearUsuarioFL.ldap}" maxlength="60"
+									required="true" style="width:160px">
+									<p:ajax event="blur" process="@this,nombreUsuario"
+										listener="#{usuariosMB.validarLoginIngresado()}" />
+								</p:inputText>
+								<p:commandButton rendered="#{!crearUsuarioFL.ldap}"
+									value="#{mensajesUsuario.boton_generar_pw}"
+									update=":form-content:panel-datos"
+									process="@this,:form-content:nombres,:form-content:apellidos"
+									partialSubmit="true" action="#{usuariosMB.generarLogin()}" />
+							</h:panelGroup>
+							<p:message for="nombreUsuario"></p:message>
+
+						</h:panelGrid>
+					</p:panel>
+					<br />
+					<p:panel id="panel-roles"
+						header="#{mensajesUsuario.titulo_roles_usuario}" toggleable="true"
+						rendered="#{crearUsuarioFL.pedirDatos}">
+						<p:pickList id="pickListRoles" value="#{crearUsuarioFL.roles}"
+							var="rol" itemValue="#{rol}" itemLabel="#{rol.nombre}"
+							converter="rolPickListConverter" showCheckbox="true"
+							showSourceFilter="true" showTargetFilter="true"
+							filterMatchMode="contains">
+
+							<f:facet name="sourceCaption">
+								<h:outputText value="#{mensajesUsuario.label_roles_disponibles}" />
+							</f:facet>
+							<f:facet name="targetCaption">
+								<h:outputText value="#{mensajesUsuario.label_roles_asignados}" />
+							</f:facet>
+							<p:column style="width:100%;">
+								<h:outputText value="#{rol.nombre}" />
+							</p:column>
+						</p:pickList>
+					</p:panel>
+					<br />
+					<p:panel id="panel-grupos"
+						header="#{mensajesUsuario.titulo_grupos_usuario}"
+						toggleable="true" rendered="#{crearUsuarioFL.pedirDatos}">
+						<p:pickList id="pickListGrupos" value="#{crearUsuarioFL.grupos}"
+							var="grupo" itemValue="#{grupo}" itemLabel="#{grupo.nombre}"
+							converter="grupoPickListConverter" showCheckbox="true"
+							showSourceFilter="true" showTargetFilter="true"
+							filterMatchMode="contains">
+							<f:facet name="sourceCaption">
+								<h:outputText
+									value="#{mensajesUsuario.label_grupos_disponibles}" />
+							</f:facet>
+							<f:facet name="targetCaption">
+								<h:outputText value="#{mensajesUsuario.label_grupos_asignados}" />
+							</f:facet>
+							<p:column id="nombre" style="width:100%;">
+								<h:outputText value="#{grupo.nombre}" />
+							</p:column>
+						</p:pickList>
+					</p:panel>
+
+					<h:panelGrid rendered="#{crearUsuarioFL.pedirDatos}">
+						<f:facet name="footer">
+							<p:commandButton styleClass="_op-CREAR" action="_op-CREAR"
+								value="#{lbComun.btnGuardar}" icon="c2-icon-guardar" update="form-content"
+								process="form-content" />
+							<p:commandButton value="#{lbComun.btnCancelar}" icon="c2-icon-cancelar"
+								action="CANCELAR" immediate="true" />
+						</f:facet>
+					</h:panelGrid>
+				</h:panelGroup>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

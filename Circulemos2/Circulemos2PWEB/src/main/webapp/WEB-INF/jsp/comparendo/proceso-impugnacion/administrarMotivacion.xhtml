@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	
+	<p:panel id="resultado-motivacion" styleClass="panel-res-consulta">
+		<p:fieldset styleClass="fieldset-formulario">
+			<h:panelGrid id="panel-info-cabecera" styleClass="center-block"
+				columnClasses="label-col,input-col" columns="2" >
+
+				<p:outputLabel value="#{labelProcesoImpugnacion.label_des_hechos}"
+					styleClass="campo-obligatorio"></p:outputLabel>
+				<h:panelGroup>
+					<p:inputTextarea id="textAreaHechos"
+						value="#{impugnacionFL.radicarExpedienteDTO.motivacionImpugnacionDTO.descripcionHechos}"
+						style="width: 400px; height: 100px;"></p:inputTextarea>
+					<p:message for="textAreaHechos" />
+				</h:panelGroup>
+
+				<!--Cargar escrito-->
+				<p:outputLabel value="#{labelProcesoImpugnacion.label_escrito}"></p:outputLabel>		
+				<h:panelGroup>			
+					<p:fileUpload id="fupArchivo"
+						fileUploadListener="#{impugnacionMB.cargarArchivoEscrito}"
+						label="#{lbComun.btnExaminar}" uploadLabel="#{lbComun.btnCargar}"
+						cancelLabel="#{lbComun.btnCancelar}" mode="advanced"
+						dragDropSupport="false" 
+						process="@form" multiple="true"
+						update="resultado-motivacion"
+						sizeLimit="#{impugnacionMB.tamanioMaximoArch}"
+						allowTypes="#{impugnacionMB.tiposArchivosPermitidos}"
+						invalidFileMessage="#{labelProcesoImpugnacion.msg_error_ext_pdf}"
+						invalidSizeMessage="#{impugnacionMB.mesErrLimitSize}" style="width: 400px !important"/>
+					<h:outputText id="msgFileUploaded"
+								value="#{impugnacionFL.radicarExpedienteDTO.adjunto.nombreArchivo}"
+								rendered="#{impugnacionFL.radicarExpedienteDTO.adjunto != null}"
+								style="font-weight: bold;" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelProcesoImpugnacion.label_peticion}"></p:outputLabel>
+				<h:panelGroup>
+					<p:selectOneMenu id="selPeticion"
+						value="#{impugnacionFL.radicarExpedienteDTO.motivacionImpugnacionDTO.tipoPeticion.id}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+						<f:selectItems value="#{fachadaCatalogosMB.catTipoPeticion()}" />
+					</p:selectOneMenu>
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelProcesoImpugnacion.label_org_impug}"></p:outputLabel>
+				<h:panelGroup>
+					<p:selectOneMenu id="selOrgImpug"
+						value="#{impugnacionFL.radicarExpedienteDTO.motivacionImpugnacionDTO.origenImpugnacion.id}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catOrigenImpugnacion()}" />
+					</p:selectOneMenu>
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

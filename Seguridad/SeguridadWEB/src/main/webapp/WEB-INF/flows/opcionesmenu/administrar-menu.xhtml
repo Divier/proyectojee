@@ -1,0 +1,122 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{adminMenuMB.toString()}" />
+			<f:event type="preRenderView"
+				listener="#{adminMenuMB.cargarListaAplicaciones()}" />
+		</f:metadata>
+		<div>
+			<h2>
+				<h:outputText
+					value="#{mensajesOpcionMenu.titulo_consultar_opciones_menu}"></h:outputText>
+			</h2>
+			<hr />
+			<!-- INICIO FORMULARIO PARA CONSULTA -->
+			<h:form id="form-content">
+				<h:panelGrid columns="3" cellpadding="5" id="panelBusqueda"
+					styleClass="formulario-servicio">
+					<h:outputLabel for="app"
+						value="#{mensajesOpcionMenu.label_aplicacion}:"
+						styleClass="campo-obligatorio" />
+					<p:selectOneMenu id="app" value="#{adminMenuMB.idAplicacion}"
+						required="true" label="#{mensajesOpcionMenu.label_aplicacion}">
+						<f:selectItem itemLabel="#{mensajesGeneral.label_seleccione}" />
+						<f:selectItems value="#{adminMenuMB.lAplicaciones}" />
+					</p:selectOneMenu>
+					<p:message for="app"></p:message>
+					<f:facet name="footer">
+						<p:commandButton styleClass="_op-CONSULTAR" action="_op-CONSULTAR"
+							value="#{lbComun.btnConsultar}" icon="c2-icon-consultar"
+							update=":form-adm-menu:preview-menu,form-content" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+			<!-- FIN FORMULARIO PARA CONSULTA -->
+
+			<br></br>
+
+			<!-- INICIO INCLUIR POP-UP DE CREACION DE OPCION DE MENU -->
+			<ui:include src="/WEB-INF/flows/opcionesmenu/crear-opcion-menu.xhtml" />
+			<!-- FIN POP-UP DE CREACION DE OPCION DE MENU -->
+
+			<!-- INICIO INCLUIR POP-UP DE MODIFICACION DE OPCION DE MENU -->
+			<ui:include
+				src="/WEB-INF/flows/opcionesmenu/modificar-opcion-menu.xhtml" />
+			<!-- FIN POP-UP DE MODIFICACION DE OPCION DE MENU -->
+
+			<!-- INICIO INCLUIR POP-UP DE BUSQUEDA DE RECURSOS -->
+			<ui:include src="/WEB-INF/flows/recursos/buscar-recursos.xhtml" />
+			<!-- FIN INCLUIR POP-UP DE BUSQUEDA DE RECURSOS -->
+
+			<!-- INICIO PANEL PARA MENUBAR -->
+			<h:form id="form-adm-menu">
+				<p:panel header="#{mensajesOpcionMenu.label_opciones_menu_app}"
+					toggleable="true" rendered="#{adminMenuMB.idAplicacion !=null}">
+					<p:menubar binding="#{adminMenuMB.menubar}"></p:menubar>
+					<p:panelMenu id="preview-menu"
+						binding="#{adminMenuMB.menuAplicacion}" />
+					<br></br>
+					<p:commandButton styleClass="_op-EDITAR" action="_op-EDITAR"
+						value="#{lbComun.btnGuardar}" icon="c2-icon-guardar"
+						update=":form-content" />
+				</p:panel>
+			</h:form>
+			<!-- FIN PANEL PARA MENUBAR -->
+
+			<!-- INICIO POP-UP DE ORDENACION -->
+			<p:dialog id="dialog-ordenar-submenu"
+				header="#{mensajesOpcionMenu.titulo_ordenar_opciones_menu}"
+				widgetVar="dlgOrdenarSubmenu" resizable="false" appendTo="@(body)">
+				<h:form id="form-ordenar-submenu">
+					<h:panelGrid columns="2" cellpadding="5">
+						<p:orderList value="#{ordenarOpcionesMenuMB.menuItemList}"
+							var="menuItem" itemValue="#{menuItem}" itemLabel="#{menuItem}"
+							controlsLocation="left">
+							<f:facet name="caption">#{mensajesOpcionMenu.label_opciones_menu}</f:facet>
+							<p:column>
+								<h:outputText value="#{menuItem}" />
+							</p:column>
+						</p:orderList>
+						<f:facet name="footer">
+							<p:commandButton value="#{mensajesGeneral.boton_aceptar}"
+								action="#{adminMenuMB.ordenarHijosSubmenu}"
+								update="@form :form-adm-menu" />
+						</f:facet>
+					</h:panelGrid>
+				</h:form>
+			</p:dialog>
+			<!-- FIN POP-UP DE ORDENACION -->
+
+			<!-- INICIO POP-UP MOVER -->
+			<p:dialog id="dialog-mover-submenu"
+				header="#{mensajesOpcionMenu.label_mover_a}"
+				widgetVar="dlgMoverSubmenu" resizable="false" appendTo="@(body)">
+				<h:form id="form-mover-submenu">
+					<h:panelGrid columns="2" cellpadding="5">
+						<p:selectOneListbox id="selectPadre"
+							value="#{moverOpcionesMenuMB.idPadreMover}">
+							<f:selectItem itemLabel="#{mensajesOpcionMenu.label_menu_ppal}"></f:selectItem>
+							<f:selectItems
+								value="#{moverOpcionesMenuMB.listaPadresDisponibles}" />
+						</p:selectOneListbox>
+						<f:facet name="footer">
+							<p:commandButton value="#{mensajesGeneral.boton_aceptar}"
+								action="#{adminMenuMB.moverSubmenu()}"
+								update="@form :form-adm-menu" />
+						</f:facet>
+					</h:panelGrid>
+				</h:form>
+			</p:dialog>
+			<!-- FIN POP-UP MOVER -->
+		</div>
+	</ui:define>
+
+</ui:composition>

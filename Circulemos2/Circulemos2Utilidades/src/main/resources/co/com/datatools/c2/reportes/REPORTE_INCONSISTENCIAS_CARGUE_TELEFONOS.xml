@@ -1,0 +1,35 @@
+<reporte>
+	<codigo>REPORTE_23</codigo>
+	<nombre>REPORTE DE INCONSISTENCIAS PARA EL CARGUE MASIVO DE TELEFONOS</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL_SIN_FILTROS</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>TIPO DE DOCUMENTO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NÚMERO DE DOCUMENTO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DE TELÉFONO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TELÉFONO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>VÁLIDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CALIFICACIÓN</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>INCONSISTENCIAS</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

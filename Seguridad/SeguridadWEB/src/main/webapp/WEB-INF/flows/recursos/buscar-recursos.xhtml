@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog id="dialogBusqueda" widgetVar="dlgBusqueda"
+		header="#{mensajesRecurso.titulo_consultar_recursos}" closable="true"
+		resizable="false" styleClass="dialog-top" closeOnEscape="true">
+		<h:form id="form-content-buscar">
+			<h:panelGrid columns="2" cellpadding="5"
+				styleClass="formulario-servicio">
+				<h:outputLabel for="nombre"
+					value="#{mensajesRecurso.label_nombre_recurso}:" />
+				<p:inputText id="nombre"
+					label="#{mensajesRecurso.label_nombre_recurso}"
+					value="#{recursosFL.nombreRecPadreConsulta}" />
+				<h:outputLabel for="descripcion"
+					value="#{mensajesRecurso.label_descripcion_recurso}:" />
+				<p:inputText id="descripcion"
+					label="#{mensajesRecurso.label_descripcion_recurso}"
+					value="#{recursosFL.descripcionRecPadreConsulta}" />
+				<f:facet name="footer">
+					<p:commandButton action="#{recursosMB.buscarRecursos()}"
+						value="#{lbComun.btnConsultar}" icon="c2-icon-consultar"
+						process="@this,:form-content-buscar" update=":form-content-buscar" />
+				</f:facet>
+			</h:panelGrid>
+			<p:panel header="#{mensajesGeneral.titulo_resultados_consulta}"
+				toggleable="true"
+				rendered="#{recursosFL.resultadoConsultaRecPadre.size()==0 and recursosFL.consultaPadreRealizada}">
+				<h:outputLabel value="#{mensajesGeneral.mensaje_no_resultados}" />
+			</p:panel>
+			<p:panel id="panelResultados"
+				header="#{mensajesGeneral.titulo_resultados_consulta}"
+				toggleable="true"
+				rendered="#{recursosFL.resultadoConsultaRecPadre.size()>0}">
+				<h:panelGrid id="panelBotones">
+					<f:facet name="footer">
+						<p:commandButton
+							action="#{recursosMB.consultarDetalleRecursoPadre()}"
+							value="#{lbComun.btnVerDet}" icon="c2-icon-detalle"
+							disabled="#{recursosFL.recursoPadreSeleccionado==null}"
+							oncomplete="PF('dlgDetalle').show()"
+							update=":form-content-buscar:mensajeDetalle" />
+							
+						<p:commandButton action="#{recursosMB.asignarRecursoPadre()}"
+							value="#{mensajesRecurso.boton_asignar_padre}"
+							icon="c2-icon-detalle"
+							disabled="#{recursosFL.recursoPadreSeleccionado==null}"
+							oncomplete="PF('dlgBusqueda').hide()"
+							update=":form-content_injComi:padre,:form-content_injComi:botonQuitarPadre"
+							rendered="#{recursosFL.asignacionRecursoPadre}" />
+
+						<p:commandButton action="#{recursosMB.asignarRecursoPadre()}"
+							value="#{mensajesRecurso.boton_asignar}" icon="c2-icon-detalle"
+							disabled="#{recursosFL.recursoPadreSeleccionado==null}"
+							oncomplete="PF('dlgBusqueda').hide()"
+							update=":form-crear-submenu_injComi:recurso"
+							rendered="#{!recursosFL.asignacionRecursoPadre and !recursosFL.modificacionMenu}" />
+							
+						<p:commandButton action="#{recursosMB.asignarRecursoPadre()}"
+							value="#{mensajesRecurso.boton_asignar}" icon="c2-icon-detalle"
+							disabled="#{recursosFL.recursoPadreSeleccionado==null}"
+							oncomplete="PF('dlgBusqueda').hide()"
+							update=":form-modificar-submenu:recurso"
+							rendered="#{!recursosFL.asignacionRecursoPadre and recursosFL.modificacionMenu}" />
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tablaResultados"
+					value="#{recursosFL.resultadoConsultaRecPadre}" var="recurso"
+					rowKey="#{recurso.idRecurso}"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					paginator="true"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}"
+					selection="#{recursosFL.recursoPadreSeleccionado}">
+					<p:ajax event="rowSelectRadio"
+						update=":form-content-buscar:panelBotones"
+						process=":form-content-buscar:tablaResultados"></p:ajax>
+					<p:column selectionMode="single"/>
+
+					<p:column headerText="#{mensajesRecurso.label_nombre_recurso}">
+						<h:outputText value="#{recurso.nombreRecurso}" />
+					</p:column>
+					<p:column headerText="#{mensajesRecurso.label_descripcion_recurso}">
+						<h:outputText value="#{recurso.descripcion}" />
+					</p:column>
+					<p:column headerText="#{mensajesRecurso.label_aplicacion}">
+						<h:outputText value="#{recurso.nombreAplicacion}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			<p:dialog id="mensajeDetalle" widgetVar="dlgDetalle"
+				header="#{mensajesRecurso.label_nombre_recurso}: #{recursosFL.detalleRecursoPadre.nombreRecurso}"
+				appendTo="@(body)" closable="true" resizable="false"
+				styleClass="dialog-top" closeOnEscape="true">				
+				<br></br>
+				<p:panel header="#{mensajesRecurso.label_recurso_padre}"
+					toggleable="true">
+					<h:outputLabel value="#{mensajesRecurso.msg_recurso_sin_padre}"
+						rendered="#{recursosFL.detalleRecursoPadre.padre ==null}" />
+					<h:panelGrid columns="2" styleClass="formulario-servicio"
+						rendered="#{recursosFL.detalleRecursoPadre.padre !=null}">
+						<h:outputText value="#{mensajesRecurso.label_recurso_padre}:" />
+						<h:outputText
+							value="#{recursosFL.detalleRecursoPadre.padre.nombreRecurso}" />
+						<h:outputText
+							value="#{mensajesRecurso.label_descripcion_recurso_padre}:" />
+						<h:outputText
+							value="#{recursosFL.detalleRecursoPadre.padre.descripcion}" />
+					</h:panelGrid>
+				</p:panel>
+				<br></br>
+				<p:panel header="#{mensajesRecurso.label_operaciones_recurso}"
+					toggleable="true">
+					<h:outputLabel
+						value="#{mensajesRecurso.msg_recurso_sin_operaciones}"
+						rendered="#{recursosFL.detalleRecursoPadre.operaciones.size()==0}" />
+					<p:dataTable value="#{recursosFL.detalleRecursoPadre.operaciones}"
+						var="operacion" id="detalleOperaciones"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						paginator="true"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}"
+						rendered="#{recursosFL.detalleRecursoPadre.operaciones.size()>0}">
+						<p:column
+							headerText="#{mensajesRecurso.label_nombre_operacion_rec}">
+							<h:outputText value="#{operacion.nombreOperacion}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+				<br></br>
+				<p:panel header="#{mensajesRecurso.label_recursos_hijos}"
+					toggleable="true">
+					<h:outputLabel value="#{mensajesRecurso.msg_recurso_sin_hijos}"
+						rendered="#{recursosFL.detalleRecursoPadre.hijos.size()==0}" />
+					<p:dataTable value="#{recursosFL.detalleRecursoPadre.hijos}"
+						var="recHijo" id="detalleHijos"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						paginator="true"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}"
+						rendered="#{recursosFL.detalleRecursoPadre.hijos.size()>0}">
+						<p:column headerText="#{mensajesRecurso.label_nombre_recurso}">
+							<h:outputText value="#{recHijo.nombreRecurso}" />
+						</p:column>
+						<p:column
+							headerText="#{mensajesRecurso.label_descripcion_recurso}">
+							<h:outputText value="#{recHijo.descripcion}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</p:dialog>
+		</h:form>
+
+	</p:dialog>
+
+</ui:composition>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-testigo" styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_testigo}">
+
+		<p:fieldset id="datos-testigo" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_testigo}">
+			<h:panelGrid id="panel-formulario-testigo" styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_documento}" />
+				<p:outputLabel
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.comparendo.testigo.tipoIdentificacion.nombre}" />
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_documento}" />
+				<c2:outputNumberText
+					value="#{rectificaComparendoEcuadorFL.testigo.numeroIdentificacion}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_nombre}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.testigo.nombre1}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_segundo_nombre}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.testigo.nombre2}" />
+				
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_apellido}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.testigo.apellido1}" />
+				
+				<p:outputLabel value="#{labelAdminComparendo.label_segundo_apellido}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.testigo.apellido2}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_celular}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.testigo.telefonoMovil}" />
+			</h:panelGrid>
+		</p:fieldset>
+
+		<p:fieldset id="datos-direccion-testigo"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_direccion_testigo}">
+			<h:panelGrid id="panel-formulario-direccion-testigo"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="3">
+				<!-- Modulo de direcciones-->
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_direccion_testigo}" />
+				<h:panelGroup>
+					<p:inputTextarea rows="3" readonly="true" maxlength="150"
+						value="#{rectificaComparendoEcuadorFL.direccionTestigoTexto}" />
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

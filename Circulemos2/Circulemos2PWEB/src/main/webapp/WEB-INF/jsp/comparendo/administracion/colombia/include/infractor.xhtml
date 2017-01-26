@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-infractor" styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_infractor}">
+		<p:fieldset id="datos-infractor" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_infractor}">
+			<h:panelGrid id="panel-formulario-infractor"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+
+
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_documento}"
+					styleClass="campo-obligatorio"
+					rendered="#{adminComparendoFL.requiereInfractor or adminComparendoFL.requiereTipoDocInfractor}" />
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_documento}"
+					rendered="#{!adminComparendoFL.requiereInfractor and !adminComparendoFL.requiereTipoDocInfractor}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selTipoDocumentoInfractor"
+						value="#{adminComparendoFL.infractor.idTipoIdentificacion}"
+						required="#{adminComparendoFL.requiereInfractor}"
+						requiredMessage="#{labelGeneral.val_campo_requerido}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />
+						<p:ajax
+							listener="#{adminComparendoMB.onTipoDocumentoInfractorChange(adminComparendoFL)}" global="false"
+							update="campos-registro-infractor" process="@this" />
+					</p:selectOneMenu>
+					<p:message for="selTipoDocumentoInfractor" />
+				</h:panelGroup>
+
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_documento}"
+					styleClass="campo-obligatorio"
+					rendered="#{adminComparendoFL.requiereInfractor or adminComparendoFL.requiereTipoDocInfractor}" />
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_documento}"
+					rendered="#{!adminComparendoFL.requiereInfractor and !adminComparendoFL.requiereTipoDocInfractor}" />
+				<h:panelGroup>
+					<p:inputText id="numeroDocumentoInfractor"
+						value="#{adminComparendoFL.infractor.numeroIdentificacion}"
+						maxlength="20"
+						required="#{adminComparendoFL.requiereInfractor}"
+						requiredMessage="#{labelGeneral.val_campo_requerido}">
+						<p:ajax listener="#{adminComparendoMB.onNumDocInfractorChange(adminComparendoFL)}" global="false"
+							update="campos-registro-infractor" process="@this" event="change" />
+					</p:inputText>
+					<p:message for="numeroDocumentoInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_nombre}"
+					styleClass="campo-obligatorio"
+					rendered="#{(adminComparendoFL.requiereInfractor or adminComparendoFL.requiereTipoDocInfractor) and !adminComparendoFL.tipoIdJuridicoInfractor}" />
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_nombre}"
+					rendered="#{!adminComparendoFL.requiereInfractor and !adminComparendoFL.requiereTipoDocInfractor and !adminComparendoFL.tipoIdJuridicoInfractor}" />
+				<h:panelGroup rendered="#{!adminComparendoFL.tipoIdJuridicoInfractor}">
+					<p:inputText id="primerNombreInfractor"
+						value="#{adminComparendoFL.infractor.nombre1}" maxlength="30"
+						required="#{adminComparendoFL.requiereInfractor or adminComparendoFL.requiereTipoDocInfractor}"
+						requiredMessage="#{labelGeneral.val_campo_requerido}"
+						validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}">
+						<f:validateRegex pattern="#{adminComparendoMB.expresionTextos}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="primerNombreInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_segundo_nombre}" rendered="#{!adminComparendoFL.tipoIdJuridicoInfractor}" />
+				<h:panelGroup rendered="#{!adminComparendoFL.tipoIdJuridicoInfractor}">
+					<p:inputText id="segundoNombreInfractor"
+						value="#{adminComparendoFL.infractor.nombre2}" maxlength="30"
+						required="false"
+						validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}">
+						<f:validateRegex pattern="#{adminComparendoMB.expresionTextos}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="segundoNombreInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_apellido}"
+					styleClass="campo-obligatorio"
+					rendered="#{(adminComparendoFL.requiereInfractor or adminComparendoFL.requiereTipoDocInfractor) and !adminComparendoFL.tipoIdJuridicoInfractor}" />
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_apellido}"
+					rendered="#{!adminComparendoFL.requiereInfractor and !adminComparendoFL.requiereTipoDocInfractor and !adminComparendoFL.tipoIdJuridicoInfractor}" />
+				<h:panelGroup rendered="#{!adminComparendoFL.tipoIdJuridicoInfractor}">
+					<p:inputText id="primerApellidoInfractor"
+						value="#{adminComparendoFL.infractor.apellido1}" maxlength="30"
+						required="#{adminComparendoFL.requiereInfractor or adminComparendoFL.requiereTipoDocInfractor}"
+						requiredMessage="#{labelGeneral.val_campo_requerido}"
+						validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}">
+						<f:validateRegex pattern="#{adminComparendoMB.expresionTextos}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="primerApellidoInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_segundo_apellido}" rendered="#{!adminComparendoFL.tipoIdJuridicoInfractor}" />
+				<h:panelGroup rendered="#{!adminComparendoFL.tipoIdJuridicoInfractor}">
+					<p:inputText id="segundoApellidoInfractor"
+						value="#{adminComparendoFL.infractor.apellido2}" maxlength="30"
+						required="false"
+						validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}">
+						<f:validateRegex pattern="#{adminComparendoMB.expresionTextos}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="segundoApellidoInfractor	" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_nombre_empresa}"
+					styleClass="campo-obligatorio"
+					rendered="#{(adminComparendoFL.requiereInfractor or adminComparendoFL.requiereTipoDocInfractor) and adminComparendoFL.tipoIdJuridicoInfractor}" />
+				<p:outputLabel value="#{labelAdminComparendo.label_nombre_empresa}"
+					rendered="#{!adminComparendoFL.requiereInfractor and !adminComparendoFL.requiereTipoDocInfractor and adminComparendoFL.tipoIdJuridicoInfractor}" />
+				<h:panelGroup rendered="#{adminComparendoFL.tipoIdJuridicoInfractor}">
+					<p:inputText id="nombreEmpresaInfractor"
+						value="#{adminComparendoFL.infractor.razonSocial}"
+						maxlength="200">
+						<p:ajax process="@this" event="change" />
+					</p:inputText>
+					<p:message for="nombreEmpresaInfractor" />
+				</h:panelGroup>				
+
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_infractor}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selTipoInfractor"
+						value="#{adminComparendoFL.procesaComparendo.codigoTipoInfractor}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems value="#{fachadaCatalogosMB.catTipoInfractor()}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selTipoInfractor" />
+				</h:panelGroup>
+				
+				<p:outputLabel value="#{labelAdminComparendo.label_edad}" />
+				<h:panelGroup>
+					<p:inputText id="edadInfractor"
+						value="#{adminComparendoFL.infractor.edad}" maxlength="3"
+						required="false"
+						converterMessage="#{labelGeneral.val_campo_numerico}">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="edadInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_correo}" />
+				<h:panelGroup>
+					<p:inputText id="correoInfractor"
+						value="#{adminComparendoFL.infractor.email}" maxlength="100"
+						required="false"
+						validatorMessage="#{labelGeneral.val_campo_email}">
+						<f:validator
+							validatorId="co.com.datatools.util.jsf.EmailValidator" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="correoInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_telefono_fijo}" />
+				<h:panelGroup>
+					<p:inputText id="telefonoFijoInfractor"
+						value="#{adminComparendoFL.infractor.telefonoFijo}" maxlength="20"
+						required="false">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="telefonoFijoInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_celular}" />
+				<h:panelGroup>
+					<p:inputText id="celularInfractor"
+						value="#{adminComparendoFL.infractor.telefonoMovil}"
+						maxlength="20" required="false">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="celularInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_es_propietario}"
+					styleClass="campo-obligatorio" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selEsPropietario"
+						value="#{adminComparendoFL.esPropietario}" required="true"
+						requiredMessage="#{labelGeneral.val_campo_requerido}">
+						<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+							itemValue="true" />
+						<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+							itemValue="false" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selEsPropietario" />
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:fieldset>
+
+		<p:fieldset id="datos-direccion-infractor"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_direccion_infractor}">
+			<h:panelGrid id="panel-formulario-direccion-infractor"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="3">
+				<!-- Modulo de direcciones-->
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_direccion_infractor}" />
+				<h:panelGroup>
+					<p:inputTextarea id="direccionInfractor" rows="3"
+						readonly="true" maxlength="150"
+						value="#{adminComparendoFL.direccionInfractorTexto}"></p:inputTextarea>
+					<p:message for="direccionInfractor" />
+				</h:panelGroup>
+				<!--Boton Direccion-->
+				<p:commandButton id="btnDireccionInfractor"
+					action="DIRECCION_INFRACTOR" process="@this"
+					update="direccionInfractor" immediate="true"
+					value="#{labelAdminComparendo.tooltip_btnDireccion}">
+					<p:tooltip for="btnDireccionInfractor"
+						value="#{labelAdminComparendo.tooltip_btnDireccion}" />
+				</p:commandButton>
+			</h:panelGrid>
+		</p:fieldset>
+
+		<p:fieldset id="datos-licencia-infractor"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_licencia_infractor}">
+			<h:panelGrid id="panel-formulario-licencia-infractor"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_organismo_transito_licencia}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selOrganismoTransitoLicencia"
+						value="#{adminComparendoFL.infractor.codigoOrganismoLicencia}"
+						required="false"
+						requiredMessage="#{labelGeneral.val_campo_requerido}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selOrganismoTransitoLicencia" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_numero_licencia}" />
+				<h:panelGroup>
+					<p:inputText id="numeroLicencia"
+						value="#{adminComparendoFL.infractor.numeroLicencia}"
+						maxlength="50" required="false"
+						validatorMessage="#{labelGeneral.val_campo_numerico}">
+						<f:validateRegex pattern="#{adminComparendoMB.expresionNumerica}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="numeroLicencia" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_categoria_licencia}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selCategoriaLicencia"
+						value="#{adminComparendoFL.infractor.idCategoriaLicenciaCondu}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catCategoriaLicencia()}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selCategoriaLicencia" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_fecha_expedicion_licencia}" />
+				<h:panelGroup>
+					<p:calendar id="fechaExpedicionLicencia"
+						value="#{adminComparendoFL.infractor.fechaExpedicionLicenCondu}"
+						pattern="#{webPrm.lab_calendar_pattern}" navigator="true">
+						<p:watermark for="fechaExpedicionLicencia"
+							value="#{webPrm.lab_calendar_mask_pattern}" />
+						<p:ajax process="@this" event="dateSelect" global="false" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:calendar>
+					<p:message for="fechaExpedicionLicencia" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_fecha_vencimiento_licencia}" />
+				<h:panelGroup>
+					<p:calendar id="fechaVencimientoLicencia"
+						value="#{adminComparendoFL.infractor.fechaVencimientoLicenCondu}"
+						pattern="#{webPrm.lab_calendar_pattern}" navigator="true">
+						<p:watermark for="fechaVencimientoLicencia"
+							value="#{webPrm.lab_calendar_mask_pattern}" />
+						<p:ajax process="@this" event="dateSelect" global="false" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:calendar>
+					<p:message for="fechaVencimientoLicencia" />
+				</h:panelGroup>
+
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

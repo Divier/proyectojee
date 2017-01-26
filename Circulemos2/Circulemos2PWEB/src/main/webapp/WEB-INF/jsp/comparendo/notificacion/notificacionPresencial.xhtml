@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelNotificacionComparendo.titulo_notificar_comparendo}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+					<h:panelGrid id="panel-info-cabecera" styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">
+						<p:outputLabel
+							value="#{labelNotificacionComparendo.label_organismo_transito}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOrganismoTransito"
+								value="#{notificacionPresencialHolderFL.consultaNotificacionComparendoDTO.codigoOrganismo}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+								<p:ajax
+									listener="#{notificacionPresencialMB.onCodigoOrganismoChangeConsulta}"
+									update="codigoOrganismoNumero :messages" process="@this"
+									global="false" />
+							</p:selectOneMenu>
+							<p:message for="selOrganismoTransito" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelNotificacionComparendo.label_polca}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selPolca" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								value="#{notificacionPresencialHolderFL.consultaNotificacionComparendoDTO.esPolca}">
+								<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+									itemValue="true" />
+								<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+									itemValue="false" />
+								<p:ajax
+									listener="#{notificacionPresencialMB.onPolcaChangeConsulta}"
+									update="codigoOrganismoNumero" process="@this" global="false" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelNotificacionComparendo.label_tipo_documento}"
+							styleClass="campo-obligatorio"
+							rendered="#{notificacionPresencialHolderFL.requiereTipoDocInfractor}" />
+						<p:outputLabel value="#{labelNotificacionComparendo.label_tipo_documento}"
+							rendered="#{!notificacionPresencialHolderFL.requiereTipoDocInfractor}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selTipoDocumentoInfractor"
+								value="#{notificacionPresencialHolderFL.consultaNotificacionComparendoDTO.tipoDocumentoInfractor}"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />
+								<f:selectItem
+									itemLabel="#{labelNotificacionComparendo.label_option_otros}"
+									itemValue="0" />
+								<p:ajax
+									listener="#{notificacionPresencialMB.onTipoDocumentoInfractorChange}" global="false"
+									update="campos-consulta" process="@this" />
+							</p:selectOneMenu>
+							<p:message for="selTipoDocumentoInfractor" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelNotificacionComparendo.label_numero_documento}"
+							styleClass="campo-obligatorio"
+							rendered="#{notificacionPresencialHolderFL.requiereTipoDocInfractor}" />
+						<p:outputLabel value="#{labelNotificacionComparendo.label_numero_documento}"
+							rendered="#{!notificacionPresencialHolderFL.requiereTipoDocInfractor}" />
+						<h:panelGroup>
+							<p:inputText id="numeroDocumentoInfractor"
+								value="#{notificacionPresencialHolderFL.consultaNotificacionComparendoDTO.numeroDocumentoInfractor}"
+								maxlength="20"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<p:ajax
+									listener="#{notificacionPresencialMB.onTipoDocumentoInfractorChange}" global="false"
+									update="campos-consulta" process="@this" />
+							</p:inputText>
+							<p:message for="numeroDocumentoInfractor" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelNotificacionComparendo.label_numero_comparendo}" />
+						<h:panelGroup>
+							<h:panelGrid columns="2">
+								<p:inputText id="codigoOrganismoNumero" style="width:70px"
+									readonly="true" maxlength="8"
+									value="#{notificacionPresencialHolderFL.codOrganismoNumeroComparendo}"></p:inputText>
+								<p:inputText id="numeroComparendo" style="width:100px"
+									value="#{notificacionPresencialHolderFL.numeroComparendo}"
+									maxlength="22"
+									validatorMessage="#{labelGeneral.val_campo_numerico}">
+									<f:validateRegex pattern="#{notificacionPresencialMB.expresionNumerica}" />
+									<p:ajax
+										listener="#{notificacionPresencialMB.onNumeroComparendoChangeConsulta()}"
+										update="numeroComparendo, numeroComparendoMessage"
+										global="false" process="@this" event="change" />
+								</p:inputText>
+							</h:panelGrid>
+							<p:message id="numeroComparendoMessage" for="numeroComparendo" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+
+					<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultar" value="#{lbComun.btnConsultar}" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{notificacionPresencialHolderFL.lstComparendos.size() > 0}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelNotificacionComparendo.msg_fieldset_comparendos}">
+					<h:panelGrid id="acciones-top">
+						<f:facet name="footer">
+							<!--Boton Ver detalle-->
+							<p:commandButton id="btnAbreNotificar"
+								action="#{notificacionPresencialMB.abrirNotificar()}"
+								oncomplete="PF('dlgNotificar').show()" icon="c2-icon-detalle"
+								process="@this" styleClass="_op-NOTIFICAR"
+								value="#{labelNotificacionComparendo.btn_notificar}"
+								disabled="#{notificacionPresencialHolderFL.comparendosSeleccionados==null or notificacionPresencialHolderFL.comparendosSeleccionados.size() == 0}"
+								update="dlg-notificar">
+								<p:tooltip for="btnAbreNotificar"
+									value="#{labelNotificacionComparendo.btn_notificar}" />
+							</p:commandButton>
+						</f:facet>
+					</h:panelGrid>
+
+					<p:dataTable id="tabla-resultados"
+						value="#{notificacionPresencialHolderFL.lstComparendos}"
+						var="registro" rowKey="#{registro.idComparendo}"
+						selection="#{notificacionPresencialHolderFL.comparendosSeleccionados}"
+						paginator="true"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+
+						<p:ajax event="rowSelectCheckbox"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this" global="false" />
+
+						<p:ajax event="rowUnselectCheckbox"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this" global="false" />
+
+						<p:ajax event="toggleSelect"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this" global="false" />
+ 
+						<p:column selectionMode="multiple" />
+
+						<p:column
+							headerText="#{labelNotificacionComparendo.label_numero_comparendo}"
+							style="width:200px">
+							<p:outputLabel value="#{registro.numeroComparendo}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelNotificacionComparendo.label_infraccion}"
+							style="width:100px">
+							<p:outputLabel value="#{registro.codigoInfraccion}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelNotificacionComparendo.label_fecha_imposicion}">
+							<c2:outputDateLabel labelValue="#{registro.fechaInfraccion}"
+								fullFormat="true" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelNotificacionComparendo.label_estado_comparendo}">
+							<p:outputLabel value="#{registro.estadoComparendo}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelNotificacionComparendo.label_tipo_doc_infractor}">
+							<p:outputLabel value="#{registro.tipoDocumentoInfractor}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelNotificacionComparendo.label_numero_doc_infractor}">
+							<p:outputLabel value="#{registro.numeroDocumentoInfractor}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelNotificacionComparendo.label_nombre_infractor}">
+							<p:outputLabel value="#{registro.nombreInfractor}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelNotificacionComparendo.label_valor_tarifa}">
+							<p:outputLabel value="#{registro.valorInfraccion}">
+								<f:convertNumber type="currency" currencySymbol="$" />
+							</p:outputLabel>
+						</p:column>
+						<p:column
+							headerText="#{labelNotificacionComparendo.label_tipo_notificacion}">
+							<p:outputLabel value="#{registro.tipoNotificacion}" />
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<p:dialog widgetVar="dlgNotificar" id="dlg-notificar"
+			resizable="false" modal="true" appendToBody="@(body)" dynamic="true"
+			width="50%" header="#{labelNotificacionComparendo.btn_notificar}">
+			<h:form id="form-notificar">
+				<p:panel id="campos-registro-notificar"
+					styleClass="panel-formulario"
+					header="#{labelNotificacionComparendo.titulo_notificar_comparendo}">
+					<p:fieldset id="datos-principal-notificar"
+						styleClass="fieldset-formulario"
+						legend="#{lbComun.msg_fieldset_registro}">
+
+						<!--Agregar Secciones o Panel Grid de campos-->
+						<h:panelGrid id="panel-info-cabecera-notificar"
+							styleClass="center-block"
+							columnClasses="label-col,input-col,label-col,input-col"
+							columns="2">
+							<p:outputLabel
+								value="#{labelNotificacionComparendo.label_tipo_notificacion}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+
+								<p:selectOneMenu id="selTipoNotificacion"
+									value="#{notificacionPresencialHolderFL.idTipoNotificacion}"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+									<f:selectItems
+										value="#{fachadaCatalogosMB.catTipoNotificacionComparendoPresencial()}" />
+								</p:selectOneMenu>
+								<p:message for="selTipoNotificacion" />
+							</h:panelGroup>
+
+							<p:outputLabel
+								value="#{labelNotificacionComparendo.label_fecha_notificacion}"
+								styleClass="campo-obligatorio" />
+							<c2:outputDateLabel
+								labelValue="#{notificacionPresencialHolderFL.fechaNotificacion}"
+								fullFormat="true" />
+						</h:panelGrid>
+						<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+							<!--Boton Guardar-->
+							<p:commandButton id="btnNotificar"
+								action="#{notificacionPresencialMB.notificar()}"
+								icon="c2-icon-guardar" process="@form"
+								value="#{lbComun.btnGuardar}"
+								update=":messages :form-notificar :form-resultado :form-contenido dlg-pdfviewer">
+								<p:tooltip for="btnNotificar"
+									value="#{labelRango.tooltip_btnGuardar}" />
+								<p:confirm header="#{lbComun.msg_tit_confirmar}"
+									message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+							</p:commandButton>
+							<!--Boton Cancelar-->
+							<p:commandButton id="btnCancelar"
+								onclick="PF('dlgNotificar').hide()" icon="c2-icon-cancelar"
+								process="@this" immediate="true" value="#{lbComun.btnCancelar}">
+								<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+								<p:confirm header="#{lbComun.msg_tit_confirmar}"
+									message="#{lbComun.msg_confirm_volver_cancelar}"
+									icon="ui-icon-alert" />
+							</p:commandButton>
+						</h:panelGrid>
+					</p:fieldset>
+				</p:panel>
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgPdfviewer" id="dlg-pdfviewer"
+			resizable="false" modal="true" appendTo="@(body)" dynamic="true"
+			width="50%">
+			<h:form id="form-pdfviewer">
+				<pe:documentViewer
+					rendered="#{notificacionPresencialMB.streamedContent != null}"
+					height="500" value="#{notificacionPresencialMB.streamedContent}" />
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

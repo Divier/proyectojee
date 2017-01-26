@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelAnulacion.label_datos_anulacion}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAnulacion.label_datos_anulacion}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<p:outputLabel
+							value="#{labelAnulacion.label_correo_institucional_supervisor}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="txtidCorreoInstitucional"
+								value="#{anulacionFL.correoInstitucional}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								validatorMessage="#{labelAnulacion.msg_correo_invalido}">
+								<f:validateRegex pattern="#{anulacionMB.formatoCorreo}" />
+							</p:inputText>
+							<p:message for="txtidCorreoInstitucional" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelAnulacion.label_fecha_correo}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar id="calidFechaCorreo"
+								value="#{anulacionFL.fechaCorreo}" navigator="true"
+								pattern="#{utilidadMB.formatoFecha}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								maxdate="#{anulacionMB.fechaActual}">
+								<p:watermark for="calidFechaCorreo"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="calidFechaCorreo" />
+						</h:panelGroup>
+						<p:outputLabel
+							value="#{labelAnulacion.label_justificacion_anulacion}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputTextarea id="txaidJustificacionAnulacion"
+								value="#{anulacionFL.justificacionAnulacion}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" rows="10"
+								cols="100" maxlength="500" />
+							<p:message for="txaidJustificacionAnulacion" />
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+				</p:fieldset>
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAnulacion.label_funcionario}">
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel
+							value="#{labelAdmin.label_primer_nombre}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="txtprimerNombreAutoridad"
+								value="#{anulacionFL.primerNombreAutoridadTransito}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								validatorMessage="#{labelAnulacion.formato_invalido}"
+								maxlength="30">
+							<f:validateRegex pattern="#{anulacionMB.formatoNombre}" />	
+							</p:inputText>	
+							<p:message for="txtprimerNombreAutoridad" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_segundo_nombre}" />
+						<h:panelGroup>
+							<p:inputText id="txtsegundoNombreAutoridad"
+								value="#{anulacionFL.segundoNombreAutoridadTransito}"
+								validatorMessage="#{labelAnulacion.formato_invalido}"
+								maxlength="30">
+								<f:validateRegex pattern="#{anulacionMB.formatoNombre}" />
+							</p:inputText>
+							<p:message for="txtsegundoNombreAutoridad" />
+						</h:panelGroup>
+						<p:outputLabel
+							value="#{labelAdmin.label_primer_apellido}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="txtprimerApellidoAutoridad"
+								value="#{anulacionFL.primerApellidoAutoridadTransito}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								validatorMessage="#{labelAnulacion.formato_invalido}"
+								maxlength="30">
+								<f:validateRegex pattern="#{anulacionMB.formatoNombre}" />
+							</p:inputText>	
+							<p:message for="txtprimerApellidoAutoridad" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdmin.label_segundo_apellido}" />
+						<h:panelGroup>
+							<p:inputText id="txtsegundoApellidoAutoridad"
+								value="#{anulacionFL.segundoApellidoAutoridadTransito}"
+								validatorMessage="#{labelAnulacion.formato_invalido}"
+								maxlength="30">
+								<f:validateRegex pattern="#{anulacionMB.formatoNombre}" />
+							</p:inputText>
+							<p:message for="txtsegundoApellidoAutoridad" />
+						</h:panelGroup>
+					</h:panelGrid>
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}" update=":messages :form-contenido">
+							<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

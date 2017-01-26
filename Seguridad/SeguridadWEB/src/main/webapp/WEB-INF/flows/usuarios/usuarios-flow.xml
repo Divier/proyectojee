@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+	parent="global">
+
+	<var name="usuariosFL" class="co.com.datatools.seguridad.mb.usuarios.UsuariosFL" />
+	<var name="crearUsuarioFL" class="co.com.datatools.seguridad.mb.usuarios.CrearUsuarioFL" />
+	<var name="modificarUsuarioFL"
+		class="co.com.datatools.seguridad.mb.usuarios.ModificarUsuarioFL" />
+
+	<decision-state id="decision">
+		<if test="requestParameters.stateId=='crear'" then="_op-CREAR"
+			else="ingresar" />
+	</decision-state>
+
+	<!-- INICIO- Estados del flujo de creacion -->
+	<view-state id="_op-CREAR" view="crear-usuario.xhtml">
+		<on-entry>
+			<evaluate expression="externalContext.sessionMap.seguridadUtilMB.instanciarMB('usuariosMB')" />
+			<evaluate expression="externalContext.sessionMap.usuariosMB.inicializarComponentesInterfaz()" />
+		</on-entry>
+		<transition on="_op-CREAR" to="CREAR-USUARIO" />
+		<transition on="CANCELAR" to="_op-CREAR">
+			<evaluate
+				expression="new co.com.datatools.seguridad.mb.usuarios.CrearUsuarioFL()"
+				result="flowScope.crearUsuarioFL"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="CREAR-USUARIO">
+		<evaluate expression="externalContext.sessionMap.usuariosMB.crearUsuario()" />
+		<transition on="yes" to="_op-CREAR">
+			<evaluate
+				expression="new co.com.datatools.seguridad.mb.usuarios.CrearUsuarioFL()"
+				result="flowScope.crearUsuarioFL"></evaluate>
+		</transition>
+		<transition on="no" to="_op-CREAR" />
+	</action-state>
+
+	<!-- FIN- Estados del flujo de creacion -->
+
+	<!-- INICIO- Estados del flujo de consulta -->
+	<view-state id="ingresar" view="consultar-usuario.xhtml">
+		<on-entry>
+			<evaluate expression="externalContext.sessionMap.seguridadUtilMB.instanciarMB('usuariosMB')" />
+			<evaluate expression="externalContext.sessionMap.usuariosMB.inicializarComponentesInterfaz()" />
+			<evaluate
+				expression="new co.com.datatools.seguridad.mb.usuarios.ModificarUsuarioFL()"
+				result="flowScope.modificarUsuarioFL" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+		<transition on="CANCELAR" to="fin" />
+		<transition on="_op-ELIMINAR" to="_op-ELIMINAR" />
+		<transition on="_op-EDITAR" to="_op-EDITAR" />
+		<transition on="VER-HISTORICO" to="VER-HISTORICO">
+			<evaluate
+				expression="externalContext.sessionMap.usuariosMB.cargarParametrosHistorico()"></evaluate>
+			<set name="flashScope.idUsuario" value="modificarUsuarioFL.usuarioSeleccionado.id" />
+			<set name="flashScope.loginUsuario" value="modificarUsuarioFL.usuarioSeleccionado.login" />
+			<set name="flashScope.fechaInicial" value="usuariosFL.fechaInicioHistorico" />
+			<set name="flashScope.fechaFinal" value="usuariosFL.fechaFinHistorico" />
+		</transition>
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate expression="externalContext.sessionMap.usuariosMB.consultarUsuarios()" />
+		<transition on="success" to="ingresar"></transition>
+	</action-state>
+
+	<subflow-state id="VER-HISTORICO" subflow="historico-usuarios">
+		<input name="idUsuario" value="idUsuario" />
+		<input name="fechaInicial" value="fechaInicial" />
+		<input name="fechaFinal" value="fechaFinal" />
+		<transition on="fin" to="_op-CONSULTAR" />
+	</subflow-state>
+
+	<action-state id="_op-ELIMINAR">
+		<evaluate expression="externalContext.sessionMap.usuariosMB.eliminarUsuario()" />
+		<transition on="success" to="ingresar"></transition>
+	</action-state>
+
+	<view-state id="_op-EDITAR" view="modificar-usuario.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.usuariosMB.cargarDetalleUsuarioSel()"></evaluate>
+		</on-entry>
+		<transition on="MODIFICAR-USUARIO" to="MODIFICAR-USUARIO" />
+		<transition on="VOLVER" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.usuariosMB.consultarUsuarios()" />
+		</transition>
+		<transition on="MODIFICAR-PW" to="MODIFICAR-PW"></transition>
+		<transition on="DESBLOQUEAR-PW" to="_op-EDITAR">
+			<evaluate expression="externalContext.sessionMap.usuariosMB.desbloquearPw()" />
+		</transition>
+	</view-state>
+
+	<action-state id="MODIFICAR-USUARIO">
+		<evaluate expression="externalContext.sessionMap.usuariosMB.actualizarUsuario()" />
+		<transition on="success" to="_op-EDITAR"></transition>
+	</action-state>
+	<action-state id="MODIFICAR-PW">
+		<evaluate expression="externalContext.sessionMap.usuariosMB.actualizarPw()" />
+		<transition on="success" to="_op-EDITAR"></transition>
+	</action-state>
+	<!-- FIN- Estados del flujo de consulta -->
+
+	<end-state id="fin" />
+</flow>

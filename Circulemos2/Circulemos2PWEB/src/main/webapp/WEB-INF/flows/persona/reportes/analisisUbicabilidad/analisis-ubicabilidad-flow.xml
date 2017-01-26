@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="analisisUbicabilidadHolderFL"
+		class="co.com.datatools.c2.maganed_bean.persona.reportes.analisis_ubicabilidad.AnalisisUbicabilidadHolderFL" />
+		
+	<decision-state id="CARGUE_ACTIVO">
+		<on-entry>
+			<evaluate expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('analisisUbicabilidadMB')" />
+		</on-entry>
+		<if test="externalContext.sessionMap.analisisUbicabilidadMB.isCargueActivo()" then="CONSULTAR"
+			else="ingresar" />
+	</decision-state>
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/persona/reportes/analisisUbicabilidad.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('analisisUbicabilidadMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="VALIDAR_ARCHIVO">
+		</transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.analisisUbicabilidadMB.finalizarConsulta()" />
+		</transition>
+		<transition on="VOLVER" to="ingresar">
+		</transition>	
+	</view-state>
+
+	<action-state id="VALIDAR_ARCHIVO">
+		<evaluate expression="externalContext.sessionMap.analisisUbicabilidadMB.consultar()" />
+		<transition on="yes" to="CONSULTAR" />
+		<transition on="no" to="ingresar" />
+	</action-state>
+	
+	<action-state id="CONSULTAR_UBICABILIDAD">
+		<evaluate
+			expression="externalContext.sessionMap.datosDemograficosMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+	
+	<view-state id="CONSULTAR" view="/WEB-INF/jsp/persona/reportes/progresoAnalisisUbicabilidad.xhtml">
+		<on-render>
+			<evaluate
+				expression="externalContext.sessionMap.analisisUbicabilidadMB.inciarCargaProceso()" />
+		</on-render>
+		<transition on="VOLVER_USR" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.analisisUbicabilidadMB.finalizarConsulta()" />
+		</transition>
+		<transition on="VOLVER_USR_EXT" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.analisisUbicabilidadMB.finalizarConsulta()" />
+		</transition>
+	</view-state>
+
+</flow>

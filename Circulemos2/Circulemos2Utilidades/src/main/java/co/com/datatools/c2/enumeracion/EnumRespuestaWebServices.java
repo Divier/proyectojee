@@ -1,0 +1,149 @@
+package co.com.datatools.c2.enumeracion;
+
+import co.com.datatools.c2.util.SearchableEnumeration;
+
+/**
+ * Manejo las posibles respuestas del webservices.
+ * 
+ * @author luis.forero(mod 2016-04-06)
+ * 
+ */
+public enum EnumRespuestaWebServices implements SearchableEnumeration<Integer> {
+    PROCESO_EXITOSO(1, EnumWebService.RECIBIR_COMPARENDO, "0000"), //
+    FALTA_NUMERO_FACTURA(119, EnumWebService.RECIBIR_COMPARENDO, "9090"), //
+    ERROR_BLOQUEANTE(2, EnumWebService.RECIBIR_COMPARENDO, "9999"), //
+    INCONSISTENCIA(3, EnumWebService.RECIBIR_COMPARENDO, "0002"), //
+    NO_SE_PUDO_REALIZA_TRANSACCION(4, EnumWebService.RECIBIR_COMPARENDO, "99"), //
+    VALOR_NO_MAPEADO(5, EnumWebService.RECIBIR_COMPARENDO, "1110"), //
+
+    NOTIFICACION_EXITOSA(38, EnumWebService.NOTIFICAR_COMPARENDO_SIMIT, "0000"), //
+    NOTIFICACION_NO_EXITOSA(39, EnumWebService.NOTIFICAR_COMPARENDO_SIMIT, "0001"), //
+    PROBLEMAS_WEB_SERVICE(40, EnumWebService.NOTIFICAR_COMPARENDO_SIMIT, "0002"), //
+    PROBLEMAS_CONEXION(41, EnumWebService.NOTIFICAR_COMPARENDO_SIMIT, "0003"), //
+    PROBLEMAS_URL_CONEXION(42, EnumWebService.NOTIFICAR_COMPARENDO_SIMIT, "0004"), //
+    FALTAN_DATOS_CONEXION(43, EnumWebService.NOTIFICAR_COMPARENDO_SIMIT, "0005"), //
+    FALTAN_DATOS_AUTENTICACION(44, EnumWebService.NOTIFICAR_COMPARENDO_SIMIT, "0006"), //
+
+    SOLICITUD_EXITOSA(27, EnumWebService.SOLICITAR_OCN, "0000"), //
+    VEHICULO_SIN_IDENTIFICAR(28, EnumWebService.SOLICITAR_OCN, "1000"), //
+    FALTA_TIPO_DOCUMENTO_RESPONSABLE(29, EnumWebService.SOLICITAR_OCN, "1001"), //
+    FALTA_NUMERO_DOCUMENTO_RESPONSABLE(30, EnumWebService.SOLICITAR_OCN, "1002"), //
+    AGENTE_INVALIDO(32, EnumWebService.SOLICITAR_OCN, "1004"), //
+    TIPO_DOCUMENTO_INVALIDO(33, EnumWebService.SOLICITAR_OCN, "1005"), //
+    FECHA_IMPOSICION_INVALIDA(35, EnumWebService.SOLICITAR_OCN, "1007"), //
+    HORA_IMPOSICION_INVALIDA(36, EnumWebService.SOLICITAR_OCN, "1008"), //
+    PLACA_AGENTE_INVALIDA(37, EnumWebService.SOLICITAR_OCN, "1009"), //
+    IDENTIFICACION_VEHICULO_IMPRECISO(45, EnumWebService.SOLICITAR_OCN, "1010"), //
+    RESPONSABLE_NO_EXISTE(46, EnumWebService.SOLICITAR_OCN, "1011"), //
+    COMPARENDOS_NO_DISPONIBLES(47, EnumWebService.SOLICITAR_OCN, "1012"), //
+    ORGANISMO_TRANSITO_INVALIDO(31, EnumWebService.SOLICITAR_OCN, "1003"), //
+    TIPO_RESPONSABLE_INVALIDO(48, EnumWebService.SOLICITAR_OCN, "1013"), //
+
+    PAGO_YA_REGISTRADO(58, EnumWebService.REPLICAR_PAGO, "-"), //
+    FECHA_PAGO_SUPERIOR_ACTUAL(61, EnumWebService.REPLICAR_PAGO, "-"), //
+    TOTAL_RECAUDO_NO_SUMA_MEDIOS_PAGO(62, EnumWebService.REPLICAR_PAGO, "-"), //
+    TOTAL_RECAUDO_NO_SUMA_OBLIGACIONES(63, EnumWebService.REPLICAR_PAGO, "-"), //
+    PAGO_YA_APLICADO(64, EnumWebService.REPLICAR_PAGO, "-"), //
+    FALTA_NUMERO_CUOTA(65, EnumWebService.REPLICAR_PAGO, "-"), //
+    NO_CATALOGO_ORGANISMO_TRANSITO(66, EnumWebService.REPLICAR_PAGO, "-"), //
+    PERSONA_NO_ENCONTRADA(67, EnumWebService.REPLICAR_PAGO, "-"), //
+    NO_SE_PUDO_REALIZA_TRANSACCION_RECAUDO(71, EnumWebService.REPLICAR_PAGO, "-"), //
+    VALOR_NO_MAPEADO_RECAUDO(72, EnumWebService.REPLICAR_PAGO, "-"), //
+
+    GESTION_COBRO_SAC_EXITOSA(57, EnumWebService.GESTION_COBRO_SAC, "1015"), //
+
+    TRANSACCION_EXITOSA(73, EnumWebService.REGISTRAR_FINANCIAMIENTO, "000"), //
+    ERROR_APLICACION(74, EnumWebService.REGISTRAR_FINANCIAMIENTO, "001"), //
+    ERROR_CONECTIVIDAD_BD(75, EnumWebService.REGISTRAR_FINANCIAMIENTO, "002"), //
+    ERROR_SQL_EJECUTAR_SP(76, EnumWebService.REGISTRAR_FINANCIAMIENTO, "003"), //
+    ERROR_LOGICA_NEGOCIO(77, EnumWebService.REGISTRAR_FINANCIAMIENTO, "004"), //
+    FALTAN_DATOS_CONEXION_WS(78, EnumWebService.REGISTRAR_FINANCIAMIENTO, "005"), //
+    DATO_REGISTRADO_ANTERIORMENTE(95, EnumWebService.REGISTRAR_FINANCIAMIENTO, "006"), //
+    ERROR_INESPERADO(92, EnumWebService.REGISTRAR_FINANCIAMIENTO, "999"), //
+
+    TRANSACCION_EXITOSA_ANULAR(79, EnumWebService.ANULAR_FINANCIAMIENTO, "000"), //
+    ERROR_APLICACION_ANULAR(80, EnumWebService.ANULAR_FINANCIAMIENTO, "001"), //
+    ERROR_CONECTIVIDAD_BD_ANULAR(81, EnumWebService.ANULAR_FINANCIAMIENTO, "002"), //
+    ERROR_SQL_EJECUTAR_SP_ANULAR(82, EnumWebService.ANULAR_FINANCIAMIENTO, "003"), //
+    ERROR_LOGICA_NEGOCIO_ANULAR(83, EnumWebService.ANULAR_FINANCIAMIENTO, "004"), //
+    FALTAN_DATOS_CONEXION_WS_ANULAR(84, EnumWebService.ANULAR_FINANCIAMIENTO, "005"), //
+    DATO_REGISTRADO_ANTERIORMENTE_ANULAR(96, EnumWebService.ANULAR_FINANCIAMIENTO, "006"), //
+    ERROR_INESPERADO_ANULAR(93, EnumWebService.ANULAR_FINANCIAMIENTO, "999"), //
+
+    TRANSACCION_EXITOSA_IMPUGNAR(85, EnumWebService.IMPUGNAR_COMPARENDO_AXIS, "000"), //
+    ERROR_APLICACION_IMPUGNAR(86, EnumWebService.IMPUGNAR_COMPARENDO_AXIS, "001"), //
+    ERROR_CONECTIVIDAD_BD_IMPUGNAR(87, EnumWebService.IMPUGNAR_COMPARENDO_AXIS, "002"), //
+    ERROR_SQL_EJECUTAR_SP_IMPUGNAR(88, EnumWebService.IMPUGNAR_COMPARENDO_AXIS, "003"), //
+    ERROR_LOGICA_NEGOCIO_IMPUGNAR(89, EnumWebService.IMPUGNAR_COMPARENDO_AXIS, "004"), //
+    FALTAN_DATOS_CONEXION_WS_IMPUGNAR(90, EnumWebService.IMPUGNAR_COMPARENDO_AXIS, "005"), //
+    DATO_REGISTRADO_ANTERIORMENTE_IMPUGNAR(91, EnumWebService.IMPUGNAR_COMPARENDO_AXIS, "006"), //
+    ERROR_INESPERADO_IMPUGNAR(94, EnumWebService.IMPUGNAR_COMPARENDO_AXIS, "999"), //
+
+    TRANSACCION_EXITOSA_COACTIVO(97, EnumWebService.COACTIVO_COMPARENDO_AXIS, "000"), //
+    FORMATO_DE_DATOS_RECIBIDOS_INCORRECTOS_COACTIVO(98, EnumWebService.COACTIVO_COMPARENDO_AXIS, "001"), //
+    ERROR_DE_CONECTIVIDAD_HACIA_BD_COACTIVO(99, EnumWebService.COACTIVO_COMPARENDO_AXIS, "002"), //
+    ERROR_AL_INTENTAR_EJECUTAR_EL_SP_COACTIVO(100, EnumWebService.COACTIVO_COMPARENDO_AXIS, "003"), //
+    ERROR_DE_LOGICA_DE_NEGOCIO_COACTIVO(101, EnumWebService.COACTIVO_COMPARENDO_AXIS, "004"), //
+    ERROR_NO_CONTROLADO_POR_AXIS_COACTIVO(102, EnumWebService.COACTIVO_COMPARENDO_AXIS, "005"), //
+    DATO_REGISTRADO_ANTERIORMENTE_COACTIVO(103, EnumWebService.COACTIVO_COMPARENDO_AXIS, "006"), //
+    ERROR_INESPERADO_COACTIVO(104, EnumWebService.COACTIVO_COMPARENDO_AXIS, "999"), //
+
+    EJECUCION_CORRECTA(105, EnumWebService.NOTIFICAR_E_NOTIFICA, "0"), //
+    ERROR_NOMBRE_DOCUMENTO(106, EnumWebService.NOTIFICAR_E_NOTIFICA, "1001"), //
+    EMAIL_INVALIDO(107, EnumWebService.NOTIFICAR_E_NOTIFICA, "1002"), //
+    ERROR_NUMERO_DESTINATARIOS(108, EnumWebService.NOTIFICAR_E_NOTIFICA, "1003"), //
+    ERROR_VALIDACION_DESTINATARIOS(109, EnumWebService.NOTIFICAR_E_NOTIFICA, "1004"), //
+    DOCUMENTO_INVALIDO(110, EnumWebService.NOTIFICAR_E_NOTIFICA, "1008"), //
+    ERROR_ORDEN_OPERACIONES(111, EnumWebService.NOTIFICAR_E_NOTIFICA, "1010"), //
+    PUBLICACION_INVALIDA(112, EnumWebService.NOTIFICAR_E_NOTIFICA, "1012"), //
+    TITULO_CIRCUITO_NO_INDICADO(113, EnumWebService.NOTIFICAR_E_NOTIFICA, "1013"), //
+    ERROR_ALMACENANDO_DOCUMENTO(114, EnumWebService.NOTIFICAR_E_NOTIFICA, "2001"), //
+    ERROR_NUMERO_CREDITOS(115, EnumWebService.NOTIFICAR_E_NOTIFICA, "2002"), //
+    CREDITOS_INSUFICIENTES(116, EnumWebService.NOTIFICAR_E_NOTIFICA, "2003"), //
+    ERROR_CREAR_OPERACION(117, EnumWebService.NOTIFICAR_E_NOTIFICA, "2004"), //
+    ERROR_GENERICO(118, EnumWebService.NOTIFICAR_E_NOTIFICA, "3000"), //
+    ;
+
+    private Integer idRespuesta;
+    private EnumWebService enumWebService;
+    private String codigo;
+
+    private EnumRespuestaWebServices(Integer idRespuesta, EnumWebService enumWebService, String codigo) {
+        this.idRespuesta = idRespuesta;
+        this.enumWebService = enumWebService;
+        this.codigo = codigo;
+    }
+
+    @Override
+    public Integer getValue() {
+        return idRespuesta;
+    }
+
+    public EnumWebService getEnumWebService() {
+        return enumWebService;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    /**
+     * Busca la enumeracion por codigo y ws
+     * 
+     * @param codigo
+     * @param ws
+     * @return EnumRespuestaWebServices
+     * @author julio.pinzon 2016-08-17
+     */
+    public static EnumRespuestaWebServices encontrarPorCodigo(String codigo, EnumWebService ws) {
+        EnumRespuestaWebServices respuestaWS = null;
+        for (EnumRespuestaWebServices respuesta : EnumRespuestaWebServices.values()) {
+            if (respuesta.getEnumWebService().equals(ws) && respuesta.getCodigo().equals(codigo)) {
+                respuestaWS = respuesta;
+                break;
+            }
+        }
+        return respuestaWS;
+    }
+
+}

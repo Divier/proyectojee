@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="stockTipoResponsableHolderFL"
+		class="co.com.datatools.c2.managed_bean.formularios.stock_tipo_responsable.StockTipoResponsableHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/formularios/stock-tipo-responsable/consultarStockTipFormTipAsig.xhtml">
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+		<transition on="_op-CREAR" to="_op-CREAR">
+			<evaluate
+				expression="flowScope.stockTipoResponsableHolderFL.initStockTipoResponsableDTO()" />
+		</transition>
+		<transition on="_op-ELIMINAR" to="_op-ELIMINAR">
+		</transition>
+		<transition on="_op-EDITAR" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.stockTipoFormAsignacionMB.cargarDetalle()" />
+		</transition>
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.stockTipoFormAsignacionMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<view-state id="_op-CREAR"
+		view="/WEB-INF/jsp/formularios/stock-tipo-responsable/registrarStockTipFormTipAsig.xhtml">
+		<transition on="CONTINUAR" to="registrarStock" />
+		<transition on="VOLVER" to="ingresar">
+		</transition>
+		<transition on="LIMPIAR" to="_op-CREAR">
+			<evaluate
+				expression="flowScope.stockTipoResponsableHolderFL.initStockTipoResponsableDTO()" />
+		</transition>
+	</view-state>
+
+	<action-state id="registrarStock">
+		<evaluate
+			expression="externalContext.sessionMap.stockTipoFormAsignacionMB.registrarStock()" />
+		<transition on="yes" to="_op-CONSULTAR" />
+		<transition on="no" to="_op-CREAR" />
+	</action-state>
+
+	<view-state id="_op-EDITAR"
+		view="/WEB-INF/jsp/formularios/stock-tipo-responsable/actualizarStockTipFormTipAsig.xhtml">
+		<transition on="CONTINUAR" to="actualizarStock" />
+		<transition on="VOLVER" to="ingresar" />
+	</view-state>
+
+	<action-state id="_op-ELIMINAR">
+		<evaluate
+			expression="externalContext.sessionMap.stockTipoFormAsignacionMB.eliminarStock()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<action-state id="actualizarStock">
+		<evaluate
+			expression="externalContext.sessionMap.stockTipoFormAsignacionMB.actualizarStock()" />
+		<transition on="yes" to="_op-CONSULTAR" />
+		<transition on="no" to="_op-EDITAR" />
+	</action-state>
+
+</flow>

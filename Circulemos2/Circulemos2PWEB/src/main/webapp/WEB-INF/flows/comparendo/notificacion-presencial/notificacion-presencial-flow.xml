@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="notificacionPresencialHolderFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.notificacion.NotificacionPresencialHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/comparendo/notificacion/notificacionPresencial.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('notificacionPresencialMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR">
+		</transition>
+	</view-state>
+
+	<!-- INICIO- Estados del flujo de consulta -->
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate expression="externalContext.sessionMap.notificacionPresencialMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+	<!-- FIN- Estados del flujo de consulta -->
+
+	<end-state id="fin" />
+</flow>

@@ -1,0 +1,155 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{rolesMB.toString()}" />
+		</f:metadata>
+		<div>
+			<h2>
+				<h:outputText value="#{mensajesRol.titulo_modificar_rol}"></h:outputText>
+			</h2>
+			<hr />
+			<h:form id="form-content">
+				<h:panelGrid columns="3" cellpadding="5"
+					styleClass="formulario-servicio">
+					<h:outputLabel for="nombre"
+						value="#{mensajesRol.label_nombre_rol}:"
+						styleClass="campo-obligatorio" />
+					<p:inputText id="nombre" label="#{mensajesRol.label_nombre_rol}"
+						value="#{modificarRolFL.rolModificar.nombre}" required="true"
+						maxlength="50" />
+					<p:message for="nombre" />
+
+					<h:outputLabel for="descripcion"
+						value="#{mensajesRol.label_descripcion_rol}:"
+						styleClass="campo-obligatorio" />
+					<p:inputTextarea id="descripcion" rows="3" cols="25"
+						label="#{mensajesRol.label_descripcion_rol}"
+						value="#{modificarRolFL.rolModificar.descripcion}" required="true"
+						maxlength="250" />
+					<p:message for="descripcion" />
+
+					<h:outputLabel for="estado"
+						value="#{mensajesRol.label_estado_rol}:"
+						styleClass="campo-obligatorio" />
+					<p:selectOneMenu id="estado"
+						value="#{modificarRolFL.rolModificar.activo}">
+						<f:selectItems value="#{rolesMB.lEstadosRol}" />
+					</p:selectOneMenu>
+					<p:message for="estado" />
+
+					<h:outputLabel for="aplicacion"
+						value="#{mensajesRol.label_aplicacion}:"
+						styleClass="campo-obligatorio" />
+					<p:inputText id="aplicacion" disabled="true"
+						value="#{modificarRolFL.nombreAplicacion}"></p:inputText>
+					<p:message for="aplicacion"></p:message>
+
+					<h:outputLabel for="padre" value="#{mensajesRol.label_rol_padre}:"
+						styleClass="label-padding" />
+					<h:panelGroup layout="block" styleClass="inline">
+						<p:inputText id="padre" label="#{mensajesRol.label_rol_padre}"
+							value="#{modificarRolFL.nombreRolPadre}" required="true"
+							readonly="true" styleClass="input-fixed" />
+						<p:commandButton styleClass="float-right" id="botonQuitarPadre"
+							action="#{rolesMB.quitarRolPadre()}"
+							disabled="#{modificarRolFL.nombreRolPadre == null}"
+							icon="c2-icon-eliminar" immediate="true"
+							update="@this,:form-content:padre" />
+
+						<p:commandButton styleClass="float-right"
+							onclick="PF('dlgBusqueda').show()" icon="c2-icon-consultar" />
+					</h:panelGroup>
+					<p:message for="padre" />
+				</h:panelGrid>
+
+				<p:panel id="panel-grupos" header="#{mensajesRol.titulo_grupos_rol}"
+					toggleable="true">
+					<p:pickList id="pickListGrupos" value="#{modificarRolFL.gruposRol}"
+						var="grupo" itemValue="#{grupo}" itemLabel="#{grupo.nombre}"
+						converter="grupoPickListConverter" showCheckbox="true"
+						showSourceFilter="true" showTargetFilter="true"
+						filterMatchMode="contains">
+						<f:facet name="sourceCaption">
+							<h:outputText value="#{mensajesRol.label_grupos_disponibles}" />
+						</f:facet>
+						<f:facet name="targetCaption">
+							<h:outputText value="#{mensajesRol.label_grupos_asignados}" />
+						</f:facet>
+						<p:ajax event="transfer" process="@this" />
+						<p:column style="width:85%;">
+							<h:outputText value="#{grupo.nombre}" />
+						</p:column>
+					</p:pickList>
+				</p:panel>
+				<br />
+				<h:panelGroup id="panelRecursos">
+					<p:panel header="#{mensajesRol.titulo_permisos_rol}"
+						toggleable="true">
+						<ui:repeat var="wrapApp" value="#{modificarRolFL.recursosAppRol}"
+							varStatus="index">
+							<p:fieldset legend="#{wrapApp.nombreAplicacion}">
+								<p:treeTable id="arbolRecursos" value="#{wrapApp.arbolRecursos}"
+									var="wrapRecurso">
+
+									<p:column style="width:30%">
+										<f:facet name="header">#{mensajesRol.label_recurso}</f:facet>
+										<h:panelGroup style="#{wrapRecurso.clase}">
+											<p:selectBooleanCheckbox id="selectRecurso"
+												itemLabel="#{wrapRecurso.recurso.descripcion}"
+												rendered="#{wrapRecurso.clase == 'ui-seg-rol-recurso'}"
+												required="false" value="#{wrapRecurso.seleccionado}">
+												<p:ajax event="change" process="@this"
+													update="arbolRecursos,selectOperacion"
+													listener="#{rolesMB.seleccionarOperaciones(wrapRecurso.recurso.idRecurso)}"></p:ajax>
+											</p:selectBooleanCheckbox>
+											<h:outputText value="#{wrapRecurso.recurso.descripcion}"
+												rendered="#{wrapRecurso.clase != 'ui-seg-rol-recurso'}" />
+										</h:panelGroup>
+									</p:column>
+
+									<p:column style="width:70%">
+										<f:facet name="header">#{mensajesRol.label_operaciones}</f:facet>
+										<p:selectManyCheckbox id="selectOperacion" style="width: 10%"
+											value="#{wrapRecurso.seleccionOperacion}" layout="grid"
+											columns="5"
+											rendered="#{!wrapRecurso.recurso.operaciones.isEmpty()}"
+											styleClass="row-#{wrapRecurso.idRecurso}" required="false"
+											converter="selectManyCheckboxConverter">
+											<f:selectItems value="#{wrapRecurso.recurso.operaciones}"
+												var="operacion"
+												itemLabel="#{operacion.pre}#{operacion.nombreOperacion}#{operacion.pos}"
+												itemValue="#{operacion}" itemLabelEscaped="false" />
+											<p:ajax event="change" process="@this,selectOperacion"></p:ajax>
+										</p:selectManyCheckbox>
+									</p:column>
+								</p:treeTable>
+							</p:fieldset>
+							<br />
+						</ui:repeat>
+					</p:panel>
+				</h:panelGroup>
+				<h:panelGrid>
+					<f:facet name="footer">
+						<p:commandButton styleClass="_op-EDITAR" action="MODIFICAR-ROL"
+							value="#{lbComun.btnGuardar}" icon="c2-icon-guardar"
+							update="form-content,form-content:panelRecursos"
+							process="form-content" />
+						<p:commandButton value="#{lbComun.btnVolver}"
+							icon="c2-icon-volver" action="VOLVER" immediate="true"
+							update="form-content:panelRecursos" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+			<ui:include src="/WEB-INF/flows/roles/buscar-roles.xhtml" />
+		</div>
+	</ui:define>
+</ui:composition>

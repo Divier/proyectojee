@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="catalogoCompuestoHolderFL"
+		class="co.com.datatools.c2.managed_bean.administracion.catalogo_compuesto.CatalogoCompuestoHolderFL" />
+	<var name="catalogoCompuestoFL"
+		class="co.com.datatools.c2.managed_bean.administracion.catalogo_compuesto.CatalogoCompuestoFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracion/catalogo-compuesto/consultarCatalogosCompuestos.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('catalogoCompuestoMB')"></evaluate>
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR"></transition>
+		<transition on="_op-EDITAR" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.verDetalle()"></evaluate>
+		</transition>
+		<transition on="VER_DETALLE" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.verDetalle()"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.verDetalleItemsCatalogoCompuesto()"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.catalogoCompuestoMB.consultarCatalogosCompuestos()"></evaluate>
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<view-state id="_op-EDITAR"
+		view="/WEB-INF/jsp/administracion/catalogo-compuesto/editarCatalogoCompuesto.xhtml">
+		<transition on="CONTINUAR" to="actualizarCatalogo"></transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.limpiarCamposCatalogo()"></evaluate>
+		</transition>
+		<transition on="_op-CONSULTAR" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.consultarItemsCatalogoCompuesto()"></evaluate>
+		</transition>
+		<transition on="_op-CREAR" to="_op-CREAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.cargarDependencias()"></evaluate>
+		</transition>
+		<transition on="_op-EDITAR" to="editarItemCatalogo">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.verDetalleItemCatalogoCompuesto()"></evaluate>
+		</transition>
+		<transition on="_op-ELIMINAR" to="_op-ELIMINAR" />
+		<transition on="VER_DETALLE" to="VER_DETALLE_ITEM">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.verDetalleItem()"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="_op-ELIMINAR">
+		<evaluate
+			expression="externalContext.sessionMap.catalogoCompuestoMB.eliminarItemCatalogoCompuesto()"></evaluate>
+		<transition on="yes" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.limpiarCampos()"></evaluate>
+		</transition>
+		<transition on="no" to="_op-EDITAR" />
+	</action-state>
+
+	<view-state id="editarItemCatalogo"
+		view="/WEB-INF/jsp/administracion/catalogo-compuesto/editarItemCatalogoCompuesto.xhtml">
+		<transition on="CONTINUAR" to="actualizarItem">
+		</transition>
+		<transition on="VOLVER" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.limpiarCampos()"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="actualizarItem">
+		<evaluate
+			expression="externalContext.sessionMap.catalogoCompuestoMB.actualizarItemCatalogoCompuesto()"></evaluate>
+		<transition on="yes" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.limpiarCampos()"></evaluate>
+		</transition>
+		<transition on="no" to="editarItemCatalogo"></transition>
+	</action-state>
+
+	<view-state id="_op-CREAR"
+		view="/WEB-INF/jsp/administracion/catalogo-compuesto/registrarItemCatalogoCompuesto.xhtml">
+		<transition on="CONTINUAR" to="registrarItem">
+		</transition>
+		<transition on="VOLVER" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.limpiarCampos()"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="registrarItem">
+		<evaluate
+			expression="externalContext.sessionMap.catalogoCompuestoMB.registrarItemCatalogoCompuesto()"></evaluate>
+		<transition on="yes" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.limpiarCampos()"></evaluate>
+		</transition>
+		<transition on="no" to="_op-CREAR"></transition>
+	</action-state>
+
+	<action-state id="actualizarCatalogo">
+		<evaluate
+			expression="externalContext.sessionMap.catalogoCompuestoMB.actualizarCatalogoCompuesto()"></evaluate>
+		<transition on="yes" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.limpiarCamposCatalogo()"></evaluate>
+		</transition>
+	</action-state>
+
+	<view-state id="VER_DETALLE"
+		view="/WEB-INF/jsp/administracion/catalogo-compuesto/detalleCatalogoCompuesto.xhtml">
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.limpiarCamposCatalogo()"></evaluate>
+		</transition>
+	</view-state>
+
+	<view-state id="VER_DETALLE_ITEM"
+		view="/WEB-INF/jsp/administracion/catalogo-compuesto/detalleItemsCatalogoCompuesto.xhtml">
+		<transition on="VOLVER" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoCompuestoMB.limpiarCampos()"></evaluate>
+		</transition>
+	</view-state>
+</flow>

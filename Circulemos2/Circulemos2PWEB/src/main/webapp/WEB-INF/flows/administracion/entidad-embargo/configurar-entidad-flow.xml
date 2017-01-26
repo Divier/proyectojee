@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="configuracionEntidadHolderFL"
+		class="co.com.datatools.c2.managed_bean.administracion.configuracion_entidad.ConfiguracionEntidadHolderFL" />
+	<var name="configuracionEntidadFL"
+		class="co.com.datatools.c2.managed_bean.administracion.configuracion_entidad.ConfiguracionEntidadFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracion/entidad-embargo/consultarConfiguracionEntidad.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('configuracionEntidadMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+		<transition on="_op-CREAR" to="_op-CREAR">
+			<evaluate
+				expression="externalContext.sessionMap.configuracionEntidadMB.consultarMunicipioGuayaquil()"></evaluate>
+		</transition>
+		<transition on="_op-EDITAR" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.configuracionEntidadMB.detalleConfiguracionEntidad()"></evaluate>
+		</transition>
+	</view-state>
+
+	<view-state id="_op-EDITAR"
+		view="/WEB-INF/jsp/administracion/entidad-embargo/actualizarConfiguracionEntidad.xhtml">
+		<transition on="EDITAR" to="EDITAR" />
+		<transition on="VOLVER" to="ingresar" />
+	</view-state>
+
+	<action-state id="EDITAR">
+		<evaluate
+			expression="externalContext.sessionMap.configuracionEntidadMB.actualizarConfiguracionEntidad()"></evaluate>
+		<transition on="yes" to="_op-CONSULTAR" />
+		<transition on="no" to="_op-EDITAR" />
+	</action-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.configuracionEntidadMB.consultarConfiguracionEntidad()"></evaluate>
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<view-state id="_op-CREAR"
+		view="/WEB-INF/jsp/administracion/entidad-embargo/registrarConfiguracionEntidad.xhtml">
+		<transition on="CONTINUAR" to="CONTINUAR" />
+		<transition on="VOLVER" to="_op-CONSULTAR" />
+	</view-state>
+
+	<action-state id="CONTINUAR">
+		<evaluate
+			expression="externalContext.sessionMap.configuracionEntidadMB.registrarConfiguracionEntidad()"></evaluate>
+		<transition on="yes" to="_op-CONSULTAR" />
+		<transition on="no" to="_op-CREAR" />
+	</action-state>
+
+</flow>

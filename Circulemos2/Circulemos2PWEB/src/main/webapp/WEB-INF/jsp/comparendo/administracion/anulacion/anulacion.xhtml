@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelAnulacion.label_anulaciones}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAnulacion.label_anular_multa}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<p:outputLabel
+							value="#{labelAdminComparendo.label_organismo_transito}"
+							styleClass="campo-obligatorio" />
+						<p:selectOneMenu id="selOrganismoTransito"
+							value="#{anulacionHolderFL.codigoOrganismo}">
+							<f:selectItems
+								value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+						</p:selectOneMenu>
+						<p:outputLabel
+							value="#{labelAnulacion.label_fecha_hora_imposicion_ini}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar id="idFechaInicialImposicion"
+								value="#{anulacionHolderFL.fechaInicialImposicion}"
+								navigator="true" pattern="#{utilidadMB.formatoFechaCompleta}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								maxdate="#{anulacionMB.fechaActual}">
+								<p:watermark for="idFechaInicialImposicion"
+									value="#{utilidadMB.formatoFecha}" />
+								<p:ajax event="dateSelect"
+									listener="#{anulacionMB.calcularRangoConsultaFechaAnulacion()}"
+									process="idFechaInicialImposicion"
+									update="idFechaFinalImposicion" global="false" />
+							</p:calendar>
+							<p:message for="idFechaInicialImposicion" />
+						</h:panelGroup>
+						<p:outputLabel
+							value="#{labelAnulacion.label_fecha_hora_imposicion_fin}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar id="idFechaFinalImposicion"
+								value="#{anulacionHolderFL.fechaFinalImposicion}"
+								navigator="true" pattern="#{utilidadMB.formatoFechaCompleta}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								mindate="#{anulacionHolderFL.fechaInicialImposicion}"
+								maxdate="#{anulacionMB.fechaAnulacionDiasMaximo}">
+								<p:watermark for="idFechaFinalImposicion"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="idFechaFinalImposicion" />
+						</h:panelGroup>
+						<p:outputLabel
+							value="#{labelAdminComparendo.label_direccion_infraccion}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="idDireccionInfraccion"
+								value="#{anulacionHolderFL.direccionInfraccion}"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								required="true" maxlength="150"/>
+								
+							<p:message for="idDireccionInfraccion" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+						</p:commandButton>
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+						<!--Boton Nuevo-->
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado" rendered="#{anulacionHolderFL.comparendoConsultaAnulacionDTOList.size()>0}">
+			<h:panelGrid id="acciones-top">
+				<f:facet name="footer">
+					<p:commandButton id="btnAnular" styleClass="_op-CREAR"
+						action="_op-CREAR" icon="c2-icon-crear" process="@form"
+						value="#{labelAnulacion.btn_anular}"
+						update=":messages :form-resultado :form-contenido"
+						disabled="#{!anulacionMB.seleccionado}">
+						<p:tooltip for="btnAnular"
+							value="#{labelAnulacion.btn_anular}" />
+					</p:commandButton>
+				</f:facet>
+			</h:panelGrid>
+			<p:dataTable id="tabla-resultados"
+				value="#{anulacionHolderFL.comparendoConsultaAnulacionDTOList}"
+				var="registro" rowKey="#{registro.cicomparendo}"
+				selection="#{anulacionHolderFL.comparendoConsultaAnulacionSeleccionados}"
+				paginatorTemplate="#{webPrm.param_paginator_template}"
+				paginator="true" rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+				rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+
+				<p:ajax event="rowSelect" process=":form-resultado:tabla-resultados"
+					update=":form-resultado:acciones-top @this"
+					listener="#{anulacionMB.cambiarSeleccion()}" global="false" />
+
+				<p:ajax event="rowUnselect"
+					listener="#{anulacionMB.cambiarSeleccion()}"
+					process=":form-resultado:tabla-resultados"
+					update=":form-resultado:acciones-top @this" global="false" />
+
+				<p:ajax event="rowSelectCheckbox"
+					listener="#{anulacionMB.cambiarSeleccion()}"
+					process=":form-resultado:tabla-resultados"
+					update=":form-resultado:acciones-top @this" global="false" />
+
+				<p:ajax event="rowUnselectCheckbox"
+					listener="#{anulacionMB.cambiarSeleccion()}"
+					process=":form-resultado:tabla-resultados"
+					update=":form-resultado:acciones-top @this" global="false" />
+
+				<p:ajax event="toggleSelect"
+					listener="#{anulacionMB.cambiarSeleccion()}"
+					process=":form-resultado:tabla-resultados"
+					update=":form-resultado:acciones-top @this" global="false" />
+				<p:column selectionMode="multiple" />
+
+				<p:column headerText="#{labelAnulacion.label_numero_multa}">
+					<p:outputLabel value="#{registro.numeroMulta}" />
+				</p:column>
+
+				<p:column
+					headerText="#{labelAdminComparendo.label_codigo_infraccion}">
+					<p:outputLabel value="#{registro.codigoInfraccion}" />
+				</p:column>
+
+				<p:column
+					headerText="#{labelAdminComparendo.label_fecha_imposicion_fielset}">
+					<c2:outputDateLabel labelValue="#{registro.fechaImposicion}"
+						fullFormat="false" />
+				</p:column>
+
+				<p:column headerText="#{labelAnulacion.label_hora_imposicion}">
+					<p:outputLabel value="#{registro.horaImposicion}" />
+				</p:column>
+
+				<p:column headerText="#{labelAnulacion.label_fecha_notificaion}">
+					<c2:outputDateLabel labelValue="#{registro.fechaNotificacion}"
+						fullFormat="false" />
+				</p:column>
+
+				<p:column headerText="#{labelAnulacion.label_estado_multa}">
+					<p:outputLabel value="#{registro.estadoMulta}" />
+				</p:column>
+
+				<p:column
+					headerText="#{labelAdminComparendo.label_direccion_infraccion}">
+					<p:outputLabel value="#{registro.direccionInfraccion}" />
+				</p:column>
+
+				<p:column headerText="#{labelAdminComparendo.label_placa_vehiculo}">
+					<p:outputLabel value="#{registro.placa}" />
+				</p:column>
+
+				<p:column
+					headerText="#{labelAdminComparendo.label_tipo_doc_infractor}">
+					<p:outputLabel value="#{registro.tipoDocumentoInfractor}" />
+				</p:column>
+
+				<p:column
+					headerText="#{labelAdminComparendo.label_numero_doc_infractor}">
+					<p:outputLabel value="#{registro.numeroDocumentoInfractor}" />
+				</p:column>
+
+				<p:column headerText="#{labelAnulacion.label_nombres_infractor}">
+					<p:outputLabel value="#{registro.nombreInfractor}" />
+				</p:column>
+
+				<p:column headerText="#{labelAdminComparendo.label_fecha_registro}">
+					<p:outputLabel value="#{registro.fechaRegistro}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+
+
+</ui:composition>

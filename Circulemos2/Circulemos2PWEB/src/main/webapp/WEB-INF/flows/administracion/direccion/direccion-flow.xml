@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.springframework.org/schema/webflow
+      					  http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="dirFL" class="co.com.datatools.c2.managed_bean.administracion.direccion.DireccionFL" />
+	<var name="dirHolderFL" class="co.com.datatools.c2.managed_bean.administracion.direccion.DireccionHolderFL" />
+
+	<view-state id="inicio" view="/WEB-INF/jsp/administracion/direccion/registrarDireccion.xhtml">
+		<transition on="LIMPIAR">
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()"></evaluate>
+		</transition>
+		<transition on="CONTINUAR">
+			<evaluate expression="externalContext.sessionMap.direccionMB.registrarDireccion()"></evaluate>
+		</transition>
+	</view-state>
+
+</flow>

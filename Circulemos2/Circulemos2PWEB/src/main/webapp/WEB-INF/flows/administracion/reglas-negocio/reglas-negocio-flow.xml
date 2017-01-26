@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<view-state id="ingresar" view="/WEB-INF/jsp/administracion/reglas-negocio/actualizarReglaNegocio.xhtml">
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR"/>
+		<transition on="_op-EDITAR" to="_op-EDITAR"/>
+	</view-state> 
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate expression="externalContext.sessionMap.reglasNegocioMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<action-state id="_op-EDITAR">
+		<evaluate expression="externalContext.sessionMap.reglasNegocioMB.modificar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+</flow>

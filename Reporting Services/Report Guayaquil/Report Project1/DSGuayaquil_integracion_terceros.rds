@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="DSGuayaquil_integracion_terceros">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=192.168.44.39;Initial Catalog=integracion_terceros_desa</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>bec415e1-8d5d-4598-aba4-d49b8bacd189</DataSourceID>
+</RptDataSource>

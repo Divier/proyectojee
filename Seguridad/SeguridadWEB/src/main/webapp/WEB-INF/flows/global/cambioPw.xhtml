@@ -1,0 +1,89 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/layouts/standardSinMenu.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="form-content">
+			<p:panel id="campos-ingreso" styleClass="center-box"
+				header="#{mensajesIngreso.titulo_cambio_pw}">
+				<h:panelGrid id="panel-formulario" styleClass="center-block"
+					columns="2" columnClasses="label-col,input-col,label-col,input-col"
+					rendered="#{cambioContrasenaMB.mostrarFormulario}">
+
+					<h:outputLabel for="pwdActual"
+						value="#{mensajesIngreso.label_pw_actual}"
+						styleClass="campo-obligatorio" />
+					<h:panelGroup>
+						<p:password id="pwdActual"
+							label="#{mensajesIngreso.label_pw_actual}"
+							value="#{cambioContrasenaMB.pwActual}" required="true"
+							autocomplete="false" />
+						<p:message for="pwdActual" />
+					</h:panelGroup>
+
+					<h:outputLabel for="pwdNuevo"
+						value="#{mensajesIngreso.label_pw_nuevo}"
+						styleClass="campo-obligatorio" />
+					<h:panelGroup>
+						<p:password id="pwdNuevo"
+							label="#{mensajesIngreso.label_pw_nuevo}"
+							value="#{cambioContrasenaMB.pwNuevo}" required="true" />
+						<p:tooltip id="toolTip" for="pwdNuevo" showEvent="focus"
+							hideEvent="blur">
+							<p:dataTable value="#{cambioContrasenaMB.politicas}"
+								var="politica"
+								style="border: 0 !important; bgcolor: #dcdcdc;cellspacing:0;width:300px !important;">
+								<p:column headerText="#{mensajesGeneral.label_politicas_pw}">
+									<h:outputText value="#{politica}"></h:outputText>
+								</p:column>
+							</p:dataTable>
+						</p:tooltip>
+						<p:message for="pwdNuevo" />
+					</h:panelGroup>
+
+					<h:outputLabel for="pwdNuevoConfirma"
+						value="#{mensajesIngreso.label_pw_nuevo_confirmacion}"
+						styleClass="campo-obligatorio" />
+					<h:panelGroup>
+						<p:password id="pwdNuevoConfirma"
+							label="#{mensajesIngreso.label_pw_nuevo_confirmacion}"
+							value="#{cambioContrasenaMB.confirmacionPwNuevo}" required="true" />
+						<pe:keyFilter for="pwdNuevoConfirma"></pe:keyFilter>
+						<p:message for="pwdNuevoConfirma" />
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:panelGrid styleClass="center-block" columns="2" cellpadding="5"
+					rendered="#{cambioContrasenaMB.mostrarFormulario}">
+					<p:commandButton id="btnCambiarPw" action="cambiarPw"
+						icon="c2-icon-guardar" process="@form"
+						value="#{mensajesIngreso.boton_cambiar_pw}"
+						update=":messages :form-content"
+						rendered="#{cambioContrasenaMB.mostrarFormulario}">
+						<p:tooltip for="btnCambiarPw"
+							value="#{mensajesIngreso.tooltip_btnCambiarPw}" />
+					</p:commandButton>
+				</h:panelGrid>
+				<h:panelGrid styleClass="center-block" columns="2"
+					rendered="#{!cambioContrasenaMB.mostrarFormulario}">
+					<h:outputText value="#{cambioContrasenaMB.mensajeCambioExitoso}" />
+				</h:panelGrid>
+				<h:panelGrid styleClass="center-block" columns="1" cellpadding="5"
+					rendered="#{!cambioContrasenaMB.mostrarFormulario}">
+					<p:commandButton id="btnContinuar" action="continuar"
+						icon="c2-icon-ingresar" process="@this" immediate="true"
+						value="#{mensajesIngreso.boton_continuar}">
+						<p:tooltip for="btnContinuar"
+							value="#{mensajesIngreso.tooltip_btnContinuar}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

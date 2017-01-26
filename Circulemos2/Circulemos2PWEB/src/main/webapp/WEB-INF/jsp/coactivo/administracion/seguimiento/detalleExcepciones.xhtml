@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<p:panel id="campos-consulta" styleClass="panel-formulario">
+		<p:fieldset id="datos-excep-rad" styleClass="fieldset-formulario"
+			legend="#{labelCoactivo.btn_rad_excep}">
+			<h:panelGrid id="panel-formulario-excep" styleClass="center-block"
+				columns="2" columnClasses="label-col,input-col">
+
+				<p:outputLabel value="#{labelCoactivo.lbl_fecha_excepcion}" />
+				<c2:outputDateLabel
+					labelValue="#{consultaSeguimientoHolderFL.radicarExcepcionDTO.fechaExcepcion}"
+					fullFormat="false" />
+
+				<p:outputLabel value="#{labelCoactivo.lbl_observaciones}" />
+				<p:outputLabel
+					value="#{consultaSeguimientoHolderFL.radicarExcepcionDTO.observaciones}"></p:outputLabel>
+
+			</h:panelGrid>
+
+			<h:panelGrid id="acciones-top-rad">
+				<f:facet name="footer">
+					<!--Ver Prueba-->
+					<p:commandButton value="#{labelCoactivo.lbl_ver_anexo}"
+						action="#{radicarExcepcionMB.verAnexoRad()}" process="@this"
+						update=":frmDocAnexo"
+						disabled="#{consultaSeguimientoHolderFL.archivoExcepcionRadSelDTO == null}">
+						<p:tooltip value="#{labelCoactivo.lbl_ver_anexo}" />
+					</p:commandButton>
+				</f:facet>
+			</h:panelGrid>
+			<h:panelGrid id="panel-archivos-rad" styleClass="center-block"
+				columns="1" columnClasses="label-colancha">
+				<p:dataTable id="tabla-resultados-exp"
+					value="#{consultaSeguimientoHolderFL.archivoExcepcionRadDTOs}"
+					var="registro" paginator="true" rowKey="#{registro.id}"
+					selection="#{consultaSeguimientoHolderFL.archivoExcepcionRadSelDTO}"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}"
+					emptyMessage="#{labelAdminAccidentalidad.mensaje_vacio}"
+					sortMode="multiple">
+
+					<p:ajax event="rowSelectRadio"
+						process=":form-contenido:secciones-detalle:tabla-resultados-exp"
+						update=":form-contenido:secciones-detalle:acciones-top-rad @this"
+						global="false" />
+
+					<p:column selectionMode="single" />
+
+					<p:column headerText="#{labelCoactivo.lbl_nombre_archivo}">
+						<p:outputLabel value="#{registro.nombreArchivo}" />
+					</p:column>
+
+				</p:dataTable>
+			</h:panelGrid>
+		</p:fieldset>
+
+		<p:fieldset id="datos-excep-fallo" styleClass="fieldset-formulario"
+			legend="#{labelCoactivo.btn_fallo_excep}"
+			rendered="#{consultaSeguimientoHolderFL.fallo}">
+			<h:panelGrid id="panel-formulario-excep-fallo"
+				styleClass="center-block" columns="2"
+				columnClasses="label-col,input-col">
+
+				<p:outputLabel value="#{labelCoactivo.lbl_fecha_fallo}" />
+				<c2:outputDateLabel
+					labelValue="#{consultaSeguimientoHolderFL.radicarExcepcionDTO.fechaFalloExcepcion}"
+					fullFormat="false" />
+
+				<p:outputLabel value="#{labelCoactivo.lbl_observaciones}" />
+				<p:outputLabel
+					value="#{consultaSeguimientoHolderFL.radicarExcepcionDTO.observacionesFallo}"></p:outputLabel>
+
+				<p:outputLabel value="#{labelCoactivo.lbl_fallo_favor}" />
+				<p:outputLabel value="#{labelGeneral.val_sel_rad_yes}"
+					rendered="#{consultaSeguimientoHolderFL.falloAFavor}"></p:outputLabel>
+				<p:outputLabel value="#{labelGeneral.val_sel_rad_no}"
+					rendered="#{!consultaSeguimientoHolderFL.falloAFavor}"></p:outputLabel>
+
+			</h:panelGrid>
+			<h:panelGrid id="acciones-top-fallo">
+				<f:facet name="footer">
+					<!--Ver anexo-->
+					<p:commandButton value="#{labelCoactivo.lbl_ver_anexo}"
+						action="#{radicarExcepcionMB.verAnexoFallo()}" process="@this"
+						update=":frmDocAnexo"
+						disabled="#{consultaSeguimientoHolderFL.archivoExcepcionFalloSelDTO == null}">
+						<p:tooltip value="#{labelCoactivo.lbl_ver_anexo}" />
+					</p:commandButton>
+				</f:facet>
+			</h:panelGrid>
+			<h:panelGrid id="panel-archivos-fallo" styleClass="center-block"
+				columns="1" columnClasses="label-colancha">
+				<p:dataTable id="tabla-resultados-fallo"
+					value="#{consultaSeguimientoHolderFL.archivoExcepcionFalloDTOs}"
+					var="registro" paginator="true" rowKey="#{registro.id}"
+					selection="#{consultaSeguimientoHolderFL.archivoExcepcionFalloSelDTO}"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}"
+					emptyMessage="#{labelAdminAccidentalidad.mensaje_vacio}"
+					sortMode="multiple">
+
+					<p:ajax event="rowSelectRadio"
+						process=":form-contenido:secciones-detalle:tabla-resultados-fallo"
+						update=":form-contenido:secciones-detalle:acciones-top-fallo @this"
+						global="false" />
+
+					<p:column selectionMode="single" />
+
+					<p:column headerText="#{labelCoactivo.lbl_nombre_archivo}">
+						<p:outputLabel value="#{registro.nombreArchivo}" />
+					</p:column>
+
+				</p:dataTable>
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+
+</ui:composition>

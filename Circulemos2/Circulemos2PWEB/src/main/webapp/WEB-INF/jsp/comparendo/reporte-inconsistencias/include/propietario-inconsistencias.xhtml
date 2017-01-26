@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-propietario" styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_propietario}">
+
+		<p:dataList id="idDetallesP"
+			rendered="#{not empty gestionarInconsistenciasComparendoFL.respuestaValidacionVO.detalleProcesamientoPropietarioDTOs}"
+			value="#{gestionarInconsistenciasComparendoFL.respuestaValidacionVO.detalleProcesamientoPropietarioDTOs}"
+			var="error" itemType="circle">
+			<p:outputLabel value="#{error.errorProcesamiento.descripcion}"
+				style="color:red;" />
+		</p:dataList>
+
+		<p:fieldset id="datos-propietario" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_propietario}">
+
+			<h:panelGrid id="panel-formulario-propietario"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+
+				<!-- Componentes del formulario 2 o 4 columnas-->
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_documento}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selTipoDocumentoPropietario"
+						value="#{gestionarInconsistenciasComparendoFL.propietario.idTipoIdentificacion}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />
+						<p:ajax
+							listener="#{gestionarInconsistenciasComparendoMB.onTipoDocumentoPropietarioChange}"
+							update=":messages campos-registro-propietario" process="@this"
+							global="false" />
+					</p:selectOneMenu>
+					<p:message for="selTipoDocumentoPropietario" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_documento}" />
+				<h:panelGroup>
+					<p:inputText id="numeroDocumentoPropietario"
+						value="#{gestionarInconsistenciasComparendoFL.propietario.numeroIdentificacion}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(84)}">
+						<p:ajax
+							listener="#{gestionarInconsistenciasComparendoMB.onNumDocPropietarioChange}"
+							update=":messages campos-registro-propietario" process="@this"
+							global="false" event="change" />
+					</p:inputText>
+					<p:message for="numeroDocumentoPropietario" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_nombre}"
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoPropietario}" />
+				<h:panelGroup
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoPropietario}">
+					<p:inputText id="primerNombrePropietario"
+						value="#{gestionarInconsistenciasComparendoFL.propietario.nombre1}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(87)}"
+						validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}">
+									<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="primerNombrePropietario" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_segundo_nombre}"
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoPropietario}" />
+				<h:panelGroup
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoPropietario}">
+					<p:inputText id="segundoNombrePropietario"
+						value="#{gestionarInconsistenciasComparendoFL.propietario.nombre2}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(88)}" required="false"
+						validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}">
+							<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="segundoNombrePropietario" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_apellido}"
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoPropietario}" />
+				<h:panelGroup
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoPropietario}">
+					<p:inputText id="primerApellidoPropietario"
+						value="#{gestionarInconsistenciasComparendoFL.propietario.apellido1}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(85)}"
+						validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}">
+										<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="primerApellidoPropietario" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_segundo_apellido}"
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoPropietario}" />
+				<h:panelGroup
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoPropietario}">
+					<p:inputText id="segundoApellidoPropietario"
+						value="#{gestionarInconsistenciasComparendoFL.propietario.apellido2}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(86)}" required="false"
+						validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}">
+								<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="segundoApellidoPropietario	" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_nombre_empresa}"
+					rendered="#{gestionarInconsistenciasComparendoFL.tipoIdJuridicoPropietario}" />
+				<h:panelGroup
+					rendered="#{gestionarInconsistenciasComparendoFL.tipoIdJuridicoPropietario}">
+					<p:inputText id="nombreEmpresaPropietario"
+						value="#{gestionarInconsistenciasComparendoFL.propietario.razonSocial}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(90)}">
+						<p:ajax process="@this" event="change" />
+					</p:inputText>
+					<p:message for="nombreEmpresaPropietario" />
+				</h:panelGroup>
+
+			</h:panelGrid>
+		</p:fieldset>
+
+		<p:fieldset id="datos-licencia-propietario"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_licencia_propietario}">
+			<h:panelGrid id="panel-formulario-licencia-propietario"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_organismo_transito_licencia_propietario}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selOrganismoTransitoLicenciaPropietario"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.codigoOrganismoLicenciaTransito}"
+						required="false"
+						requiredMessage="#{labelGeneral.val_campo_requerido}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selOrganismoTransitoLicenciaPropietario" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_licencia_transito}" />
+				<h:panelGroup>
+					<p:inputText id="numeroLicenciaPropietario"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.numeroLicenciaTransito}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(35)}" required="false"
+						validatorMessage="#{labelGeneral.val_campo_numerico}">						
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="numeroLicenciaPropietario" />
+				</h:panelGroup>
+
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

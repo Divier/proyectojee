@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<h:form id="form-encabezado-impugnacion">
+		<p:panel id="campos-registro" styleClass="panel-formulario"
+			header="#{labelProcesoImpugnacion.label_encabezado_impugnacion}">
+			<p:fieldset id="datos-encabezado" styleClass="fieldset-formulario"
+				legend="#{labelProcesoImpugnacion.label_encabezado_impugnacion}">
+
+				<h:panelGrid id="panel-formulario" styleClass="center-block"
+					columns="4" columnClasses="label-col,input-col,label-col,input-col">
+
+					<p:outputLabel
+						value="#{labelProcesoImpugnacion.label_numero_proceso}" />
+					<h:outputText
+						value="#{encabezadoImpugnacionHolderFL.numeroProceso}" />
+
+					<p:outputLabel
+						value="#{labelProcesoImpugnacion.label_fecha_apertura_proceso}" />
+					<h:outputText
+						value="#{encabezadoImpugnacionHolderFL.fechaApertura}">
+						<f:convertDateTime pattern="#{utilidadMB.formatoFecha}" />
+					</h:outputText>
+
+					<p:outputLabel
+						value="#{labelProcesoImpugnacion.label_numero_comparendo}" />
+					<h:outputText
+						value="#{encabezadoImpugnacionHolderFL.numeroComparendo}" />
+
+					<p:outputLabel
+						value="#{labelProcesoImpugnacion.label_codigo_infraccion}" />
+					<h:outputText
+						value="#{encabezadoImpugnacionHolderFL.descripcionInfraccion}" />
+
+					<p:outputLabel
+						value="#{labelProcesoImpugnacion.label_documento_infractor}" />
+					<h:outputText
+						value="#{encabezadoImpugnacionHolderFL.documentoInfractor}" />
+
+					<p:outputLabel
+						value="#{labelProcesoImpugnacion.label_nombre_infractor}" />
+					<h:outputText
+						value="#{encabezadoImpugnacionHolderFL.nombreInfractor}" />
+
+					<p:outputLabel value="#{labelProcesoImpugnacion.label_placa}" />
+					<h:outputText value="#{encabezadoImpugnacionHolderFL.placa}" />
+
+					<p:outputLabel value="#{labelProcesoImpugnacion.label_numero_citacion}" />
+					<h:outputText value="#{encabezadoImpugnacionHolderFL.numeroCitacion}" />
+					
+				</h:panelGrid>
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<p:commandButton id="btnVerDet" icon="c2-icon-detalle" action="VER_DETALLE"
+							process="@this" value="#{lbComun.btnVerDet}">
+							<p:tooltip for="btnVerDet" value="#{labelProcesoImpugnacion.tooltip_ver_detalle_encabezado}" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+			</p:fieldset>
+		</p:panel>
+	</h:form>
+</ui:composition>

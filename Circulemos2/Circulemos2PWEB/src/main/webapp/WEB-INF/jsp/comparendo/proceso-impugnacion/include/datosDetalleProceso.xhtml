@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<p:fieldset id="datos-proceso" styleClass="fieldset-formulario"
+		legend="#{labelProcesoImpugnacion.label_datos_proceso}">
+		<h:panelGrid id="panel-formulario-proceso" styleClass="center-block"
+			columnClasses="label-col,input-col,label-col,input-col" columns="4">
+			<!-- Componentes del formulario 2 o 4 columnas-->
+			<p:outputLabel
+				value="#{labelProcesoImpugnacion.label_numero_proceso}" />
+			<c2:outputNumComparendo
+				value="#{detalleProcesoFL.proceso.numeroProceso}" />
+
+			<p:outputLabel
+				value="#{labelProcesoImpugnacion.label_fecha_apertura}" />
+			<c2:outputDateLabel
+				labelValue="#{detalleProcesoFL.proceso.fechaInicio}"
+				fullFormat="true" />
+
+			<p:outputLabel
+				value="#{labelProcesoImpugnacion.label_numero_comparendo}" />
+			<c2:outputNumComparendo
+				value="#{detalleProcesoFL.comparendo.ordenComparendoNacional.numeroComparendo}" />
+
+			<p:outputLabel
+				value="#{labelProcesoImpugnacion.label_fecha_imposicion}" />
+			<c2:outputDateLabel
+				labelValue="#{detalleProcesoFL.comparendo.fechaHoraImposicion}"
+				fullFormat="true" />
+		</h:panelGrid>
+	</p:fieldset>
+
+	<p:fieldset id="datos-infraccion" styleClass="fieldset-formulario"
+		legend="#{labelAdminComparendo.label_datos_infraccion}">
+		<h:panelGrid id="panel-formulario-infraccion"
+			styleClass="center-block"
+			columnClasses="label-col,input-col,label-col,input-col" columns="2">
+			<!-- Componentes del formulario 2 o 4 columnas-->
+
+			<p:outputLabel
+				value="#{labelAdminComparendo.label_codigo_infraccion}" />
+			<p:outputLabel
+				value="#{detalleProcesoFL.comparendo.infraccion.codigo}" />
+
+			<p:outputLabel
+				value="#{labelAdminComparendo.label_descripcion_infraccion}" />
+			<p:outputLabel value="#{detalleProcesoFL.descripcionInfraccion}" />
+
+		</h:panelGrid>
+	</p:fieldset>
+
+	<p:fieldset styleClass="fieldset-formulario"
+		legend="#{labelProcesoImpugnacion.label_participantes}">
+		<p:dataTable id="tabla-resultados_par" var="registro"
+			value="#{detalleProcesoFL.proceso.participantesProcesoList}"
+			rowKey="#{registro.id}" paginator="true"
+			paginatorTemplate="#{webPrm.param_paginator_template}"
+			rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+			rows="#{webPrm.param_initial_rows}">
+
+			<p:column
+				headerText="#{labelProcesoImpugnacion.label_tipo_participante}">
+				<p:outputLabel value="#{registro.tipoParticipante.nombre}" />
+			</p:column>
+
+			<p:column headerText="#{labelProcesoImpugnacion.label_tipo_doc}">
+				<p:outputLabel value="#{registro.persona.tipoIdentificacion.nombre}" />
+			</p:column>
+
+			<p:column headerText="#{labelProcesoImpugnacion.label_num_doc}">
+				<p:outputLabel value="#{registro.persona.numeroIdentificacion}" />
+			</p:column>
+
+			<p:column
+				headerText="#{labelProcesoImpugnacion.label_nom_participante}">
+				<p:outputLabel value="#{registro.persona.nombreCompleto}" />
+			</p:column>
+
+			<p:column headerText="#{labelProcesoImpugnacion.label_direccion}">
+				<p:outputLabel value="#{registro.persona.direccionVigente}"></p:outputLabel>
+			</p:column>
+
+			<p:column
+				headerText="#{labelProcesoImpugnacion.label_correo_electronico}">
+				<p:outputLabel value="#{registro.persona.getCorreoVigente()}" />
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+</ui:composition>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<p:dialog widgetVar="popUpDetail" id="popUpDetDiaNoHabil" header="#{labelCalendario.titulo_detalle_DNH}" resizable="false" modal="true"
+		appendToBody="true" dynamic="true">
+
+		<h:form id="idFrmDetModDNH">
+			<h:panelGrid id="pnlGrdForDet" columns="2" styleClass="center-block" columnClasses="label-col,input-col">
+
+				<p:outputLabel value="#{labelCalendario.lbl_fecha_DNH}: " />
+				<c2:outputDateLabel labelValue="#{diaNoHabilFL.selDiaNoHabil.fecha}" />
+
+				<p:outputLabel value="#{labelCalendario.lbl_observacion_DNH}: " />
+				<p:inputTextarea id="txtObsDet" value="#{diaNoHabilFL.selDiaNoHabil.observacion}" readonly="true" rows="3"
+					validatorMessage="#{labelCalendario.err_length_observacion}" maxlength="300" style="overflow:auto;" autoResize="false">
+					<f:validateLength maximum="300" for="txtObsDet" />
+				</p:inputTextarea>
+
+			</h:panelGrid>
+
+			<h:panelGrid styleClass="center-block" cellspacing="5" columns="2">
+
+				<p:commandButton id="btnEditar" styleClass="_op-EDITAR" oncomplete="PF('popUpDetail').hide();PF('popUpEditar').show();" icon="c2-icon-editar" process="@this"
+					value="#{lbComun.btnEditar}" rendered="#{calendarioMB.esMayorIgualDiaActualSel()}">
+					<p:tooltip for="btnEditar" value="#{labelCalendario.tooltip_modificar}" />
+				</p:commandButton>
+
+				<p:commandButton value="#{lbComun.btnEliminar}" id="btnEliminar" styleClass="_op-ELIMINAR" action="_op-ELIMINAR"
+					oncomplete="PF('popUpDetail').hide();" icon="c2-icon-eliminar" update=":form-resultado:schedule :messages" process="@this"
+					rendered="#{calendarioMB.esMayorIgualDiaActualSel()}">
+					<p:tooltip for="btnEliminar" value="#{labelCalendario.tooltip_eliminar}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+				</p:commandButton>
+				
+			</h:panelGrid>
+
+		</h:form>
+	</p:dialog>
+
+</ui:composition>

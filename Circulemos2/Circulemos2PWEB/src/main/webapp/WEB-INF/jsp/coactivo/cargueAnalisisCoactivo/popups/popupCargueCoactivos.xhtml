@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="frmResultadoCargue">
+		<p:dialog widgetVar="popUpResultadoCargue" id="idPopUpResultadoCargue"
+			header="#{labelCargueCoactivo.tit_resultado_cargue}"
+			resizable="false" modal="true" appendToBody="true" dynamic="true"
+			closable="false" closeOnEscape="false"
+			visible="#{cargueAnalisisCoactivoHolderFL.archivoProcesado}">
+
+			<h:panelGrid id="panel-formulario" styleClass="center-block"
+				columns="1" columnClasses="label-col">
+
+				<p:outputLabel
+					value="#{cargueAnalisisCoactivoHolderFL.cantidadMultasArchivo}" />
+				<p:outputLabel
+					value="#{cargueAnalisisCoactivoHolderFL.multasValidasCoactivo}" />
+				<p:outputLabel
+					value="#{cargueAnalisisCoactivoHolderFL.multasNoValidasCoactivo}" />
+				<p:outputLabel
+					value="#{labelCargueCoactivo.msg_reporte_apertura_coactivo}" />
+
+			</h:panelGrid>
+
+			<h:panelGrid styleClass="center-block" columns="4" cellpadding="5">
+				<p:commandButton id="btnGuardar"
+					action="ACEPTAR"
+					icon="c2-icon-guardar" process="@form"
+					value="#{labelCargueCoactivo.btn_aceptar}"
+					update=":messages :form-ingreso :frmResultadoCargue"
+					disabled="#{cargueAnalisisCoactivoHolderFL.cargue.totalLeidos == 0}">
+					<p:tooltip for="btnGuardar"
+						value="#{labelCargueCoactivo.btn_aceptar}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}"
+						message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+				</p:commandButton>
+
+				<p:commandButton id="btnVerValidas"
+					value="#{labelCargueCoactivo.btn_ver_multas_validas}"
+					ajax="false"
+					onclick="PrimeFaces.monitorDownload(startReport, stopReport);"
+					icon="ui-icon-arrowthick-1-s"
+					disabled="#{cargueAnalisisCoactivoHolderFL.cargue.totalLeidos == 0}"
+					process="@this"
+					update=":messages :form-ingreso :frmResultadoCargue">
+					<p:tooltip for="btnVerValidas"
+						value="#{labelCargueCoactivo.btn_ver_multas_validas}" />
+					<p:fileDownload
+						value="#{cargueAnalisisCoactivoMB.generarArchivoMultasValidas()}" />
+				</p:commandButton>
+
+				<p:commandButton id="btnVerNoValidas"
+					value="#{labelCargueCoactivo.btn_ver_multas_no_validas}"
+					ajax="false"
+					onclick="PrimeFaces.monitorDownload(startReport, stopReport);"
+					icon="ui-icon-arrowthick-1-s"
+					disabled="#{cargueAnalisisCoactivoHolderFL.cargue.totalInconsistencias == 0}"
+					process="@this"
+					update=":messages :form-ingreso :frmResultadoCargue">
+					<p:tooltip for="btnVerNoValidas"
+						value="#{labelCargueCoactivo.btn_ver_multas_no_validas}" />
+					<p:fileDownload
+						value="#{cargueAnalisisCoactivoMB.generarArchivoMultasInvalidas()}" />
+				</p:commandButton>
+
+				<p:commandButton id="btnCancelar"
+					action="CANCELAR"
+					icon="c2-icon-cancelar" process="@this" immediate="true"
+					value="#{lbComun.btnCancelar}"
+					onclick="PF('popUpResultadoCargue').hide();">
+					<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}"
+						message="#{labelCargueCoactivo.msg_confirmacion_cancelar}"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+</ui:composition>

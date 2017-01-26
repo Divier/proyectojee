@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<h:form id="form-obligacion">
+
+		<p:dialog widgetVar="popUpObligaciones" id="popUpObligaciones"
+			resizable="false" modal="true" appendToBody="true" dynamic="true"
+			closable="false" visible="#{detalleFinanciacionFL.obligaciones}">
+
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelFinanciaciones.msg_fieldset_finan_obl}">
+					<p:dataTable id="tabla-resultados" var="registro"
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.consultaObligacionesFinanciacionDTOs}"
+						rowKey="#{registro.idObligacion}" paginator="true"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}">
+
+						<p:column headerText="#{labelFinanciaciones.label_tip_oblig}">
+							<p:outputLabel value="#{registro.nombreTipoObligacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_num_oblig}">
+							<p:outputLabel value="#{registro.numeroObligacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_fecha_oblig}">
+							 <c2:outputDateLabel labelValue="#{registro.fechaObligacion}" fullFormat = "true"/>
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_vlr_oblig}">
+							<c2:outputCurrencyText value="#{registro.valorObligacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_vlr_recargo}">
+							<c2:outputCurrencyText value="#{registro.valorRecargo}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelFinanciaciones.label_vlr_costo_procesales}">
+							<c2:outputCurrencyText value="#{registro.valorCostasProcesales}" />
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<!--Boton Cancelar-->
+				<p:commandButton id="btnCancelar" action="VOLVER_OBL"
+					icon="c2-icon-cancelar" process="@this" immediate="true"
+					value="#{lbComun.btnCancelar}">
+					<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}"
+						message="#{lbComun.msg_confirm_volver_cancelar}"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+</ui:composition>

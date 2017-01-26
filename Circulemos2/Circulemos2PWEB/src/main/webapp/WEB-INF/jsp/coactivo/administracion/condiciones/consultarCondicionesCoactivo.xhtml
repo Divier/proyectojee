@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<f:metadata>
+			<f:event type="preRenderView"
+				listener="#{condicionesCoactivoMB.toString}" />
+		</f:metadata>
+
+		<h:form id="form-contenido">
+
+			<p:panel id="campos-consulta"
+				header="#{labelCondicionesCoactivo.tit_consulta_conf_coactivo}"
+				styleClass="panel-formulario">
+				<p:fieldset legend="#{lbComun.msg_fieldset_consultar}"
+					styleClass="fieldset-formulario">
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel
+							value="#{labelCondicionesCoactivo.lbl_fecha_inicial_vig_cond}: " />
+						<h:panelGroup>
+							<p:calendar id="calConFecIni"
+								value="#{condicionesCoactivoHolderFL.filtroConfiguracionCoactivo.fechaInicial}"
+								navigator="true" pattern="#{utilidadMB.formatoFecha}">
+								<p:watermark for="calConFecIni"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="calConFecIni" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelCondicionesCoactivo.lbl_fecha_final_vig_cond}: " />
+						<h:panelGroup>
+							<p:calendar id="calConFecFin"
+								value="#{condicionesCoactivoHolderFL.filtroConfiguracionCoactivo.fechaFinal}"
+								navigator="true" pattern="#{utilidadMB.formatoFecha}">
+								<p:watermark for="calConFecFin"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="calConFecFin" />
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							value="#{lbComun.btnConsultar}" icon="c2-icon-consultar"
+							action="_op-CONSULTAR" process="@form"
+							update=":form-contenido :messages :form-resultado">
+							<p:tooltip for="btnConsultar"
+								value="#{labelCondicionesCoactivo.lbl_btn_consulta_conf_coactivo}" />
+						</p:commandButton>
+
+						<!--Boton Nuevo-->
+						<p:commandButton id="btnCrear" styleClass="_op-CREAR"
+							value="#{lbComun.btnCrear}" icon="c2-icon-crear"
+							action="_op-CREAR" process="@this" update=":messages">
+							<p:tooltip for="btnCrear"
+								value="#{labelCondicionesCoactivo.lbl_btn_nueva_conf_coactivo}" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{condicionesCoactivoHolderFL.configuracionCoactivoDataModel.size() > 0}">
+
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+
+						<!--Boton Editar-->
+						<p:commandButton id="btnEditar" value="#{lbComun.btnEditar}"
+							icon="c2-icon-editar" styleClass="_op-EDITAR"
+							disabled="#{condicionesCoactivoHolderFL.configuracionSeleccionada==null}"
+							action="_op-EDITAR" process="@form" update=":messages">
+							<p:tooltip for="btnEditar"
+								value="#{labelCondicionesCoactivo.lbl_btn_actualizar_conf_coactivo}" />
+						</p:commandButton>
+
+						<!--Boton Eliminar-->
+						<p:commandButton id="btnEliminar" styleClass="_op-ELIMINAR"
+							value="#{lbComun.btnEliminar}" icon="c2-icon-eliminar"
+							disabled="#{condicionesCoactivoHolderFL.configuracionSeleccionada==null}"
+							action="_op-ELIMINAR" process="@form"
+							update=":messages :form-resultado">
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_eliminar}"
+								icon="ui-icon-alert" />
+							<p:tooltip for="btnEliminar"
+								value="#{labelCondicionesCoactivo.lbl_btn_eliminar_conf_coactivo}" />
+						</p:commandButton>
+
+						<!--Boton Ver detalle-->
+						<p:commandButton id="btnVerDet" value="#{lbComun.btnVerDet}"
+							icon="c2-icon-detalle" oncomplete="PF('detConfCoactivo').show();"
+							disabled="#{condicionesCoactivoHolderFL.configuracionSeleccionada==null}"
+							action="#{condicionesCoactivoMB.visualizarDetalle()}"
+							process="@form" update=":formdetConfCoactivo :messages">
+							<p:tooltip for="btnVerDet"
+								value="#{labelCondicionesCoactivo.lbl_btn_detalle_conf_coactivo}" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados"
+					value="#{condicionesCoactivoHolderFL.configuracionCoactivoDataModel}"
+					var="confCoactivo" rowKey="#{confCoactivo.id}"
+					paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}"
+					selection="#{condicionesCoactivoHolderFL.configuracionSeleccionada}">
+
+					<p:ajax event="rowSelectRadio"
+						process=":form-resultado:tabla-resultados"
+						update=":form-resultado:acciones-top" global="false" />
+
+					<p:column selectionMode="single" />
+
+					<p:column
+						headerText="#{labelCondicionesCoactivo.lbl_clm_nombre_conf_coactivo}">
+						<p:outputLabel value="#{confCoactivo.nombre}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelCondicionesCoactivo.lbl_clm_fec_ini_vig_con}">
+						<c2:outputDateLabel labelValue="#{confCoactivo.fechaInicial}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelCondicionesCoactivo.lbl_clm_fec_fin_vig_con}">
+						<c2:outputDateLabel labelValue="#{confCoactivo.fechaFinal}" />
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+		<ui:include
+			src="/WEB-INF/jsp/coactivo/administracion/condiciones/popUps/detalleConfiguracionCoactivo.xhtml" />
+	</ui:define>
+</ui:composition>

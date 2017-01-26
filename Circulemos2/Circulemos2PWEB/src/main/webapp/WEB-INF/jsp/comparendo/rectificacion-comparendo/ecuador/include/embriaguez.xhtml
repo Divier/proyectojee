@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-embriaguez" styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_embriaguez}">
+		<p:fieldset id="datos-embriaguez" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_embriaguez}">
+			<h:panelGrid id="panel-formulario-embriaguez"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_infractor_nego_presentar}" />
+				<c2:outputBoolText
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.niegaPruebaAlcoholemia}" />
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_grado_alcoholemia}" />
+				<p:outputLabel
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.comparendo.gradoAlcoholemia.valor} - #{rectificaComparendoEcuadorFL.procesaComparendo.comparendo.gradoAlcoholemia.nombre}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_fecha_prueba}" />
+				<c2:outputDateLabel
+					labelValue="#{rectificaComparendoEcuadorFL.procesaComparendo.fechaPruebaAlcoholemia}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_numero_prueba}" />
+				<p:outputLabel
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.comparendo.numeroPruebaAlcoholemia}" />
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_miligramos_etanol}" />
+				<c2:outputNumberText
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.valorGradoAlcoholemia}"
+					format="false" />
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_reincidente}" />
+				<c2:outputNumberText
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.numeroReincidencia}"
+					format="false" />
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelUsuarios.titulo_registrar_usuario}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_registro}">
+
+					<p:fieldset id="datos-usuario" styleClass="fieldset-formulario"
+						legend="#{labelUsuarios.titulo_datos_usuario}">
+						<h:panelGrid id="panel-datos-usuario" styleClass="center-block"
+							columns="2"
+							columnClasses="label-col,input-col,label-col,input-col">
+							<p:outputLabel value="#{labelUsuarios.label_nombre_usuario}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup layout="block" styleClass="inline-block">
+								<p:inputText id="txtLogin" value="#{usuariosFL.login}"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									maxlength="60">
+								</p:inputText>
+								<p:message for="txtLogin" />
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:panelGrid id="panel-botones" styleClass="center-block"
+							columns="1" cellpadding="5">
+							<!--Boton Guardar-->
+							<p:commandButton id="btnValidar" action="CREAR_USUARIO"
+								process="@this txtLogin"
+								value="#{labelUsuarios.label_validar_usuario}"
+								update=":messages :form-ingreso">
+							</p:commandButton>
+						</h:panelGrid>
+					</p:fieldset>
+
+					<p:fieldset id="datos-persona-ingreso"
+						styleClass="fieldset-formulario"
+						legend="#{labelUsuarios.titulo_datos_persona}"
+						rendered="#{usuariosFL.validoUsuario}">
+						<h:panelGrid id="panel-ingreso-persona-natural"
+							styleClass="center-block" columns="4"
+							columnClasses="label-col,input-col,label-col,input-col">
+
+							<p:outputLabel value="#{labelUsuarios.label_tipo_documento}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selOneMen"
+									value="#{usuariosFL.usuarioPersonaDTO.persona.tipoIdentificacion.id}"
+									required="true" rendered="#{!usuariosFL.usuarioPersona}"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+										noSelectionOption="true" />
+									<f:selectItems value="#{catalogoGeneralMB.opcTipoIdentPersona}" />
+									<p:ajax listener="#{usuariosMB.validarTipoPersona()}"
+										update="panel-ingreso-persona-natural"
+										process="@this selOneMen"></p:ajax>
+								</p:selectOneMenu>
+								<p:message for="selOneMen" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelUsuarios.label_numero_documento}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="txtNumeroIdentificacion"
+									value="#{usuariosFL.usuarioPersonaDTO.persona.numeroIdentificacion}"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									maxlength="20" rendered="#{!usuariosFL.usuarioPersona}">
+									<p:ajax listener="#{usuariosMB.validarPersona()}"
+										update="panel-ingreso-persona-natural"
+										process="@this txtNumeroIdentificacion"></p:ajax>
+								</p:inputText>
+								<p:outputLabel
+									value="#{usuariosFL.usuarioPersonaDTO.persona.numeroIdentificacion}"
+									rendered="#{usuariosFL.usuarioPersona}"></p:outputLabel>
+								<p:message for="txtNumeroIdentificacion" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelUsuarios.label_primer_nombre}"
+								styleClass="campo-obligatorio"
+								rendered="#{usuariosFL.personaNatural}" />
+							<h:panelGroup rendered="#{usuariosFL.personaNatural}">
+								<p:inputText id="txtNombre1"
+									value="#{usuariosFL.usuarioPersonaDTO.persona.nombre1}"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									maxlength="30" rendered="#{!usuariosFL.usuarioPersona}">
+								</p:inputText>
+								<p:outputLabel
+									value="#{usuariosFL.usuarioPersonaDTO.persona.nombre1}"
+									rendered="#{usuariosFL.usuarioPersona}"></p:outputLabel>
+								<p:message for="txtNombre1" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelUsuarios.label_segundo_nombre}"
+								rendered="#{usuariosFL.personaNatural}" />
+							<h:panelGroup rendered="#{usuariosFL.personaNatural}">
+								<p:inputText id="txtNombre2"
+									value="#{usuariosFL.usuarioPersonaDTO.persona.nombre2}"
+									maxlength="30" rendered="#{!usuariosFL.usuarioPersona}">
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:inputText>
+								<p:outputLabel
+									value="#{usuariosFL.usuarioPersonaDTO.persona.nombre2}"
+									rendered="#{usuariosFL.usuarioPersona}"></p:outputLabel>
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelUsuarios.label_primer_apellido}"
+								styleClass="campo-obligatorio"
+								rendered="#{usuariosFL.personaNatural}" />
+							<h:panelGroup rendered="#{usuariosFL.personaNatural}">
+								<p:inputText id="txtApellido1"
+									value="#{usuariosFL.usuarioPersonaDTO.persona.apellido1}"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									maxlength="30" rendered="#{!usuariosFL.usuarioPersona}">
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:inputText>
+								<p:outputLabel
+									value="#{usuariosFL.usuarioPersonaDTO.persona.apellido1}"
+									rendered="#{usuariosFL.usuarioPersona}"></p:outputLabel>
+								<p:message for="txtApellido1" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelUsuarios.label_segundo_apellido}"
+								rendered="#{usuariosFL.personaNatural}" />
+							<h:panelGroup rendered="#{usuariosFL.personaNatural}">
+								<p:inputText id="txtApellido2"
+									value="#{usuariosFL.usuarioPersonaDTO.persona.apellido2}"
+									maxlength="30" rendered="#{!usuariosFL.usuarioPersona}">
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:inputText>
+								<p:outputLabel
+									value="#{usuariosFL.usuarioPersonaDTO.persona.apellido2}"
+									rendered="#{usuariosFL.usuarioPersona}"></p:outputLabel>
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelUsuarios.label_correo_usuario}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="txtCorreoElectronicoUsuario"
+									label="#{labelUsuarios.label_correo}"
+									value="#{usuariosFL.usuarioPersonaDTO.persona.correoElectronico}"
+									required="true" rendered="#{!usuariosFL.usuarioPersona}"
+									validatorMessage="#{labelGeneral.val_campo_email}"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									maxlength="256">
+									<f:validator
+										validatorId="co.com.datatools.util.jsf.EmailValidator" />
+									<p:ajax event="change" process="@this"></p:ajax>
+								</p:inputText>
+								<p:outputLabel
+									value="#{usuariosFL.usuarioPersonaDTO.persona.correoElectronico}"
+									rendered="#{usuariosFL.usuarioPersona}"></p:outputLabel>
+								<p:message for="txtCorreoElectronicoUsuario" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelUsuarios.label_telefono}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="txtNumeroTelefonico"
+									value="#{usuariosFL.usuarioPersonaDTO.persona.numeroTelefonico}"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									maxlength="20" rendered="#{!usuariosFL.usuarioPersona}">
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:inputText>
+								<p:outputLabel
+									value="#{usuariosFL.usuarioPersonaDTO.persona.numeroTelefonico}"
+									rendered="#{usuariosFL.usuarioPersona}"></p:outputLabel>
+								<p:message for="txtNumeroTelefonico" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelUsuarios.label_digito_verificacion}"
+								styleClass="campo-obligatorio"
+								rendered="#{!usuariosFL.personaNatural}" />
+							<h:panelGroup rendered="#{!usuariosFL.personaNatural}">
+								<p:spinner id="spinDigitoverificacion"
+									value="#{usuariosFL.digitoVerificacion}" min="0" max="9"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:spinner>
+								<p:outputLabel
+									value="#{usuariosFL.usuarioPersonaDTO.persona.digitoVerificacion}"
+									rendered="#{usuariosFL.usuarioPersona}"></p:outputLabel>
+								<p:message for="spinDigitoverificacion" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelUsuarios.label_nombre_comercial}"
+								styleClass="campo-obligatorio"
+								rendered="#{!usuariosFL.personaNatural}" />
+							<h:panelGroup rendered="#{!usuariosFL.personaNatural}">
+								<p:inputText id="txtNombrecomercial"
+									value="#{usuariosFL.nombreComercial}" required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									maxlength="60">
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:inputText>
+								<p:message for="txtNombrecomercial" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelUsuarios.label_sigla}"
+								rendered="#{!usuariosFL.personaNatural}" />
+							<h:panelGroup rendered="#{!usuariosFL.personaNatural}">
+								<p:inputText id="txtSigla" value="#{usuariosFL.sigla}"
+									maxlength="10">
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:inputText>
+								<p:message for="txtSigla" display="default" />
+							</h:panelGroup>
+
+						</h:panelGrid>
+					</p:fieldset>
+				</p:fieldset>
+			</p:panel>
+			<h:panelGrid columns="1" styleClass="center-block" cellspacing="7"
+				rendered="#{usuariosFL.guardarUsuario}">
+				<p:commandButton id="btnGuardar" action="GUARDAR"
+					icon="c2-icon-guardar" process="@form"
+					value="#{lbComun.btnGuardar}" update=":messages @form">
+					<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}"
+						message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+				</p:commandButton>
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>

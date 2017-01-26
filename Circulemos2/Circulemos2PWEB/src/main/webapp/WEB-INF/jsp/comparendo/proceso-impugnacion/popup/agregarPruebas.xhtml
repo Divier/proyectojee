@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="frmAgregarPruebas">
+		<p:dialog widgetVar="popUpAgregarPruebas" id="popUpAgregarPruebas"
+			header="#{labelProcesoImpugnacion.titulo_agregar_prueba}"
+			resizable="false" modal="true" appendToBody="true" dynamic="true"
+			closable="false" visible="#{gestionarPruebasFL.adicionarPrueba}"
+			height="400" width="500">
+
+			<h:panelGrid id="panel-info-cabecera" styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col,label-col,input-col"
+				columns="2">
+				
+				<p:outputLabel styleClass="campo-obligatorio"
+					value="#{labelProcesoImpugnacion.label_destino_prueba}"></p:outputLabel>
+				<h:panelGroup>
+					<p:selectOneMenu
+						value="#{gestionarPruebasFL.solicitudPruebasBackDTO.tipoDestinoPruebaImpug.id}"
+						id="selDestPruebas" required="true" >
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catTipoDestinoPruebaImpug()}" />
+							<p:ajax event="change" process="@this" update="panel-info-cabecera" />
+					</p:selectOneMenu>
+					<p:message for="selDestPruebas" />
+				</h:panelGroup>
+				
+				<h:panelGroup id="labelDestinoOtro" rendered="#{gestionarPruebasMB.isDestinoPruebaOtros()}">
+					<p:outputLabel styleClass="campo-obligatorio"
+						value="#{labelProcesoImpugnacion.label_destino_otros}"></p:outputLabel>
+				</h:panelGroup>	
+				<h:panelGroup id="destinoOtro" rendered="#{gestionarPruebasMB.isDestinoPruebaOtros()}">
+					<p:inputText maxlength="150" required="true" 
+						value="#{gestionarPruebasFL.solicitudPruebasBackDTO.destinoPruebaOtro}">
+					</p:inputText>
+					<p:message for="destinoOtro" />
+				</h:panelGroup>
+				<p:outputLabel styleClass="campo-obligatorio"
+					value="#{labelProcesoImpugnacion.label_caracteristica_prueba}"></p:outputLabel>
+				<h:panelGroup>
+					<p:selectOneMenu
+						value="#{gestionarPruebasFL.solicitudPruebasBackDTO.caracteristicaPrueba.id}"
+						id="selCarPruebas" required="true">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catCaracteristicaPrueba()}" />
+					</p:selectOneMenu>
+					<p:message for="selCarPruebas" />
+				</h:panelGroup>
+
+				<p:outputLabel styleClass="campo-obligatorio"
+					value="#{labelProcesoImpugnacion.label_tipo_prueba}"></p:outputLabel>
+				<h:panelGroup>
+					<p:selectOneMenu
+						value="#{gestionarPruebasFL.solicitudPruebasBackDTO.tipoPrueba.id}"
+						id="selTipPrueba" required="true">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+						<f:selectItems value="#{fachadaCatalogosMB.catTipoPrueba()}" />
+					</p:selectOneMenu>
+					<p:message for="selTipPrueba" />
+				</h:panelGroup>
+
+				<p:outputLabel styleClass="campo-obligatorio"
+					value="#{labelProcesoImpugnacion.label_origen_prueba}"></p:outputLabel>
+				<h:panelGroup>
+					<p:selectOneMenu
+						value="#{gestionarPruebasFL.solicitudPruebasBackDTO.origenPrueba.id}"
+						id="selOrigPrueba" required="true">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+						<f:selectItems value="#{fachadaCatalogosMB.catOrigenPrueba()}" />
+					</p:selectOneMenu>
+					<p:message for="selOrigPrueba" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelProcesoImpugnacion.label_fecha_sol_prueba}"></p:outputLabel>
+				<h:panelGroup>
+					<p:calendar
+						value="#{gestionarPruebasFL.solicitudPruebasBackDTO.fechaSolicitud}"
+						id="calFechSolPrueba" navigator="true"
+						pattern="#{utilidadMB.formatoFechaCompleta}" mindate="#{gestionarPruebasFL.fechaSistema}"></p:calendar>
+					<p:message for="calFechSolPrueba" />
+				</h:panelGroup>
+
+				<p:outputLabel styleClass="campo-obligatorio"
+					value="#{labelProcesoImpugnacion.label_descripcion_prueba}"></p:outputLabel>
+				<h:panelGroup>
+					<p:inputTextarea
+						value="#{gestionarPruebasFL.solicitudPruebasBackDTO.descripcion}"
+						id="txtADesPrueba" required="true"
+						style="width: 170px; height: 80px;"></p:inputTextarea>
+					<p:message for="txtADesPrueba" />
+				</h:panelGroup>
+			</h:panelGrid>
+
+			<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+				<!-- Boton agregar-->
+				<p:commandButton id="btnAgregar" action="GUARDAR_PRUEBA"
+					icon="c2-icon-crear" process="@form"
+					value="#{labelProcesoImpugnacion.btnAgregarPrueba}"
+					update=":messages :frmAgregarPruebas:panel-info-cabecera">
+					<p:tooltip for="btnAgregar"
+						value="#{labelProcesoImpugnacion.btnAgregarPrueba}" />
+				</p:commandButton>
+				<!--Boton Cancelar-->
+				<p:commandButton id="btnCancelar" action="VOLVER_POPUP"
+					icon="c2-icon-cancelar" process="@this" immediate="true"
+					value="#{lbComun.btnCancelar}">
+					<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}"
+						message="#{lbComun.msg_confirm_volver_cancelar}"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+</ui:composition>

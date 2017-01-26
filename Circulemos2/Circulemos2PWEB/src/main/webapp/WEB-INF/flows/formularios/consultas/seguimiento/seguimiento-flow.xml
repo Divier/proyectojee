@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="consultarSeguimientoFormularioHolderFL"
+		class="co.com.datatools.c2.managed_bean.formularios.consultas.ConsultarSeguimientoFormularioHolderFL" />
+	<var name="seguimientoFormularioFL"
+		class="co.com.datatools.c2.managed_bean.formularios.consultas.SeguimientoFormularioFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/formularios/consultas/seguimiento/consultarSeguimientoFormulario.xhtml">
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR">
+		</transition>
+		<transition on="VER_DETALLE" to="VER_DETALLE">
+			<evaluate
+				expression="flowScope.consultarSeguimientoFormularioHolderFL.getSeguimientoSeleccionado()"
+				result="flowScope.seguimientoFormularioFL" />
+		</transition>
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.consultarSeguimientoFormularioMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<view-state id="VER_DETALLE"
+		view="/WEB-INF/jsp/formularios/consultas/seguimiento/detalleSeguimientoFormulario.xhtml">
+		<transition on="VOLVER" to="ingresar" />
+	</view-state>
+
+</flow>

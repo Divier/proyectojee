@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+
+	<ui:define name="contenido">
+
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelSimulacionFinanciacion.lbl_titulo_simulacion}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_registro}">
+
+					<!--Agregar Secciones o Panel Grid de campos-->
+
+					<h:panelGrid styleClass="center-block" columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_gral_tipodocumento}" />
+						<p:outputLabel
+							value="#{simulacionFinanciacionFL.infractor.tipoIdentificacion.nombre}" />
+
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_gral_numerodocumento}" />
+						<p:outputLabel
+							value="#{simulacionFinanciacionFL.infractor.numeroIdentificacion}" />
+
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_nombres_apellidos_infra}" />
+						<p:outputLabel
+							value="#{simulacionFinanciacionFL.infractor.nombreCompleto}" />
+
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_fecha_solicitud}" />
+						<c2:outputDateLabel
+							labelValue="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.proceso.fechaInicio}" />
+
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_total_capital_obligaciones}" />
+						<c2:outputCurrencyText
+							value="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.valorTotalSaldoCapitalObligaciones}" />
+
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_valor_total_recargos}" />
+						<c2:outputCurrencyText
+							value="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.valorTotalInteresesMoratorios}" />
+
+					</h:panelGrid>
+
+					<br />
+					<p:separator style="height:2px" />
+					<br />
+					
+					<h:panelGrid styleClass="center-block" columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_valor_total}" />
+						<c2:outputCurrencyText
+							value="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.valorTotal}" />
+
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_tasa_interes_finan}" />
+						<h:outputText value="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.interesFinanciacion * 100}" 
+							style="text-align:right" layout="block">
+							<f:convertNumber pattern="#,##0.000'%'" />
+						</h:outputText>
+						
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_total_interes}" />
+						<c2:outputCurrencyText
+							value="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.valorTotalFinanciarInteres.subtract(simulacionFinanciacionFL.simulacionFinanciacionDTO.valorTotal)}" />
+
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_valor_total_con_interes}" />
+						<c2:outputCurrencyText
+							value="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.valorTotalFinanciarInteres}" />
+
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_valor_cuota_inicial}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<pe:inputNumber id="txtValCuoIni"
+								value="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.valorPrimeraCuota}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								decimalPlaces="2">
+								<p:ajax event="change" process="@this"
+									update=":form-ingreso :messages"
+									listener="#{simulacionFinanciacionMB.calcularFinanciacion(simulacionFinanciacionFL.simulacionFinanciacionDTO)}" />
+							</pe:inputNumber>
+							<p:message for="txtValCuoIni" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_porcentaje_cuota_inicial}" />
+						<c2:outputPercentText
+							value="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.valorPrimeraCuota * 100 / simulacionFinanciacionFL.simulacionFinanciacionDTO.valorTotal}" />
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+								<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_numero_cuotas}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:spinner id="spin"
+								value="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.numeroCuotas}"
+								min="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.cantidadCuotasAplica.cantidadMinimaCoutas}"
+								max="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.cantidadCuotasAplica.cantidadMaximaCouta}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								validatorMessage="#{labelSimulacionFinanciacion.err_msg_validation}">
+								<f:validateLongRange
+									minimum="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.cantidadCuotasAplica.cantidadMinimaCoutas}"
+									maximum="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.cantidadCuotasAplica.cantidadMaximaCouta}" />
+								<p:ajax event="change" update=":form-ingreso :messages"
+									process="@this"
+									listener="#{simulacionFinanciacionMB.calcularFinanciacion(simulacionFinanciacionFL.simulacionFinanciacionDTO)}" />
+							</p:spinner>
+							<p:message for="spin" />
+						</h:panelGroup>
+		
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_justificacion}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputTextarea id="txaJus"
+								value="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.justificacion}"
+								required="true" maxlength="300" style="overflow:auto;"
+								autoResize="false"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<p:ajax event="change" process="@this" global="false" />
+							</p:inputTextarea>
+							<p:message for="txaJus" />
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+					<br/>
+					<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+						<p:commandButton
+							value="#{labelSimulacionFinanciacion.lbl_btn_calcular_simulacion}"
+							id="btnCalcularSolicitud" process="@form"
+							update=":form-ingreso :messages" action="RECALCULAR">
+						</p:commandButton>
+					</h:panelGrid>
+
+					<p:dataTable id="tblResSimulacionfinanciacion"
+						var="resultadoSimulacionDTO" widgetVar="wvTblResSimulacionDTO"
+						value="#{simulacionFinanciacionFL.simulacionFinanciacionDTO.detallesFinanciacion}"
+						paginator="true"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}">
+
+						<p:column
+							headerText="#{labelSimulacionFinanciacion.lbl_col_numero_cuota}">
+							<c2:outputNumCuota
+								value="#{resultadoSimulacionDTO.numeroCuota}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelSimulacionFinanciacion.lbl_col_pago_oportuna}">
+							<c2:outputDateLabel
+								labelValue="#{resultadoSimulacionDTO.fechaPagoOportuno}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelSimulacionFinanciacion.lbl_col_valor_capital}">
+							<c2:outputCurrencyText
+								value="#{resultadoSimulacionDTO.valorCapital}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelSimulacionFinanciacion.lbl_valor_interes}">
+							<c2:outputCurrencyText
+								value="#{resultadoSimulacionDTO.valorIntereses}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelSimulacionFinanciacion.lbl_valor_total_cuota}">
+							<c2:outputCurrencyText
+								value="#{resultadoSimulacionDTO.valorTotal}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelSimulacionFinanciacion.lbl_saldo_obligacion}">
+							<c2:outputCurrencyText
+								value="#{resultadoSimulacionDTO.valorSaldoObligacion}" />
+						</p:column>
+
+					</p:dataTable>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<!--Boton Guardar-->
+
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}"
+							update=":messages :form-ingreso :frmConfirFinanciacion">
+							<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<ui:include
+			src="/WEB-INF/jsp/financiacion/administracion/simulacion/popUp/docsFinanciacion.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/administracion/captura-firma/capturaFirma.xhtml" />
+
+	</ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+		<p:tabView>
+			<!--Pestaña de Seguimineto-->
+			<p:tab title="#{labelAdminAgentes.tit_tab_informacion}">
+				<p:fieldset styleClass="fieldset-formulario"
+				legend="#{labelAdminAgentes.titulo_administrar_agentes_detalle}">
+					<h:panelGrid id="panel-info"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">					
+						<p:outputLabel value="#{labelAdminAgentes.label_tipo_documento}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.persona.tipoIdentificacion.nombre}" />
+													
+						<p:outputLabel value="#{labelAdminAgentes.label_numero_documento}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.persona.numeroIdentificacion}" />
+							
+						<p:outputLabel value="#{labelAdminAgentes.label_primer_nombre}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.persona.nombre1}" />
+								
+						<p:outputLabel value="#{labelAdminAgentes.label_segundo_nombre}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.persona.nombre2}" />
+								
+						<p:outputLabel value="#{labelAdminAgentes.label_primer_apellido}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.persona.apellido1}" />
+								
+						<p:outputLabel value="#{labelAdminAgentes.label_segundo_apellido}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.persona.apellido2}" />
+												
+						<p:outputLabel value="#{labelAdminAgentes.label_placa_agente}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.placa}" />
+							
+						<p:outputLabel value="#{labelAdminAgentes.label_estado}"/>						
+							<p:outputLabel value="#{labelAdminAgentes.val_vigente}" rendered="#{adminAgentesFL.agenteVigente}"/>
+							<p:outputLabel value="#{labelAdminAgentes.val_no_vigente}" rendered="#{!adminAgentesFL.agenteVigente}"/>							
+							
+						<p:outputLabel value="#{labelAdminAgentes.label_fecha_inicial}"/>																
+						<c2:outputDateLabel labelValue="#{adminAgentesFL.agente.fechaInicioVigencia}"/>
+																	
+						<p:outputLabel value="#{labelAdminAgentes.label_fecha_final}" />
+						<c2:outputDateLabel labelValue="#{adminAgentesFL.agente.fechaFinVigencia}" />
+							
+						<p:outputLabel value="#{labelAdminAgentes.label_firma_agente}" />	
+						<p:graphicImage value="#{adminAgentesMB.firma}" />
+					</h:panelGrid>
+				</p:fieldset>
+			</p:tab>
+			<!--Pestaña de Datos del agente-->
+			<p:tab title="#{labelAdminAgentes.tit_tab_seguimiento}">
+				<p:panel id="campos-consulta" styleClass="panel-formulario"
+					header="#{labelAdminAgentes.tit_det_agente}">
+					<p:dataTable id="tabla-resultados"
+						value="#{adminAgentesFL.detalleHistoricoAgenteDTOs}"
+						var="registro" paginator="true"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}">
+
+						<p:column
+							headerText="#{labelAdminAgentes.lbl_tipo_identificacion}">
+							<p:outputLabel
+								value="#{registro.personaDTO.tipoIdentificacion.nombre}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelAdminAgentes.lbl_numero_identificacion}">
+							<p:outputLabel
+								value="#{registro.personaDTO.numeroIdentificacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelAdminAgentes.lbl_nombre_agente}">
+							<p:outputLabel value="#{registro.personaDTO.nombreCompleto}" />
+						</p:column>
+
+						<p:column headerText="#{labelAdminAgentes.lbl_placa_agente}">
+							<p:outputLabel value="#{registro.historicoAgenteDTO.placa}" />
+						</p:column>
+
+						<p:column headerText="#{labelAdminAgentes.lbl_fecha_ini_vig}">
+							<c2:outputDateLabel
+								labelValue="#{registro.historicoAgenteDTO.fechaInicioVigencia}" />
+						</p:column>
+
+						<p:column headerText="#{labelAdminAgentes.lbl_fecha_fin_vig}">
+							<c2:outputDateLabel
+								labelValue="#{registro.historicoAgenteDTO.fechaFinVigencia}" />
+						</p:column>
+
+						<p:column headerText="#{labelAdminAgentes.lbl_motivo}">
+							<p:outputLabel
+								value="#{registro.motivoVigenciaAgenteDTO.nombre}" />
+						</p:column>
+
+						<p:column headerText="#{labelAdminAgentes.lbl_fch_actu}">
+							<c2:outputDateLabel
+								labelValue="#{registro.historicoAgenteDTO.fechaActualizacion}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</p:tab>
+		</p:tabView>
+		<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+			<!--Boton Cancelar-->
+			<p:commandButton id="btnCancelar" action="VOLVER"
+				icon="c2-icon-volver" process="@this" immediate="true"
+				value="#{lbComun.btnVolver}">
+				<p:tooltip for="btnCancelar" value="#{lbComun.btnVolver}" />
+			</p:commandButton>
+		</h:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelConfiguracionEntidad.tit_conf_entidades}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_registro}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel
+							value="#{labelConfiguracionEntidad.lbl_tipo_entidad}" />
+						<p:outputLabel
+							value="#{configuracionEntidadFL.configuracionEntidadDTO.tipoEntidadDTO.nombre}"></p:outputLabel>
+
+						<p:outputLabel
+							value="#{labelConfiguracionEntidad.lbl_nom_entidad}" />
+						<p:outputLabel
+							value="#{configuracionEntidadFL.configuracionEntidadDTO.entidadOficioDTO.nombre}"></p:outputLabel>
+
+						<p:outputLabel value="#{labelConfiguracionEntidad.lbl_contacto}" />
+						<p:outputLabel
+							value="#{configuracionEntidadFL.configuracionEntidadDTO.contacto}"></p:outputLabel>
+
+						<p:outputLabel value="#{labelConfiguracionEntidad.lbl_direccion}" />
+						<p:outputLabel
+							value="#{configuracionEntidadFL.configuracionEntidadDTO.direccion}"></p:outputLabel>
+
+						<p:outputLabel value="#{labelConfiguracionEntidad.lbl_ciudad}" />
+						<p:outputLabel
+							value="#{configuracionEntidadFL.configuracionEntidadDTO.municipioDTO.nombre}"></p:outputLabel>
+
+						<p:outputLabel value="#{labelConfiguracionEntidad.lbl_sigla_ofic}" />
+						<p:outputLabel
+							value="#{configuracionEntidadFL.configuracionEntidadDTO.siglaOficio}"></p:outputLabel>
+
+						<p:outputLabel
+							value="#{labelConfiguracionEntidad.lbl_fecha_inicio}" />
+						<c2:outputDateLabel
+							labelValue="#{configuracionEntidadFL.configuracionEntidadDTO.fechaInicio}"
+							fullFormat="false" />
+
+						<p:outputLabel value="#{labelConfiguracionEntidad.lbl_fecha_fin}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar
+								value="#{configuracionEntidadFL.configuracionEntidadDTO.fechaFin}"
+								id="parteFinalizado" navigator="true"
+								pattern="#{utilidadMB.formatoFechaCompleta}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								mindate="#{configuracionEntidadFL.configuracionEntidadDTO.fechaInicio}">
+								<p:watermark for="parteFinalizado"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="parteFinalizado" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<!--Boton Guardar-->
+						<p:commandButton id="btnGuardar" action="EDITAR"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}" update=":messages :form-ingreso">
+							<p:tooltip for="btnGuardar"
+								value="#{labelConfiguracionEntidad.txt_tooltip_reg_guardar_itme_cat}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnVolver" action="VOLVER"
+							icon="c2-icon-volver" process="@this" immediate="true"
+							value="#{lbComun.btnVolver}">
+							<p:tooltip for="btnVolver" value="#{lbComun.tooltip_volver}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

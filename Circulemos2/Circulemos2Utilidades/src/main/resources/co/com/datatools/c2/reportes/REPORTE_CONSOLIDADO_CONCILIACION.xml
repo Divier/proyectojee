@@ -1,0 +1,47 @@
+<reporte>
+	<codigo>REPORTE_6</codigo>
+	<nombre>REPORTE CONSOLIDADO CONCILIACION CARTERA</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>RESULTADO DE LA CONCILIACION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DE OBLIGACION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CANTIDAD DE OBLIGACIONES</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>SUMA TOTAL VALOR AL 100%</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>SUMA TOTAL SALDO ACTUAL</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CANTIDAD TOTAL DEBITOS</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>SUMA TOTAL VALOR DEBITOS</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CANTIDAD TOTAL CREDITOS</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>SUMA TOTAL VALOR CREDITOS</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>SUMA TOTAL VALOR RECAUDADO</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

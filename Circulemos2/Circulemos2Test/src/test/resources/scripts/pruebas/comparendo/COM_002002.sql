@@ -1,0 +1,14 @@
+SET FOREIGN_KEY_CHECKS = 0;
+DELETE FROM infraccion;
+DELETE FROM responsable_formulario;
+DELETE FROM detalle_cambio_estado;
+DELETE FROM numeracion_formulario;
+DELETE FROM detalle_numeracion;
+DELETE FROM rango_formulario;
+DELETE FROM detalle_cambio_estado;
+DELETE FROM formulario;
+DELETE FROM configuracion_infraccion;
+DELETE FROM tarifa_infraccion;
+DELETE FROM persona;
+--DELETE FROM direccion;
+DELETE FROM agente;

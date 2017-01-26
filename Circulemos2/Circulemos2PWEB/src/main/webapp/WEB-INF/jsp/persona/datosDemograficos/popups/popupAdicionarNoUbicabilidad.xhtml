@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:dialog widgetVar="popupAdicionarNoUbicabilidad" id="idPopupAdicionarNoUbicabilidad"
+		resizable="false" header="#{labelAdminPersona.tit_adicionar_no_ubicabilidad}"
+		modal="true" appendTo="@(body)" closable="false" closeOnEscape="false"
+		dynamic="true">
+
+		<h:form id="frmAdicionarNoUbicabilidad">
+			<p:messages id="messages-no_ubicabilidad" globalOnly="true" showDetail="true"
+				closable="true" />
+			<p:panel id="campos-registro-no-ubicabilidad" styleClass="panel-formulario"
+				header="#{labelAdminPersona.tit_adicionar_no_ubicabilidad}" >
+				<p:fieldset id="datos-principal-no-ubicabilidad"
+					styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_registro}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2"
+						columnClasses="label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel value="#{labelAdminPersona.lbl_fuente_ubicabilidad}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="tipoFuenteInformacion" value="#{datosDemograficosHolderFL.archivoNoUbiRegistrar.tipoFuenteInformacion.id}" 
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" >
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoFuenteInformacion()}" />
+								<p:ajax event="change" process="@this" global="false" />
+							</p:selectOneMenu>
+							<p:message for="tipoFuenteInformacion" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelAdminPersona.lbl_pagina_consultada}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="pagina" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								value="#{datosDemograficosHolderFL.archivoNoUbiRegistrar.pagina}" >
+								<p:ajax process="@this" global="false" event="change" />
+							</p:inputText>
+							<p:message for="pagina" />
+						</h:panelGroup>
+						
+						<p:fileUpload id="fupArchivo"
+							fileUploadListener="#{datosDemograficosMB.handleFileUpload}"
+							label="#{labelAdminPersona.btn_anadir_soporte}"
+							mode="advanced" update="@form"
+							allowTypes="/(\.|\/)(jpg|png)$/" fileLimit="1"
+							invalidFileMessage="#{labelAdminPersona.msg_error_tipo_archivo_cargar}" 
+							dragDropSupport="true" required="true"
+							requiredMessage="#{labelGeneral.val_campo_requerido}"   
+							sizeLimit="#{datosDemograficosMB.tamanioMaximoArchivoNoUbi}"
+							invalidSizeMessage="#{datosDemograficosMB.mensajeErrorTamanioArchivo}"
+							value="#{datosDemograficosHolderFL.archivoCargado}" auto="true" />
+						<p:outputLabel value="#{datosDemograficosHolderFL.archivoCargado.getFileName()}" />
+					</h:panelGrid>
+					
+					<h:panelGrid id="panel-archivo" >
+		                
+					</h:panelGrid>
+					
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Guardar-->
+						<p:commandButton id="btnAgregarNoUbi"
+							action="#{datosDemograficosMB.adicionarNoUbicabilidad()}"
+							icon="c2-icon-guardar" update=":frmAdicionarNoUbicabilidad :frmDetalleNoUbicabilidad:tabla-detalle-no-ubicabilidad"
+							value="#{lbComun.btnGuardar}" process="@form" >
+							<p:tooltip for="btnAgregarNoUbi" value="#{lbComun.btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelarNoUbi" icon="c2-icon-cancelar"
+							process="@this" immediate="true"
+							oncomplete="PF('popupAdicionarNoUbicabilidad').hide();"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelarNoUbi" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</p:dialog>
+</ui:composition>

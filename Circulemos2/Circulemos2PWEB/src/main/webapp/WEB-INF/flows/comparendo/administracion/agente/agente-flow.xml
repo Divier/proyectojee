@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="agenteHolderFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.administracion.agente.AgenteHolderFL" />
+	<var name="agenteFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.administracion.agente.AgenteFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/comparendo/administracion/agente/agente.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('agenteMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.agenteMB.consultar()" />
+		</transition>
+	</view-state>
+	
+</flow>

@@ -1,0 +1,181 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:event type="preRenderView"
+				listener="#{historicoIngresosMB.toString()}" />
+			<f:event type="preRenderView"
+				listener="#{historicoIngresosMB.init()}" />
+		</f:metadata>
+		<div>
+			<h2>
+				<h:outputText
+					value="#{mensajesHistoricoIngresos.titulo_consultar_ingresos}"></h:outputText>
+			</h2>
+			<hr />
+			<h:form id="form-content">
+				<h:panelGrid columns="3" cellpadding="5"
+					styleClass="formulario-servicio">
+					<h:outputLabel for="selAplicacion"
+						value="#{mensajesHistoricoIngresos.label_aplicacion}:"
+						styleClass="campo-obligatorio" />
+					<p:selectOneMenu id="selAplicacion"
+						label="#{mensajesHistoricoIngresos.label_aplicacion}"
+						value="#{historicoIngresosFL.aplicacionSeleccionada}"
+						required="true">
+						<f:selectItem itemLabel="#{mensajesGeneral.label_seleccione}"
+							noSelectionOption="true" />
+						<f:selectItems value="#{historicoIngresosFL.lAplicaciones}" />
+						<p:ajax update="selRecurso" event="valueChange" process="@this"
+							listener="#{historicoIngresosMB.cargarListaRecursos()}" />
+					</p:selectOneMenu>
+					<p:message for="selAplicacion" />
+					<h:outputLabel for="fechaInicial"
+						value="#{mensajesHistoricoIngresos.label_fecha_ingreso_inicial}:"
+						styleClass="campo-obligatorio" />
+					<p:calendar id="fechaInicial" navigator="true"
+						value="#{historicoIngresosFL.fechaInicial}"
+						pattern="#{webPrm.lab_calendar_pattern_full}" required="true"
+						label="#{mensajesHistoricoIngresos.label_fecha_ingreso_inicial}"
+						maxdate="#{historicoIngresosFL.fechaActual}" readonlyInput="true">
+						<f:convertDateTime pattern="#{webPrm.lab_calendar_pattern_full}"
+							timeZone="#{parametrosBase.param_time_zone}" />
+					</p:calendar>
+					<p:message for="fechaInicial" />
+					<h:outputLabel for="fechaFinal"
+						value="#{mensajesHistoricoIngresos.label_fecha_ingreso_final}:"
+						styleClass="campo-obligatorio" />
+					<p:calendar id="fechaFinal" navigator="true"
+						value="#{historicoIngresosFL.fechaFinal}"
+						pattern="#{webPrm.lab_calendar_pattern_full}"
+						required="true"
+						label="#{mensajesHistoricoIngresos.label_fecha_ingreso_final}"
+						maxdate="#{historicoIngresosFL.fechaActual}" readonlyInput="true">
+						<f:convertDateTime
+							pattern="#{webPrm.lab_calendar_pattern_full}"
+							timeZone="#{parametrosBase.param_time_zone}" />
+					</p:calendar>
+					<p:message for="fechaFinal" />
+					<h:outputLabel for="selRecurso"
+						value="#{mensajesHistoricoIngresos.label_recurso}:"
+						styleClass="label-padding" />
+					<p:selectOneMenu id="selRecurso"
+						value="#{historicoIngresosFL.recursoSeleccionado}">
+						<f:selectItem itemLabel="#{mensajesGeneral.label_seleccione}"
+							noSelectionOption="true" />
+						<f:selectItems value="#{historicoIngresosFL.lRecursos}" />
+					</p:selectOneMenu>
+					<p:message for="selRecurso" />
+					<h:outputLabel for="usuario"
+						value="#{mensajesHistoricoIngresos.label_login}:"
+						styleClass="label-padding" />
+					<p:inputText id="usuario"
+						label="#{mensajesHistoricoIngresos.label_login}"
+						value="#{historicoIngresosFL.usuario}" maxlength="60">
+					</p:inputText>
+					<p:message for="usuario" />
+					<h:outputLabel for="selEstado"
+						value="#{mensajesHistoricoIngresos.label_estado_ingreso}:"
+						styleClass="label-padding" />
+					<p:selectOneMenu id="selEstado"
+						value="#{historicoIngresosFL.estadoIngresoSeleccionado}">
+						<f:selectItem itemLabel="#{mensajesGeneral.label_seleccione}"
+							noSelectionOption="true" />
+						<f:selectItems value="#{historicoIngresosFL.lEstadosIngreso}" />
+					</p:selectOneMenu>
+					<p:message for="selEstado" />
+					<f:facet name="footer">
+						<p:commandButton styleClass="CONSULTAR" action="CONSULTAR"
+							value="#{lbComun.btnConsultar}" icon="c2-icon-consultar" update="form-content" />
+						<p:commandButton value="#{lbComun.btnCancelar}" icon="c2-icon-cancelar"
+							action="CANCELAR" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+
+			<h:form id="form-result">
+				<p:panel header="#{mensajesGeneral.titulo_resultados_consulta}"
+					toggleable="true"
+					rendered="#{historicoIngresosFL.resultadoConsulta.size()==0 and historicoIngresosFL.consultaRealizada}">
+					<h:outputLabel value="#{mensajesGeneral.mensaje_no_resultados}" />
+				</p:panel>
+				<p:panel id="panelResultados"
+					header="#{mensajesGeneral.titulo_resultados_consulta}"
+					toggleable="true"
+					rendered="#{historicoIngresosFL.resultadoConsulta.size()>0}">
+					<h:panelGrid id="panelBotones" columns="1">
+						<f:facet name="footer">
+							<p:commandButton styleClass="CONSULTAR"
+								action="VER-DETALLE-INGRESO"
+								value="#{lbComun.btnVerDet}" icon="c2-icon-detalle"
+								disabled="#{historicoIngresosFL.ingresoSeleccionado==null}" />						
+<!-- 						<c2:reportHandler contentSrc="#{historicoIngresosMB.procesarContenidoReporte()}" reportId="HISTORICO_INGRESOS" fileName="historicoIngresos" formats="xls, xlsx"></c2:reportHandler> -->
+							<p:splitButton id="HISTORICO_INGRESOS" value="#{labelReporte.btn_exportar}" actionListener="#{reportHandlerMB.preDescargarReporte}" 
+								onclick="PF('panelReportPrms').show()" global="false" update=":frmPanelReportsPrms" icon="ui-icon-folder-open">
+								<p:menuitem value="#{labelReporte.btn_enviar_correo}" actionListener="#{reportHandlerMB.preEnviarCorreo}" 
+									rendered="true" onclick="PF('popUpEnviarCorreo').show()" global="false" update=":frmPopUpEnviarCorreo" 
+									icon="ui-icon-mail-closed" />
+								<f:attribute name="formats" value="xls, xlsx" />
+								<f:attribute name="showDownload" value="true" />
+								<f:attribute name="fileName" value="historicoIngresos" />
+								<f:attribute name="contentSrc" value="historicoIngresosMB.procesarContenidoReporte" />
+								<f:attribute name="emailHandler" value="#{mailExportarMB}" />
+							</p:splitButton>
+						</f:facet>
+					</h:panelGrid>
+					<p:dataTable id="tablaResultados" resizableColumns="true"
+						value="#{historicoIngresosFL.resultadoConsulta}" var="ingreso"
+						rowKey="#{ingreso.id}"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						paginator="true"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}"
+						selection="#{historicoIngresosFL.ingresoSeleccionado}">
+						<p:ajax event="rowSelectRadio" 
+							update=":form-result:panelBotones,:form-result:tablaResultados"
+							process=":form-result:tablaResultados"></p:ajax>
+						<p:column selectionMode="single"/>
+
+						<p:column headerText="#{mensajesHistoricoIngresos.label_login}"
+							sortBy="#{ingreso.login}">
+							<h:outputText value="#{ingreso.login}" />
+						</p:column>
+						<p:column
+							headerText="#{mensajesHistoricoIngresos.label_aplicacion}"
+							sortBy="#{ingreso.nombreAplicacion}">
+							<h:outputText value="#{ingreso.nombreAplicacion}" />
+						</p:column>
+						<p:column
+							headerText="#{mensajesHistoricoIngresos.label_fecha_ingreso}"
+							sortBy="#{ingreso.fechaInicio}">
+							<c2:outputDateLabel labelValue="#{ingreso.fechaInicio}" fullFormat="true"/>							
+						</p:column>
+						<p:column
+							headerText="#{mensajesHistoricoIngresos.label_fecha_cierre}"
+							sortBy="#{ingreso.fechaCierre}">
+							<c2:outputDateLabel labelValue="#{ingreso.fechaCierre}" fullFormat="true"/>							
+						</p:column>
+						<p:column
+							headerText="#{mensajesHistoricoIngresos.label_estado_ingreso}"
+							sortBy="#{ingreso.estadoIngreso}">
+							<h:outputText value="#{ingreso.estadoIngreso}" />
+						</p:column>
+						<p:column
+							headerText="#{mensajesHistoricoIngresos.label_ip_equipo}"
+							sortBy="#{ingreso.ipIngreso}">
+							<h:outputText value="#{ingreso.ipIngreso}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<p:dialog widgetVar="panelReportPrms" id="reportPrms" header="#{labelReporte.lbl_sel_formato_archivo}" resizable="false"
+		modal="true" appendTo="@(body)">
+		<h:form id="frmPanelReportsPrms">
+			<h:outputText value="#{labelReporte.lbl_sel_formato_archivo}" />
+			<h:panelGrid columns="3" cellpadding="1">
+				<p:selectOneMenu id="format" value="#{reportHandlerMB.format}">
+					<f:selectItems value="#{reportHandlerMB.formatosReporte}" />
+				</p:selectOneMenu>
+				<p:commandButton rendered="#{reportHandlerMB.showDownload}" ajax="false" process="@form"
+					onclick="PrimeFaces.monitorDownload(startDownReport, stopDownReport);" icon="ui-icon-arrowthick-1-s" 
+					title="#{labelReporte.btn_exportar}" styleClass="inline-btn">
+					<p:fileDownload value="#{reportHandlerMB.downloadReport()}" />
+					<f:attribute name="reportId" value="#{reportHandlerMB.reportId}" />
+				</p:commandButton>
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog widgetVar="popUpEnviarCorreo" id="idPopUpEnviarCorreo" header="#{labelReporte.btn_enviar_correo}" resizable="false"
+		modal="true" appendTo="@(body)" closable="false">
+		<h:form id="frmPopUpEnviarCorreo">
+			<p:panel id="enviar_correo" styleClass="panel-res-consulta">
+				<p:messages id="msg_enviar_correo" showDetail="true" closable="true" globalOnly="true" />
+				<h:panelGrid styleClass="center-block" columns="2" columnClasses="label-col,input-col input-col-large">
+					<p:outputLabel value="#{labelReporte.lbl_direcciones_destino}" />
+					<h:panelGroup>
+						<p:inputTextarea id="txt_direcciones" value="#{reportHandlerMB.direccionesDestino}"
+							requiredMessage="#{labelGeneral.val_campo_requerido}" required="true" rows="2" style="overflow:auto;"
+							autoResize="false" />
+						<p:message id="msg_txt_direcciones" for="txt_direcciones" />
+					</h:panelGroup>
+					<p:outputLabel value="#{labelReporte.lbl_asunto}" />
+					<h:panelGroup>
+						<p:inputText id="txt_asunto" value="#{reportHandlerMB.asunto}" requiredMessage="#{labelGeneral.val_campo_requerido}"
+							required="true" label="#{labelReporte.lbl_asunto}">
+							<f:validateLength maximum="#{labelReporte.longitud_asunto}" />
+						</p:inputText>
+						<p:message id="msg_txt_asunto" for="txt_asunto" />
+					</h:panelGroup>
+					<p:outputLabel value="#{labelReporte.lbl_sel_formato_archivo}" />
+					<p:selectOneMenu id="format" value="#{reportHandlerMB.format}">
+						<f:selectItems value="#{reportHandlerMB.formatosReporte}" />
+					</p:selectOneMenu>
+					<p:outputLabel value="#{labelReporte.lbl_texto_correo}" />
+					<h:panelGroup>
+						<p:inputTextarea id="txt_cuerpo" value="#{reportHandlerMB.cuerpoCorreo}" rows="7" style="overflow:auto;" 
+							autoResize="false" label="#{labelReporte.lbl_texto_correo}">
+							<f:validateLength maximum="#{labelReporte.longitud_cuerpo}" />
+						</p:inputTextarea>
+						<p:message id="msg_txt_cuerpo" for="txt_cuerpo" />
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:panelGrid columns="2" styleClass="center-block" cellspacing="5">
+					<!--Boton Enviar-->
+					<p:commandButton id="btnEnviar"	actionListener="#{reportHandlerMB.enviarCorreo()}" icon="c2-icon-guardar" 
+						process="@form" value="Enviar" update="frmPopUpEnviarCorreo">
+						<p:tooltip for="btnEnviar" value="#{labelReporte.btn_enviar_correo}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{labelReporte.msg_confirmacion_enviar}"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+					<!--Boton Cancelar-->
+					<p:commandButton id="btnCancelar" icon="c2-icon-cancelar" onclick="PF('popUpEnviarCorreo').hide()" process="@this"
+						immediate="true" value="#{lbComun.btnCancelar}"	update="frmPopUpEnviarCorreo">
+						<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+	</p:dialog>
+	
+</ui:composition>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-agente_transito"
+		styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_agente_transito}">
+		<p:growl id="messagesAgente" showDetail="true" life="15000"
+			globalOnly="true" />
+		<p:fieldset id="datos-agente_transito"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_agente_transito}">
+			<h:panelGrid id="panel-formulario-agente_transito"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+
+				<p:outputLabel value="#{labelAdminComparendo.label_placa_agente}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.procesaComparendo.placaAgente}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_documento}" />
+				<p:outputLabel
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.comparendo.comparendoAgente.tipoIdentificacionPersona.nombre}" />
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_documento}" />
+				<c2:outputNumberText
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.comparendo.comparendoAgente.numeroIdentificacion}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_nombre}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.procesaComparendo.comparendo.comparendoAgente.nombre1}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_segundo_nombre}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.procesaComparendo.comparendo.comparendoAgente.nombre2}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_apellido}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.procesaComparendo.comparendo.comparendoAgente.apellido1}" />
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_segundo_apellido}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.procesaComparendo.comparendo.comparendoAgente.apellido2}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_entidad_agente}"/>
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.procesaComparendo.nombreResponsable}" />
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-infractor" styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_infractor}">
+
+		<p:dataList id="idDetallesI"
+			rendered="#{not empty gestionarInconsistenciasComparendoFL.respuestaValidacionVO.detalleProcesamientoInfractorDTOs}"
+			value="#{gestionarInconsistenciasComparendoFL.respuestaValidacionVO.detalleProcesamientoInfractorDTOs}"
+			var="error" itemType="circle">
+			<p:outputLabel value="#{error.errorProcesamiento.descripcion}"
+				style="color:red;" />
+		</p:dataList>
+
+		<p:fieldset id="datos-infractor" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_infractor}">
+
+			<h:panelGrid id="panel-formulario-infractor"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+
+				<!-- Componentes del formulario 2 o 4 columnas-->
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_documento}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selTipoDocumentoInfractor"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.idTipoIdentificacion}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />
+						<p:ajax event="change"
+							listener="#{gestionarInconsistenciasComparendoMB.onTipoDocumentoInfractorChange}"
+							global="false" update=":messages campos-registro-infractor" />
+					</p:selectOneMenu>
+					<p:message for="selTipoDocumentoInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_documento}" />
+				<h:panelGroup>
+					<p:inputText id="numeroDocumentoInfractor"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.numeroIdentificacion}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(66)}">
+						<p:ajax
+							listener="#{gestionarInconsistenciasComparendoMB.onNumDocInfractorChange}"
+							global="false" update=":messages campos-registro-infractor"
+							process="@this" event="blur" />
+					</p:inputText>
+					<p:message for="numeroDocumentoInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_nombre}"
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoInfractor}" />
+				<h:panelGroup
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoInfractor}">
+					<p:inputText id="primerNombreInfractor"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.nombre1}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(74)}"
+						validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="primerNombreInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_segundo_nombre}"
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoInfractor}" />
+				<h:panelGroup
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoInfractor}">
+					<p:inputText id="segundoNombreInfractor"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.nombre2}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(75)}"
+						validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="segundoNombreInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_apellido}"
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoInfractor}" />
+				<h:panelGroup
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoInfractor}">
+					<p:inputText id="primerApellidoInfractor"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.apellido1}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(72)}"
+						validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="primerApellidoInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_segundo_apellido}"
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoInfractor}" />
+				<h:panelGroup
+					rendered="#{!gestionarInconsistenciasComparendoFL.tipoIdJuridicoInfractor}">
+					<p:inputText id="segundoApellidoInfractor"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.apellido2}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(73)}"
+						validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="segundoApellidoInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_nombre_empresa}"
+					rendered="#{gestionarInconsistenciasComparendoFL.tipoIdJuridicoInfractor}" />
+				<h:panelGroup
+					rendered="#{gestionarInconsistenciasComparendoFL.tipoIdJuridicoInfractor}">
+					<p:inputText id="nombreEmpresaInfractor"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.razonSocial}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(76)}">
+						<p:ajax process="@this" event="change" />
+					</p:inputText>
+					<p:message for="nombreEmpresaInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_infractor}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selTipoInfractor"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.codigoTipoInfractor}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems value="#{fachadaCatalogosMB.catTipoInfractor()}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selTipoInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_edad}" />
+				<h:panelGroup>
+					<p:inputText id="edadInfractor"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.edad}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(77)}" required="false"
+						converterMessage="#{labelGeneral.val_campo_numerico}">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="edadInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_correo}" />
+				<h:panelGroup>
+					<p:inputText id="correoInfractor"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.email}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(80)}" required="false"
+						validatorMessage="#{labelGeneral.val_campo_email}">
+						<f:validator
+							validatorId="co.com.datatools.util.jsf.EmailValidator" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="correoInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_telefono_fijo}" />
+				<h:panelGroup>
+					<p:inputText id="telefonoFijoInfractor"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.telefonoFijo}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(81)}" required="false">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="telefonoFijoInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_celular}" />
+				<h:panelGroup>
+					<p:inputText id="celularInfractor"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.telefonoMovil}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(82)}" required="false">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="celularInfractor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_es_propietario}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selEsPropietario"
+						value="#{gestionarInconsistenciasComparendoFL.esPropietario}">
+						<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+							itemValue="true" />
+						<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+							itemValue="false" />
+						<p:ajax process="@this" event="change"
+							update="campos-registro-propietario"
+							listener="#{gestionarInconsistenciasComparendoMB.onEsPropietarioInfractorChange()}"
+							global="false" />
+					</p:selectOneMenu>
+					<p:message for="selEsPropietario" />
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:fieldset>
+
+		<p:fieldset id="datos-direccion-infractor"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_direccion_infractor}">
+			<h:panelGrid id="panel-formulario-direccion-infractor"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="3">
+				<!-- Modulo de direcciones-->
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_direccion_infractor}" />
+				<h:panelGroup>
+					<p:inputTextarea id="direccionInfractor" rows="3" readonly="true"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(78)}"
+						value="#{gestionarInconsistenciasComparendoFL.direccionInfractorTexto}"></p:inputTextarea>
+					<p:message for="direccionInfractor" />
+				</h:panelGroup>
+				<!--Boton Direccion-->
+				<p:commandButton id="btnDireccionInfractor"
+					action="DIRECCION_INFRACTOR" process="@this"
+					update="direccionInfractor" immediate="true"
+					value="#{labelAdminComparendo.tooltip_btnDireccion}">
+					<p:tooltip for="btnDireccionInfractor"
+						value="#{labelAdminComparendo.tooltip_btnDireccion}" />
+				</p:commandButton>
+			</h:panelGrid>
+		</p:fieldset>
+
+		<p:fieldset id="datos-licencia-infractor"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_licencia_infractor}">
+			<h:panelGrid id="panel-formulario-licencia-infractor"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_organismo_transito_licencia}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selOrganismoTransitoLicencia"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.codigoOrganismoLicencia}"
+						required="false"
+						requiredMessage="#{labelGeneral.val_campo_requerido}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selOrganismoTransitoLicencia" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_numero_licencia}" />
+				<h:panelGroup>
+					<p:inputText id="numeroLicencia"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.numeroLicencia}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(68)}" required="false"
+						validatorMessage="#{labelGeneral.val_campo_numerico}">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="numeroLicencia" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_categoria_licencia}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selCategoriaLicencia"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.idCategoriaLicenciaCondu}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catCategoriaLicencia()}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selCategoriaLicencia" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_fecha_expedicion_licencia}" />
+				<h:panelGroup>
+					<p:calendar id="fechaExpedicionLicencia"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.fechaExpedicionLicenCondu}"
+						pattern="#{webPrm.lab_calendar_pattern}">
+						<p:watermark for="fechaExpedicionLicencia"
+							value="#{webPrm.lab_calendar_mask_pattern}" />
+						<p:ajax process="@this" event="dateSelect" global="false" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:calendar>
+					<p:message for="fechaExpedicionLicencia" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_fecha_vencimiento_licencia}" />
+				<h:panelGroup>
+					<p:calendar id="fechaVencimientoLicencia"
+						value="#{gestionarInconsistenciasComparendoFL.infractor.fechaVencimientoLicenCondu}"
+						pattern="#{webPrm.lab_calendar_pattern}">
+						<p:watermark for="fechaVencimientoLicencia"
+							value="#{webPrm.lab_calendar_mask_pattern}" />
+						<p:ajax process="@this" event="dateSelect" global="false" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:calendar>
+					<p:message for="fechaVencimientoLicencia" />
+				</h:panelGroup>
+
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

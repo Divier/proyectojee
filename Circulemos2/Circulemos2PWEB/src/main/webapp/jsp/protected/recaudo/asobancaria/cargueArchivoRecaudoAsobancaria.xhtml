@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<f:metadata>
+		    <f:event type="preRenderView" listener="#{cargueArchivoRecaudoAsobancariaMB.toString()}" />
+		</f:metadata>
+		
+		<h:form id="form-contenido">
+
+ 			<p:fieldset id="datos-principal" legend="#{labelRecaudo.msg_cargar_archivo_asobancaria}"
+				styleClass="fieldset-formulario">
+
+				<h:panelGrid id="panel-formulario" styleClass="center-block" columns="1" columnClasses="label-colancha">
+
+					<p:commandButton id="btnCargaAutomatica" actionListener="#{cargueArchivoRecaudoAsobancariaMB.procesarArchivoAutomatico()}"
+						process="@this" update=":messages"
+						value="#{labelRecaudo.msg_ejecutar_proceso}" 
+						disabled="#{!cargueArchivoRecaudoAsobancariaMB.desabilitado}">
+						<p:tooltip for="btnCargaAutomatica" value="#{labelRecaudo.msg_ejecutar_proceso}" />
+					</p:commandButton>
+
+				</h:panelGrid>
+
+			</p:fieldset>
+
+		</h:form>
+
+		<h:form id="form-resultado">
+        	<p:panel id="resultado-consulta" styleClass="panel-res-consulta" rendered="#{cargueArchivoAsobancariaHolder.hayErrores()}">
+            <p:dataTable id="tabla-resultados" value="#{cargueArchivoAsobancariaHolder.errores.respuestas}" var="error"
+                    paginator="true"
+                    paginatorTemplate="#{webPrm.param_paginator_template}"
+                    rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+                    rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+
+					<p:column headerText="#{labelRecaudo.label_columna_numero_linea}" >
+						<h:outputText value="#{error.codigo}" />
+					</p:column>
+
+					<p:column headerText="#{labelRecaudo.label_columna_descripcion_error}" >
+						<h:outputText value="#{error.errorEntrada.descripcion}" />
+					</p:column>
+
+            </p:dataTable>
+        </p:panel>
+    </h:form>
+
+	</ui:define>
+
+</ui:composition>

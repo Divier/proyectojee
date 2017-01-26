@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+	<ui:define name="contenido">
+		<p:panel id="campos-registro" styleClass="panel-formulario"
+			header='#{adminComparendoPeruMB.obtenerMensaje("titulo_ingresar_comparendo")}'>
+			<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+				legend="#{lbComun.msg_fieldset_registro}">
+				<h:form id="form-ingreso" enctype="multipart/form-data">
+					<p:fieldset id="datos-comparendo" styleClass="fieldset-formulario"
+						legend='#{adminComparendoPeruMB.obtenerMensaje("label_datos_comparendo")}'>
+						<h:panelGrid id="panel-formulario" styleClass="center-block"
+							columnClasses="label-col,input-col,label-col,input-col"
+							columns="4">
+							<!-- Componentes del formulario 2 o 4 columnas-->
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_organismo_transito}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selOrganismoTransito"
+									value="#{adminComparendoPeruFL.procesaComparendo.organismoTransito.codigoOrganismo}"
+									required="true"
+									disabled="#{adminComparendoPeruFL.mostrarWizard}"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+									<f:selectItems
+										value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+									<p:ajax
+										listener="#{adminComparendoPeruMB.onCodigoOrganismoChange}"
+										update=":messages" process="@this" global="false" />
+								</p:selectOneMenu>
+								<p:message for="selOrganismoTransito" />
+							</h:panelGroup>
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_fecha_registro}"
+								styleClass="campo-obligatorio" />
+							<c2:outputDateLabel
+								labelValue="#{adminComparendoPeruFL.procesaComparendo.fechaRecepcion}" />
+
+							<p:outputLabel
+								value='#{adminComparendoPeruMB.obtenerMensaje("label_tipo_comparendo")}'
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selTipoComparendo"
+									disabled="#{adminComparendoPeruFL.mostrarWizard}"
+									value="#{adminComparendoPeruFL.procesaComparendo.codigoMedioImposicion}"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+									<f:selectItems
+										value="#{fachadaCatalogosMB.catMedioImposicionComparendo()}" />
+									<p:ajax process="@this" global="false" />
+								</p:selectOneMenu>
+								<p:message for="selTipoComparendo" />
+							</h:panelGroup>
+
+							<p:outputLabel
+								value='#{adminComparendoPeruMB.obtenerMensaje("label_numero_comparendo")}'
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<h:panelGrid columns="2">
+									<p:inputText id="numeroComparendo"
+										value="#{adminComparendoPeruFL.procesaComparendo.numeroComparendo}"
+										maxlength="11" required="true"
+										disabled="#{adminComparendoPeruFL.mostrarWizard}"
+										requiredMessage="#{labelGeneral.val_campo_requerido}"
+										validatorMessage="#{labelGeneral.val_campo_numerico}">
+										<f:validateRegex pattern="#{adminComparendoPeruMB.expresionNumerica}" />
+										<p:ajax
+											listener="#{adminComparendoPeruMB.onNumeroComparendoChange}"
+											update="numeroComparendo, numeroComparendoMessage"
+											global="false" process="@this" event="change" />
+									</p:inputText>
+									<h:outputText value="#{adminComparendoPeruFL.sufijoComparendo}" />
+								</h:panelGrid>
+								<p:message id="numeroComparendoMessage" for="numeroComparendo" />
+							</h:panelGroup>
+
+							<p:outputLabel
+								value='#{adminComparendoPeruMB.obtenerMensaje("label_fecha_imposicion")}'
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:calendar id="fechaImposicion"
+									value="#{adminComparendoPeruFL.procesaComparendo.fechaInfraccion}"
+									pattern="#{webPrm.lab_calendar_pattern_full}" required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									disabled="#{adminComparendoPeruFL.mostrarWizard}"
+									maxdate="#{adminComparendoPeruFL.procesaComparendo.fechaRecepcion}">
+
+									<p:ajax event="dateSelect"
+										listener="#{adminComparendoPeruMB.onFechaImposicionChange}"
+										update="descripcionInfraccion :messages" global="false"
+										process="@this" />
+									<p:ajax event="change"
+										listener="#{adminComparendoPeruMB.onFechaImposicionChange}"
+										update="descripcionInfraccion :messages" global="false"
+										process="@this" />
+									<p:watermark for="fechaImposicion"
+										value="#{webPrm.lab_calendar_pattern_full}" />
+								</p:calendar>
+								<p:message for="fechaImposicion" />
+							</h:panelGroup>
+						</h:panelGrid>
+					</p:fieldset>
+
+					<p:fieldset id="datos-infraccion" styleClass="fieldset-formulario"
+						legend="#{labelAdminComparendo.label_datos_infraccion}">
+						<p:fieldset id="datos-codigo-infraccion"
+							styleClass="fieldset-formulario"
+							legend="#{labelAdminComparendo.label_infraccion}">
+							<h:panelGrid id="panel-formulario-infraccion"
+								styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col"
+								columns="2">
+								<!-- Componentes del formulario 2 o 4 columnas-->
+
+								<p:outputLabel
+									value="#{labelAdminComparendo.label_codigo_infraccion}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputText id="codigoInfraccion" required="true"
+										disabled="#{adminComparendoPeruFL.mostrarWizard}"
+										requiredMessage="#{labelGeneral.val_campo_requerido}"
+										value="#{adminComparendoPeruFL.procesaComparendo.codigoInfraccion}"
+										maxlength="35" onblur="value=value.toUpperCase()">
+										<p:ajax
+											listener="#{adminComparendoPeruMB.onCodigoInfraccionChange}"
+											update=":messages panel-formulario-infraccion"
+											process="@this" event="change" />
+									</p:inputText>
+									<p:message for="codigoInfraccion" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminComparendo.label_descripcion_infraccion}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputTextarea id="descripcionInfraccion"
+										value="#{adminComparendoPeruFL.descripcionInfraccion}"
+										required="true"
+										disabled="#{adminComparendoPeruFL.mostrarWizard}"
+										requiredMessage="#{labelGeneral.val_campo_requerido}"
+										maxlength="200" rows="3" readonly="true"></p:inputTextarea>
+									<p:message for="descripcionInfraccion" />
+								</h:panelGroup>
+							</h:panelGrid>
+						</p:fieldset>
+						<p:fieldset id="datos-lugar-infraccion"
+							styleClass="fieldset-formulario"
+							legend="#{labelAdminComparendo.label_lugar_infraccion}">
+							<h:panelGrid id="panel-formulario-lugar-infraccion"
+								styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col"
+								columns="3">
+								<!-- Modulo de direcciones-->
+								<p:outputLabel
+									value="#{labelAdminComparendo.label_direccion_infraccion}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputTextarea id="direccionInfraccion" rows="3"
+										required="true" readonly="true" maxlength="150"
+										value="#{adminComparendoPeruFL.direccionInfraccionTexto}"></p:inputTextarea>
+									<p:message for="direccionInfraccion" />
+								</h:panelGroup>
+								<!--Boton Direccion-->
+								<p:commandButton id="btnDireccion" action="DIRECCION_INFRACCION"
+									process="@this" update="direccionInfraccion" immediate="true"
+									value="#{labelAdminComparendo.tooltip_btnDireccion}"
+									disabled="#{adminComparendoPeruFL.mostrarWizard}">
+									<p:tooltip for="btnDireccion"
+										value="#{labelAdminComparendo.tooltip_btnDireccion}" />
+								</p:commandButton>
+							</h:panelGrid>
+						</p:fieldset>
+					</p:fieldset>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<!--Boton Continuar diligenciamiento-->
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="@form "
+							value="#{labelAdminComparendo.tooltip_btnGuardar}"
+							update=":messages campos-registro"
+							disabled="#{adminComparendoPeruFL.mostrarWizard}">
+							<p:tooltip for="btnGuardar"
+								value="#{labelAdminComparendo.tooltip_btnGuardar}" />
+						</p:commandButton>
+						<!--Boton Limpiar-->
+						<p:commandButton id="btnLimpiar" action="LIMPIAR"
+							icon="c2-icon-limpiar" process="@this"
+							update=":form-ingreso, :form-ingreso-detalle-comparendo"
+							immediate="true" value="#{lbComun.btnLimpiar}">
+							<p:tooltip for="btnLimpiar" value="#{lbComun.tooltip_limpiar}" />
+						</p:commandButton>
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</h:form>
+
+				<h:form id="form-ingreso-detalle-comparendo"
+					enctype="multipart/form-data">
+					<p:fieldset id="datos-especificos" styleClass="fieldset-formulario"
+						legend='#{adminComparendoPeruMB.obtenerMensaje("label_datos_comparendo_detalle")}'
+						rendered="#{adminComparendoPeruFL.mostrarWizard}">
+						<h:panelGrid columns="1" id="panelDatosEspecificos"
+							styleClass="center-block">
+							<!-- TODO : WIZARD-->
+							<p:wizard flowListener="#{adminComparendoPeruMB.onFlowProcess}"
+								backLabel="#{labelAdminComparendo.label_atras}"
+								nextLabel="#{labelAdminComparendo.label_siguiente}"
+								step="#{adminComparendoPeruFL.pasoActual}">
+								<p:tab id="vehiculo"
+									title="#{labelAdminComparendo.label_vehiculo}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/vehiculo.xhtml" />
+								</p:tab>
+								<p:tab id="infractor"
+									title="#{labelAdminComparendo.label_infractor}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/infractor.xhtml" />
+								</p:tab>
+								<p:tab id="propietario"
+									title="#{labelAdminComparendo.label_propietario}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/propietario.xhtml" />
+								</p:tab>
+								<p:tab id="empresa"
+									title="#{labelAdminComparendo.label_empresa}"
+									rendered="#{!adminComparendoPeruFL.papeleta}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/empresa.xhtml" />
+								</p:tab>
+								<p:tab id="agente_transito"
+									title="#{labelAdminComparendo.label_agente_transito}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/agente_transito.xhtml" />
+								</p:tab>
+								<p:tab id="observaciones"
+									title="#{labelAdminComparendo.label_observaciones}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/observaciones.xhtml" />
+								</p:tab>
+								<p:tab id="evidencias_fisicas"
+									title="#{labelAdminComparendo.label_evidencias_fisicas}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/evidencias_fisicas.xhtml" />
+								</p:tab>
+							</p:wizard>
+						</h:panelGrid>
+					</p:fieldset>
+				</h:form>
+			</p:fieldset>
+
+		</p:panel>
+
+		<ui:include
+			src="/WEB-INF/jsp/administracion/direccion/registrarDireccion.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/comparendo/administracion/peru/popup/errores_procesamiento.xhtml" />
+	</ui:define>
+</ui:composition>

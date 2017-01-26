@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-propietario" styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_propietario}">
+		<p:fieldset id="datos-propietario" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_propietario}">
+			<h:panelGrid id="panel-formulario-propietario"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_documento}" />
+				<p:outputLabel
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.comparendo.propietario.tipoIdentificacion.nombre}" />
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_documento}" />
+				<c2:outputNumberText
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.comparendo.propietario.numeroIdentificacion}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_nombre}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.propietario.nombre1}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_segundo_nombre}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.propietario.nombre2}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_primer_apellido}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.propietario.apellido1}" />
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_segundo_apellido}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.propietario.apellido2}" />
+
+			</h:panelGrid>
+		</p:fieldset>
+		<p:fieldset id="datos-licencia-propietario"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_licencia_propietario}">
+			<h:panelGrid id="panel-formulario-licencia-propietario"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_organismo_transito_licencia_propietario}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.nomOrganismoLicencia}" />
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_licencia_transito}" />
+				<p:outputLabel
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.numeroLicenciaTransito}" />
+
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

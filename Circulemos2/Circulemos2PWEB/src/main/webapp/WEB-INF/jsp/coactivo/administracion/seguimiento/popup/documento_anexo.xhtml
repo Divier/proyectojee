@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="frmDocAnexo">
+		<p:dialog widgetVar="popUpDocAnexo" id="popUpDocAnexo"
+			resizable="false" modal="true" appendToBody="true" dynamic="true"
+			closable="false" visible="#{consultaSeguimientoHolderFL.anexo}"
+			height="500" width="600">
+
+			<br />
+			<pe:documentViewer value="#{radicarExcepcionMB.streamedContent}"
+				height="500"></pe:documentViewer>
+			<br />
+
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<!--Boton Radicar-->
+				<p:commandButton action="#{radicarExcepcionMB.verCancelar()}"
+					value="#{lbComun.btnCancelar}"
+					update=":frmDocAnexo :form-contenido:secciones-detalle:campos-consulta">
+				</p:commandButton>
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+</ui:composition>

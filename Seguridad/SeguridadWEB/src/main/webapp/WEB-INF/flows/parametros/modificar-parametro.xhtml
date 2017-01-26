@@ -1,0 +1,93 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{parametrosMB.toString()}" />
+			<f:event type="preRenderView"
+				listener="#{parametrosMB.cargarListaTiposParametro()}" />
+		</f:metadata>
+		<div>
+			<h2>
+				<h:outputText value="#{parametrosBase.titulo_modificar_parametros}"></h:outputText>
+			</h2>
+			<hr />
+			<h:form id="form-content">
+				<h:panelGrid columns="2" cellpadding="5"
+					styleClass="formulario-servicio" id="panelDatos">
+					<h:outputLabel value="#{parametrosBase.label_nombre_parametro}:"/>
+					<h:outputLabel value="#{modificarParametroFL.parametroSeleccionado.nombre}" />					
+					<h:outputLabel value="#{parametrosBase.label_descripcion_parametro}:"/>
+					<h:outputLabel value="#{modificarParametroFL.parametroSeleccionado.descripcion}" />
+					<h:outputLabel value="#{parametrosBase.label_tipo_parametro}:"/>
+					<h:outputLabel value="#{modificarParametroFL.parametroSeleccionado.nombreTipoParametro}" />
+
+					<h:outputLabel value="#{parametrosBase.label_valor_parametro}" styleClass="campo-obligatorio" />
+
+					<h:panelGroup rendered="#{modificarParametroFL.valorFecha}">
+						<p:calendar id="fecha" value="#{modificarParametroFL.fecha}"
+							pattern="#{webPrm.lab_calendar_pattern}" required="true"
+							label="#{parametrosBase.label_valor_parametro}" />
+						<p:message for="fecha" />
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{modificarParametroFL.valorFechaHora}">
+						<p:calendar id="fechaHora" value="#{modificarParametroFL.fecha}"
+							pattern="#{webPrm.lab_calendar_pattern_full}"
+							timeZone="#{labelGeneral.time_zone}" required="true"
+							label="#{parametrosBase.label_valor_parametro}">
+							<f:convertDateTime
+								pattern="#{webPrm.lab_calendar_pattern_full}"
+								timeZone="#{parametrosBase.param_time_zone}" />
+						</p:calendar>
+						<p:message for="fechaHora" />
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{modificarParametroFL.valorHora}">
+						<p:calendar id="hora" value="#{modificarParametroFL.fecha}"
+							pattern="#{webPrm.lab_calendar_hour_pattern}" timeOnly="true"
+							required="true" readonlyInput="true"
+							label="#{parametrosBase.label_valor_parametro}" />
+						<p:message for="fechaHora" />
+					</h:panelGroup>
+
+
+					<h:panelGroup rendered="#{modificarParametroFL.valorBooleano}">
+						<p:selectOneMenu value="#{modificarParametroFL.valorSiNo}"
+							label="#{parametrosBase.label_valor_parametro}">
+							<f:selectItems value="#{modificarParametroFL.lSiNo}" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+
+					<h:panelGroup
+						rendered="#{modificarParametroFL.valorNumeroEntero or modificarParametroFL.valorNumeroDecimal}">
+						<p:inputText id="numero" value="#{modificarParametroFL.numero}" maxlength="1024"
+							required="true" label="#{parametrosBase.label_valor_parametro}" />
+						<p:message for="numero" />
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{modificarParametroFL.valorTexto}">
+						<p:inputTextarea id="texto" value="#{modificarParametroFL.texto}"
+							required="true" autoResize="false" cols="85" rows="10"
+							label="#{parametrosBase.label_valor_parametro}" maxlength="1024"/>
+						<p:message for="texto" />
+					</h:panelGroup>
+
+					<f:facet name="footer">
+						<p:commandButton styleClass="_op-EDITAR"
+							action="MODIFICAR-PARAMETRO"
+							value="#{lbComun.btnGuardar}" icon="c2-icon-guardar" update="panelDatos" />
+						<p:commandButton value="#{lbComun.btnVolver}" icon="c2-icon-volver"
+							action="VOLVER" immediate="true" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+	<converter>
+		<converter-for-class>java.lang.String</converter-for-class>
+		<converter-class>co.com.datatools.util.jsf.StringTrimmer</converter-class>
+	</converter>
+	<application>
+		<locale-config>
+			<default-locale>es</default-locale>
+		</locale-config>
+		<resource-bundle>
+			<base-name>co.com.datatools.c2.bundle.comun.LabelComun</base-name>
+			<var>lbComun</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.c2.bundle.comun.ParametrosWeb</base-name>
+			<var>webPrm</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.seguridad.bundle.parametros.Mensajes</base-name>
+			<var>parametrosBase</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.seguridad.bundle.general.Mensajes</base-name>
+			<var>mensajesGeneral</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.seguridad.bundle.ingreso.Mensajes</base-name>
+			<var>mensajesIngreso</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.seguridad.bundle.grupos.Mensajes</base-name>
+			<var>mensajesGrupo</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.seguridad.bundle.usuarios.Mensajes</base-name>
+			<var>mensajesUsuario</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.seguridad.bundle.recursos.Mensajes</base-name>
+			<var>mensajesRecurso</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.seguridad.bundle.roles.Mensajes</base-name>
+			<var>mensajesRol</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.seguridad.bundle.operaciones.Mensajes</base-name>
+			<var>mensajesOperacion</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.seguridad.bundle.opcionesmenu.Mensajes</base-name>
+			<var>mensajesOpcionMenu</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.seguridad.bundle.historicoingresos.Mensajes</base-name>
+			<var>mensajesHistoricoIngresos</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.seguridad.bundle.instalador.Mensajes</base-name>
+			<var>mensajesInstalador</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.seguridad.bundle.error.Mensajes</base-name>
+			<var>labelError</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.c2.bundle.reporte.Mensajes</base-name>
+			<var>labelReporte</var>
+		</resource-bundle>
+		<message-bundle>co.com.datatools.seguridad.bundle.general.MensajesFaces</message-bundle>
+		<system-event-listener>
+			<system-event-listener-class>co.com.datatools.seguridad.web.listener.AutorizacionListener</system-event-listener-class>
+			<system-event-class>javax.faces.event.PreRenderViewEvent</system-event-class>
+		</system-event-listener>
+	</application>
+	<!-- <lifecycle> <phase-listener>co.com.datatools.seguridad.web.listener.AutorizacionListener</phase-listener> 
+		</lifecycle> -->
+</faces-config>

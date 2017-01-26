@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:panelGroup>
+	<div class="navbar yamm menu-c2">
+		<div id="navbar-collapse-grid" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-left">
+				<ui:repeat var="menu" value="#{menuMB.menuDtos}">
+					<li class="dropdown yamm-fw"><a href="#"
+						class="dropdown-toggle" data-toggle="dropdown"> <img
+							width="20px" height="20px"
+							src="#{resource[menu.obtenerValorAtributo()]}" /> <h:outputLabel
+								style="margin-left: 5px;" value="#{menu.label}" /><b
+							class="caret" /></a>
+						<ul class="dropdown-menu">
+							<li class="yamm-content">
+								<div class="row">
+									<ui:repeat var="submenu" value="#{menu.submenu}">
+										<ul class="menu-c2-seccion col-md-3 list-unstyled">
+											<li><h:outputLabel value="#{submenu.label}" /></li>
+											<ui:repeat var="item" value="#{submenu.submenu}">
+												<li><a
+													href="#{request.contextPath}/app/#{item.recurso.nombreRecurso}"><b />
+														<h:outputLabel value="#{item.label}" /></a></li>
+											</ui:repeat>
+										</ul>
+									</ui:repeat>
+								</div>
+							</li>
+						</ul></li>
+				</ui:repeat>
+			</ul>		
+		</div>
+	</div>
+</h:panelGroup>
+</html>

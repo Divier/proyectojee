@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-inmovilizacion"
+		styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_inmovilizacion}">
+		<p:fieldset id="datos-inmovilizacion" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_inmovilizacion}">
+			<h:panelGrid id="panel-formulario-inmovilizacion"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+
+				<p:outputLabel value="#{labelAdminComparendo.label_numero_patio}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.procesaComparendo.numeroPatio}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_nombre_patio}" />
+				<p:outputLabel value="#{rectificaComparendoEcuadorFL.procesaComparendo.nombrePatio}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_numero_grua}" />
+				<p:outputLabel
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.numeroGrua}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_placa_grua}" />
+				<p:outputLabel
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.placaGrua}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_consecutivo}" />
+				<p:outputLabel
+					value="#{rectificaComparendoEcuadorFL.procesaComparendo.consecutivoInmovilizacion}" />
+			</h:panelGrid>
+		</p:fieldset>
+
+		<p:fieldset id="datos-direccion-inmovilizacion"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_direccion_inmovilizacion}">
+			<h:panelGrid id="panel-formulario-direccion-inmovilizacion"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="3">
+				<!-- Modulo de direcciones-->
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_direccion_inmovilizacion}" />
+				<h:panelGroup>
+					<p:inputTextarea rows="3" readonly="true" maxlength="150"
+						value="#{rectificaComparendoEcuadorFL.direccionInmovilizacionTexto}" />
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:fieldset>
+
+	</p:panel>
+</ui:composition>

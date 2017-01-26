@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog widgetVar="capturaFirma" id="capturaFirma" resizable="false"
+		modal="true" appendTo="@(body)" closable="false"
+		header="#{labelCapturaFirma.titulo_capt_frm_digital}">
+		<h:form id="form-captura-firma">
+			<h:panelGrid columns="1">
+				<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+					<!--Boton firmar-->
+					<p:commandButton value="Firmar" icon="c2-icon-editar"
+						onclick="StartSign('form-captura-firma:imgdata');" type="button">
+					</p:commandButton>
+				</h:panelGrid>
+				<p:outputLabel value="#{labelCapturaFirma.lbl_vista_previa}"></p:outputLabel>
+				<p:inputText type="hidden" name="imgdata" id="imgdata"></p:inputText>
+				<canvas id="cnv" name="cnv" width="500" height="100"></canvas>
+			</h:panelGrid>
+
+			<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+				<!--Boton guargar-->
+				<p:commandButton id="btnGuardar" value="#{lbComun.btnGuardar}"
+					icon="c2-icon-guardar" action="GUARDAR_FIRMA"
+					process="@this"></p:commandButton>
+				<!--Boton cancelar-->
+				<p:commandButton id="btnCancelar"
+					action="#{capturaFirmaMB.cerrarCapturaFirmaDigital()}"
+					oncomplete="PF('capturaFirma').hide(); limpiarCanvas();" icon="c2-icon-cancelar"
+					process="@this" value="#{lbComun.btnCancelar}">
+					<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}"
+						message="#{lbComun.msg_confirm_volver_cancelar}"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<script>
+ 	$(document).ready(function() {
+		if (#{capturaFirmaMB.capturaFirmaFL.capturarFirmaDigital}) {
+			PF('capturaFirma').show();	
+		}
+ 	});
+ 	function limpiarCanvas(){
+ 		var canvasObj = document.getElementById('cnv');
+		var ctx = document.getElementById('cnv').getContext('2d');
+		ctx.clearRect(0, 0, canvasObj.width, canvasObj.height);
+ 	}
+	</script>
+
+	<h:outputScript library="js" name="signaction.js" target="head" />
+</ui:composition>

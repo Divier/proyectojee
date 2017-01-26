@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+	
+	<ui:define name="contenido">
+	<f:metadata><f:event type="preRenderView" listener="#{reasignacionesMB.consultarTipoFormulario()}" /></f:metadata>
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario" header="#{labelCambioEstadosForm.titulo_ingresar_reasignacion}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_registro}">
+					<p:fieldset id="datos-generales" styleClass="fieldset-formulario" legend="#{labelCambioEstadosForm.label_datos_generales}">
+						<h:panelGrid id="panel-formulario" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">							
+							<p:outputLabel value="#{labelCambioEstadosForm.label_tipo_formulario}"/>
+							<h:outputText value="#{reasignacionFL.nombreTipoFormulario}" />
+							<p:outputLabel value="#{labelCambioEstadosForm.label_tipo_asignacion}" />
+							<h:outputText value="#{reasignacionFL.nombreTipoAsignacion}" />
+							<p:outputLabel value="#{labelCambioEstadosForm.label_folios}" />
+							<h:outputText value="#{reasignacionFL.folio}" />
+							<p:outputLabel value="#{labelCambioEstadosForm.label_fecha_asignacion}" />
+							<c2:outputDateLabel labelValue="#{reasignacionFL.fechaAsignacion}" />
+							<p:outputLabel value="#{labelCambioEstadosForm.label_observaciones}"/>						
+							<h:outputText value="#{reasignacionFL.observaciones}" maxlength="100"/>						
+						</h:panelGrid>
+					</p:fieldset>
+					
+					<p:fieldset id="datos-valida-responsable" styleClass="fieldset-formulario" legend="#{labelCambioEstadosForm.label_datos_responsable_actual}">
+						<h:panelGrid id="panel-formulario-valida-resp" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">
+							<p:outputLabel value="#{labelCambioEstadosForm.label_placa_responsable}"/>
+							<h:panelGroup>
+								<h:outputText id="placa" value="#{reasignacionFL.placaResponsable}" />
+								<p:message for="placa" />
+							</h:panelGroup>
+							<p:outputLabel value="#{labelCambioEstadosForm.label_tipo_doc_responsable}"/>							
+							<h:outputText value="#{reasignacionFL.nombreTipoIdentificacion}" />
+							<p:outputLabel value="#{labelCambioEstadosForm.label_numero_doc_responsable}"/>
+							<h:outputText value="#{reasignacionFL.numeroDocResponsable}" />	
+						</h:panelGrid>
+						<h:panelGrid id="panel-nombre-resp" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4" >
+							<p:outputLabel value="#{labelCambioEstadosForm.label_nombre_responsable}"/>
+							<h:outputText value="#{reasignacionFL.nombreResponsable}" />
+							<p:outputLabel value="#{labelCambioEstadosForm.label_area_responsable}"/>
+							<h:outputText value="#{reasignacionFL.areaResponsable}" />
+						</h:panelGrid>
+					</p:fieldset>
+					<p:fieldset id="datos-formularios" styleClass="fieldset-formulario" legend="#{labelCambioEstadosForm.label_datos_formulario}">
+						<h:panelGrid id="panel-formulario-resp" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">
+							<p:outputLabel value="#{labelCambioEstadosForm.label_numero_inicial}" />
+							<h:outputText id="numInicial" value="#{reasignacionFL.numInicial}" maxlength="50" />
+							<p:outputLabel value="#{labelCambioEstadosForm.label_numero_final}" />
+							<h:outputText id="numFinal" value="#{reasignacionFL.numFinal}" maxlength="50" />
+							<p:outputLabel value="#{labelCambioEstadosForm.label_cantidad_formularios}"/>
+							<h:outputText id="cantidad" value="#{reasignacionFL.cantidadFormularios}"/>	
+						</h:panelGrid>
+					</p:fieldset>
+					
+					<p:fieldset id="datos-valida-responsable-nuevo" styleClass="fieldset-formulario" legend="#{labelCambioEstadosForm.label_datos_responsable_nuevo}">
+						<h:panelGrid id="panel-formulario-valida-resp-nuevo" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">
+							<p:outputLabel value="#{labelCambioEstadosForm.label_placa_responsable}"/>
+							<h:panelGroup>
+								<p:inputText id="placaNuevo" value="#{reasignacionFL.placaResponsableNuevo}" maxlength="20" disabled="#{reasignacionFL.deshabilitarCampoPlaca}">
+									<p:ajax process="@this" update="@this" global="false"/>
+								</p:inputText>
+								<p:message for="placaNuevo" />
+							</h:panelGroup>
+							
+							<p:outputLabel value="#{labelCambioEstadosForm.label_tipo_doc_responsable}"/>							
+							<p:selectOneMenu id="selTipoDoc" value="#{reasignacionFL.idTipoDocResponsableNuevo}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />
+								<p:ajax process="@this" update="@this,placaNuevo" global="false"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="#{labelCambioEstadosForm.label_numero_doc_responsable}"/>
+							<p:inputText id="numeroDocNuevo" value="#{reasignacionFL.numeroDocResponsableNuevo}" maxlength="20">
+								<p:ajax process="@this" update="@this" global="false"/>
+							</p:inputText>	
+						</h:panelGrid>
+						<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+								<!--Boton validar responsable-->
+								<p:commandButton id="btnValidar" 
+									action="#{reasignacionesMB.validarResponsable()}" icon="c2-icon-consultar"
+									value="#{labelCambioEstadosForm.btnValidarResponsable}"
+									update=":messages :form-ingreso">
+									<p:tooltip for="btnValidar" value="#{labelCambioEstadosForm.tooltip_btnValidar}" />
+								</p:commandButton>
+						</h:panelGrid>	
+						<h:panelGrid id="panel-nombre-resp-nuevo" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4" rendered="#{reasignacionFL.nombreResponsableNuevo != null}">
+							<p:outputLabel value="#{labelCambioEstadosForm.label_nombre_responsable}"/>
+							<h:outputText value="#{reasignacionFL.nombreResponsableNuevo}" />
+							
+							<p:outputLabel value="#{labelCambioEstadosForm.label_area_responsable}"/>
+							<h:outputText value="#{reasignacionFL.areaResponsableNuevo}" />
+						</h:panelGrid>
+						<h:panelGrid  styleClass="center-block" columns="4" cellpadding="5">
+							<p:outputLabel value="#{labelCambioEstadosForm.label_folios}" styleClass="campo-obligatorio"/>
+							<h:panelGroup>
+								<p:inputText id="folio" value="#{reasignacionFL.folioNuevo}" requiredMessage="#{labelGeneral.val_campo_requerido}" maxlength="20" />
+								<p:message for="folio" />
+							</h:panelGroup>
+							<p:outputLabel value="#{labelCambioEstadosForm.label_fecha_reasignacion}" styleClass="campo-obligatorio"/>
+							<h:panelGroup>
+								<p:calendar id="fechaReasignacion" value="#{reasignacionFL.fechaReasignacion}" navigator="true" pattern="#{webPrm.lab_calendar_pattern}"
+										requiredMessage="#{labelGeneral.val_campo_requerido}" maxdate="new java.util.Date()">
+									<p:watermark for="fechaReasignacion" value="#{webPrm.lab_calendar_mask_pattern}" />
+								</p:calendar>
+								<p:message for="fechaReasignacion" />
+							</h:panelGroup>							
+							<p:outputLabel value="#{labelCambioEstadosForm.label_observaciones}"/>
+							<p:inputTextarea id="observaciones" value="#{reasignacionFL.observacionesNuevo}" maxlength="100" />
+						</h:panelGrid>
+					</p:fieldset>
+					
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5"> 
+						<!--Boton Reasignar todo el rango de formularios-->
+						<p:commandButton id="btnGuardar" action="VALIDAR-CANTIDAD-FORMULARIOS-RANGO" icon="c2-icon-guardar" process="@form" value="#{labelCambioEstadosForm.btnReasignar_todo}" update=":messages,:form-ingreso">
+							<p:tooltip for="btnGuardar" value="#{labelCambioEstadosForm.tooltip_btnReasignar_todo}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton> 
+						<!--Boton Reasignar por formularios-->
+						<p:commandButton id="btnReasignarFormulario" action="VER-DETALLE-FORMULARIOS" icon="c2-icon-detalle" process="@form" update=":messages :form-ingreso" 
+							value="#{labelCambioEstadosForm.btnReasignar_formulario}" >
+							<p:tooltip for="btnReasignarFormulario" value="#{labelCambioEstadosForm.tooltip_btnReasignar_formulario}" />
+						</p:commandButton>
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" action="_op-CANCELAR" icon="c2-icon-cancelar" process="@this" immediate="true" value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{labelNumeracion.tooltip_btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+						</p:commandButton>						
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+		<!-- Popup para confirmar la creacion de un responsable que no existe -->
+		<p:dialog widgetVar="confirmaRegistroResponsable" id="confirmaRegistroResponsable" header="#{labelCambioEstadosForm.titulo_confirmacion}" resizable="false" modal="true" appendToBody="true" dynamic="true">
+			<h:form >
+				<h:panelGrid styleClass="center-block" columns="4">
+					<p:outputLabel value="#{labelCambioEstadosForm.msg_confirmacion_registro_responsable}" />
+				</h:panelGrid>	
+				<h:panelGrid columns="2" styleClass="center-block" cellspacing="5">
+					<p:commandButton value="Si" action="CREAR-RESPONSABLE" immediate="true" oncomplete="PF('confirmaRegistroResponsable').hide();" styleClass="ui-confirmdialog-yes" icon="c2-icon-si"/>
+					<p:commandButton value="No" action="CANCELAR-CREACION-RESPONSABLE" immediate="true" oncomplete="PF('confirmaRegistroResponsable').hide();" styleClass="ui-confirmdialog-no"	icon="c2-icon-no"/>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+		
+		<!-- Popup para confirmar que se desea asignar una cantidad menor al stock minimo configurado -->
+		<p:dialog widgetVar="confirmaCantidadFormularios" id="confirmaCantidadFormularios" header="#{labelCambioEstadosForm.titulo_confirmacion_cantidad}" resizable="false" modal="true" appendToBody="true" dynamic="true">
+			<h:form >
+				<h:panelGrid styleClass="center-block" columns="4">
+					<p:outputLabel value="#{reasignacionesMB.msgConfirmaCantidad}" />
+				</h:panelGrid>	
+				<h:panelGrid columns="2" styleClass="center-block" cellspacing="5">
+					<p:commandButton value="Si" action="CONTINUAR" immediate="true" oncomplete="PF('confirmaCantidadFormularios').hide();" styleClass="ui-confirmdialog-yes" icon="c2-icon-si" update=":form-ingreso"/>
+					<p:commandButton value="No" action="CANCELAR-REASIGNACION" immediate="true" oncomplete="PF('confirmaCantidadFormularios').hide();" styleClass="ui-confirmdialog-no"	icon="c2-icon-no"/>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+		
+			<script>
+	 	$(document).ready(function(){
+			var popUp = #{reasignacionFL.cantidadInferiorMinimo};
+			if(popUp){
+				PF('confirmaCantidadFormularios').show();	
+			}
+	 	 });
+		</script>
+	</ui:define>
+</ui:composition>

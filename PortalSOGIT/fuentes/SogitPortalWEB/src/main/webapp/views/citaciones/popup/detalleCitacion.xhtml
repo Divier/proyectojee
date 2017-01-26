@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="frmDetCitn">
+		<p:dialog widgetVar="popUpDetCitn" id="popUpDetCitn"
+			header="#{bundleCitaciones['tit_det_comparendo']}" resizable="false"
+			modal="true" appendTo="@(body)" dynamic="true" closable="false" width="750" height="520">
+
+			<p:tabView>
+				<p:tab title="#{bundleCitaciones['tit_info_comparendo']}">
+					<h:panelGrid id="panel-formulario" columns="4"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel value="#{bundleCitaciones['lbl_numero_citacion']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.numeroCitacion}"></p:outputLabel>
+
+						<p:outputLabel value="#{bundleCitaciones['lbl_fch_imposicion']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.fechaImposicion}">
+							<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+						</p:outputLabel>
+
+						<p:outputLabel value="#{bundleCitaciones['lbl_tip_documento']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.nombreTipoIdentificacion}"></p:outputLabel>
+
+						<p:outputLabel value="#{bundleCitaciones['lbl_direc_imposi']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.direccionInfraccion}"></p:outputLabel>
+
+						<p:outputLabel value="#{bundleCitaciones['lbl_numero_documento']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.identificacion}"></p:outputLabel>
+
+						<p:outputLabel value="#{bundleCitaciones['lbl_placa_vehiculo']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.placaVehiculo}"></p:outputLabel>
+
+						<p:outputLabel value="#{bundleCitaciones['lbl_nom_deudor']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.nombreInfractor}"></p:outputLabel>
+
+						<p:outputLabel value="#{bundleCitaciones['lbl_est_citacion']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.estadoCitacion}"></p:outputLabel>
+
+						<p:outputLabel value="#{bundleCitaciones['lbl_rubro']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.descripcionInfraccion}"></p:outputLabel>
+
+						<p:outputLabel value="#{bundleCitaciones['lbl_sl_citacion']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.saldoComparendo}">
+							<f:convertNumber pattern="#{utilidadMB.formatoMonedaCompleta}"
+								type="currency" />
+						</p:outputLabel>
+
+						<p:outputLabel value="#{bundleCitaciones['lbl_int_mora']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.valorIntereses}">
+							<f:convertNumber pattern="#{utilidadMB.formatoMonedaCompleta}"
+								type="currency" />
+						</p:outputLabel>
+					</h:panelGrid>
+					<h:panelGrid id="panel-formulario_sl" columns="2"
+						styleClass="center-block" columnClasses="label-col,input-col"
+						rendered="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.fechaPago == null}">
+						<p:outputLabel value="#{bundleCitaciones['lbl_totl_slado']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.totalSaldo}"
+							style="font-weight: bold;font-size: 20px !important;">
+							<f:convertNumber pattern="#{utilidadMB.formatoMonedaCompleta}"
+								type="currency" />
+						</p:outputLabel>
+					</h:panelGrid>
+					<h:panelGrid id="panel-formulario_fp" columns="2"
+						styleClass="center-block" columnClasses="label-col,input-col"
+						rendered="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.fechaPago != null}">
+						<p:outputLabel value="#{bundleCitaciones['lbl_fecha_pago']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaCitacionesMB.comparendoReplicaDetalleDTO.fechaPago}">
+							<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+						</p:outputLabel>
+					</h:panelGrid>
+					<p:outputLabel value="#{bundleCitaciones['nota_dt_citacion']}"
+						style="color:red;"></p:outputLabel>
+				</p:tab>
+				<p:tab title="#{bundleCitaciones['tit_det_evidencia']}"
+					rendered="#{consultaCitacionesMB.evidencias!=null}">
+
+					<p:galleria rendered="#{consultaCitacionesMB.evidencias.size()>0}"
+						var="evd" value="#{consultaCitacionesMB.evidencias}"
+						panelWidth="676" panelHeight="350">
+						<p:graphicImage value="#{evd}" width="676" height="350">
+						</p:graphicImage>
+					</p:galleria>
+
+				</p:tab>
+			</p:tabView>
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<!--Boton Consultar-->
+				<p:commandButton oncomplete="PF('popUpDetCitn').hide();"
+					icon="c2-icon-cancelar" process="@this"
+					value="#{bundleGeneral['btn_volver']}">
+				</p:commandButton>
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+</ui:composition>

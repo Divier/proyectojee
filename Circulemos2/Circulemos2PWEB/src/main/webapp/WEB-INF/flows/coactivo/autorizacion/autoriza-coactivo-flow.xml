@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="autorizaCoactivoFL"
+		class="co.com.datatools.c2.managed_bean.coactivo.autorizacion.AutorizaCoactivoFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/coactivo/autorizacion/autorizarCoactivo.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('autorizaCoactivoMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.autorizaCoactivoMB.consultar()" />
+		</transition>
+		<transition on="_op-AUTORIZAR_COACTIVO" to="ASIGNAR_SECRETARIO"/>
+		<transition on="NO_AUTORIZAR" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.autorizaCoactivoMB.noAutorizar()" />
+		</transition>
+	</view-state>
+
+	<!-- SUB FLUJO asignar secretario -->
+	<subflow-state id="ASIGNAR_SECRETARIO" subflow="coactivo/asignar-secretario">
+
+		<output name="funcionario" />
+
+		<transition on="CANCELAR_SEC" to="ingresar"/>
+		<transition on="ASIGNAR_SEC" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.autorizaCoactivoMB.autorizar(funcionario)" />
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.coactivo.autorizacion.AutorizaCoactivoFL()"
+				result="flowScope.autorizaCoactivoFL"></evaluate>
+		</transition>
+	</subflow-state>
+	<!-- -->		
+</flow>

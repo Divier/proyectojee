@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="interesHolderFL"
+		class="co.com.datatools.c2.managed_bean.administracionnegocio.configuracion.interes.InteresHolderFL" />
+	<var name="interesFL"
+		class="co.com.datatools.c2.managed_bean.administracionnegocio.configuracion.interes.InteresFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracionnegocio/configuracion/interes/consultarInteres.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('interesMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="CONSULTAR_INTERES" />
+		<transition on="_op-CREAR" to="INGRESAR_INTERES" />
+		<transition on="_op-EDITAR" to="EDITAR_INTERES" />
+		<transition on="_op-ELIMINAR" to="ELIMINAR_INTERES" />
+	</view-state>
+
+	<action-state id="CONSULTAR_INTERES">
+		<evaluate
+			expression="externalContext.sessionMap.interesMB.consultarTasasInteres()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<action-state id="INGRESAR_INTERES">
+		<evaluate
+			expression="externalContext.sessionMap.interesMB.irGuardarTasaInteres()" />
+		<transition on="CREAR" to="CREAR_INTERES" >
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.administracionnegocio.configuracion.interes.InteresFL()"
+				result="flowScope.interesFL" />
+		</transition>
+		<transition on="ERROR" to="ingresar" />
+	</action-state>
+
+	<view-state id="CREAR_INTERES"
+		view="/WEB-INF/jsp/administracionnegocio/configuracion/interes/registrarInteres.xhtml">
+		<transition on="VOLVER" to="ingresar" />
+		<transition on="CONTINUAR" to="GUARDAR_INTERES" />
+		<transition on="ACEPTAR" to="ACEPTAR" />
+	</view-state>
+
+	<action-state id="GUARDAR_INTERES">
+		<evaluate
+			expression="externalContext.sessionMap.interesMB.guardarTasaInteres()" />
+		<transition on="EXITOSO" to="CREAR_INTERES" />
+		<transition on="ERROR" to="CREAR_INTERES" />
+	</action-state>
+
+	<action-state id="EDITAR_INTERES">
+		<evaluate
+			expression="externalContext.sessionMap.interesMB.irActualizarTasaInteres()" />
+		<transition on="yes" to="CREAR_INTERES" />
+		<transition on="no" to="ingresar" />
+	</action-state>
+	
+	<action-state id="ELIMINAR_INTERES">
+		<evaluate
+			expression="externalContext.sessionMap.interesMB.eliminarTasaInteres()" />
+		<transition on="success" to="ingresar" />
+	</action-state> 
+
+	<action-state id="ACEPTAR">
+		<evaluate expression="externalContext.sessionMap.interesMB.aceptarConfirmacion()" />
+		<transition on="CREADO" to="INGRESAR_INTERES" />
+		<transition on="ACTUALIZADO" to="ingresar" />
+	</action-state>
+</flow>

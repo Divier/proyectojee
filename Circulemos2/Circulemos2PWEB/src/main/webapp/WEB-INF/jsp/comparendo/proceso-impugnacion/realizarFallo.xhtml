@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/layouts/standard.xhtml">
+	<ui:define name="contenido">
+		<ui:include
+			src="/WEB-INF/jsp/comparendo/proceso-impugnacion/encabezadoImpugnacion.xhtml" />
+
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelProcesoImpugnacion.label_realizar_fallo}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_registro}">
+
+					<!--Agregar Secciones o Panel Grid de campos-->
+					<h:panelGrid styleClass="center-block" columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel
+							value="#{labelProcesoImpugnacion.label_tipo_plantilla}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenTipoPlantilla"
+								value="#{realizarFalloFL.codigoPlantilla}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItems value="#{realizarFalloFL.lstPlantillas}" />
+								<p:ajax process="@this" global="false" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenTipoPlantilla" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelProcesoImpugnacion.label_tipo_fallo}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenTipoFallo"
+								value="#{realizarFalloFL.idTipoFallo}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoFallo()}" />
+								<p:ajax listener="#{realizarFalloMB.onTipoFallo()}"
+									update="datos-principal" process="@this" global="false" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenTipoFallo" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelProcesoImpugnacion.label_porcentaje}"
+							styleClass="campo-obligatorio"
+							rendered="#{realizarFalloFL.mostrarPorcentaje}" />
+						<h:panelGroup rendered="#{realizarFalloFL.mostrarPorcentaje}">
+							<p:spinner id="porcentajeSpin"
+								value="#{realizarFalloFL.porcentaje}" min="1" max="99"
+								stepFactor="1" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								validatorMessage="#{labelProcesoImpugnacion.error_porcentaje}">
+								<f:validateDoubleRange minimum="1" maximum="99" />
+								<p:ajax process="@this" global="false" />
+							</p:spinner>
+							<p:message for="porcentajeSpin" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelProcesoImpugnacion.label_puntos}"
+							rendered="#{realizarFalloFL.mostrarPuntos}" />
+						<h:panelGroup rendered="#{realizarFalloFL.mostrarPuntos}">
+							<p:spinner id="puntosSpin" value="#{realizarFalloFL.puntos}"
+								autocomplete="false" stepFactor="0.01" required="false"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								converterMessage="#{labelProcesoImpugnacion.error_puntos}"
+								validatorMessage="#{labelProcesoImpugnacion.error_puntos}">
+								<f:validateDoubleRange minimum="0.01" maximum="99.99" />
+								<p:ajax process="@this" global="false" />
+							</p:spinner>
+							<p:message for="puntosSpin" />
+						</h:panelGroup>
+					</h:panelGrid>
+					<h:panelGrid styleClass="center-block" columns="1"
+						columnClasses="label-col gigante">
+						<p:outputLabel
+							value="#{labelProcesoImpugnacion.label_motivo_fallo}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputTextarea id="txaMotivoFallo" styleClass="textAreaGigante"
+								value="#{realizarFalloFL.motivoFallo}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<p:ajax process="@this" global="false" />
+							</p:inputTextarea>
+							<p:message for="txaMotivoFallo" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="4" cellpadding="5">
+						<!--Boton Vista Preliminar-->
+						<p:commandButton id="btnPreliminar"
+							action="#{realizarFalloMB.generarVistaPreliminar()}"
+							icon="ui-icon-document" process="@form"
+							value="#{labelProcesoImpugnacion.label_vista_preliminar}"
+							update=":messages @form :form-pdfviewer">
+							<p:tooltip for="btnPreliminar"
+								value="#{labelProcesoImpugnacion.label_vista_preliminar}" />
+						</p:commandButton>
+						<!--Boton Continuar-->
+						<p:commandButton id="btnContinuar" action="ACEPTAR"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}" update=":messages :form-ingreso">
+							<p:tooltip for="btnContinuar" value="#{lbComun.btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<!--Boton Limpiar-->
+						<p:commandButton id="btnLimpiar" action="LIMPIAR"
+							icon="c2-icon-limpiar" process="@this" update=":form-ingreso"
+							immediate="true" value="#{lbComun.btnLimpiar}">
+							<p:tooltip for="btnLimpiar" value="#{lbComun.tooltip_limpiar}" />
+						</p:commandButton>
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<ui:include
+			src="/WEB-INF/jsp/comparendo/proceso-impugnacion/popup/visualizarDocumentoPdf.xhtml" />
+	</ui:define>
+
+</ui:composition>

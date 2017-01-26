@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ServicioPruebaWSService" targetNamespace="http://suma.ws.poc.c2.datatools.com.co/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://suma.ws.poc.c2.datatools.com.co/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://suma.ws.poc.c2.datatools.com.co/" schemaLocation="serviciopruebaws_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="sumaResponse">
+    <wsdl:part name="parameters" element="tns:sumaResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="suma">
+    <wsdl:part name="parameters" element="tns:suma">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="IServicioPruebaWS">
+    <wsdl:operation name="suma">
+      <wsdl:input name="suma" message="tns:suma">
+    </wsdl:input>
+      <wsdl:output name="sumaResponse" message="tns:sumaResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServicioPruebaWSServiceSoapBinding" type="tns:IServicioPruebaWS">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="suma">
+      <soap:operation soapAction="urn:Suma" style="document"/>
+      <wsdl:input name="suma">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="sumaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ServicioPruebaWSService">
+    <wsdl:port name="ServicioPruebaWSPort" binding="tns:ServicioPruebaWSServiceSoapBinding">
+      <soap:address location="http://localhost:8080/Prueba-WS-CXF/services"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

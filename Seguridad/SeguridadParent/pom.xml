@@ -1,0 +1,186 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>co.com.datatools.seguridad</groupId>
+	<artifactId>SeguridadParent</artifactId>
+	<version>2.2.12</version>
+	<packaging>pom</packaging>
+
+	<name>Seguridad Parent POM</name>
+	<description>POM Maestro para el proyecto Seguridad</description>
+
+	<organization>
+		<name>Data Tools</name>
+		<url>http://www.datatools.com.co</url>
+	</organization>
+	
+	<profiles>
+		<!-- Perfil desarrollo -->
+		<profile>
+			<id>development</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<project.stage>Development</project.stage>
+			</properties>
+			<modules>
+				<module>../SeguridadSQL</module>
+				<module>../SeguridadWebExtras</module>
+				<module>../SeguridadClientEJB</module>
+				<module>../SeguridadEJB</module>
+				<module>../SeguridadWEB</module>
+				<module>../SeguridadEAR</module>
+			</modules>
+		</profile>
+
+		<!-- Perfil release version -->
+		<profile>
+			<id>release</id>
+			<properties>
+				<project.stage>Production</project.stage>
+			</properties>
+			<modules>
+				<module>../SeguridadSQL</module>
+				<module>../SeguridadWebExtras</module>
+				<module>../SeguridadClientEJB</module>
+				<module>../SeguridadEJB</module>
+				<module>../SeguridadWEB</module>
+				<module>../SeguridadEAR</module>
+			</modules>
+		</profile>
+
+		<!-- Perfil pruebas unitarias -->
+		<profile>
+			<id>test</id>
+			<modules>
+				<module>../SeguridadTest</module>
+			</modules>
+		</profile>
+	</profiles>
+	
+	<properties>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		
+		<!-- Utilidades internas -->
+		<UtilidadesWEB.version>1.2.2-SNAPSHOT</UtilidadesWEB.version>
+		<UtilidadesEJB.version>1.1.0-SNAPSHOT</UtilidadesEJB.version>
+		<UtilidadesJSE.version>1.2.3-SNAPSHOT</UtilidadesJSE.version>
+		<GeneradorReportesC2.version>1.1.0-SNAPSHOT</GeneradorReportesC2.version>
+		
+		<!-- Dependencias Hibernate -->
+		<hibernate-jpa-2.0-api.version>1.0.1.Final</hibernate-jpa-2.0-api.version>
+		<persistence-api.version>1.0</persistence-api.version>
+		<hibernate-entitymanager.version>4.1.4.Final</hibernate-entitymanager.version>
+		
+		<!-- Dependencias Web -->
+		<primefaces.version>5.2</primefaces.version>
+		<primefaces-mobile.version>0.9.4</primefaces-mobile.version>
+		<primefaces-extensions.version>3.2.0</primefaces-extensions.version>
+		<all-themes.version>1.0.10</all-themes.version>
+		<webjar-c2.version>1.0.6</webjar-c2.version>
+		<spring-faces.version>2.4.1.RELEASE</spring-faces.version>
+		<spring-webflow.version>2.4.1.RELEASE</spring-webflow.version>
+		<jsf-impl.version>2.1.16</jsf-impl.version>
+		
+		<!-- API Java EE 6.0 -->
+		<jboss-javaee-6.0.version>3.0.2.Final</jboss-javaee-6.0.version>
+		
+		<!-- Generales -->
+		<jboss-logging.version>3.1.0.GA</jboss-logging.version>
+		<reflections.version>0.9.9-RC1</reflections.version>
+		<infinispan.version>5.1.2.FINAL</infinispan.version>
+		<commons-collections.version>3.2.1</commons-collections.version>
+		
+		<!-- junit -->
+		<junit.version>4.8.1</junit.version>
+		<arquillian-bom.version>1.1.3.Final</arquillian-bom.version>
+		
+		<!-- Modulos Seguridad -->
+		<SeguridadSQL.version>2.2.12</SeguridadSQL.version>
+		<SeguridadClientEJB.version>2.2.12</SeguridadClientEJB.version>
+		<SeguridadWebExtras.version>2.2.12</SeguridadWebExtras.version>
+		<SeguridadEJB.version>2.2.12</SeguridadEJB.version>
+		<SeguridadWEB.version>2.2.12</SeguridadWEB.version>
+		<SeguridadEAR.version>2.2.12</SeguridadEAR.version>
+		<SeguridadTest.version>2.2.12</SeguridadTest.version>
+		<AuditoriaEJBClient.version>0.0.1-SNAPSHOT</AuditoriaEJBClient.version>
+		
+		<!-- Envio de correo -->
+		<EnvioCorreoEJB.version>1.0.1</EnvioCorreoEJB.version>
+	</properties>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-ejb-plugin</artifactId>
+					<version>2.3</version>
+					<configuration>
+						<ejbVersion>3.1</ejbVersion>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-ear-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jboss.as.plugins</groupId>
+					<artifactId>jboss-as-maven-plugin</artifactId>
+					<version>7.4.Final</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+					<configuration>
+						<target>1.7</target>
+						<source>1.7</source>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.12</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<target>1.7</target>
+					<source>1.7</source>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>archiva.internal</id>
+			<name>Internal Release Repository</name>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/internal/</url>
+		</repository>
+		<snapshotRepository>
+			<id>archiva.snapshots</id>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

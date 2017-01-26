@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelSimit.gen_archivo_simit}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2" columnClasses="label-col,input-col">
+						<!-- ORGANISMO DE TRANSITO -->
+						<p:outputLabel value="#{labelSimit.lbl_org_tra}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup id="org-tra">
+							<p:selectOneMenu id="selOneMenOrgTra"
+								value="#{archivoSimitFL.codigoOrganismo}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									noSelectionOption="true" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenOrgTra" />
+						</h:panelGroup>
+						<!-- FECHA INICIAL -->
+						<p:outputLabel value="#{labelSimit.lbl_fec_ini}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup id="fecha-inicial">
+							<p:calendar id="calFecIni" value="#{archivoSimitFL.fechaInicial}"
+								navigator="true" pattern="#{webPrm.lab_calendar_pattern}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								maxdate="#{archivoSimitFL.fechaInicialMax}">
+								<p:ajax event="dateSelect"
+									listener="#{archivoSimitMB.ajustarFechaLimite()}"
+									update="fecha-inicial fecha-final" global="false" />
+								<p:watermark for="calFecIni"
+									value="#{webPrm.lab_calendar_mask_pattern}" />
+							</p:calendar>
+							<p:message for="calFecIni" />
+						</h:panelGroup>
+						<!-- FECHA FINAL -->
+						<p:outputLabel value="#{labelSimit.lbl_fec_fin}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup id="fecha-final">
+							<p:calendar id="calFecFin" value="#{archivoSimitFL.fechaFinal}"
+								navigator="true" pattern="#{webPrm.lab_calendar_pattern}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								mindate="#{archivoSimitFL.fechaFinalMin}">
+								<p:ajax event="dateSelect"
+									listener="#{archivoSimitMB.ajustarFechaLimite()}"
+									update="fecha-inicial fecha-final" global="false" />
+								<p:watermark for="calFecFin"
+									value="#{webPrm.lab_calendar_mask_pattern}" />
+							</p:calendar>
+							<p:message for="calFecFin" />
+						</h:panelGroup>
+					</h:panelGrid>
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultar" value="#{labelSimit.tt_consultar}" />
+						</p:commandButton>
+						<!--Boton Nuevo-->
+						<p:commandButton id="btnCrear" styleClass="_op-CREAR"
+							action="_op-CREAR" icon="c2-icon-crear" process="@this org-tra"
+							value="#{lbComun.btnCrear}" update="@form :dialogoArchivoSimit">
+							<p:tooltip for="btnCrear" value="#{labelSimit.tt_crear}" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{archivoSimitHolderFL.resultados.size() > 0}">
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<!-- Ver archivo plano generado -->
+						<p:commandButton id="btnVerDet" process="@this"
+							disabled="#{archivoSimitHolderFL.eventoArchivoSimitSel == null or archivoSimitHolderFL.eventoArchivoSimitSel.idDocumento == null}"
+							ajax="false" icon="ui-icon-arrowthick-1-s"
+							onclick="PrimeFaces.monitorDownload(start, stop);"
+							value="#{labelSimit.btn_des}" title="#{labelSimit.tt_detalle}"
+							styleClass="contenido">
+							<p:tooltip value="#{labelSimit.btn_des}" />
+							<p:fileDownload
+								value="#{archivoSimitMB.descargarDocumento(archivoSimitHolderFL.eventoArchivoSimitSel.idDocumento)}" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+				<p:dataTable id="tabla-resultados"
+					value="#{archivoSimitHolderFL.resultados}" var="registro"
+					rowKey="#{registro.id}"
+					selection="#{archivoSimitHolderFL.eventoArchivoSimitSel}"
+					paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+					<p:ajax event="rowSelectRadio"
+						process=":form-resultado:tabla-resultados"
+						update=":form-resultado:acciones-top" global="false" />
+					<!--Columnas Resultado Consulta-->
+					<p:column selectionMode="single" />
+					<!-- Fecha y hora generacion archivo SIMIT -->
+					<p:column headerText="#{labelSimit.col_fec_gen}">
+						<c2:outputDateLabel
+							labelValue="#{registro.notificacionSimit.fechaGeneracion}"
+							fullFormat="true" />
+					</p:column>
+					<!-- Tipo de documento a enviar -->
+					<p:column headerText="#{labelSimit.col_tipo_doc}">
+						<h:outputText
+							value="#{registro.notificacionSimit.tipoDocumentoEnvioSimit.nombre}" />
+					</p:column>
+					<!-- Numero de registros contenidos -->
+					<p:column headerText="#{labelSimit.col_num_reg}">
+						<c2:outputNumberText
+							value="#{registro.notificacionSimit.cantidadRegistros}"
+							format="false" />
+					</p:column>
+					<!-- Resultado del envio a SIMIT -->
+					<p:column headerText="#{labelSimit.col_tipo_res}">
+						<h:outputText
+							value="#{registro.notificacionSimit.tipoResultadoEnvioSimit.nombre}" />
+					</p:column>
+					<!-- Usuario -->
+					<p:column headerText="#{labelSimit.col_usu}">
+						<h:outputText value="#{registro.usuario}" />
+					</p:column>
+					<!-- Usuario -->
+					<p:column headerText="#{labelSimit.col_num_of}">
+						<h:outputText value="#{registro.numeroOficio}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+		<p:dialog widgetVar="dialogoArchivoSimit" id="dialogoArchivoSimit"
+			header="#{labelSimit.gen_archivo_simit}" resizable="false"
+			modal="true" appendTo="@(body)" closable="false" width="700">
+			<h:form id="form-ingreso-generar" styleClass="contenido">
+				<p:panel id="campos-registro" styleClass="panel-formulario"
+					header="#{labelSimit.res_archivo_simit}">
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<p:outputLabel value="#{labelSimit.lbl_tipo_doc}" />
+						<p:outputLabel
+							value="#{archivoSimitGenerarFL.nombreTipoDocumentoSimit}" />
+						<p:outputLabel value="#{labelSimit.lbl_num_reg}" />
+						<p:outputLabel
+							value="#{archivoSimitGenerarFL.cantidadRegistrosTotal}" />
+					</h:panelGrid>
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Generar -->
+						<p:commandButton id="btnGuardar" action="GENERAR_ARCHIVO"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}"
+							update=":messages :form-ingreso-generar" immediate="true">
+							<p:tooltip for="btnGuardar" value="#{labelSimit.tt_crear}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<p:commandButton id="btnVolver" icon="c2-icon-volver"
+							process="@this" immediate="true" value="#{lbComun.btnVolver}"
+							oncomplete="PF('dialogoArchivoSimit').hide()">
+							<p:tooltip for="btnVolver" value="#{lbComun.tooltip_volver}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:panel>
+			</h:form>
+		</p:dialog>
+		<script>
+	 	$(document).ready(function() {
+			if (#{archivoSimitGenerarFL.mostrarGenerarArchivo}) {
+				PF('dialogoArchivoSimit').show();	
+			}
+	 	});
+		</script>
+	</ui:define>
+
+</ui:composition>

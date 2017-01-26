@@ -1,0 +1,77 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>co.com.datatools.c2</groupId>
+		<artifactId>Circulemos2Parent</artifactId>
+		<version>2.0.26</version>
+		<relativePath>../Circulemos2Parent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>ClientesWS</artifactId>
+	<name>ClienteWS</name>
+	<packaging>jar</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<jboss-javaee-6.0.version>3.0.2.Final</jboss-javaee-6.0.version>
+		<hibernate-entitymanager.version>4.1.4.Final</hibernate-entitymanager.version>
+		<slf4j.version>1.7.5</slf4j.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis-jaxrpc</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-discovery</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.8.1</version>
+		</dependency>
+
+		<!-- jboss log -->
+		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging</artifactId>
+			<version>${jboss-logging.version}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<distributionManagement>
+		<repository>
+			<id>archiva.internal</id>
+			<name>Internal Release Repository</name>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/internal/</url>
+		</repository>
+		<snapshotRepository>
+			<id>archiva.snapshots</id>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

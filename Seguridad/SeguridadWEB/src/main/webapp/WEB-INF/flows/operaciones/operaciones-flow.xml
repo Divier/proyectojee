@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+	parent="global">
+
+	<var name="operacionesFL" class="co.com.datatools.seguridad.mb.operaciones.OperacionesFL" />
+	<var name="crearOperacionFL"
+		class="co.com.datatools.seguridad.mb.operaciones.CrearOperacionFL" />
+	<var name="modificarOperacionFL"
+		class="co.com.datatools.seguridad.mb.operaciones.ModificarOperacionFL" />
+
+	<decision-state id="decision">
+		<if test="requestParameters.stateId=='crear'" then="_op-CREAR"
+			else="ingresar" />
+	</decision-state>
+
+	<!-- INICIO- Estados del flujo de creacion -->
+	<view-state id="_op-CREAR" view="crear-operacion.xhtml">
+		<transition on="_op-CREAR" to="CREAR-OPERACION" />
+		<transition on="CANCELAR" to="_op-CREAR">
+			<evaluate
+				expression="new co.com.datatools.seguridad.mb.operaciones.CrearOperacionFL()"
+				result="flowScope.crearOperacionFL"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="CREAR-OPERACION">
+		<evaluate expression="externalContext.sessionMap.operacionesMB.crearOperacion()" />
+		<transition on="success" to="_op-CREAR"></transition>
+	</action-state>
+	<!-- FIN- Estados del flujo de creacion -->
+
+	<!-- INICIO- Estados del flujo de consulta -->
+	<view-state id="ingresar" view="consultar-operaciones.xhtml">
+		<on-entry>
+			<evaluate
+				expression="new co.com.datatools.seguridad.mb.operaciones.ModificarOperacionFL()"
+				result="flowScope.modificarOperacionFL" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+		<transition on="CANCELAR" to="fin" />
+		<transition on="_op-ELIMINAR" to="_op-ELIMINAR" />
+		<transition on="_op-EDITAR" to="_op-EDITAR" />
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.operacionesMB.consultarOperaciones()" />
+		<transition on="success" to="ingresar"></transition>
+	</action-state>
+
+	<action-state id="_op-ELIMINAR">
+		<evaluate
+			expression="externalContext.sessionMap.operacionesMB.eliminarOperacion()" />
+		<transition on="success" to="ingresar"></transition>
+	</action-state>
+
+	<view-state id="_op-EDITAR" view="modificar-operacion.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.operacionesMB.cargarDetalleOperacion()"></evaluate>
+		</on-entry>
+		<transition on="MODIFICAR-OPERACION" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.operacionesMB.actualizarOperacion()" />
+		</transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.operacionesMB.consultarOperaciones()" />
+		</transition>
+	</view-state>
+	<end-state id="fin" />
+</flow>
+	

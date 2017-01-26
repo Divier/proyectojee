@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta-persona" styleClass="panel-formulario" header="#{labelResponsableFormulario.tit_consultar_persona}"
+				rendered="#{consultaResponsableFormularioFL.idTipoDocumento != null}">
+				<p:fieldset styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block" columns="4" columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel value="#{labelResponsableFormulario.lbl_tipo_documento_responsable}" />
+						<p:outputLabel value="#{consultaResponsableFormularioFL.strTipoDocumento}" />
+
+						<p:outputLabel value="#{labelResponsableFormulario.lbl_numero_documento_responsable}"/>
+						<h:panelGroup>
+							<p:inputText id="txtNumDoc" value="#{consultaResponsableFormularioFL.numeroIdentificacion}" maxlength="20" />
+							<p:message for="txtNumDoc" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultarPers" action="CONSULTAR_PERSONA" icon="c2-icon-consultar" process="@form" value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultarPers" value="#{labelResponsableFormulario.tooltip_btn_consultar_persona}" />
+						</p:commandButton>
+
+						<p:commandButton id="btnVolver1" action="VOLVER" icon="c2-icon-volver" process="@this" immediate="true" value="#{lbComun.btnVolver}">
+							<p:tooltip for="btnVolver1" value="#{lbComun.tooltip_volver}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+
+			<p:panel id="campos-consulta-organismo" styleClass="panel-formulario" header="#{labelResponsableFormulario.tit_consultar_organismo}"
+				rendered="#{consultaResponsableFormularioFL.idTipoDocumento == null}">
+				<p:fieldset styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario-org" styleClass="center-block" columns="4" columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel value="#{labelResponsableFormulario.lbl_codigo_organismo}" />
+						<h:panelGroup>
+							<p:inputText id="txtCodOrg" value="#{consultaResponsableFormularioFL.numeroIdentificacion}" maxlength="20" />
+							<p:message for="txtCodOrg" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultarOrg" action="CONSULTAR_PERSONA" icon="c2-icon-consultar" process="@form" value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultarOrg" value="#{labelResponsableFormulario.tooltip_btn_consultar_organismo}" />
+						</p:commandButton>
+
+						<p:commandButton id="btnVolver2" action="VOLVER" icon="c2-icon-volver" process="@this" immediate="true" value="#{lbComun.btnVolver}">
+							<p:tooltip for="btnVolver2" value="#{lbComun.tooltip_volver}" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta" rendered="#{consultaResponsableFormularioFL.listResultado.size() > 0}">
+
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<!--Boton Editar-->
+						<p:commandButton id="btnAgregarDet" action="SELECCIONAR" icon="c2-icon-agregar-det" immediate="true"
+							value="#{labelResponsableFormulario.btn_seleccionar}" disabled="#{consultaResponsableFormularioFL.unificacionResponsableSeleccionado==null}">
+							<p:tooltip for="btnAgregarDet" value="#{labelResponsableFormulario.btn_seleccionar}" />
+						</p:commandButton>
+
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados" value="#{consultaResponsableFormularioFL.listResultado}" var="registro" rowKey="#{registro.hashCode()}"
+					selection="#{consultaResponsableFormularioFL.unificacionResponsableSeleccionado}" paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}" rowsPerPageTemplate="#{webPrm.param_rows_per_page}" rows="#{webPrm.param_initial_rows}"
+					sortMode="multiple">
+
+					<p:ajax event="rowSelectRadio" process=":form-resultado:tabla-resultados" update=":form-resultado:acciones-top" global="false" />
+
+					<p:column selectionMode="single" />
+
+					<!--Columnas Resultado Consulta-->
+					<p:column headerText="#{labelResponsableFormulario.lbl_clm_persona_juridica}" rendered="#{consultaResponsableFormularioFL.idTipoDocumento!=null}">
+						<c2:outputNumberText value="#{registro.numeroIdentificacion}" format="false" />
+					</p:column>
+
+					<p:column headerText="#{labelResponsableFormulario.lbl_clm_organismo_transito}"
+						rendered="#{consultaResponsableFormularioFL.idTipoDocumento==null}">
+						<c2:outputNumberText value="#{registro.numeroIdentificacion}" format="false" />
+					</p:column>
+
+					<p:column headerText="#{labelResponsableFormulario.lbl_clm_nombre_comercial}" rendered="#{consultaResponsableFormularioFL.idTipoDocumento!=null}">
+						<p:outputLabel value="#{registro.nombre}" />
+					</p:column>
+
+					<p:column headerText="#{labelResponsableFormulario.lbl_clm_nombre_organismo_transito}"
+						rendered="#{consultaResponsableFormularioFL.idTipoDocumento==null}">
+						<p:outputLabel value="#{registro.nombre}" />
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

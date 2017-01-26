@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="FachadaIntegracionWebEAR-1.0.0-SNAPSHOT">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/ear-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/application" tag="defaultRootSource"/>
+        <dependent-module archiveName="FachadaIntegracionWeb-1.0.7.war" deploy-path="/" handle="module:/resource/FachadaIntegracionWeb/FachadaIntegracionWeb">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="FachadaIntegracionWebEJB-1.0.7.jar" deploy-path="/" handle="module:/resource/FachadaIntegracionWebEJB/FachadaIntegracionWebEJB">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="FachadaIntegracionWebEJBClient-1.0.7.jar" deploy-path="/lib" handle="module:/resource/FachadaIntegracionWebEJBClient/FachadaIntegracionWebEJBClient">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="guava-17.0.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/com/google/guava/guava/17.0/guava-17.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="commons-lang3-3.1.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>

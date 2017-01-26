@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelAdminAgentes.titulo_administrar_agentes}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminAgentes.titulo_administrar_agentes_act}">
+					<h:panelGrid id="panel-info"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">					
+						<p:outputLabel value="#{labelAdminAgentes.label_tipo_documento}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.persona.tipoIdentificacion.nombre}" />
+												
+						<p:outputLabel value="#{labelAdminAgentes.label_numero_documento}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.persona.numeroIdentificacion}" />
+						
+						<p:outputLabel value="#{labelAdminAgentes.label_primer_nombre}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.persona.nombre1}" />
+							
+						<p:outputLabel value="#{labelAdminAgentes.label_segundo_nombre}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.persona.nombre2}" />
+							
+						<p:outputLabel value="#{labelAdminAgentes.label_primer_apellido}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.persona.apellido1}" />
+							
+						<p:outputLabel value="#{labelAdminAgentes.label_segundo_apellido}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.persona.apellido2}" />
+											
+						<p:outputLabel value="#{labelAdminAgentes.label_placa_agente}" />
+						<p:outputLabel value="#{adminAgentesFL.agente.placa}" />
+												
+						<p:outputLabel value="" rendered="#{adminAgentesFL.agenteVigente}"/>
+						<p:outputLabel value="" rendered="#{adminAgentesFL.agenteVigente}"/>
+					
+						<p:outputLabel value="#{labelAdminAgentes.label_fecha_inicial}" styleClass="campo-obligatorio" rendered="#{!adminAgentesFL.agenteVigente}"/>
+						<h:panelGroup rendered="#{!adminAgentesFL.agenteVigente}">
+							<p:calendar
+								value="#{adminAgentesFL.agente.fechaInicioVigencia}"
+								id="fechaIni" navigator="true"
+								pattern="#{utilidadMB.formatoFecha}"
+								mindate="#{adminAgentesMB.fechaActual}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<p:watermark for="fechaIni"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="fechaIni" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelAdminAgentes.label_fecha_inicial}" rendered="#{adminAgentesFL.agenteVigente}"/>																
+						<c2:outputDateLabel labelValue="#{adminAgentesFL.agente.fechaInicioVigencia}" rendered="#{adminAgentesFL.agenteVigente}"/>
+																
+						<p:outputLabel value="#{labelAdminAgentes.label_fecha_final}" styleClass="campo-obligatorio" rendered="#{adminAgentesFL.agenteVigente}"/>
+						<h:panelGroup rendered="#{adminAgentesFL.agenteVigente}">							
+							<p:calendar
+								value="#{adminAgentesFL.agente.fechaFinVigencia}"
+								id="fechaFin" navigator="true"
+								pattern="#{utilidadMB.formatoFecha}"
+								mindate="#{adminAgentesMB.fechaActual}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" >
+								<p:watermark for="fechaFin"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>						
+							<p:message for="fechaFin" />
+						</h:panelGroup>						
+						
+						<p:outputLabel value="#{labelAdminAgentes.label_motivo}" styleClass="campo-obligatorio" rendered="#{adminAgentesFL.agenteVigente}"/>
+						<h:panelGroup rendered="#{adminAgentesFL.agenteVigente}">
+							<p:selectOneMenu id="selMotivo"
+								value="#{adminAgentesFL.agente.motivoVigenciaAgente.id}"
+								required="true">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catMotivosVigenciaAgente()}" />
+							</p:selectOneMenu>
+							<p:message for="selMotivo" />
+						</h:panelGroup>	
+						
+						<p:outputLabel value="#{labelAdminAgentes.label_estado}" rendered="#{adminAgentesFL.agenteVigente}"/>						
+						<p:outputLabel value="#{adminAgentesMB.vigente}" rendered="#{adminAgentesFL.agenteVigente}"/>
+						
+						<p:outputLabel value="#{labelAdminAgentes.label_estado}" rendered="#{!adminAgentesFL.agenteVigente}"/>	
+						<p:outputLabel value="#{adminAgentesMB.noVigente}" rendered="#{!adminAgentesFL.agenteVigente}"/>
+
+						<p:outputLabel value="#{labelAdminAgentes.label_fecha_final}" rendered="#{!adminAgentesFL.agenteVigente}"/>
+						<c2:outputDateLabel labelValue="#{adminAgentesFL.agente.fechaFinVigencia}" rendered="#{!adminAgentesFL.agenteVigente}"/>
+							
+					</h:panelGrid>
+					
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5" >
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}"
+							update=":messages :form-contenido">
+							<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+	
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>						
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

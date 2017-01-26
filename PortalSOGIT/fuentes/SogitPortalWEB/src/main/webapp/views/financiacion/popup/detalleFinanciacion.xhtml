@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="frmDetFinan">
+		<p:dialog widgetVar="popUpDetFinan" id="popUpDetFinan" header=""
+			resizable="false" modal="true" appendTo="@(body)" dynamic="true"
+			closable="false" height="500" width="900">
+
+			<p:tabView>
+				<p:tab title="#{bundleFinanciacion['tit_info_financiacion']}">
+					<p:fieldset styleClass="fieldset-formulario"
+						legend="#{bundleFinanciacion['tit_inf_infractor']}">
+						<h:panelGrid id="panel-formulario_infractor" columns="4"
+							styleClass="center-block"
+							columnClasses="label-col,input-col,label-col,input-col">
+
+							<p:outputLabel value="#{bundleFinanciacion['lbl_tip_documento']}"></p:outputLabel>
+							<p:outputLabel
+								value="#{consultaFinanciacionMB.detalleFinanciacionReplicaDTO.nombreTipoIdentificacion}"></p:outputLabel>
+
+							<p:outputLabel
+								value="#{bundleFinanciacion['lbl_nombres_infractor']}"></p:outputLabel>
+							<p:outputLabel
+								value="#{consultaFinanciacionMB.detalleFinanciacionReplicaDTO.nombresDeudor}"></p:outputLabel>
+
+							<p:outputLabel
+								value="#{bundleFinanciacion['lbl_numero_documento']}"></p:outputLabel>
+							<p:outputLabel
+								value="#{consultaFinanciacionMB.detalleFinanciacionReplicaDTO.numeroIdentificacionDeudor}"></p:outputLabel>
+						</h:panelGrid>
+					</p:fieldset>
+					<p:fieldset styleClass="fieldset-formulario"
+						legend="#{bundleFinanciacion['tit_info_financiacion']}">
+						<h:panelGrid id="panel-formulario" columns="4"
+							styleClass="center-block"
+							columnClasses="label-col,input-col,label-col,input-col">
+
+							<p:outputLabel
+								value="#{bundleFinanciacion['lbl_num_financiacion']}"></p:outputLabel>
+							<p:outputLabel
+								value="#{consultaFinanciacionMB.detalleFinanciacionReplicaDTO.numeroFinanciacion}"></p:outputLabel>
+
+							<p:outputLabel value="#{bundleFinanciacion['lbl_fch_solicitud']}"></p:outputLabel>
+							<p:outputLabel
+								value="#{consultaFinanciacionMB.detalleFinanciacionReplicaDTO.fechaFinanciacion}">
+								<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+							</p:outputLabel>
+
+							<p:outputLabel
+								value="#{bundleFinanciacion['lbl_vsl_tlt_financiacion']}"></p:outputLabel>
+							<p:outputLabel
+								value="#{consultaFinanciacionMB.detalleFinanciacionReplicaDTO.valorTotalFinanciado}">
+								<f:convertNumber pattern="#{utilidadMB.formatoMonedaCompleta}"
+									type="currency" />
+							</p:outputLabel>
+
+							<p:outputLabel value="#{bundleFinanciacion['lbl_num_cuotas']}"></p:outputLabel>
+							<p:outputLabel
+								value="#{consultaFinanciacionMB.detalleFinanciacionReplicaDTO.numeroCuotas}"></p:outputLabel>
+						</h:panelGrid>
+					</p:fieldset>
+					<p:fieldset styleClass="fieldset-formulario"
+						legend="#{bundleFinanciacion['tit_cdr_amort']}"
+						rendered="#{consultaFinanciacionMB.detalleFinanciacionReplicaDTO.detalleAmortizacion.size() > 0}">
+						<p:dataTable id="tabla-resultados"
+							value="#{consultaFinanciacionMB.detalleFinanciacionReplicaDTO.detalleAmortizacion}"
+							var="registro" paginator="true">
+
+							<p:column headerText="#{bundleFinanciacion['lbl_num_cuota']}">
+								<p:outputLabel
+									value="#{registro.numeroCuota == 0 ? bundleFinanciacion['lbl_cuota_ini'] : registro.numeroCuota}"></p:outputLabel>
+							</p:column>
+
+							<p:column
+								headerText="#{bundleFinanciacion['lbl_fch_pago_oportuno']}">
+								<p:outputLabel value="#{registro.fechaPagoOportuno}">
+									<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+								</p:outputLabel>
+							</p:column>
+
+							<p:column headerText="#{bundleFinanciacion['lbl_vlr_tol_cuota']}">
+								<p:outputLabel value="#{registro.valorCuota}">
+									<f:convertNumber pattern="#{utilidadMB.formatoMonedaCompleta}"
+										type="currency" />
+								</p:outputLabel>
+							</p:column>
+
+							<p:column headerText="#{bundleFinanciacion['lbl_fch_real_pago']}">
+								<p:outputLabel value="#{registro.fechaTransaccion}">
+									<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+								</p:outputLabel>
+							</p:column>
+						</p:dataTable>
+					</p:fieldset>
+				</p:tab>
+
+				<p:tab title="#{bundleFinanciacion['tit_ver_obligaciones']}"
+					rendered="#{consultaFinanciacionMB.detalleFinanciacionReplicaDTO.oblicacionesFinanciacion.size() > 0}">
+					<p:dataTable id="tabla-resultados_obl"
+						value="#{consultaFinanciacionMB.detalleFinanciacionReplicaDTO.oblicacionesFinanciacion}"
+						var="registro" paginator="true">
+
+						<p:column headerText="#{bundleFinanciacion['lbl_tip_obligacion']}">
+							<p:outputLabel value="#{registro.nombreObligacion}" />
+						</p:column>
+
+						<p:column headerText="#{bundleFinanciacion['lbl_num_obligacion']}">
+							<p:outputLabel value="#{registro.obligacion}" />
+						</p:column>
+
+						<p:column headerText="#{bundleFinanciacion['lbl_fch_obligacion']}">
+							<p:outputLabel value="#{registro.fechaObligacion}">
+								<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+							</p:outputLabel>
+						</p:column>
+
+						<p:column
+							headerText="#{bundleFinanciacion['lbl_valor_obligacion']}">
+							<p:outputLabel value="#{registro.valorObligacion}">
+								<f:convertNumber pattern="#{utilidadMB.formatoMonedaCompleta}"
+									type="currency" />
+							</p:outputLabel>
+						</p:column>
+
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<!--Boton Consultar-->
+				<p:commandButton oncomplete="PF('popUpDetFinan').hide();"
+					icon="c2-icon-cancelar" process="@this"
+					value="#{bundleGeneral['btn_volver']}">
+				</p:commandButton>
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+</ui:composition>

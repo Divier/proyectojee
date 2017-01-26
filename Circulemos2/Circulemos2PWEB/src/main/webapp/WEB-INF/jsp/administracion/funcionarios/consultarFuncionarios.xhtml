@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelAdministrarFuncionarios.titulo_administrar_funcionarios}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdministrarFuncionarios.titulo_administrar_funcionarios_con}">
+					<h:panelGrid id="panel-info-filros" styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">
+						<p:outputLabel value="#{labelAdministrarFuncionarios.label_tipo_documento}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selTipoDocumento"
+								value="#{adminFuncionarioHolderFL.funcionario.persona.tipoIdentificacion.id}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />
+							</p:selectOneMenu>
+							<p:message for="selTipoDocumento" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdministrarFuncionarios.label_numero_documento}" />
+						<h:panelGroup>
+							<p:inputText id="numeroDocumento"
+								value="#{adminFuncionarioHolderFL.funcionario.persona.numeroIdentificacion}"
+								maxlength="20">
+							</p:inputText>
+							<p:message for="numeroDocumento" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdministrarFuncionarios.label_proceso_funcionario}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selProcesoFuncionario"
+								value="#{adminFuncionarioHolderFL.funcionario.codigoProceso}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoProceso()}" />
+							</p:selectOneMenu>
+							<p:message for="selProcesoFuncionario" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelAdministrarFuncionarios.label_cargo_funcionario}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selCargoFuncionario"
+								value="#{adminFuncionarioHolderFL.funcionario.idCargo}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />
+							</p:selectOneMenu>
+							<p:message for="selCargoFuncionario" />
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+					<!--Boton Consultar-->
+					<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+						action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+						value="#{lbComun.btnConsultar}"
+						update=":messages :form-contenido :form-resultado">
+						<p:tooltip for="btnConsultar"
+							value="#{labelAdministrarFuncionarios.btnConsultar}" />
+					</p:commandButton>
+					<!--Boton Nuevo-->
+					<p:commandButton id="btnCrear" styleClass="_op-CREAR"
+						value="#{lbComun.btnCrear}" icon="c2-icon-crear"
+						action="_op-CREAR" process="@this" update=":messages">
+						<p:tooltip for="btnCrear" value="#{labelAdministrarFuncionarios.btnCrear}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

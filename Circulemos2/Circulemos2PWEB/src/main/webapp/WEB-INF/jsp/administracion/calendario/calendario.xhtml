@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="headIncludes">
+		<style type="text/css">
+.ui-datepicker-trigger.ui-button {
+	min-width: 0px;
+}
+
+.ui-state-default.ui-button{
+	min-width: 0px;
+}
+.fc-agendaWeek-button {
+	display: none;
+}
+.fc-button-agendaWeek {
+	display: none;
+}
+
+.fc-agendaDay-button{
+	display: none;
+}
+.fc-button-agendaDay{
+	display: none;
+}
+
+.fc-month-button{
+	display: none;
+}
+.fc-button-month{
+	display: none;
+}
+</style>
+
+	</ui:define>
+
+	<ui:define name="contenido">
+
+		<h:form id="form-resultado">
+			<p:panel id="campos-consulta" styleClass="panel-formulario" header="#{labelCalendario.titulo_calendario}">
+
+				<h:panelGrid id="panel-formulario" styleClass="center-block" columns="4" columnClasses="label-col,input-col,label-col,input-col">
+					<p:outputLabel value="#{labelCalendario.lbl_fecha_DNH}" />
+					<h:panelGrid columns="2" columnClasses="input-col-small,input-col-small">
+						<p:selectOneMenu id="calFiltroMes" value="#{diaNoHabilFL.mesSeleccionado}">
+							<f:selectItems value="#{diaNoHabilFL.meses}" />
+							<p:ajax event="change" listener="#{calendarioMB.cambioFechaConsultada()}" update=":form-resultado:schedule" process="@this" global="false" />
+						</p:selectOneMenu>
+						<p:selectOneMenu id="calFiltroAnio" value="#{diaNoHabilFL.anioSeleccionado}">
+							<f:selectItems value="#{diaNoHabilFL.anios}" />
+							<p:ajax event="change" listener="#{calendarioMB.cambioFechaConsultada()}" update=":form-resultado:schedule @this" process="@this"
+								global="false" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+				</h:panelGrid>
+
+				<h:panelGrid styleClass="center-block" columns="1" cellspacing="5">
+
+					<h:panelGroup>
+						<div class="ui-messages-info">
+							<span class="ui-messages-info-icon" /> <span class="ui-messages-info-summary"></span> <span class="ui-messages-info-detail">#{labelCalendario.wrn_ingreso_datos}</span>
+						</div>
+					</h:panelGroup>
+
+					<p:schedule id="schedule" value="#{diaNoHabilFL.smCalendario}" widgetVar="schCalendario" style="width: 600px;height: 500px;" locale="es"
+						draggable="false" view="month" initialDate="#{diaNoHabilFL.dFecIniFiltro}">
+						<p:ajax event="dateSelect" listener="#{calendarioMB.verRegDiaNoHabil}" update=":idFrmDetModDNH :idFrmRegDNH @this :messages" global="false" />
+						<p:ajax event="eventSelect" listener="#{calendarioMB.verDiaNoHabil}" update=":idFrmDetModDNH @this :messages" global="false" />
+					</p:schedule>
+
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+		<ui:include src="/WEB-INF/jsp/administracion/calendario/popups/detalleDiaNoHabil.xhtml" />
+		<ui:include src="/WEB-INF/jsp/administracion/calendario/popups/regDiaNoHabil.xhtml" />
+		<ui:include src="/WEB-INF/jsp/administracion/calendario/popups/editarDiaNoHabil.xhtml" />
+
+		<script>
+	    PrimeFaces.locales['es'] = {  
+	        closeText: 'Cerrar', 
+	        prevText: 'Anterior',  
+	        nextText: 'Siguiente',  
+	        currentText: 'Hoy',  
+	        monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',  
+	        'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],  
+	        monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',  
+	        'Jul','Ago','Sep','Oct','Nov','Dic'],  
+	        dayNames: ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'],  
+	        dayNamesShort: ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],  
+	        dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sa'],  
+	        weekHeader: 'Sm',  
+	        firstDay: 0,  
+	        isRTL: false,  
+	        showMonthAfterYear: false,  
+	        yearSuffix: '',  
+	        month: 'Mes',  
+	        week: 'Semana',  
+	        day: 'Día',  
+	        allDayText : 'Todo el día'  
+	    };  
+	</script>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<p:fieldset id="datos-motivacion" styleClass="fieldset-formulario"
+		legend="#{labelProcesoImpugnacion.label_det_motiv}">
+		
+		<h:panelGrid id="panel-formulario-motiv" styleClass="center-block"
+			columnClasses="label-col,input-col,label-col,input-col" columns="4">
+			<!-- Componentes del formulario 2 o 4 columnas-->
+			<p:outputLabel value="#{labelProcesoImpugnacion.label_peticion}" />
+			<p:outputLabel value="#{detalleProcesoFL.motivacionImpugnacionDTO.tipoPeticion.nombre}" />
+
+			<p:outputLabel value="#{labelProcesoImpugnacion.label_org_impug}" />
+			<p:outputLabel value="#{detalleProcesoFL.motivacionImpugnacionDTO.origenImpugnacion.nombre}" />
+		</h:panelGrid>
+		
+		<h:panelGrid id="acciones-top-documentos">
+			<f:facet name="footer">
+				<!--Boton Vista Preliminar-->
+				<p:commandButton id="btnVerDocumento"
+					action="#{impugnacionMB.consultarDocumentoEscrito()}"
+					icon="ui-icon-document" process="@form"
+					value="#{labelProcesoImpugnacion.label_ver_documento_escrito}"
+					update=":messages @form :form-pdfviewer"
+					disabled="#{detalleProcesoFL.adjuntoSeleccionado == null}">
+					<p:tooltip for="btnVerDocumento"
+						value="#{labelProcesoImpugnacion.label_ver_documento_escrito}" />
+				</p:commandButton>
+			</f:facet>
+		</h:panelGrid>
+		
+		<p:dataTable id="tabla-documentos" var="registro"
+			value="#{detalleProcesoFL.lsAdjuntos}"
+			rowKey="#{registro.id}" paginator="true"
+			selection="#{detalleProcesoFL.adjuntoSeleccionado}"
+			paginatorTemplate="#{webPrm.param_paginator_template}"
+			rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+			emptyMessage="#{labelGeneral.msj_tabla_vacia}"
+			rows="#{webPrm.param_initial_rows}">
+
+			<p:ajax event="rowSelectRadio"
+				process=":form-detalle-proceso:secciones-detalle:tabla-documentos"
+				update="form-detalle-proceso:secciones-detalle:acciones-top-documentos @this"
+				global="false" />
+
+			<p:column selectionMode="single"></p:column>
+
+			<p:column headerText="#{labelProcesoImpugnacion.label_nombre_archivo_escrito}">
+				<p:outputLabel value="#{registro.nombreArchivo}" />
+			</p:column>	
+
+			<p:column headerText="#{labelProcesoImpugnacion.label_fecha_cargue_escrito}">
+				<c2:outputDateLabel	labelValue="#{registro.fechaCargue}" fullFormat="true" />
+			</p:column>			
+		</p:dataTable>		
+	</p:fieldset>
+</ui:composition>

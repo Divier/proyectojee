@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://suma.ws.poc.c2.datatools.com.co/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://suma.ws.poc.c2.datatools.com.co/"
+	version="1.0">
+	<xs:element name="suma" type="tns:suma" />
+	<xs:element name="sumaResponse" type="tns:sumaResponse" />
+	<xs:complexType name="suma">
+		<xs:sequence>
+			<xs:element name="x">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="120" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="y">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="-3" />
+						<xs:maxInclusive value="12" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="sumaResponse">
+		<xs:sequence>
+			<xs:element name="return" type="xs:int" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<h:form id="formConsultaUsuFin">
+		<p:dialog id="popUpConsultaUsuFin"
+			header="#{labelAnalisisUbicabilidad.encabezado_popup_resultado}"
+			widgetVar="popUpConsultaUsuFin" resizable="false"
+			modal="true" appendToBody="true" dynamic="true" height="200px" closable="false"
+			width="450px" visible="false">
+			<p:fieldset
+				legend="#{labelAnalisisUbicabilidad.legend_field_resultados}"
+				styleClass="fieldset-formulario">
+				
+				<h:panelGrid columns="1" >
+					<p:outputLabel value="#{labelAnalisisUbicabilidad.msg_cargue_finalizado_usr}" escape="false" />
+					<p:commandButton id="btnVolverConsultaFin" icon="c2-icon-volver"
+						process="@this" immediate="true" value="#{lbComun.btnVolver}"
+						onclick="" action="VOLVER_USR_EXT">
+						<p:tooltip for="btnVolverConsultaFin" value="#{lbComun.tooltip_volver}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:fieldset>
+		</p:dialog>
+	</h:form>
+
+</ui:composition>

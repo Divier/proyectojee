@@ -1,0 +1,28 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template-principal.xhtml">
+
+	<ui:define name="contenido">
+
+		<p:panel id="agenda">
+			<h:panelGrid>
+				<p:link href="#{menuMB.rutaAgendaCitaWEB}" target="_blank">
+					<p:graphicImage id="gphImgAgt" library="img" name="agenda.png"
+						width="110" height="110"></p:graphicImage>
+				</p:link>
+				<p:tooltip for="gphImgAgt" value="#{bundleMenu['lbl_agenda_cita']}"
+					style="color:white;"></p:tooltip>
+				<p:outputLabel value="#{bundleMenu['lbl_agenda_cita']}"
+					style="color:white;"></p:outputLabel>
+			</h:panelGrid>
+		</p:panel>
+		<p:draggable for="agenda" revert="true" />
+
+	</ui:define>
+
+</ui:composition>

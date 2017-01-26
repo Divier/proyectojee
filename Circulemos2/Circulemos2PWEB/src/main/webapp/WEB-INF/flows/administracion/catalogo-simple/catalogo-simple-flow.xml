@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="catalogoSimpleHolderFL"
+		class="co.com.datatools.c2.managed_bean.administracion.catalogo_simple.CatalogoSimpleHolderFL" />
+	<var name="catalogoSimpleFL"
+		class="co.com.datatools.c2.managed_bean.administracion.catalogo_simple.CatalogoSimpleFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracion/catalogo-simple/consultarCatalogosSimples.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('catalogoSimpleMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR"></transition>
+		<transition on="_op-EDITAR" to="_op-EDITAR">
+			<evaluate expression="externalContext.sessionMap.catalogoSimpleMB.verDetalle()"></evaluate>
+		</transition>
+		<transition on="VER_DETALLE" to="VER_DETALLE">
+			<evaluate expression="externalContext.sessionMap.catalogoSimpleMB.verDetalle()"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.catalogoSimpleMB.verDetalleItemsCatalogoSimple()"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.catalogoSimpleMB.consultarCatalogosSimples()"></evaluate>
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<view-state id="_op-EDITAR"
+		view="/WEB-INF/jsp/administracion/catalogo-simple/editarCatalogoSimple.xhtml">
+		<transition on="CONTINUAR" to="actualizarCatalogo"></transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoSimpleMB.limpiarCampos()"></evaluate>
+		</transition>
+		<transition on="_op-CONSULTAR" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoSimpleMB.consultarItemsCatalogoSimple()"></evaluate>
+		</transition>
+		<transition on="_op-CREAR" to="_op-CREAR">
+		</transition>
+		<transition on="_op-EDITAR" to="editarItemCatalogo">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoSimpleMB.verDetalleItemCatalogoSimple()"></evaluate>
+		</transition>
+		<transition on="_op-ELIMINAR" to="_op-ELIMINAR" />
+	</view-state>
+
+	<action-state id="_op-ELIMINAR">
+		<evaluate
+			expression="externalContext.sessionMap.catalogoSimpleMB.eliminarItemCatalogoSimple()"></evaluate>
+		<transition on="yes" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoSimpleMB.limpiarCampos()"></evaluate>
+		</transition>
+		<transition on="no" to="_op-EDITAR" />
+	</action-state>
+
+	<action-state id="actualizarCatalogo">
+		<evaluate
+			expression="externalContext.sessionMap.catalogoSimpleMB.actualizarCaterogiaSimple()"></evaluate>
+		<transition on="yes" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoSimpleMB.limpiarCamposCatalogo()"></evaluate>
+		</transition>
+	</action-state>
+
+	<view-state id="_op-CREAR"
+		view="/WEB-INF/jsp/administracion/catalogo-simple/registrarItemCatalogoSimple.xhtml">
+		<transition on="CONTINUAR" to="registrarItem">
+		</transition>
+		<transition on="VOLVER" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoSimpleMB.limpiarCampos()"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="registrarItem">
+		<evaluate
+			expression="externalContext.sessionMap.catalogoSimpleMB.registrarItemCatalogoSimple()"></evaluate>
+		<transition on="yes" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoSimpleMB.limpiarCampos()"></evaluate>
+		</transition>
+		<transition on="no" to="_op-CREAR"></transition>
+	</action-state>
+
+	<view-state id="editarItemCatalogo"
+		view="/WEB-INF/jsp/administracion/catalogo-simple/editarItemCatalogoSimple.xhtml">
+		<transition on="CONTINUAR" to="actualizarItem">
+		</transition>
+		<transition on="VOLVER" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoSimpleMB.limpiarCampos()"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="actualizarItem">
+		<evaluate
+			expression="externalContext.sessionMap.catalogoSimpleMB.actualizarItemCatalogoSimple()"></evaluate>
+		<transition on="yes" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoSimpleMB.limpiarCampos()"></evaluate>
+		</transition>
+		<transition on="no" to="editarItemCatalogo"></transition>
+	</action-state>
+
+	<view-state id="VER_DETALLE"
+		view="/WEB-INF/jsp/administracion/catalogo-simple/detalleCatalogoSimple.xhtml">
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.catalogoSimpleMB.limpiarCampos()"></evaluate>
+		</transition>
+	</view-state>
+</flow>

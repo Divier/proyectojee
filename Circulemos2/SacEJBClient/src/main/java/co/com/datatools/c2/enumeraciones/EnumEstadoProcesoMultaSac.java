@@ -1,0 +1,40 @@
+package co.com.datatools.c2.enumeraciones;
+
+import co.com.datatools.c2.util.SearchableEnumeration;
+
+/**
+ * @author Javier.Fajardo
+ *
+ */
+public enum EnumEstadoProcesoMultaSac implements SearchableEnumeration<Integer> {
+	IMPOSICION_COMPARENDO_TRAZ(1),
+	COMPARENDO_NOTIFICADO(2),
+	NOTIF_PERSONAL_COMPARENDO(3),
+	NOTIF_CONDUCTA_CONCLUY_COMPARENDO(4),
+	RECTIF_DE_COMPARENDO(5),
+	NOTIF_PROCESO_CORREO_CERTIFICADO(6),
+	NOTIF_CORREO_CERTIFICADO_COMPARENDO(7),
+	GENERACION_RESOLUCION_SANCION(8),
+	NOTIF_AVISO_COMPARENDO(9),
+	RADIC_PROCESO_IMPUGNACION(10),
+	COMPARENDO_ENVIADO_SIMIT(11),
+	RECTIF_DE_COMPARENDO_SIMIT(12),
+	NOTIF_DE_COMPARENDO_ENVIADA_SIMIT(13),
+	IMPOSICION_COMPARENDO_MOV(14),
+	REGISTRO_COMPARENDO(15),
+	PAGO_COMPARENDO(16),
+	SUSTITUCION(17),
+	IMPOSICION_SUSTITUCION(18),
+	FINANCIACION_COMPARENDO(19);
+
+	private Integer id;
+
+	private EnumEstadoProcesoMultaSac(Integer id) {
+		this.id = id;
+	}
+
+	@Override
+	public Integer getValue() {
+		return id;
+	}
+}

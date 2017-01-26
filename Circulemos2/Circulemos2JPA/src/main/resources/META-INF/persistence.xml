@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="Circulemos2JPA">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<!--<jta-data-source>java:jboss/datasources/C2DesaMySqlDS</jta-data-source>
+		 <jta-data-source>java:jboss/datasources/C2ReleaseMySqlDS</jta-data-source> -->
+		<jta-data-source>java:jboss/datasources/Circulemos2SqlDS</jta-data-source>
+				<jar-file>../FormulariosEJB-${FormulariosEJB.version}.jar</jar-file>
+		<jar-file>../ParametrizacionEJB-${ParametrizacionEJB.version}.jar</jar-file>
+		<jar-file>../Circulemos2BaseEJB-${Circulemos2BaseEJB.version}.jar</jar-file>
+		<jar-file>../ComparendoEJB-${ComparendoEJB.version}.jar</jar-file>
+		<jar-file>../RegistroVehicularEJB-${RegistroVehicularEJB.version}.jar</jar-file>
+		<jar-file>../PatioEJB-${PatioEJB.version}.jar</jar-file>
+		<jar-file>../CarteraEJB-${CarteraEJB.version}.jar</jar-file>
+		<jar-file>../SimitEJB-${SimitEJB.version}.jar</jar-file>
+		<jar-file>../ResolucionEJB-${ResolucionEJB.version}.jar</jar-file>
+		<jar-file>../ProcesoEJB-${ProcesoEJB.version}.jar</jar-file>
+		<jar-file>../NotificacionTercerosC2EJB-${NotificacionTercerosC2EJB.version}.jar</jar-file>
+		<jar-file>../RecaudoEJB-${RecaudoEJB.version}.jar</jar-file>
+		<jar-file>../SacEJB-${SacEJB.version}.jar</jar-file>
+		<jar-file>../FinanciacionEJB-${FinanciacionEJB.version}.jar</jar-file>
+		<jar-file>../ImpugnacionEJB-${ImpugnacionEJB.version}.jar</jar-file>
+		<jar-file>../CoactivoEJB-${CoactivoEJB.version}.jar</jar-file>
+		<jar-file>../ProcesoEJB-${ProcesoEJB.version}.jar</jar-file>
+		<jar-file>../AccidentalidadEJB-${AccidentalidadEJB.version}.jar</jar-file>
+		<jar-file>../AdministracionEJB-${AdministracionEJB.version}.jar</jar-file>
+		
+		<!-- Utilizado para las tareas programadas -->
+		<jar-file>FormulariosEJB-${FormulariosEJB.version}.jar</jar-file>
+		<jar-file>ParametrizacionEJB-${ParametrizacionEJB.version}.jar</jar-file>
+		<jar-file>Circulemos2BaseEJB-${Circulemos2BaseEJB.version}.jar</jar-file>
+		<jar-file>ComparendoEJB-${ComparendoEJB.version}.jar</jar-file>
+		<jar-file>RegistroVehicularEJB-${RegistroVehicularEJB.version}.jar</jar-file>
+		<jar-file>PatioEJB-${PatioEJB.version}.jar</jar-file>
+		<jar-file>CarteraEJB-${CarteraEJB.version}.jar</jar-file>
+		<jar-file>SimitEJB-${SimitEJB.version}.jar</jar-file>
+		<jar-file>ResolucionEJB-${ResolucionEJB.version}.jar</jar-file>
+		<jar-file>ProcesoEJB-${ProcesoEJB.version}.jar</jar-file>
+		<jar-file>NotificacionTercerosC2EJB-${NotificacionTercerosC2EJB.version}.jar</jar-file>
+		<jar-file>RecaudoEJB-${RecaudoEJB.version}.jar</jar-file>
+		<jar-file>SacEJB-${SacEJB.version}.jar</jar-file>
+		<jar-file>FinanciacionEJB-${FinanciacionEJB.version}.jar</jar-file>
+		<jar-file>ImpugnacionEJB-${ImpugnacionEJB.version}.jar</jar-file>
+		<jar-file>CoactivoEJB-${CoactivoEJB.version}.jar</jar-file>
+		<jar-file>ProcesoEJB-${ProcesoEJB.version}.jar</jar-file>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
+			<property name="hibernate.show_sql" value="true" />
+			<!--  
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform" />
+			<property name="hibernate.hbm2ddl.auto" value="update" /> 
+			
+			-->
+		</properties>
+	</persistence-unit>
+</persistence>

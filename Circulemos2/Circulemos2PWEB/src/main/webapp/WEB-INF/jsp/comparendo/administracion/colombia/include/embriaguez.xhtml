@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-embriaguez" styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_embriaguez}">
+		<p:growl id="messagesEmbriaguez" showDetail="true" life="15000"
+			globalOnly="true" />
+		<p:fieldset id="datos-embriaguez" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_embriaguez}">
+			<h:panelGrid id="panel-formulario-embriaguez"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_infractor_nego_presentar}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selNegoPresentarPrueba"
+						value="#{adminComparendoFL.procesaComparendo.niegaPruebaAlcoholemia}"
+						required="false"
+						requiredMessage="#{labelGeneral.val_campo_requerido}">
+						<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+							itemValue="true" />
+						<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+							itemValue="false" />
+						<p:ajax update="campos-registro-embriaguez" process="@this"
+							event="change" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selNegoPresentarPrueba" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_grado_alcoholemia}"
+					styleClass="campo-obligatorio"
+					rendered="#{adminComparendoFL.requiereEmbriaguez and !adminComparendoFL.procesaComparendo.niegaPruebaAlcoholemia}" />
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_grado_alcoholemia}"
+					rendered="#{!adminComparendoFL.requiereEmbriaguez or adminComparendoFL.procesaComparendo.niegaPruebaAlcoholemia}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selGradoAlcoholemia"
+						value="#{adminComparendoFL.procesaComparendo.gradoAlcoholemia}"
+						required="#{adminComparendoFL.requiereEmbriaguez and !adminComparendoFL.procesaComparendo.niegaPruebaAlcoholemia}"
+						requiredMessage="#{labelGeneral.val_campo_requerido}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems value="#{fachadaCatalogosMB.catGradoAlcoholemia()}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selGradoAlcoholemia" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_fecha_prueba}" />
+				<h:panelGroup>
+					<p:calendar id="fechaPrueba"
+						value="#{adminComparendoFL.procesaComparendo.fechaPruebaAlcoholemia}"
+						pattern="#{webPrm.lab_calendar_pattern}" maxdate="#{adminComparendoFL.procesaComparendo.fechaRecepcion}" 
+						mindate="#{adminComparendoFL.procesaComparendo.fechaInfraccion}">
+						<p:watermark for="fechaPrueba"
+							value="#{webPrm.lab_calendar_mask_pattern}" />
+						<p:ajax process="@this" event="change" global="false" />
+						<p:ajax event="dateSelect" global="false" process="@this" />
+					</p:calendar>
+					<p:message for="fechaPrueba" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_numero_prueba}" />
+				<h:panelGroup>
+					<p:inputText id="numeroPrueba"
+						value="#{adminComparendoFL.procesaComparendo.numeroPruebaAlcoholemia}"
+						maxlength="10"
+						validatorMessage="#{labelGeneral.val_campo_numerico}">
+						<f:validateRegex pattern="#{adminComparendoMB.expresionNumerica}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="numeroPrueba" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_miligramos_etanol}"
+					styleClass="campo-obligatorio"
+					rendered="#{adminComparendoFL.requiereEmbriaguez and !adminComparendoFL.procesaComparendo.niegaPruebaAlcoholemia}" />
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_miligramos_etanol}"
+					rendered="#{!adminComparendoFL.requiereEmbriaguez or adminComparendoFL.procesaComparendo.niegaPruebaAlcoholemia}" />
+				<h:panelGroup>
+					<p:inputText id="miligramosEtanol"
+						value="#{adminComparendoFL.procesaComparendo.valorGradoAlcoholemia}"
+						required="#{adminComparendoFL.requiereEmbriaguez and !adminComparendoFL.procesaComparendo.niegaPruebaAlcoholemia}"
+						requiredMessage="#{labelGeneral.val_campo_requerido}"
+						converterMessage="#{labelGeneral.val_campo_numerico}">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="miligramosEtanol" />
+				</h:panelGroup>
+
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_reincidente}" />
+				<h:panelGroup>
+					<p:inputText id="numeroVecesReincidente"
+						value="#{adminComparendoFL.procesaComparendo.numeroReincidencia}"
+						converterMessage="#{labelGeneral.val_campo_numerico}"
+						validatorMessage="#{labelAdminComparendo.msg_error_numero_reincidencia}">
+						<f:validateLongRange minimum="1"/>
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="numeroVecesReincidente" />
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:fieldset>
+
+	</p:panel>
+</ui:composition>

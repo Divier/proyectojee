@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<p:fieldset id="solicitud_pruebas" styleClass="fieldset-formulario"
+		legend="#{labelProcesoImpugnacion.msg_fieldset_sol_pruebas}">
+		<!--Agregar Secciones o Panel Grid de campos-->
+		<h:panelGrid styleClass="center-block" columns="4"
+			columnClasses="label-col,input-col,label-col,input-col">
+			<!--Componentes del formulario 2 o 4 columnas-->
+			<p:outputLabel
+				value="#{labelProcesoImpugnacion.label_caracteristica_prueba}" />
+			<p:outputLabel
+				value="#{registrarPruebaFL.solicitud.caracteristicaPrueba.nombre}" />
+
+			<p:outputLabel value="#{labelProcesoImpugnacion.label_tipo_prueba}" />
+			<p:outputLabel
+				value="#{registrarPruebaFL.solicitud.tipoPrueba.nombre}" />
+
+			<p:outputLabel value="#{labelProcesoImpugnacion.label_origen_prueba}" />
+			<p:outputLabel
+				value="#{registrarPruebaFL.solicitud.origenPrueba.nombre}" />
+
+			<p:outputLabel
+				value="#{labelProcesoImpugnacion.label_fecha_sol_prueba}" />
+			<c2:outputDateLabel
+				labelValue="#{registrarPruebaFL.solicitud.fechaSolicitud}"
+				fullFormat="false" />
+
+			<p:outputLabel
+				value="#{labelProcesoImpugnacion.label_descripcion_prueba}" />
+			<p:outputLabel style="width: 570px;"
+				value="#{registrarPruebaFL.solicitud.descripcion}" />
+		</h:panelGrid>
+
+		<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+			<!--Ver Solicitud Prueba-->
+			<p:commandButton id="btnVerSolicitudPrueba"
+				action="#{registrarPruebaMB.verSolicitudPrueba()}" process="@this"
+				immediate="true" update=":form-pdfviewer"
+				value="#{labelProcesoImpugnacion.btn_ver_sol_prueba}">
+				<p:tooltip for="btnVerSolicitudPrueba"
+					value="#{labelProcesoImpugnacion.btn_ver_sol_prueba}" />
+			</p:commandButton>
+		</h:panelGrid>
+	</p:fieldset>
+
+	<p:fieldset id="impulsos_pruebas" styleClass="fieldset-formulario"
+		legend="#{labelProcesoImpugnacion.msg_fieldset_imp_pruebas}">
+		<h:panelGrid id="acciones-top-impulsos">
+			<f:facet name="footer">
+				<!--Ver Impulso-->
+				<p:commandButton action="#{registrarPruebaMB.verImpulso()}"
+					icon="c2-icon-consultar" process="@this" update=":form-pdfviewer"
+					value="#{labelProcesoImpugnacion.btn_ver_impulso_prueba}"
+					disabled="#{registrarPruebaFL.impulsoSeleccionado == null || registrarPruebaFL.impulsoSeleccionado.dto.numeroDocumento == null }">
+				</p:commandButton>
+
+				<!--Cargar Impulso-->
+				<p:commandButton
+					action="#{registrarImpulsoPruebaMB.inicializarDatos()}"
+					icon="c2-icon-crear" process="@this"
+					update="idPopUpRegistroImpulsoPruebas"
+					disabled="#{registrarPruebaMB.esImpulsoDefinitivo(false)}"
+					rendered="#{!registrarPruebaFL.modoConsulta}"
+					value="#{labelProcesoImpugnacion.btn_cargar_impulso_prueba}">
+				</p:commandButton>
+
+				<!--Eliminar Impulso-->
+				<p:commandButton action="#{registrarPruebaMB.eliminarImpulso()}"
+					icon="c2-icon-editar" process="@this"
+					update="#{idPrefix}:impulsos_pruebas #{idPrefix}:pruebas"
+					value="#{labelProcesoImpugnacion.btn_eliminar_impulso}"
+					rendered="#{!registrarPruebaFL.modoConsulta}"
+					disabled="#{registrarPruebaFL.impulsoSeleccionado == null || registrarPruebaFL.impulsoSeleccionado.dto.id != null}">
+				</p:commandButton>
+			</f:facet>
+		</h:panelGrid>
+
+		<p:dataTable id="tabla-resultados_imp" var="registro"
+			value="#{registrarPruebaFL.listaImpulsos}"
+			rowKey="#{registro.rowKey}" paginator="true"
+			selection="#{registrarPruebaFL.impulsoSeleccionado}"
+			paginatorTemplate="#{webPrm.param_paginator_template}"
+			rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+			emptyMessage="#{labelGeneral.msj_tabla_vacia}"
+			rows="#{webPrm.param_initial_rows}">
+
+			<p:ajax event="rowSelectRadio"
+				process="#{idPrefix}:tabla-resultados_imp"
+				update="#{idPrefix}:acciones-top-impulsos @this" global="false" />
+
+			<p:column selectionMode="single"></p:column>
+
+			<p:column
+				headerText="#{labelProcesoImpugnacion.label_fecha_generacion_impulso}">
+				<c2:outputDateLabel labelValue="#{registro.dto.fechaGeneracion}"
+					fullFormat="false" />
+			</p:column>
+
+			<p:column
+				headerText="#{labelProcesoImpugnacion.label_impulso_definitivo}">
+				<c2:outputBoolText value="#{registro.dto.definitivo}" />
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+
+	<p:fieldset id="pruebas" styleClass="fieldset-formulario"
+		legend="#{labelProcesoImpugnacion.msg_fieldset_pruebas}">
+		<!--Cargar Prueba-->
+		<p:fileUpload id="fupArchivo"
+			fileUploadListener="#{registrarPruebaMB.cargarArchivoPrueba}"
+			label="#{labelProcesoImpugnacion.btn_cargar_prueba}" mode="advanced"
+			update="@form :messages" auto="true"
+			sizeLimit="#{registrarPruebaMB.tamanioMaximoArch}"
+			allowTypes="#{registrarPruebaMB.extensionesPermitidas}"
+			invalidFileMessage="#{labelProcesoImpugnacion.msg_error_tipo_dato}"
+			invalidSizeMessage="#{registrarPruebaMB.mesErrLimitSize}"
+			disabled="#{registrarPruebaMB.esImpulsoDefinitivo(true)}"
+			rendered="#{!registrarPruebaFL.modoConsulta}" />
+		<h:panelGrid id="acciones-top-pruebas">
+			<f:facet name="footer">
+				<!--Ver Prueba-->
+				<p:commandButton ajax="false"
+					value="#{labelProcesoImpugnacion.btn_ver_prueba}"
+					icon="ui-icon-arrowthick-1-s"
+					onclick="PrimeFaces.monitorDownload(start, stop);"
+					title="#{labelProcesoImpugnacion.btn_ver_prueba}"
+					disabled="#{registrarPruebaFL.pruebaSeleccionada == null}"
+					styleClass="inline-btn">
+					<p:tooltip value="#{labelProcesoImpugnacion.btn_ver_prueba}" />
+					<p:fileDownload value="#{registrarPruebaMB.verPrueba()}" />
+				</p:commandButton>
+				<!--Eliminar Prueba-->
+				<p:commandButton action="#{registrarPruebaMB.eliminarPrueba()}"
+					icon="c2-icon-editar" process="@this"
+					value="#{labelProcesoImpugnacion.btn_eliminar_prueba}"
+					update="#{idPrefix}:acciones-top-pruebas #{idPrefix}:tabla-resultados_pru"
+					rendered="#{!registrarPruebaFL.modoConsulta}"
+					disabled="#{registrarPruebaFL.pruebaSeleccionada == null || registrarPruebaFL.pruebaSeleccionada.dto.id != null}">
+				</p:commandButton>
+			</f:facet>
+		</h:panelGrid>
+
+		<p:dataTable id="tabla-resultados_pru" var="registro"
+			value="#{registrarPruebaFL.listaPruebas}" rowKey="#{registro.rowKey}"
+			paginator="true" selection="#{registrarPruebaFL.pruebaSeleccionada}"
+			paginatorTemplate="#{webPrm.param_paginator_template}"
+			rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+			emptyMessage="#{labelGeneral.msj_tabla_vacia}"
+			rows="#{webPrm.param_initial_rows}">
+
+			<p:ajax event="rowSelectRadio"
+				process="#{idPrefix}:tabla-resultados_pru"
+				update="#{idPrefix}:acciones-top-pruebas @this" global="false" />
+
+			<p:column selectionMode="single"></p:column>
+
+			<p:column
+				headerText="#{labelProcesoImpugnacion.label_nombre_archivo}">
+				<p:outputLabel value="#{registro.dto.nombreArchivo}" />
+			</p:column>
+
+			<p:column
+				headerText="#{labelProcesoImpugnacion.label_fecha_cargue_prueba}">
+				<c2:outputDateLabel labelValue="#{registro.dto.fechaCarga}"
+					fullFormat="false" />
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+</ui:composition>

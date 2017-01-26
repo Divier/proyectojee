@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+	    <h:form id="form-resultado">
+	    	<p:poll interval="120" listener="#{adminJobMB.consultarJobs}" update="form-resultado" />				
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta">			
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminJobs.titulo_admin_jobs}">
+					<h:panelGrid id="acciones-top">
+						<f:facet name="footer">
+							<!--Boton Cambiar Ejecucion-->
+							<p:commandButton id="btnCmbEje" onclick="PF('dialogExpresion').show();"
+								process="@this" value="#{labelAdminJobs.btnCmbEje}"
+								disabled="#{adminJobHolderFL.tarAutSeleccionada == null}">
+								<p:tooltip for="btnCmbEje"
+									value="#{labelAdminJobs.btnCmbEje}" />
+							</p:commandButton>
+							<!--Boton Cargar -->
+							<p:commandButton id="btnDetEje" action="DETENER_EJECUCION"
+								process="@this"	value="#{labelAdminJobs.btnDetEje}"
+								disabled="#{adminJobHolderFL.tarAutSeleccionada == null}">
+								<p:tooltip for="btnDetEje"
+									value="#{labelAdminJobs.btnDetEje}" />
+							</p:commandButton>
+							<!--Boton Lanzar Inmediatamente -->
+							<p:commandButton id="btnEjeInm" action="EJECUTAR_INMEDIATAMENTE"
+								process="@this"	value="#{labelAdminJobs.btnEjeInm}"
+								disabled="#{adminJobHolderFL.tarAutSeleccionada == null}">
+								<p:tooltip for="btnEjeInm"
+									value="#{labelAdminJobs.btnEjeInm}" />
+							</p:commandButton>
+						</f:facet>
+					</h:panelGrid>
+					
+					<p:dialog header="#{labelAdminJobs.titulo_expresion_cron}" resizable="false"
+						widgetVar="dialogExpresion" minHeight="100" width="450px" modal="true" >
+							<p:fieldset styleClass="fieldset-formulario" legend="#{labelAdminJobs.titulo_expresion_cron}">
+	    						<div id="expresion_cron"></div>
+				    		</p:fieldset>
+				    		
+				    		<h:panelGrid columnClasses="label-col,input-col,label-col,input-col" columns="2" cellpadding="1">
+								<p:outputLabel value="#{labelAdminJobs.label_expresion_cron}" styleClass="campo-obligatorio"/>
+								<h:panelGroup>
+									<p:inputText id="expresionVal" value="#{adminJobHolderFL.expresionCron}" /> 
+								</h:panelGroup>
+							</h:panelGrid>	
+				    		
+					    	<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+								<p:commandButton id="btnContinuar" action="CAMBIAR_EJECUCION_SIG" 
+									process="@this expresionVal" value="#{labelAdminJobs.btnContinuar}">
+									<p:tooltip for="btnContinuar" value="#{labelAdminJobs.btnContinuar}" />
+								</p:commandButton>
+							</h:panelGrid>	
+					</p:dialog>
+					
+					<p:dataTable id="tabla-resultados"
+						value="#{adminJobHolderFL.lsTareaAutDTO}"
+						var="registro" rowKey="#{registro.idJob}"
+						selection="#{adminJobHolderFL.tarAutSeleccionada}"
+						paginator="true"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}" sortMode="multiple"
+						emptyMessage="#{labelAdminJobs.msg_error_no_ejecuciones}"
+						tableStyle="width:auto" resizableColumns="true">
+
+						<p:ajax event="rowSelectRadio"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this" global="false" />
+
+						<p:column selectionMode="single" />
+
+						<p:column headerText="#{labelAdminJobs.lbl_nombre_job}">
+							<p:outputLabel value="#{registro.nombreJob}" />							
+						</p:column>
+
+						<p:column headerText="#{labelAdminJobs.lbl_grupo_job}">
+							<p:outputLabel value="#{registro.grupoJob}" />							
+						</p:column>
+
+						<p:column headerText="#{labelAdminJobs.lbl_nombre_trigger}">
+							<p:outputLabel value="#{registro.nombreTrigger}" />
+						</p:column>
+						
+						<p:column headerText="#{labelAdminJobs.lbl_grupo_trigger}">
+							<p:outputLabel value="#{registro.grupoTrigger}" />
+						</p:column>
+						
+						<p:column headerText="#{labelAdminJobs.lbl_ejecucion}">
+							<c2:outputDateLabel labelValue="#{registro.ejecucion}" fullFormat="true" />
+						</p:column>
+						
+						<p:column headerText="#{labelAdminJobs.lbl_estado}">
+							<p:outputLabel value="#{registro.estadoTrigger}" />
+						</p:column>	
+						
+						<p:column headerText="#{labelAdminJobs.lbl_expresion_tiempo}">
+							<p:outputLabel value="#{registro.expresionTiempo}" />
+						</p:column>											
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+		<script>
+		$(document).ready(function() {
+	        $("#expresion_cron").cron({
+	            initial: "* * * * *",
+	            onChange: function() {
+	                $("#form-resultado\\:expresionVal").val($(this).cron("value"));
+	            }
+	        });
+	    });
+		</script>
+	</ui:define>
+</ui:composition>

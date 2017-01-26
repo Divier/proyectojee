@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standardSinMenu.xhtml">
+
+	<ui:define name="contenido">
+		<h:panelGroup styleClass="center-box">
+			<h:form id="form-contenido">
+				<p:panel id="campos-ingreso"
+					header="#{mensajesIngreso.label_recuperar_pw}">
+					<h:outputText
+						value="#{mensajesIngreso.mensaje_instrucciones_recuperacion}"
+						rendered="#{recuperacionContrasenaMB.mostrarFormulario}" />
+
+					<h:panelGroup
+						rendered="#{recuperacionContrasenaMB.mostrarFormulario}">
+						<h:panelGrid id="panel-formulario" styleClass="center-block"
+							columns="2" columnClasses="label-col,input-col">
+							<p:outputLabel value="#{mensajesIngreso.label_usuario}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="txtUsuario"
+									value="#{recuperacionContrasenaMB.nombreUsuario}"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}" />
+								<p:message for="txtUsuario" />
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:panelGrid styleClass="center-block">
+							<p:commandButton id="btnRecuperarPw"
+								action="#{recuperacionContrasenaMB.enviarVinculo()}"
+								icon="c2-icon-recordar-pw" process="@form"
+								value="#{mensajesIngreso.btnRecuperarPw}"
+								update=":messages :form-contenido">
+								<p:tooltip for="btnRecuperarPw"
+									value="#{mensajesIngreso.tooltip_btnRecuperarPw}" />
+							</p:commandButton>
+						</h:panelGrid>
+					</h:panelGroup>
+
+				</p:panel>
+			</h:form>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

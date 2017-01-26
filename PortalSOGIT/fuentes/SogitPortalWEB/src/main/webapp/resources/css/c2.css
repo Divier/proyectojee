@@ -1,0 +1,182 @@
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Open Sans'), local('OpenSans'),
+		url("#{resource['fonts/opensans-font.woff']}") format('woff');
+}
+
+/************************
+	Login form
+************************/
+.center-box {
+	margin: auto;
+	display: table;
+	padding-top: 30px;
+	width: 450px;
+}
+
+.status-dialog-c2 {
+	background-color: transparent !important;
+	box-shadow: none !important;
+	border: none;
+}
+
+/************************
+	Formularios
+************************/
+.panel-formulario {
+	box-shadow: 2px 2px 2px 0 #a9a9a9;
+	background-color: rgba(239, 249, 255, 0.84) !important;
+}
+
+.fieldset-formulario {
+	margin: 10px 0px;
+}
+
+.panel-res-consulta {
+	margin-top: 10px;
+	box-shadow: 2px 2px 2px 0 #a9a9a9;
+	background-color: rgba(239, 249, 255, 0.84) !important;
+}
+
+.campo-obligatorio {
+	background-repeat: no-repeat;
+	background-image: url("#{resource['img/required-icon.png']}");
+	padding-left: 13px;
+	background-position: -5px center;
+	display: block;
+}
+
+.campo-opcional {
+	background-repeat: no-repeat;
+	background-image: url("#{resource['img/opcional-icon.png']}");
+	padding-left: 13px;
+	background-position: -5px center;
+	display: block;
+	background-size: 10px 6px;
+}
+
+.center-block {
+	margin: 0 auto;
+}
+
+.label-col {
+	padding: 5px 10px;
+	background-color: rgba(239, 249, 255, 1);
+	max-width: 220px;
+	min-height: 30px;
+	color: #006c9e;
+	font-weight: bold;
+}
+
+.input-col-small {
+	padding: 5px 5px 5px 1px;
+	min-width: 70px;
+	max-width: 70px;
+}
+
+.input-col {
+	padding: 5px 5px 5px 1px;
+	min-width: 190px;
+	max-width: 190px;
+}
+
+.input-col-large {
+	max-width: 450px;
+	min-width: 450px;
+	padding: 5px 5px 5px 1px;
+}
+
+.input-col>span:first-child {
+	width: 99%;
+}
+
+.input-col>div:first-child, .input-col .ui-selectcheckboxmenu,
+	.input-col .ui-selectonemenu {
+	width: 98% !important;
+}
+
+.input-col>span:first-child>input:first-child, .input-col>div:first-child>span:first-child>input:first-child
+	{
+	width: 94%;
+}
+
+.input-col>input {
+	width: 94%;
+}
+
+.input-col>textarea {
+	width: 94%;
+}
+
+/************************
+	Iconos Botones
+************************/
+.c2-icon-consultar {
+	background-position: -160px -112px;
+}
+
+.c2-icon-crear {
+	background-position: -32px -96px;
+}
+
+.c2-icon-editar {
+	background-position: -64px -112px;
+}
+
+.c2-icon-eliminar {
+	background-position: -176px -96px;
+}
+
+.c2-icon-detalle {
+	background-position: -64px -96px;
+}
+
+.c2-icon-guardar {
+	background-position: -96px -112px;
+}
+
+.c2-icon-limpiar {
+	background-position: -144px -64px;
+}
+
+.c2-icon-cancelar {
+	background-position: 0 -128px;
+}
+
+.c2-icon-volver {
+	background-position: 0 -64px;
+}
+
+.c2-icon-agregar-det {
+	background-position: 0 -192px;
+}
+
+.c2-icon-editar-det {
+	background-position: -64px -112px;
+}
+
+.c2-icon-remover-det {
+	background-position: -16px -192px;
+}
+
+.c2-icon-si {
+	background-position: -208px -192px;
+}
+
+.c2-icon-no {
+	background-position: -32px -192px;
+}
+
+.c2-icon-ingresar {
+	background-position: -112px -128px;
+}
+
+.c2-icon-recordar-pw {
+	background-position: -192px -96px;
+}
+
+.c2-icon-refrescar {
+	background-position: -64px -80px;
+}

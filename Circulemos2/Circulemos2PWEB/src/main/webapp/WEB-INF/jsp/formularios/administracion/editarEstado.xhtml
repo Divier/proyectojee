@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-detalle" styleClass="panel-formulario"
+				header="#{labelAdminFormulariosForm.titulo_edicion}">
+
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminFormulariosForm.label_datos_generales}">
+
+					<h:panelGrid id="panel-formulario-generales"
+						styleClass="center-block" columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.label_organismo}"></p:outputLabel>
+						<p:outputLabel
+							value="#{adminFormularioMB.organismoTransito.codigoOrganismo} - #{adminFormularioMB.organismoTransito.nombreOrganismo}"></p:outputLabel>
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.label_tipo_formulario}"></p:outputLabel>
+						<p:outputLabel
+							value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.rangoFormulario.tipoFormulario.nombre}"></p:outputLabel>
+
+						<p:outputLabel value="#{labelAdminFormulariosForm.label_folio}"></p:outputLabel>
+						<h:panelGroup>
+							<p:inputText
+								value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.folio}"
+								maxlength="20" id="folio"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" />
+							<p:message for="folio" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdminFormulariosForm.label_causal}"></p:outputLabel>
+						<h:panelGroup>
+							<p:selectOneMenu id="selCausal"
+								value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.causalCambioEstado.id}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									noSelectionOption="true" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catCausalCambioEstado(adminFormularioHolderFL.cambioEstadoSeleccionado.estadoFormulario.id)}" />
+							</p:selectOneMenu>
+							<p:message for="selCausal" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.label_observaciones}"></p:outputLabel>
+						<h:panelGroup>
+							<p:inputTextarea rows="3" autoResize="false"
+								value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.observaciones}"
+								maxlength="100" id="observaciones"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" />
+							<p:message for="observaciones" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.label_numero_documento_soporte}"></p:outputLabel>
+						<h:panelGroup>
+							<p:inputText
+								value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.documentoFormulario.numeroDocumento}"
+								maxlength="20" id="numDocSoporte"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" />
+							<p:message for="numDocSoporte" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid columns="4" id="panelImagen" styleClass="center-block"
+						columnClasses="label-col">
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.label_doc_soporte}"></p:outputLabel>
+						<p:commandButton rendered="#{adminFormularioHolderFL.cambioEstadoSeleccionado.documentoFormulario.idDocumento != null}"
+							ajax="false" icon="ui-icon-arrowthick-1-s"
+							oncomplete="PrimeFaces.monitorDownload(start, stop);"
+							title="#{labelAdminComparendo.label_btn_descargar}"
+							styleClass="inline-btn">
+							<p:tooltip value="#{labelAdminComparendo.label_btn_descargar}" />
+							<p:fileDownload value="#{adminFormularioMB.descargarDocumento()}" />
+						</p:commandButton>
+						<h:panelGroup>
+							<p:fileUpload id="uploadFile"
+								fileUploadListener="#{adminFormularioMB.cargarArchivo}"
+								mode="advanced" dragDropSupport="false" fileLimit="1"
+								invalidFileMessage="#{labelAdminFormulariosForm.invalidFileMessage}"
+								fileLimitMessage="#{labelAdminFormulariosForm.fileLimitMessage}"
+								label="#{labelAdminFormulariosForm.label_examinar}"
+								uploadLabel="#{labelAdminFormulariosForm.label_cargar}"
+								cancelLabel="#{labelAdminFormulariosForm.label_cancelar}"
+								update="panelImagen"
+								allowTypes="#{adminFormularioMB.extensionesPermitidas}"
+								process="@this"></p:fileUpload>
+							<p:message id="msgFileRequired" for="uploadFile" display="text" />
+							<h:outputText id="msgFileUploaded"
+								value="#{labelAdminFormulariosForm.label_archivo_cargado}: #{adminFormularioHolderFL.nombreArchivo}"
+								rendered="#{adminFormularioMB.documentoSoporte != null}"
+								style="font-weight: bold;" />
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminFormulariosForm.label_datos_responsable}">
+
+					<h:panelGrid id="panel-formulario-respn" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.label_tipo_responsable}"></p:outputLabel>
+						<p:outputLabel
+							value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.responsableFormulario.tipoResponsable.nombre}"></p:outputLabel>
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.label_tipo_doc_responsable}"
+							rendered="#{adminFormularioHolderFL.cambioEstadoSeleccionado.empresa}"></p:outputLabel>
+						<p:outputLabel
+							value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.responsableFormulario.unificacionResponsableDTO.persona.tipoIdentificacion.nombre}"
+							rendered="#{adminFormularioHolderFL.cambioEstadoSeleccionado.empresa}"></p:outputLabel>
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.label_numero_doc_responsable}"
+							rendered="#{adminFormularioHolderFL.cambioEstadoSeleccionado.empresa}"></p:outputLabel>
+						<p:outputLabel
+							value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.responsableFormulario.unificacionResponsableDTO.persona.numeroIdentificacion}"
+							rendered="#{adminFormularioHolderFL.cambioEstadoSeleccionado.empresa}"></p:outputLabel>
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.label_nombre_comercial}"
+							rendered="#{adminFormularioHolderFL.cambioEstadoSeleccionado.empresa}"></p:outputLabel>
+						<p:outputLabel
+							value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.responsableFormulario.unificacionResponsableDTO.persona.getNombreCompleto()}"
+							rendered="#{adminFormularioHolderFL.cambioEstadoSeleccionado.empresa}"></p:outputLabel>
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.label_cod_organismo}"
+							rendered="#{adminFormularioHolderFL.cambioEstadoSeleccionado.organismo}"></p:outputLabel>
+						<p:outputLabel
+							value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.responsableFormulario.unificacionResponsableDTO.organismoTransito.codigoOrganismo}"
+							rendered="#{adminFormularioHolderFL.cambioEstadoSeleccionado.organismo}"></p:outputLabel>
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.label_nombre_organismo}"
+							rendered="#{adminFormularioHolderFL.cambioEstadoSeleccionado.organismo}"></p:outputLabel>
+						<p:outputLabel
+							value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.responsableFormulario.unificacionResponsableDTO.organismoTransito.nombreOrganismo}"
+							rendered="#{adminFormularioHolderFL.cambioEstadoSeleccionado.organismo}"></p:outputLabel>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminFormulariosForm.label_datos_formulario}">
+
+					<h:panelGrid id="panel-formulario-form" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.table_num_form_inicial}"></p:outputLabel>
+						<p:outputLabel
+							value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.numeroInicial}"></p:outputLabel>
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.table_num_form_final}"></p:outputLabel>
+						<p:outputLabel
+							value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.numeroFinal}"></p:outputLabel>
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.label_fecha_aplicacion_est}"></p:outputLabel>
+						<p:outputLabel
+							value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.fechaAplicacionEstado}"></p:outputLabel>
+
+						<p:outputLabel
+							value="#{labelAdminFormulariosForm.label_estado_formulario_evento}"></p:outputLabel>
+						<p:outputLabel
+							value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.estadoFormulario.nombre}"></p:outputLabel>
+
+						<p:outputLabel value="#{labelAdminFormulariosForm.table_cantidad}"></p:outputLabel>
+						<p:outputLabel
+							value="#{adminFormularioHolderFL.cambioEstadoSeleccionado.cantidadFormularios}"></p:outputLabel>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+					<!--Boton Guardar-->
+					<p:commandButton id="btnGuardar" action="CONTINUAR"
+						icon="c2-icon-guardar" process="@form"
+						value="#{lbComun.btnGuardar}" update=":messages :form-contenido">
+						<p:tooltip for="btnGuardar"
+							value="#{labelAdminFormulariosForm.tooltip_btn_guardar}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}"
+							message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+					</p:commandButton>
+					<!--Boton Cancelar-->
+					<p:commandButton id="btnVolver" action="VOLVER"
+						icon="c2-icon-cancelar" process="@this" immediate="true"
+						value="#{lbComun.btnVolver}">
+						<p:tooltip for="btnVolver"
+							value="#{labelAdminFormulariosForm.tooltip_btn_cancelar}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}"
+							message="#{lbComun.msg_confirm_volver_cancelar}"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

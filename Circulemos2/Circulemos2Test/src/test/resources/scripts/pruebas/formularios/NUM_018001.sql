@@ -1,0 +1,45 @@
+-- 
+--  persona
+-- 
+INSERT INTO persona (ID_PERSONA, ID_TIPO_IDENTIFICACION, NUMERO_IDENTIFICACION, CODIGO_FUENTE_INFORMACION, CODIGO_ORGANISMO, FECHA_ULTIMA_ACTUALIZACION) VALUES ('-2', '2', '10000000001', '18', '11001', '2014-01-01');
+-- 
+--  persona_juridica
+-- 
+INSERT INTO persona_juridica (ID_PERSONA_JURIDICA, DIGITO_VERIFICACION, NOMBRE_COMERCIAL, SIGLA, ID_CLASE_ACTIVIDAD_ECONOMICA, ID_MUNICIPIO) VALUES ('-2', '6', 'PERSONA JURÍDICA', 'PJ', '379', '149');
+-- 
+--  responsable_formulario
+-- 
+INSERT INTO responsable_formulario (ID_RESPONSABLE_FORMULARIO, FECHA_INICIO_VINCULA, FECHA_FIN_VINCULA, CODIGO_ORGANISMO, ID_TIPO_RESPONSABLE, correo_responsable_formulario) VALUES ('-1', '2015-01-16', '2015-01-23', '11001', '2', 'giovanni.velandia@datatools.com.co');
+INSERT INTO responsable_formulario (ID_RESPONSABLE_FORMULARIO, FECHA_INICIO_VINCULA, FECHA_FIN_VINCULA, CODIGO_ORGANISMO, ID_TIPO_RESPONSABLE, correo_responsable_formulario) VALUES ('-2', '2015-01-16', '2015-01-23', '11001', '1', 'giovanni.velandia@datatools.com.co');
+-- 
+--  unificacion responsable_formulario
+-- 
+INSERT INTO unificacion_responsable (id_unificacion_responsable, id_persona, codigo_organismo, id_responsable_formulario) VALUES (-1, -2, NULL, -1);
+INSERT INTO unificacion_responsable (id_unificacion_responsable, id_persona, codigo_organismo, id_responsable_formulario) VALUES (-2, NULL, 11001, -2);
+-- 
+-- stock_tipo_responsable
+-- 
+INSERT INTO stock_tipo_responsable (ID_STOCK_TIPO_RESPONSABLE, ID_TIPO_FORMULARIO, ID_TIPO_RESPONSABLE, STOCK_MINIMO, STOCK_MAXIMO, ESTADO_STOCK, CODIGO_ORGANISMO) VALUES ('3', '2', '1', '50', '100', '1', '11001');
+-- 
+-- numeracion_formulario
+-- 
+INSERT INTO numeracion_formulario (ID_NUMERACION, ID_TIPO_FORMULARIO, FECHA_VIGENCIA_INICIAL, FECHA_VIGENCIA_FINAL, DIGITOS, ACTIVO, TRAMA) VALUES ('-1', '1', '2010-01-01', '2015-12-31', '2', '1', '00');
+-- 
+-- detalle numeracion_formulario
+-- 
+INSERT INTO detalle_numeracion(id_detalle_numeracion, id_numeracion, digito, caracter_inicio, caracter_fin, incremental, numerico) VALUES (31, -1, 1, '0', '9', 1, 1);
+INSERT INTO detalle_numeracion(id_detalle_numeracion, id_numeracion, digito, caracter_inicio, caracter_fin, incremental, numerico) VALUES (32, -1, 2, '1', '6', 1, 1);
+-- 
+-- rango_formulario
+-- 
+INSERT INTO rango_formulario (ID_RANGO_FORMULARIO, ID_TIPO_FORMULARIO, NUMERO_INICIAL, NUMERO_FINAL, FECHA_AUTORIZACION, ID_NUMERACION, CANTIDAD_TOTAL, ALERTA_STOCK, CODIGO_ORGANISMO, CANTIDAD_DISPONIBLE, ID_DOCUMENTO_FORMULARIO) VALUES ('-1', '2', '01', '02', '2015-10-01', '-1', '2', '0', '11001', '2', NULL);
+INSERT INTO rango_formulario (ID_RANGO_FORMULARIO, ID_TIPO_FORMULARIO, NUMERO_INICIAL, NUMERO_FINAL, FECHA_AUTORIZACION, ID_NUMERACION, CANTIDAD_TOTAL, ALERTA_STOCK, CODIGO_ORGANISMO, CANTIDAD_DISPONIBLE, ID_DOCUMENTO_FORMULARIO) VALUES ('-2', '1', '03', '06', '2015-10-01', '-1', '4', '0', '11001', '4', NULL);
+-- 
+-- detalle_cambio_estado
+-- 
+INSERT INTO detalle_cambio_estado (ID_DETALLE_CAMBIO_ESTADO, NUMERO_INICIAL_RANGO, NUMERO_FINAL_RANGO, FECHA_MOVIMIENTO, ID_DOCUMENTO_FORMULARIO, ID_ESTADO_FORMULARIO, CANTIDAD_FORMULARIOS, FOLIO, TRAMA, FECHA_APLICACION_ESTADO, ID_CAUSAL_CAMBIO_ESTADO, OBSERVACIONES, ID_RESPONSABLE_FORMULARIO, ID_RANGO_FORMULARIO) VALUES ('-1', '03', '03', '2015-10-01', NULL, '3', '1', NULL, '00', '2015-10-01', '2', NULL, '-2', '-1');
+INSERT INTO detalle_cambio_estado (ID_DETALLE_CAMBIO_ESTADO, NUMERO_INICIAL_RANGO, NUMERO_FINAL_RANGO, FECHA_MOVIMIENTO, ID_DOCUMENTO_FORMULARIO, ID_ESTADO_FORMULARIO, CANTIDAD_FORMULARIOS, FOLIO, TRAMA, FECHA_APLICACION_ESTADO, ID_CAUSAL_CAMBIO_ESTADO, OBSERVACIONES, ID_RESPONSABLE_FORMULARIO, ID_RANGO_FORMULARIO) VALUES ('-2', '04', '05', '2015-10-01', NULL, '2', '3', NULL, '00', '2015-10-01', '2', NULL, '-1', '-2');
+-- 
+-- formulario
+-- 
+INSERT INTO formulario (ID_FORMULARIO, ID_TIPO_FORMULARIO, NUMERO_FORMULARIO, ID_ESTADO_FORMULARIO, ID_RESPONSABLE_FORMULARIO, ID_RANGO_FORMULARIO, CODIGO_ORGANISMO, ID_DETALLE_CAMBIO_ESTADO) VALUES ('-1', '1', '03', '3', '-1', '-1', '11001', '-1');

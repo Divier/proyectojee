@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="simulacionFinanciacionHolderFL"
+		class="co.com.datatools.c2.managed_bean.financiacion.administracion.simulacion.SimulacionFinanciacionHolderFL" />
+	<var name="simulacionFinanciacionFL"
+		class="co.com.datatools.c2.managed_bean.financiacion.administracion.simulacion.SimulacionFinanciacionFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/financiacion/administracion/simulacion/simulacionFinanciacion.xhtml"><!-- Modificado javier original -->
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('simulacionFinanciacionMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('ubicabilidadMB')" />
+		</on-entry>
+		<transition on="LIMPIAR">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.financiacion.administracion.simulacion.SimulacionFinanciacionHolderFL()"
+				result="flowScope.simulacionFinanciacionHolderFL" />
+		</transition>
+		<transition on="_op-CONSULTAR" to="VALIDAR_UBICABILIDAD">
+		</transition>
+		<transition on="_op-CREAR" to="REALIZAR_SIMULACION">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.financiacion.administracion.simulacion.SimulacionFinanciacionFL()"
+				result="flowScope.simulacionFinanciacionFL" />
+		</transition>
+	</view-state>
+
+	<!-- se accede al modulo de ubicabilidad -->	
+	<action-state id="VALIDAR_UBICABILIDAD">
+		<evaluate
+			expression="externalContext.sessionMap.simulacionFinanciacionMB.consultarPersona()" />
+		<transition on="yes" to="UBICABILIDAD">
+            <set name="flashScope.tipoDocumento" value="flowScope.simulacionFinanciacionHolderFL.infractorDTO.tipoIdentificacion.id" />
+            <set name="flashScope.documento" value="flowScope.simulacionFinanciacionHolderFL.infractorDTO.numeroIdentificacion" />
+			<set name="flashScope.soloGuardar" value="false" />
+			<set name="flashScope.ciudadanoPresente" value="true" />			
+		</transition>
+		<transition on="no" to="ingresar"></transition>
+	</action-state>	
+	
+	<!-- SUB FLUJO ubicabilidad -->	
+    <subflow-state id="UBICABILIDAD" subflow="administracion/ubicabilidad"> 
+	    <input name="tipoDocumento" />
+	    <input name="documento" />
+		<input name="soloGuardar" />
+        
+        <output name="persona" />        
+        
+		<transition on="CANCELAR_UBI" to="CONSULTA_OBLIGACIONES"/>
+		<transition on="ACEPTAR_UBI" to="CONSULTA_OBLIGACIONES"/>
+    </subflow-state>
+	<!-- -->
+
+	<action-state id="CONSULTA_OBLIGACIONES">
+		<evaluate
+			expression="externalContext.sessionMap.simulacionFinanciacionMB.consultarObligacionInfractor()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<action-state id="REALIZAR_SIMULACION">
+		<evaluate
+			expression="externalContext.sessionMap.simulacionFinanciacionMB.realizarSimulacion()" />
+		<transition on="yes" to="_op-CREAR">
+		</transition>
+		<transition on="no" to="ingresar" />
+	</action-state>
+
+	<view-state id="_op-CREAR"
+		view="/WEB-INF/jsp/financiacion/administracion/simulacion/simulacion.xhtml">
+		<transition on="RECALCULAR">
+			<evaluate
+				expression="externalContext.sessionMap.simulacionFinanciacionMB.calcularFinanciacion(flowScope.simulacionFinanciacionFL.simulacionFinanciacionDTO)"></evaluate>
+		</transition>
+		<transition on="CONTINUAR" to="PARAMETRO_FIRMA_SIMULACION" />
+		<transition on="VOLVER" to="ingresar" />
+		<transition on="TERMINAR" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.financiacion.administracion.simulacion.SimulacionFinanciacionHolderFL()"
+				result="flowScope.simulacionFinanciacionHolderFL" />
+		</transition>
+		
+		<transition on="GUARDAR_FIRMA" to="GUARDAR_FIRMA_SIMULACION"></transition>
+	</view-state>
+
+	<action-state id="registrarSimulacion">
+		<evaluate
+			expression="externalContext.sessionMap.simulacionFinanciacionMB.registrarSimulacion()" />
+		<transition on="success" to="_op-CREAR" />
+	</action-state>
+
+
+	<action-state id="PARAMETRO_FIRMA_SIMULACION">
+		<evaluate
+			expression="externalContext.sessionMap.capturaFirmaMB.consultarParametro()"></evaluate>
+		<transition on="yes" to="FIRMA_SIMULACION" />
+		<transition on="no" to="_op-CREAR">
+			<evaluate
+				expression="externalContext.sessionMap.simulacionFinanciacionMB.registrarSimulacion()"></evaluate>
+		</transition>
+	</action-state>
+
+	<action-state id="FIRMA_SIMULACION">
+		<evaluate
+			expression="externalContext.sessionMap.capturaFirmaMB.capturarFirmaDigital()"></evaluate>
+		<transition on="success" to="_op-CREAR" />
+	</action-state>
+
+	<action-state id="GUARDAR_FIRMA_SIMULACION">
+		<evaluate expression="externalContext.sessionMap.capturaFirmaMB.asociarFirma()"></evaluate>
+		<transition on="yes" to="_op-CREAR">
+			<set name="flowScope.simulacionFinanciacionFL.firma"
+				value="externalContext.sessionMap.capturaFirmaMB.capturaFirmaFL.capturaFirmaDTO.firma"
+				type="string" />
+			<evaluate
+				expression="externalContext.sessionMap.simulacionFinanciacionMB.registrarSimulacion()"></evaluate>
+		</transition>
+		<transition on="no" to="_op-CREAR" />
+	</action-state>
+</flow>

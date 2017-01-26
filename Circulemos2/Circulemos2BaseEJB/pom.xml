@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>co.com.datatools.c2</groupId>
+		<artifactId>Circulemos2Parent</artifactId>
+		<version>2.0.26</version>
+		<relativePath>../Circulemos2Parent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>Circulemos2BaseEJB</artifactId>
+	<name>Circulemos2BaseEJB</name>
+	<packaging>jar</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-6.0</artifactId>
+			<version>${jboss-javaee-6.0.version}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<version>${persistence-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate-entitymanager.version}</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Interfaces -->
+		<dependency>
+			<groupId>co.com.datatools.c2</groupId>
+			<artifactId>Circulemos2BaseEJBClient</artifactId>
+			<version>${Circulemos2BaseEJB.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+	</dependencies>
+	
+	<distributionManagement>
+		<repository>
+			<id>archiva.internal</id>
+			<name>Internal Release Repository</name>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/internal/</url>
+		</repository>
+		<snapshotRepository>
+			<id>archiva.snapshots</id>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

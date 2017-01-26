@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelAdminComparendo.titulo_cargar_evidencias}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_registro}">
+					<p:fieldset id="datos-comparendo" styleClass="fieldset-formulario"
+						legend="#{labelAdminComparendo.label_datos_comparendo}">
+						<h:panelGrid id="panel-formulario" styleClass="center-block"
+							columnClasses="label-col,input-col,label-col,input-col"
+							columns="4">
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_organismo_transito}" />
+							<p:outputLabel
+								value="#{detalleComparendoFL.nomOrganismoTransito}" />
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_tipo_comparendo}" />
+							<p:outputLabel
+								value="#{detalleComparendoFL.comparendo.tipoComparendo.nombre}" />
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_numero_comparendo}" />
+							<c2:outputNumComparendo
+								value="#{detalleComparendoFL.comparendo.ordenComparendoNacional.numeroComparendo}" />
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_fecha_imposicion}" />
+							<c2:outputDateLabel
+								labelValue="#{detalleComparendoFL.comparendo.fechaInfraccion}"
+								fullFormat="true" />
+							<p:outputLabel value="#{labelAdminComparendo.label_infraccion}" />
+							<p:outputLabel
+								value="#{detalleComparendoFL.comparendo.infraccion.codigo}" />
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_placa_vehiculo}" />
+							<p:outputLabel
+								value="#{detalleComparendoFL.comparendo.comparendoVehiculo.placaVehiculo}" />
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_tipo_doc_infractor}" />
+							<p:outputLabel
+								value="#{detalleComparendoFL.comparendo.infractor.tipoIdentificacion.nombre}" />
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_numero_doc_infractor}" />
+							<p:outputLabel
+								value="#{detalleComparendoFL.comparendo.infractor.numeroIdentificacion}" />
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_primer_nombre_infractor}" />
+							<p:outputLabel
+								value="#{detalleComparendoFL.comparendo.infractor.nombre1}" />
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_primer_apellido_infractor}" />
+							<p:outputLabel
+								value="#{detalleComparendoFL.comparendo.infractor.apellido1}" />
+						</h:panelGrid>
+					</p:fieldset>
+					<p:fieldset id="datos-detalle" styleClass="fieldset-formulario"
+						legend="#{labelAdminComparendo.titulo_evidencias}">
+						<h:panelGrid id="acciones-top">
+							<f:facet name="footer">
+								<p:outputLabel
+									value="#{labelAdminComparendo.label_tipo_evidencia}"
+									styleClass="label-col" />
+								<h:panelGroup styleClass="input-col">
+									<p:selectOneMenu id="selTipoEvidencia"
+										value="#{adminComparendoFL.idTipoEvidencia}">
+										<f:selectItem
+											itemLabel="#{labelGeneral.val_combo_primer_item}"
+											noSelectionOption="true" />
+										<f:selectItems
+											value="#{fachadaCatalogosMB.catTipoEvidencia()}" />
+										<p:ajax process="@this" global="false" />
+									</p:selectOneMenu>
+									<p:message for="selTipoEvidencia" />
+								</h:panelGroup>
+								<p:fileUpload id="fupArchivo"
+									fileUploadListener="#{adminComparendoMB.cargarEvidencia}"
+									label="#{lbComun.btnExaminar}"
+									uploadLabel="#{lbComun.btnCargar}"
+									cancelLabel="#{lbComun.btnCancelar}" mode="advanced"
+									dragDropSupport="false" update="datos-detalle :messages"
+									process="selTipoEvidencia"
+									sizeLimit="#{adminComparendoMB.tamanioMaximoArch}"
+									multiple="true"
+									allowTypes="#{adminComparendoMB.tiposArchivosPermitidos}"
+									invalidFileMessage="#{labelAdminComparendo.msg_error_tipo_dato}"
+									invalidSizeMessage="#{adminComparendoMB.mesErrLimitSize}" />
+							</f:facet>
+						</h:panelGrid>
+						<p:dataTable id="tabla-evidencias"
+							value="#{detalleComparendoFL.evidencias}" var="registro"
+							rowKey="#{registro.id}" paginator="true"
+							paginatorTemplate="#{webPrm.param_paginator_template}"
+							rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+							rows="#{webPrm.param_initial_rows}" sortMode="multiple"
+							emptyMessage="#{labelAdminComparendo.mensaje_vacio}">
+							<p:column
+								headerText="#{labelAdminComparendo.label_tipo_evidencia}">
+								<p:outputLabel value="#{registro.tipoEvidencia.nombre}" />
+							</p:column>
+							<p:column
+								headerText="#{labelAdminComparendo.label_nombre_evidencia}">
+								<p:outputLabel value="#{registro.archivoTransportable.nombre}" />
+							</p:column>
+							<p:column
+								headerText="#{labelAdminComparendo.label_btn_descargar}">
+								<p:commandButton ajax="false" icon="ui-icon-arrowthick-1-s"
+									onclick="PrimeFaces.monitorDownload(start, stop);"
+									title="#{labelAdminComparendo.label_btn_descargar}"
+									styleClass="inline-btn"
+									disabled="#{registro.idDocumento == null}">
+									<p:tooltip value="#{labelAdminComparendo.label_btn_descargar}" />
+									<p:fileDownload
+										value="#{adminComparendoMB.descargarDocumentoEvidencia(registro)}" />
+								</p:commandButton>
+							</p:column>
+							<p:column
+								headerText="#{labelAdminComparendo.label_btn_eliminar_doc}">
+								<p:commandButton id="btnEliminar"
+									action="#{adminComparendoMB.eliminarEvidencia(registro)}"
+									icon="c2-icon-eliminar" update="tabla-evidencias :messages"
+									process="@this" style="width: 16px !important">
+									<p:tooltip for="btnEliminar"
+										value="#{labelAdminComparendo.label_btn_eliminar_doc}" />
+									<p:confirm header="#{lbComun.msg_tit_confirmar}"
+										message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:fieldset>
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}" update=":messages :form-ingreso">
+							<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<p:commandButton id="btnLimpiar" action="LIMPIAR"
+							icon="c2-icon-limpiar" process="@this" update=":form-ingreso"
+							immediate="true" value="#{lbComun.btnLimpiar}">
+							<p:tooltip for="btnLimpiar" value="#{lbComun.tooltip_limpiar}" />
+						</p:commandButton>
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelConsultaDocumentos.titulo_consulta_masiva}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelConsultaDocumentos.titulo_consultar_documentos}">
+					<h:panelGrid id="panel-info-cabecera-infr"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">						
+						<p:outputLabel value="#{labelConsultaDocumentos.label_organismo_transito}" styleClass="campo-obligatorio"></p:outputLabel>
+						<h:panelGroup>
+							<p:selectOneMenu id="selOrganismoTransito" value="#{consultaMasivaHolderFL.codigoOrganismo}" required="true">
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelConsultaDocumentos.label_consecutivo_generacion}" />
+						<h:panelGroup>
+							<p:spinner id="idArchivo" value="#{consultaMasivaHolderFL.idArchivo}" min="1" />						
+							<p:message for="idArchivo" />
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:fieldset>
+				<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+					<!--Boton Consultar-->
+					<p:commandButton id="btnBuscar" styleClass="_op-CONSULTAR"
+						action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+						value="#{labelConsultaDocumentos.btnBuscar}"
+						update=":messages :form-resultado :form-contenido">
+						<p:tooltip for="btnBuscar" value="#{labelConsultaDocumentos.btnBuscar}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+	    <h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{consultaMasivaHolderFL.lsRespuesta.size() > 0}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelConsultaDocumentos.titulo_documentos}">
+					<p:dataTable id="tabla-resultados" var="registro"
+						value="#{consultaMasivaHolderFL.lsRespuesta}"
+						rowKey="#{registro.id}" paginator="true"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}" >
+
+						<p:column headerText="#{labelConsultaDocumentos.label_consecutivo_generacion}">
+							<p:outputLabel value="#{registro.id}" />							
+						</p:column>
+
+						<p:column headerText="#{labelConsultaDocumentos.lbl_fecha_solicitud}">
+							<c2:outputDateLabel labelValue="#{registro.fechaSolicitud}" fullFormat="false" />							
+						</p:column>
+
+						<p:column headerText="#{labelConsultaDocumentos.lbl_usuario}">
+							<p:outputLabel value="#{registro.usuario.login}" />
+						</p:column>
+						
+						<p:column headerText="#{labelConsultaDocumentos.lbl_numero_agrupacion}">
+							<p:outputLabel value="#{registro.limiteDocumentos}" />
+						</p:column>
+						
+						<p:column headerText="#{labelConsultaDocumentos.lbl_numero_doc_selecc}">
+							<p:outputLabel value="#{registro.cantidadDocumentos}" />
+						</p:column>
+											
+						<p:column headerText="#{labelConsultaDocumentos.lbl_fecha_procesado}">
+							<c2:outputDateLabel labelValue="#{registro.fechaProcesado}" fullFormat="false" />
+						</p:column>
+						
+						<p:column headerText="#{labelConsultaDocumentos.lbl_ruta_generacion}" width="350" styleClass="wrap">
+							<p:outputLabel value="#{registro.rutaGeneracion}" />					
+						</p:column>
+						
+						<p:column headerText="#{labelConsultaDocumentos.lbl_btn_descargar}">
+							<p:commandButton
+								ajax="false" icon="ui-icon-arrowthick-1-s"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="#{labelConsultaDocumentos.btnDescargar}"
+								styleClass="inline-btn">
+								<p:tooltip value="#{labelConsultaDocumentos.btnDescargar}" />
+								<p:fileDownload value="#{consultaMasivaDocumentosMB.descargarDocumento(registro.idArchivoGenerado)}" />
+							</p:commandButton>							
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

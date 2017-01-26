@@ -1,0 +1,176 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+		<artifactId>FachadaIntegracionWebParent</artifactId>
+		<version>1.0.7</version>
+		<relativePath>../FachadaIntegracionWebParent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>FachadaIntegracionWebEAR</artifactId>
+	<name>FachadaIntegracionWebEAR</name>
+	<packaging>ear</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-ear-plugin</artifactId>
+				<configuration>
+					<version>6</version>
+					<defaultLibBundleDir>lib</defaultLibBundleDir>
+					<!-- agregamos un nombre concreto a cada version -->
+					<applicationName>FachadaIntegracionWebEAR</applicationName>
+
+					<modules>
+						<!-- WEB -->
+						<webModule>
+							<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+							<artifactId>FachadaIntegracionWeb</artifactId>
+							<contextRoot>/FachadaIntegracionWeb</contextRoot>
+						</webModule>
+						<ejbModule>
+							<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+							<artifactId>FachadaIntegracionWebEJB</artifactId>
+						</ejbModule>
+						<jarModule>
+							<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+							<artifactId>FachadaIntegracionWebEJBClient</artifactId>
+						</jarModule>
+					</modules>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<!-- Perfil para compilar y empaquetar y desplegar con jb -->
+			<id>jb</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-ear-plugin</artifactId>
+						<configuration>
+							<version>6</version>
+							<defaultLibBundleDir>lib</defaultLibBundleDir>
+							<modules>
+								<!-- WEB -->
+								<webModule>
+									<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+									<artifactId>FachadaIntegracionWeb</artifactId>
+									<contextRoot>/FachadaIntegracionWeb</contextRoot>
+								</webModule>
+								<ejbModule>
+									<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+									<artifactId>FachadaIntegracionWebEJB</artifactId>
+								</ejbModule>
+								<jarModule>
+									<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+									<artifactId>FachadaIntegracionWebEJBClient</artifactId>
+								</jarModule>
+							</modules>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.jboss.as.plugins</groupId>
+						<artifactId>jboss-as-maven-plugin</artifactId>
+						<executions>
+							<!-- Undeploy the application on clean -->
+							<execution>
+								<id>undeploy</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>undeploy</goal>
+								</goals>
+								<configuration>
+									<ignoreMissingDeployment>true</ignoreMissingDeployment>
+								</configuration>
+							</execution>
+							<!-- Deploy the application on install -->
+							<execution>
+								<id>deploy</id>
+								<phase>install</phase>
+								<goals>
+									<goal>deploy</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>ic</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-ear-plugin</artifactId>
+						<configuration>
+							<version>6</version>
+							<defaultLibBundleDir>lib</defaultLibBundleDir>
+							<modules>
+								<!-- WEB -->
+								<webModule>
+									<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+									<artifactId>FachadaIntegracionWeb</artifactId>
+									<contextRoot>/FachadaIntegracionWeb</contextRoot>
+								</webModule>
+								<jarModule>
+									<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+									<artifactId>FachadaIntegracionWebEJBClient</artifactId>
+								</jarModule>
+								<ejbModule>
+									<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+									<artifactId>FachadaIntegracionWebEJB</artifactId>
+								</ejbModule>
+							</modules>
+						</configuration>
+					</plugin>
+					<!-- <plugin> <groupId>org.jboss.as.plugins</groupId> <artifactId>jboss-as-maven-plugin</artifactId> 
+						<version>7.7.Final</version> <configuration> <hostname>192.168.44.16</hostname> 
+						<port>10249</port> <username>admin</username> <password>adminEAP_6.4</password> 
+						</configuration> <executions> <execution> <id>undeploy</id> <phase>clean</phase> 
+						<goals> <goal>undeploy</goal> </goals> <configuration> <ignoreMissingDeployment>true</ignoreMissingDeployment> 
+						</configuration> </execution> <execution> <id>deploy</id> <phase>install</phase> 
+						<goals> <goal>deploy</goal> </goals> </execution> </executions> </plugin> -->
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+			<artifactId>FachadaIntegracionWebEJB</artifactId>
+			<version>${FachadaIntegracionWebEJB.version}</version>
+			<type>ejb</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+			<artifactId>FachadaIntegracionWeb</artifactId>
+			<version>${FachadaIntegracionWeb.version}</version>
+			<type>war</type>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<distributionManagement>
+		<repository>
+			<id>archiva.internal</id>
+			<name>Internal Release Repository</name>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/internal/</url>
+		</repository>
+		<snapshotRepository>
+			<id>archiva.snapshots</id>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

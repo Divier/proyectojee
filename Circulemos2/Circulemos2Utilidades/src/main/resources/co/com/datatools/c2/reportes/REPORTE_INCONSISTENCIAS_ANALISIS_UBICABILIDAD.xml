@@ -1,0 +1,19 @@
+<reporte>
+	<codigo>REPORTE_30</codigo>
+	<nombre>REPORTE DE INCONSISTENCIAS ANALISIS DE UBICABILIDAD</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL_SIN_FILTROS</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>TIPO DE DOCUMENTO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NÚMERO DE IDENTIFICACIÓN</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>INCONSISTENCIAS</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

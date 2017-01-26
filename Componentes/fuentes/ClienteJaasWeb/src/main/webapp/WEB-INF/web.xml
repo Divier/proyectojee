@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	<display-name>ClienteJaasWeb</display-name>
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>/faces/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+	<security-constraint>
+		<display-name>Circulemos Security Constraint</display-name>
+		<web-resource-collection>
+			<web-resource-name>Area protegida</web-resource-name>
+			<url-pattern>/protegido/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+			<http-method>PUT</http-method>
+			<http-method>DELETE</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>gen_CIRCULEMOS2.0</role-name>
+		</auth-constraint>
+		<user-data-constraint>
+			<transport-guarantee>NONE</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<realm-name>AutenticacionCirculemos</realm-name>
+		<form-login-config>
+			<form-login-page>/publico/autenticacion.xhtml</form-login-page>
+			<form-error-page>/publico/error_autenticacion.xhtml</form-error-page>
+		</form-login-config>
+	</login-config>
+	<security-role>
+		<role-name>gen_CIRCULEMOS2.0</role-name>
+	</security-role>
+</web-app>

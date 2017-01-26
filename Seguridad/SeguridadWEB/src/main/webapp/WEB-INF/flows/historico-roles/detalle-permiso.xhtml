@@ -1,0 +1,110 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:event type="preRenderView"
+				listener="#{historicoRolesMB.toString()}" />
+		</f:metadata>
+		<div>
+			<h2>
+				<h:outputText value="#{mensajesRol.titulo_detalle_permisos}"></h:outputText>
+			</h2>
+			<hr />
+			<h:form id="form-content">
+
+				<h:panelGrid id="panelDialog" columns="4" cellpadding="5"
+					columnClasses="column1,column2,column1,column2">
+					<h:outputText value="#{mensajesRol.label_nombre_rol}:" />
+					<h:outputText
+						value="#{historicoRolesFL.historicoSeleccionado.rolDetalleDto.nombre}" />
+					<h:outputText value="#{mensajesRol.label_descripcion_rol}:" />
+					<h:outputText
+						value="#{historicoRolesFL.historicoSeleccionado.rolDetalleDto.descripcion}" />
+					<h:outputText value="#{mensajesRol.fecha_cambio_rol}:" />
+					<c2:outputDateLabel labelValue="#{historicoRolesFL.historicoSeleccionado.fechaInicioRol}" fullFormat="true"/>					
+						
+					<h:outputText value="#{mensajesRol.fecha_fin_cambio_rol}:" />
+					<c2:outputDateLabel labelValue="#{historicoRolesFL.historicoSeleccionado.fechaFinRol}" fullFormat="true"/>					
+					<f:facet name="footer">
+						<p:commandButton action="VOLVER"
+							value="#{lbComun.btnVolver}" icon="c2-icon-volver" />
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tablaPermisosAsig"
+					value="#{historicoRolesFL.permisosAsignados}" var="recAsignado"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					paginator="true"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}"
+					rendered="#{historicoRolesFL.permisosAsignados.size()>0}" emptyMessage="#{mensajesGeneral.mensaje_no_resultados}">
+					<f:facet name="header">
+						<h:outputText value="#{mensajesRol.permisos_asignados_rol}" />
+					</f:facet>
+					<p:column headerText="#{mensajesRol.label_descripcion_recurso}"
+						sortBy="#{recAsignado.recursoDetalleDto.descripcion}"
+						filterBy="#{recAsignado.recursoDetalleDto.descripcion}"
+						filterMatchMode="contains">
+						<h:outputText
+							value="#{recAsignado.recursoDetalleDto.descripcion}" />
+					</p:column>
+					
+					<p:column headerText="#{mensajesRol.label_recurso}"
+						sortBy="#{recAsignado.recursoDetalleDto.nombreRecurso}"
+						filterBy="#{recAsignado.recursoDetalleDto.nombreRecurso}"
+						filterMatchMode="contains">
+						<h:outputText
+							value="#{recAsignado.recursoDetalleDto.nombreRecurso}" />
+					</p:column>
+					<p:column headerText="#{mensajesRol.label_aplicacion}" style="width: 160px;" 
+						sortBy="#{recAsignado.aplicacion}"
+						filterBy="#{recAsignado.aplicacion}" filterMatchMode="contains">
+						<h:outputText value="#{recAsignado.aplicacion}" />
+					</p:column>
+					<p:column headerText="#{mensajesRol.label_operaciones}" style="width: 410px;" 
+						sortBy="#{recAsignado.operaciones}"
+						filterBy="#{recAsignado.operaciones}" filterMatchMode="contains">
+						<h:outputText value="#{recAsignado.operaciones}" />
+					</p:column>
+				</p:dataTable>
+				<br />
+				<p:dataTable id="tablaPermisosHereda"
+					value="#{historicoRolesFL.permisosHeredados}" var="permisoHeredado"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					paginator="true"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}"
+					rendered="#{historicoRolesFL.permisosHeredados.size()>0}" emptyMessage="#{mensajesGeneral.mensaje_no_resultados}">
+					<f:facet name="header">
+						<h:outputText value="#{mensajesRol.permisos_heredados_rol}"/>
+					</f:facet>
+					<p:column headerText="#{mensajesRol.label_rol_padre}" sortBy="#{permisoHeredado.rolHerencia.nombre}" filterBy="#{permisoHeredado.rolHerencia.nombre}" filterMatchMode="contains">
+						<h:outputText value="#{permisoHeredado.rolHerencia.nombre}" />
+					</p:column>
+					<p:column headerText="#{mensajesRol.label_recurso}" sortBy="#{permisoHeredado.recursoDetalleDto.nombreRecurso}" filterBy="#{permisoHeredado.recursoDetalleDto.nombreRecurso}" filterMatchMode="contains">
+						<h:outputText value="#{permisoHeredado.recursoDetalleDto.nombreRecurso}" />
+					</p:column>
+					<p:column headerText="#{mensajesRol.label_aplicacion}" style="width: 160px;" 
+						sortBy="#{permisoHeredado.aplicacion}" 
+						filterBy="#{permisoHeredado.aplicacion}" filterMatchMode="contains">
+						<h:outputText value="#{permisoHeredado.aplicacion}" />
+					</p:column>
+					<p:column headerText="#{mensajesRol.label_operaciones}" style="width: 410px;" 
+						sortBy="#{permisoHeredado.operaciones}"
+						filterBy="#{permisoHeredado.operaciones}" filterMatchMode="contains">
+						<h:outputText value="#{permisoHeredado.operaciones}" />
+					</p:column>
+				</p:dataTable>
+
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

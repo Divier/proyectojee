@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelHorarioFuncionario.tit_conf_hor}">
+				<h:panelGrid id="panel-info-cabecera" styleClass="center-block"
+					columnClasses="label-col,input-col" columns="2">
+					<p:outputLabel value="#{labelHorarioFuncionario.lbl_cargo}"
+						styleClass="campo-obligatorio" />
+					<h:panelGroup>
+						<p:selectOneMenu id="selCargo"
+							value="#{configuracionHorarioFL.configuracionHorarioDTO.cargoDTO.id}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+							<f:selectItems value="#{fachadaCatalogosMB.catCargo()}" />
+							<p:ajax
+								listener="#{configuracionHorarioMB.consultarConfiguracionHorario()}"
+								update=":form-resultado:resultado-consulta"></p:ajax>
+						</p:selectOneMenu>
+						<p:message for="selCargo" />
+					</h:panelGroup>
+
+					<p:outputLabel value="#{labelHorarioFuncionario.lbl_dia}"
+						styleClass="campo-obligatorio" />
+
+					<h:panelGroup>
+						<p:dataTable id="tabla-resultados" var="registro"
+							value="#{fachadaCatalogosMB.catDia()}"
+							selection="#{configuracionHorarioFL.selectItemSels}"
+							rowKey="#{registro.value}" sortMode="multiple">
+
+							<p:ajax event="rowSelect"
+								listener="#{configuracionHorarioMB.consultarConfiguracionHorario()}"
+								process=":form-contenido:tabla-resultados"
+								update=":form-resultado:resultado-consulta @this" global="false" />
+
+							<p:ajax event="rowUnselect"
+								listener="#{configuracionHorarioMB.consultarConfiguracionHorario()}"
+								process=":form-contenido:tabla-resultados"
+								update=":form-resultado:resultado-consulta @this" global="false" />
+
+							<p:ajax event="rowSelectCheckbox"
+								listener="#{configuracionHorarioMB.consultarConfiguracionHorario()}"
+								process=":form-contenido:tabla-resultados"
+								update=":form-resultado:resultado-consulta @this" global="false" />
+
+							<p:ajax event="rowUnselectCheckbox"
+								listener="#{configuracionHorarioMB.consultarConfiguracionHorario()}"
+								process=":form-contenido:tabla-resultados"
+								update=":form-resultado:resultado-consulta @this" global="false" />
+
+							<p:ajax event="toggleSelect"
+								listener="#{configuracionHorarioMB.consultarConfiguracionHorario()}"
+								process=":form-contenido:tabla-resultados"
+								update=":form-resultado:resultado-consulta @this" global="false" />
+
+							<p:column selectionMode="multiple" />
+
+							<p:column>
+								<p:outputLabel value="#{registro.label}" />
+							</p:column>
+
+						</p:dataTable>
+						<p:message for="tabla-resultados" />
+					</h:panelGroup>
+
+					<p:outputLabel value="#{labelHorarioFuncionario.lbl_fch_inicio}"
+						styleClass="campo-obligatorio" />
+					<h:panelGroup>
+						<p:calendar id="calFchIni"
+							value="#{configuracionHorarioFL.configuracionHorarioDTO.fechaInicio}"
+							navigator="true" required="true"
+							pattern="#{utilidadMB.formatoFecha}">
+							<p:watermark for="calFchIni" value="#{utilidadMB.formatoFecha}" />
+						</p:calendar>
+						<p:message for="calFchIni" />
+					</h:panelGroup>
+
+					<p:outputLabel value="#{labelHorarioFuncionario.lbl_hr_inicio}"
+						styleClass="campo-obligatorio" />
+					<h:panelGroup>
+						<p:calendar id="calTimeIni"
+							value="#{configuracionHorarioFL.configuracionHorarioDTO.horaInicio}"
+							pattern="HH:mm" timeOnly="true" required="true" />
+						<p:message for="calTimeIni" />
+					</h:panelGroup>
+
+					<p:outputLabel value="#{labelHorarioFuncionario.lbl_hr_fin}"
+						styleClass="campo-obligatorio" />
+					<h:panelGroup>
+						<p:calendar id="calTimeFin"
+							mindate="#{configuracionHorarioFL.configuracionHorarioDTO.horaInicio}"
+							value="#{configuracionHorarioFL.configuracionHorarioDTO.horaFin}"
+							pattern="HH:mm" timeOnly="true" required="true" />
+						<p:message for="calTimeFin" />
+					</h:panelGroup>
+
+				</h:panelGrid>
+				<h:panelGrid styleClass="center-block" columns="4" cellpadding="5">
+					<p:commandButton id="btnGuardar" icon="c2-icon-guardar"
+						process="@form" action="CONTINUAR" value="#{lbComun.btnGuardar}"
+						update=":messages :form-contenido">
+						<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}"
+							message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+					</p:commandButton>
+					<p:commandButton id="btnCancelar" action="VOLVER"
+						icon="c2-icon-cancelar" process="@this" immediate="true"
+						value="#{lbComun.btnCancelar}">
+						<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}"
+							message="#{lbComun.msg_confirm_volver_cancelar}"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta">
+				<p:dataTable id="tabla-resultados-conf" var="registro"
+					value="#{configuracionHorarioFL.configuracionHorarioRespuestaDTOs}"
+					paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}">
+
+					<p:column headerText="#{labelHorarioFuncionario.lbl_cargo}">
+						<p:outputLabel value="#{registro.nombreCargo}" />
+					</p:column>
+
+					<p:column headerText="#{labelHorarioFuncionario.lbl_dia}">
+						<p:outputLabel value="#{registro.nombreDia}" />
+					</p:column>
+
+					<p:column headerText="#{labelHorarioFuncionario.lbl_hr_inicio}">
+						<p:outputLabel value="#{registro.horaInico}" />
+					</p:column>
+
+					<p:column headerText="#{labelHorarioFuncionario.lbl_hr_fin}">
+						<p:outputLabel value="#{registro.horaFin}" />
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

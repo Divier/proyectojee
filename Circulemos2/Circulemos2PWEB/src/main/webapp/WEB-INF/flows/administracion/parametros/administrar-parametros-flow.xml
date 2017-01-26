@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="adminParametrosHolderFL"
+		class="co.com.datatools.c2.managed_bean.administracion.parametros.AdminParametrosHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracion/parametros/administrarParametros.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('adminParametrosMB')" />	
+			<evaluate
+				expression="externalContext.sessionMap.adminParametrosMB.consultarParametros()" />
+		</on-entry>
+		
+	</view-state>
+
+</flow>

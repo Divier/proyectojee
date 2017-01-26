@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+	
+	<ui:define name="contenido">	
+		<h:form id="form-ingreso" enctype="multipart/form-data">
+			<p:panel id="campos-registro" styleClass="panel-formulario" header="#{labelCambioEstadosForm.titulo_ingresar_asignacion}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_registro}">
+					<p:fieldset id="datos-responsable" styleClass="fieldset-formulario" legend="#{labelCambioEstadosForm.label_datos_responsable}">
+						<h:panelGrid id="panel-formulario-valida-resp" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="2">
+							<p:outputLabel value="#{labelCambioEstadosForm.label_tipo_responsable}" styleClass="campo-obligatorio"/>
+							<h:panelGroup>
+								<p:selectOneMenu id="selTipoResponsable" value="#{asignacionFL.idTipoResponsable}" required="true" 
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+									<f:selectItems value="#{fachadaCatalogosMB.catTiposResponsableFormulario()}" />
+									<p:ajax event="valueChange" listener="#{asignacionesMB.cambiarTipoResponsable()}" process="@this" global="false"
+										update="@this msgSelTipoResponsable :messages datos-responsable" />
+								</p:selectOneMenu>
+								<p:message id="msgSelTipoResponsable" for="selTipoResponsable" />
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:panelGrid id="panel-frm-resp-emp" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4"
+							rendered="#{!asignacionFL.deshabilitarDatosResponsable and asignacionFL.idTipoResponsable != null}">
+							<p:outputLabel value="#{labelCambioEstadosForm.label_tipo_doc_responsable}" styleClass="campo-obligatorio" />
+							<p:selectOneMenu id="selTipoDoc" value="#{asignacionFL.idTipoDocResponsable}" disabled="true">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />
+								<p:ajax process="@this" update="@this" global="false"/>
+							</p:selectOneMenu>
+							<p:outputLabel value="#{labelCambioEstadosForm.label_numero_doc_responsable}" styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="numeroDoc" value="#{asignacionFL.numeroDocResponsable}" required="true" 
+									requiredMessage="#{labelGeneral.val_campo_requerido}" maxlength="20">
+									<p:ajax process="@this" update="@this" global="false"/>
+								</p:inputText>
+								<p:message id="msgNumeroDoc" for="numeroDoc" />
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:panelGrid id="panel-frm-resp-org" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="2"
+							rendered="#{asignacionFL.deshabilitarDatosResponsable and asignacionFL.idTipoResponsable != null}">
+							<p:outputLabel value="#{labelCambioEstadosForm.label_cod_organismo}" styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="codOrganismo" value="#{asignacionFL.codigoOrganismoConsulta}" required="true" 
+									requiredMessage="#{labelGeneral.val_campo_requerido}" maxlength="20">
+									<p:ajax process="@this" update="@this" global="false"/>
+								</p:inputText>
+								<p:message id="msgCodOrganismo" for="codOrganismo" />
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+							<!--Boton validar responsable-->
+							<p:commandButton id="btnValidar" action="#{asignacionesMB.consultarResponsableFormulario()}" icon="c2-icon-consultar"
+								value="#{labelCambioEstadosForm.btnValidarResponsable}" update=":messages datos-responsable datos-formularios"
+								process="@this selTipoResponsable selTipoDoc numeroDoc codOrganismo">
+								<p:tooltip for="btnValidar" value="#{labelCambioEstadosForm.tooltip_btnValidar}" />
+							</p:commandButton>
+						</h:panelGrid>
+						<h:panelGrid id="panel-responsable" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4" 
+							rendered="#{asignacionFL.nombreResponsable != null or asignacionFL.nombreOrganismo != null}">
+							<p:outputLabel value="#{labelCambioEstadosForm.label_nombre_comercial}" rendered="#{!asignacionFL.deshabilitarDatosResponsable}" />
+							<p:outputLabel value="#{labelCambioEstadosForm.label_nombre_organismo}" rendered="#{asignacionFL.deshabilitarDatosResponsable}"/>
+							
+							<h:outputText value="#{asignacionFL.nombreResponsable}" rendered="#{!asignacionFL.deshabilitarDatosResponsable}" />							
+							<h:outputText value="#{asignacionFL.nombreOrganismo}" rendered="#{asignacionFL.deshabilitarDatosResponsable}" />
+						</h:panelGrid>
+					</p:fieldset>
+
+					<p:fieldset id="datos-formularios" styleClass="fieldset-formulario" legend="#{labelCambioEstadosForm.label_datos_formulario}">
+						<h:panelGrid id="panel-formulario" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">
+							<p:outputLabel value="#{labelCambioEstadosForm.label_organismo}"/>
+							<p:outputLabel value="#{asignacionesMB.organismoTransito.codigoOrganismo} - #{asignacionesMB.organismoTransito.nombreOrganismo}"/>
+
+							<p:outputLabel value="#{labelCambioEstadosForm.label_tipo_formulario}" styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selTipoForm" value="#{asignacionFL.idTipoFormulario}" required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+									<f:selectItems value="#{fachadaCatalogosMB.catTipoFormulario()}" />							
+								</p:selectOneMenu>
+								<p:message for="selTipoForm" />
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+							<p:commandButton id="btnConsultarRangos" action="#{asignacionesMB.consultarRangosDisponibles()}" icon="c2-icon-consultar"
+								value="#{labelCambioEstadosForm.btn_consultar_rangos}" process="@this selTipoForm"
+								update=":messages :form-ingreso:panel-frm-rangos :form-ingreso:panel-formulario :form-ingreso:btnGuardar">
+								<p:tooltip for="btnConsultarRangos" value="#{labelCambioEstadosForm.tooltip_btnValidar}" />
+							</p:commandButton>
+							<p:commandButton id="btnLimpiarRangos" action="#{asignacionesMB.limpiarRangosDisponibles()}" icon="c2-icon-limpiar"
+								process="@this" immediate="true" value="#{labelCambioEstadosForm.btn_limpiar_rangos}" 
+								update=":messages :form-ingreso:panel-frm-rangos :form-ingreso:panel-formulario :form-ingreso:btnGuardar">
+								<p:tooltip for="btnLimpiarRangos" value="#{labelCambioEstadosForm.tooltip_btnLimpiar_responsable}" />
+							</p:commandButton>
+						</h:panelGrid>
+						
+						<p:fieldset id="panel-frm-rangos" styleClass="fieldset-formulario" legend="#{labelCambioEstadosForm.table_rangos_disp}">
+							<h:panelGrid styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">
+								<p:outputLabel value="#{labelCambioEstadosForm.label_stock_minimo}" />
+								<h:outputText id="stockMin" value="#{asignacionFL.stockMinimoForm}" />
+								
+								<p:outputLabel value="#{labelCambioEstadosForm.label_max_asignable}" />
+								<h:outputText id="maxAsigna" value="#{asignacionFL.maximoAsignable}" />
+							</h:panelGrid>
+							
+							<p:dataTable id="tabla-resultados"
+								value="#{asignacionFL.rangosDisponibles}" var="rango"
+								rowKey="#{cambioEstado.idRangoDisponible}"
+								paginator="true"
+								paginatorTemplate="#{webPrm.param_paginator_template}"
+								rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+								rows="#{webPrm.param_initial_rows}"
+								emptyMessage="#{labelCambioEstadosForm.table_rangos_empty}">
+								<p:column headerText="#{labelCambioEstadosForm.table_cantidad}" width="10%">
+									<p:inputText id="modelInput" value="#{rango.cantidadIngresada}" style="width:100%" 
+										label="#{labelCambioEstadosForm.table_cantidad}" maxlength="4">
+										<p:ajax event="valueChange" listener="#{asignacionesMB.actualizarCantidadFormularios}" 
+											update=":form-ingreso:panel-frm-rangos" global="false" />
+									</p:inputText>
+								</p:column>
+								<p:column headerText="#{labelCambioEstadosForm.table_num_form_inicial}">
+									<h:outputText value="#{rango.numeroInicial}" />
+								</p:column>
+								<p:column headerText="#{labelCambioEstadosForm.table_num_form_final}">
+									<h:outputText value="#{rango.numeroFinal}" />
+								</p:column>
+								<p:column headerText="#{labelCambioEstadosForm.table_ctd_rango}">
+									<c2:outputNumberText value="#{rango.cantidadTotal}" />
+								</p:column>
+								<p:column headerText="#{labelCambioEstadosForm.table_ctd_disponible}">
+									<c2:outputNumberText value="#{rango.cantidadDisponible}" />
+								</p:column>
+						        <p:columnGroup type="footer">
+						            <p:row>
+						                <p:column footerText="#{asignacionFL.cantidadFormularios}" />
+						                <p:column colspan="4" style="text-align:left;font-weight:bold;" 
+						                	footerText="#{labelCambioEstadosForm.label_cantidad_formularios}" />
+						            </p:row>
+						        </p:columnGroup>
+							</p:dataTable>
+						</p:fieldset>
+					</p:fieldset>
+					
+					<p:fieldset id="datos-generales" styleClass="fieldset-formulario" legend="#{labelCambioEstadosForm.label_datos_generales}">
+						<h:panelGrid id="panel-formulario-resp" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">
+							<p:outputLabel value="#{labelCambioEstadosForm.label_estado_formulario}" styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selEstadoForm" value="#{asignacionHolderFL.idEstadoFormulario}" disabled="true"
+									required="true" requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+									<f:selectItems value="#{fachadaCatalogosMB.catEstadoFormulario()}" />							
+								</p:selectOneMenu>
+								<p:message for="selEstadoForm" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelCambioEstadosForm.label_folios}" />
+							<h:panelGroup>
+								<p:inputText id="folio" value="#{asignacionFL.folio}" maxlength="20" />
+								<p:message for="folio" />
+							</h:panelGroup>
+							
+							<p:outputLabel value="#{labelCambioEstadosForm.label_causal}" styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selCausal" value="#{asignacionFL.idCausalCambioEstado}"
+									required="true" requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+									<f:selectItems value="#{fachadaCatalogosMB.catCausalCambioEstado(asignacionHolderFL.idEstadoFormulario)}" />							
+								</p:selectOneMenu>
+								<p:message for="selCausal" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelCambioEstadosForm.label_observaciones}" />
+							<p:inputTextarea id="observaciones" value="#{asignacionFL.observaciones}" maxlength="100" />
+
+							<p:outputLabel value="#{labelCambioEstadosForm.label_fecha_asignacion}" styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:calendar id="fechaAsignacion" 
+									value="#{asignacionFL.fechaAsignacion}" readonlyInput="true"
+									pattern="#{webPrm.lab_calendar_pattern_full}" required="true" 
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									maxdate="#{asignacionFL.fechaMaxima}">
+									<p:watermark for="fechaAsignacion" value="#{webPrm.lab_calendar_pattern_full}" />
+								</p:calendar>
+								<p:message for="fechaAsignacion" />
+							</h:panelGroup>
+							
+							<p:outputLabel value="#{labelCambioEstadosForm.label_num_doc_soporte}" />
+							<h:panelGroup>
+								<p:inputText id="numDocSoporte" value="#{asignacionFL.numDocSoporte}" maxlength="20" />
+								<p:message for="numDocSoporte" />
+							</h:panelGroup>
+						
+							<p:outputLabel value="#{labelCambioEstadosForm.label_doc_soporte}" />
+							<h:panelGrid columns="1">
+								<p:fileUpload id="uploadFile"
+									fileUploadListener="#{asignacionesMB.cargarArchivo}"
+									mode="advanced" dragDropSupport="false" fileLimit="1"
+									invalidFileMessage="#{labelCambioEstadosForm.msg_archivo_invalido}"
+									fileLimitMessage="#{labelCambioEstadosForm.msg_limite_archivo}"
+									label="#{labelCambioEstadosForm.label_doc_soporte}"
+									uploadLabel="#{labelCambioEstadosForm.btn_cargar}"
+									cancelLabel="#{labelCambioEstadosForm.btn_cancelar}"
+									update="panel-formulario-resp"
+									allowTypes="#{asignacionesMB.extensionesPermitidas}" process="@this panel-formulario-resp">
+								</p:fileUpload>
+								<p:message id="msgFileRequired" for="uploadFile" display="text" />
+								<h:outputText id="msgFileUploaded" 
+									value="#{labelCambioEstadosForm.lable_archivo_cargado}: #{asignacionFL.nombreArchivo}"
+									rendered="#{asignacionFL.documentoAutorizacion !=null}" 
+									style="font-weight: bold;" />
+							</h:panelGrid>
+						</h:panelGrid>
+					</p:fieldset>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5"> 
+						<!--Boton Guardar-->
+						<p:commandButton id="btnGuardar" action="VALIDAR-CANTIDAD-FORMULARIOS" icon="c2-icon-guardar" process="@form" value="#{lbComun.btnGuardar}" 
+							update=":messages,:form-ingreso" disabled="#{asignacionFL.deshabilitarBotonGuardar}">
+							<p:tooltip for="btnGuardar" value="#{labelNumeracion.tooltip_btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<!--Boton Limpiar-->
+						<p:commandButton id="btnLimpiar" action="LIMPIAR" icon="c2-icon-limpiar" process="@this" update=":form-ingreso" immediate="true" 
+							value="#{lbComun.btnLimpiar}">
+							<p:tooltip for="btnLimpiar" value="#{lbComun.tooltip_limpiar}" />
+						</p:commandButton>
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" action="VOLVER" icon="c2-icon-cancelar" process="@this" immediate="true" value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{labelNumeracion.tooltip_btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>					
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<!-- Popup para confirmar que se desea asignar una cantidad menor al stock minimo configurado -->
+		<p:dialog widgetVar="confirmaCantidadFormularios" id="confirmaCantidadFormularios" header="#{labelCambioEstadosForm.titulo_confirmacion_cantidad}" 
+			resizable="false" modal="true" appendToBody="true" dynamic="true">
+			<h:form>
+				<h:panelGrid styleClass="center-block" columns="4">
+					<p:outputLabel value="#{asignacionesMB.msgConfirmaCantidad}" />
+				</h:panelGrid>	
+				<h:panelGrid columns="2" styleClass="center-block" cellspacing="5">
+					<p:commandButton value="Sí" action="CONTINUAR" immediate="true" oncomplete="PF('confirmaCantidadFormularios').hide();" 
+						styleClass="ui-confirmdialog-yes" icon="c2-icon-si" update=":form-ingreso" />
+					<p:commandButton value="No" action="CANCELA-ASIGNACION" immediate="true" oncomplete="PF('confirmaCantidadFormularios').hide();" 
+						styleClass="ui-confirmdialog-no" icon="c2-icon-no" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+		
+		<p:dialog widgetVar="maximoCantidadFormularios" id="maximoCantidadFormularios" header="#{labelCambioEstadosForm.titulo_confirmacion_cantidad}" 
+			resizable="false" modal="true" appendToBody="true" dynamic="true">
+			<h:form>
+				<h:panelGrid styleClass="center-block" columns="4">
+					<p:outputLabel value="#{asignacionesMB.msgConfirmaCantidad}" />
+				</h:panelGrid>	
+				<h:panelGrid columns="1" styleClass="center-block" cellspacing="5">
+					<p:commandButton value="Aceptar" immediate="true" oncomplete="PF('maximoCantidadFormularios').hide();" 
+						styleClass="ui-confirmdialog-yes" icon="c2-icon-si" update=":form-ingreso" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<script>
+	 	$(document).ready(function() {
+			var popUp = #{asignacionFL.cantidadInferiorMinimo}; 
+			if (popUp) {
+				PF('confirmaCantidadFormularios').show();	
+			}
+			var popUpMax = #{asignacionFL.cantidadInferiorMaximo}; 
+			if (popUpMax) {
+				PF('maximoCantidadFormularios').show();	
+			}
+	 	});
+		</script>
+	</ui:define>
+</ui:composition>

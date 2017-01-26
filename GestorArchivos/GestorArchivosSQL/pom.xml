@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>co.com.datatools.documentos.cm</groupId>
+	<artifactId>GestorArchivosClient</artifactId>
+	<version>2.0.3</version>
+	<name>SQL Gestor Archivos</name>
+	<description>Proyecto que contiene el script de base de datos</description>
+	<packaging>jar</packaging>
+
+	<dependencies>
+	</dependencies>
+
+	<properties>
+		<db.name>sqlserver</db.name>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>filtro</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<classifier>${db.name}</classifier>
+							<includes>
+								<include>scripts/base/${db.name}/**</include>
+								<include>scripts/datos/app/**/comun/**</include>
+							</includes>
+							<excludes>
+								<exclude>**/*.xlsx</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>archiva.internal</id>
+			<name>Internal Release Repository</name>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/internal/</url>
+		</repository>
+		<snapshotRepository>
+			<id>archiva.snapshots</id>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+</project>

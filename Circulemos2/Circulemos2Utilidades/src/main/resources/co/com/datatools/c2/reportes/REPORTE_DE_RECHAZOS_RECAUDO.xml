@@ -1,0 +1,27 @@
+<reporte>
+	<codigo>REPORTE_12</codigo>
+	<nombre>REPORTE DE RECAUDOS NO RECIBIDOS</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>ORGANISMO DE TRÁNSITO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NÚMERO DEL RECAUDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA Y HORA DE RECIBIDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE DE USUARIO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>ESTADO DE TRANSACCIÓN</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

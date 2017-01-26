@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-evidencias" styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_evidencias}">
+		<p:growl id="messagesEvidencia" showDetail="true" life="15000"
+			globalOnly="true" />
+		<p:fieldset id="datos-evidencias" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_evidencias}">
+			<h:panelGrid id="panel-formulario-evidencias"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="2">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_evidencia}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selTipoEvidencia"
+						value="#{adminComparendoFL.idTipoEvidencia}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							noSelectionOption="true"/>
+						<f:selectItems value="#{fachadaCatalogosMB.catTipoEvidencia()}" />
+						<p:ajax process="@this" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selTipoEvidencia" />
+				</h:panelGroup>
+			</h:panelGrid>
+			<h:panelGrid id="panel-archivos" styleClass="center-block"
+				columns="1" columnClasses="label-colancha">
+				<p:fileUpload id="fupArchivo" 
+					fileUploadListener="#{adminComparendoMB.cargaArchivoEvidencia}"
+					label="#{lbComun.btnExaminar}" uploadLabel="#{lbComun.btnCargar}"
+					cancelLabel="#{lbComun.btnCancelar}" mode="advanced"
+					dragDropSupport="false" update="campos-registro-evidencias"
+					process="selTipoEvidencia" 
+					sizeLimit="#{adminComparendoMB.tamanioMaximoArch}" multiple="true"
+					allowTypes="#{adminComparendoMB.tiposArchivosPermitidos}"
+					invalidFileMessage="#{labelAdminComparendo.msg_error_tipo_dato}"
+					invalidSizeMessage="#{adminComparendoMB.mesErrLimitSize}"/>
+
+				<p:dataList id="idDLArch"
+					value="#{adminComparendoFL.procesaEvidencias}" var="crsDoc"
+					itemType="circle"
+					emptyMessage="#{labelAdminComparendo.mensaje_vacio}">
+
+					<h:panelGrid columns="3" cellspacing="5" styleClass="center-block">
+						<p:outputLabel
+							value=" #{crsDoc.nombreTipoEvidencia} - #{crsDoc.archivoTransportable.nombre} " />
+
+						<p:commandButton id="btnEliminar"
+							action="#{adminComparendoMB.eliminarListaDocumentos()}"
+							icon="c2-icon-eliminar" update="idDLArch :messages"
+							process="@this" style="width: 16px !important">
+							<p:tooltip for="btnEliminar"
+								value="#{labelAdminComparendo.label_btn_eliminar_doc}" />
+							<f:setPropertyActionListener
+								target="#{adminComparendoFL.evidenciaSeleccionada}"
+								value="#{crsDoc}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+						</p:commandButton>
+
+					</h:panelGrid>
+
+				</p:dataList>
+			</h:panelGrid>
+
+			<h:panelGrid columns="1" styleClass="center-block" cellspacing="7">
+
+				<p:commandButton id="btnGuardar" action="GUARDAR"
+					icon="c2-icon-guardar" process="@form"
+					value="#{lbComun.btnGuardar}"
+					update=":messages @form :frmErroresProcesamiento">
+					<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}"
+						message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+				</p:commandButton>
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

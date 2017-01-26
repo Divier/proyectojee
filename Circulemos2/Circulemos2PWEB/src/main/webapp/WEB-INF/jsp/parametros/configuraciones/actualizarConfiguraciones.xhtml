@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+	    <h:form id="form-ingreso" prependId="false">
+	        <p:panel id="campos-registro" styleClass="panel-formulario" header="#{labelConfiguraciones.lab_tit_actualizar_configuracion}">
+	            <p:fieldset id="datos-principal" styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_edicion}">
+	            
+	            	<ui:include src="/WEB-INF/jsp/parametros/configuraciones/formularioDinamico.xhtml" />
+	            
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<p:commandButton id="btnGuardar" action="CONTINUAR" icon="c2-icon-guardar"
+								process="@form" value="#{lbComun.btnGuardar}" update=":messages :form-ingreso">
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						
+						<p:commandButton id="btnVolver" action="VOLVER" icon="c2-icon-volver"
+								process="@this" immediate="true" value="#{lbComun.btnVolver}">
+							<p:tooltip for="btnVolver" value="#{lbComun.tooltip_volver}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+						</p:commandButton>
+	            	</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+
+</ui:composition>

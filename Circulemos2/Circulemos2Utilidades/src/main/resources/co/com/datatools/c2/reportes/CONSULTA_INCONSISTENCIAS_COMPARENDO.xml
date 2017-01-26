@@ -1,0 +1,59 @@
+<reporte>
+	<codigo>REPORTE_2</codigo>
+	<nombre>REPORTE DE INCONSISTENCIAS DE COMPARENDOS</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>NUMERO DE COMPARENDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE DE ORIGEN DEL COMPARENDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CODIGO DE INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE REGISTRO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA Y HORA DE IMPOSICION COMPARENDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE DE CAMPO CON INCONSISTENCIAS</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>ERROR DE PROCESAMIENTO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>PLACA VEHICULO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DE DOCUMENTO DEL INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DOCUMENTO DEL INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE 1 DEL INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>APELLIDO 1 DEL INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>USUARIO</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

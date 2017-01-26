@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-vehiculo" styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_vehiculo}">
+		<p:growl id="messagesVehiculo" showDetail="true" life="15000"
+			globalOnly="true" />
+		<p:fieldset id="datos-vehiculo" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_vehiculo}">
+			<h:panelGrid id="panel-formulario-vehiculo" styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+
+				<p:outputLabel value="#{labelAdminComparendo.label_placa_vehiculo}"
+					rendered="#{adminComparendoPeruFL.placaRequerida}"
+					styleClass="campo-obligatorio" />
+				<p:outputLabel value="#{labelAdminComparendo.label_placa_vehiculo}"
+					rendered="#{!adminComparendoPeruFL.placaRequerida}" />
+				<h:panelGroup>
+					<p:inputText id="placaVehiculo"
+						value="#{adminComparendoPeruFL.procesaComparendo.placaVehiculo}"
+						maxlength="10" required="#{adminComparendoPeruFL.placaRequerida}"
+						requiredMessage="#{labelGeneral.val_campo_requerido}"
+						validatorMessage="#{labelAdminComparendo.msg_error_placa}">
+						<f:validateRegex pattern="#{adminComparendoPeruMB.expresionPlaca}" />
+						<p:ajax listener="#{adminComparendoPeruMB.onPlacaChange}"
+							global="false" update="campos-registro-vehiculo" process="@this"
+							event="change" />
+					</p:inputText>
+					<p:message for="placaVehiculo" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_marca_vehiculo}"
+					rendered="#{adminComparendoPeruFL.placaRequerida}"
+					styleClass="campo-obligatorio" />
+				<p:outputLabel value="#{labelAdminComparendo.label_marca_vehiculo}"
+					rendered="#{!adminComparendoPeruFL.placaRequerida}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selMarcaVehiculo"
+						value="#{adminComparendoPeruFL.procesaComparendo.idMarcaVehiculo}"
+						required="#{adminComparendoPeruFL.placaRequerida}"
+						requiredMessage="#{labelGeneral.val_campo_requerido}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems value="#{fachadaCatalogosMB.catMarcaVehiculo()}" />
+						<f:selectItem
+							itemLabel="#{labelAdminComparendo.label_option_otros}"
+							itemValue="0" />
+						<p:ajax
+							global="false" update="selLineaVehiculo" process="@this"
+							event="change" />
+					</p:selectOneMenu>
+					<p:message for="selMarcaVehiculo" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_linea_vehiculo}"
+					rendered="#{adminComparendoPeruFL.placaRequerida}"
+					styleClass="campo-obligatorio" />
+				<p:outputLabel value="#{labelAdminComparendo.label_linea_vehiculo}"
+					rendered="#{!adminComparendoPeruFL.placaRequerida}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selLineaVehiculo"
+						value="#{adminComparendoPeruFL.procesaComparendo.idLineaVehiculo}"
+						required="#{adminComparendoPeruFL.placaRequerida}"
+						requiredMessage="#{labelGeneral.val_campo_requerido}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems value="#{fachadaCatalogosMB.catLineaVehiculo(adminComparendoPeruFL.procesaComparendo.idMarcaVehiculo)}" />
+						<f:selectItem
+							itemLabel="#{labelAdminComparendo.label_option_otros}"
+							itemValue="0" />
+					</p:selectOneMenu>
+					<p:message for="selLineaVehiculo" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_modelo}" />
+				<h:panelGroup>
+					<p:inputText id="modelo"
+						value="#{adminComparendoPeruFL.procesaComparendo.modelo}"
+						maxlength="4"
+						converterMessage="#{labelGeneral.val_campo_numerico}"
+						validatorMessage="#{labelAdminComparendo.error_limite_modelo}">
+						<f:convertNumber integerOnly="true" />
+						<f:validateLongRange minimum="1885" maximum="#{adminComparendoPeruFL.maximoAnio}" />
+					</p:inputText>
+					<p:message for="modelo" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_color}"
+					rendered="#{adminComparendoPeruFL.placaRequerida}"
+					styleClass="campo-obligatorio" />
+				<p:outputLabel value="#{labelAdminComparendo.label_color}"
+					rendered="#{!adminComparendoPeruFL.placaRequerida}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selColor"
+						value="#{adminComparendoPeruFL.procesaComparendo.idColor}"
+						required="#{adminComparendoPeruFL.placaRequerida}"
+						requiredMessage="#{labelGeneral.val_campo_requerido}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems value="#{fachadaCatalogosMB.catColor()}" />
+						<f:selectItem
+							itemLabel="#{labelAdminComparendo.label_option_otros}"
+							itemValue="0" />
+					</p:selectOneMenu>
+					<p:message for="selColor" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_tarjeta_operacion}" />
+				<h:panelGroup>
+					<p:inputText id="tarjetaOperacion"
+						value="#{adminComparendoPeruFL.procesaComparendo.numeroTarjetaOperacion}"
+						maxlength="20">
+					</p:inputText>
+					<p:message for="tarjetaOperacion" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_numero_motor}" rendered="#{!adminComparendoPeruFL.papeleta}" />
+				<h:panelGroup rendered="#{!adminComparendoPeruFL.papeleta}">
+					<p:inputText id="numeroMotor"
+						value="#{adminComparendoPeruFL.procesaComparendo.numeroMotor}"
+						maxlength="25">
+					</p:inputText>
+					<p:message for="numeroMotor" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_peso_seco}" rendered="#{!adminComparendoPeruFL.papeleta}" />
+				<h:panelGroup rendered="#{!adminComparendoPeruFL.papeleta}">
+					<p:inputText id="pesoSeco"
+						value="#{adminComparendoPeruFL.procesaComparendo.pesoSeco}"
+						converterMessage="#{labelGeneral.val_campo_numerico}">
+					</p:inputText>
+					<p:message for="pesoSeco" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_peso_neto}" rendered="#{!adminComparendoPeruFL.papeleta}" />
+				<h:panelGroup rendered="#{!adminComparendoPeruFL.papeleta}">
+					<p:inputText id="pesoNeto"
+						value="#{adminComparendoPeruFL.procesaComparendo.pesoNeto}"
+						converterMessage="#{labelGeneral.val_campo_numerico}">
+					</p:inputText>
+					<p:message for="pesoNeto" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_vehiculo}"
+					rendered="#{adminComparendoPeruFL.placaRequerida}"
+					styleClass="campo-obligatorio" />
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_vehiculo}"
+					rendered="#{!adminComparendoPeruFL.placaRequerida}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selTipoVehiculo"
+						value="#{adminComparendoPeruFL.procesaComparendo.idClaseVehiculo}"
+						required="#{adminComparendoPeruFL.placaRequerida}"
+						requiredMessage="#{labelGeneral.val_campo_requerido}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems value="#{fachadaCatalogosMB.catTipoVehiculo()}" />
+						<f:selectItem
+							itemLabel="#{labelAdminComparendo.label_option_otros}"
+							itemValue="0" />
+					</p:selectOneMenu>
+					<p:message for="selTipoVehiculo" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_clase_servicio}"
+					rendered="#{adminComparendoPeruFL.placaRequerida}"
+					styleClass="campo-obligatorio" />
+				<p:outputLabel value="#{labelAdminComparendo.label_clase_servicio}"
+					rendered="#{!adminComparendoPeruFL.placaRequerida}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selClaseServicio"
+						value="#{adminComparendoPeruFL.procesaComparendo.idTipoServicio}"
+						required="#{adminComparendoPeruFL.placaRequerida}"
+						requiredMessage="#{labelGeneral.val_campo_requerido}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems value="#{fachadaCatalogosMB.catClaseServicio()}" />
+						<f:selectItem
+							itemLabel="#{labelAdminComparendo.label_option_otros}"
+							itemValue="0" />
+					</p:selectOneMenu>
+					<p:message for="selClaseServicio" />
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:fieldset>
+
+
+	</p:panel>
+</ui:composition>

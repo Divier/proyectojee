@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://solicitudocn.comparendo.ws.c2.datatools.com.co/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified"
+	targetNamespace="http://solicitudocn.comparendo.ws.c2.datatools.com.co/"
+	version="1.0">
+	<xs:element name="solicitarNumeroComparendo" type="tns:solicitarNumeroComparendo" />
+	<xs:element name="solicitarNumeroComparendoResponse" type="tns:solicitarNumeroComparendoResponse" />
+	<xs:complexType name="solicitarNumeroComparendo">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="solicitudNumeroComparendo"
+				type="tns:solicitudNumeroComparendoWSDTO" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="solicitudNumeroComparendoWSDTO">
+		<xs:complexContent>
+			<xs:extension base="tns:solicitudNumeroComparendoAbstractDTO">
+				<xs:sequence />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="solicitudNumeroComparendoAbstractDTO">
+		<xs:sequence>
+	<xs:element  name="codigoOrganismo" type="xs:int" />
+	<xs:element  name="fechaImposicion" type="xs:date" />
+	<xs:element  name="horaImposicion" type="xs:time" />
+	<xs:element minOccurs="0" name="identificadorVehiculo" type="xs:string" />
+	<xs:element minOccurs="0" name="numeroDocumento" type="xs:string" />
+	<xs:element name="placaAgente">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="[0-9]*" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element minOccurs="0" name="placaVehiculo">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="7" />
+				<xs:pattern value="[a-zA-Z0-9]*" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+			<xs:element minOccurs="0" name="tipoDocumento" type="xs:string" />
+			<xs:element name="tipoResponsable" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="solicitarNumeroComparendoResponse">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="return"
+				type="tns:respuestaSolicitudNumeroComparendoWSDTO" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="respuestaSolicitudNumeroComparendoWSDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:detalleRespuestaWSDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="numeroComparendo" type="xs:string"/>
+          <xs:element minOccurs="0" name="propietarioVehiculoWSDTO" type="tns:propietarioVehiculoWSDTO"/>
+          <xs:element minOccurs="0" name="vehiculoWSDTO" type="tns:vehiculoWSDTO"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="detalleRespuestaWSDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+          <xs:element minOccurs="0" name="descripcion" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="abstractDTO">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="propietarioVehiculoWSDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="codigoOrganismoLicenciaTransito" type="xs:int"/>
+          <xs:element minOccurs="0" name="numeroDocumento" type="xs:string"/>
+          <xs:element minOccurs="0" name="numeroLicenciaTransito" type="xs:string"/>
+          <xs:element minOccurs="0" name="primerApellido" type="xs:string"/>
+          <xs:element minOccurs="0" name="primerNombre" type="xs:string"/>
+          <xs:element minOccurs="0" name="razonSocial" type="xs:string"/>
+          <xs:element minOccurs="0" name="segundoApellido" type="xs:string"/>
+          <xs:element minOccurs="0" name="segundoNombre" type="xs:string"/>
+          <xs:element minOccurs="0" name="tipoDocumento" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType name="vehiculoWSDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="claseServicio" type="xs:string"/>
+          <xs:element minOccurs="0" name="codigoOrganismoMatricula" type="xs:int"/>
+          <xs:element minOccurs="0" name="identificadorVehiculo" type="xs:string"/>
+          <xs:element minOccurs="0" name="modalidad" type="xs:string"/>
+          <xs:element minOccurs="0" name="numeroDocumentoEmpresa" type="xs:string"/>
+          <xs:element minOccurs="0" name="placaVehiculo" type="xs:string"/>
+          <xs:element minOccurs="0" name="radioAccion" type="xs:string"/>
+          <xs:element minOccurs="0" name="razonSocialEmpresa" type="xs:string"/>
+          <xs:element minOccurs="0" name="tarjetaOperacion" type="xs:int"/>
+          <xs:element minOccurs="0" name="tipoDocumentoEmpresa" type="xs:string"/>
+          <xs:element minOccurs="0" name="tipoTransportePasajeros" type="xs:string"/>
+          <xs:element minOccurs="0" name="tipoVehiculo" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

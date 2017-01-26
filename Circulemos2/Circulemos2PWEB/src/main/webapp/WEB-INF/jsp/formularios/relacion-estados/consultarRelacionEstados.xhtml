@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{relacionesEstadosFormulariosMB.toString()}" />
+		</f:metadata>
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario" header="#{labelRelacionEstadosForm.tit_relaciones_estados_formulario}">
+				<p:fieldset styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block" columns="2" columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel value="#{labelRelacionEstadosForm.lbl_tipo_formualario}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenTipForm" value="#{relacionEstadoFormularioHolderFL.fIdTipoFormulario}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoFormulario()}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelRelacionEstadosForm.lbl_estado_form_actual}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenEstAct" value="#{relacionEstadoFormularioHolderFL.fIdEstadoActual}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems value="#{fachadaCatalogosMB.catEstadoFormulario()}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelRelacionEstadosForm.lbl_estado_form_siguiente}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenEstSig" value="#{relacionEstadoFormularioHolderFL.fIdEstadoSiguiente}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems value="#{fachadaCatalogosMB.catEstadoFormulario()}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR" action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}" update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultar" value="#{labelRelacionEstadosForm.tooltip_btn_consultar}" />
+						</p:commandButton>
+						<!--Boton Nuevo-->
+						<p:commandButton id="btnCrear" styleClass="_op-CREAR" action="_op-CREAR" icon="c2-icon-crear" process="@this" value="#{lbComun.btnCrear}"
+							immediate="true">
+							<p:tooltip for="btnCrear" value="#{labelRelacionEstadosForm.tooltip_btn_crear}" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta" rendered="#{relacionEstadoFormularioHolderFL.lstRelacionesEstados.size() > 0}">
+
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+
+						<!--Boton Editar-->
+						<p:commandButton id="btnEditar" styleClass="_op-EDITAR" action="_op-EDITAR" icon="c2-icon-editar" process="@this" value="#{lbComun.btnEditar}"
+							disabled="#{relacionEstadoFormularioHolderFL.relacionEstadosSeleccionado==null}">
+							<p:tooltip for="btnEditar" value="#{labelRelacionEstadosForm.tooltip_btn_editar}" />
+						</p:commandButton>
+
+						<!--Boton Eliminar-->
+						<p:commandButton id="btnEliminar" styleClass="_op-ELIMINAR" action="_op-ELIMINAR" icon="c2-icon-eliminar" process="@this"
+							value="#{lbComun.btnEliminar}" update=":messages resultado-consulta"
+							disabled="#{relacionEstadoFormularioHolderFL.relacionEstadosSeleccionado==null}">
+							<p:tooltip for="btnEliminar" value="#{labelRelacionEstadosForm.tooltip_btn_eliminar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+						</p:commandButton>
+
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados" value="#{relacionEstadoFormularioHolderFL.lstRelacionesEstados}" var="registro" rowKey="#{registro.id}"
+					selection="#{relacionEstadoFormularioHolderFL.relacionEstadosSeleccionado}" paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}" rowsPerPageTemplate="#{webPrm.param_rows_per_page}" rows="#{webPrm.param_initial_rows}"
+					sortMode="multiple">
+
+					<p:ajax event="rowSelectRadio" process=":form-resultado:tabla-resultados" update=":form-resultado:acciones-top @this" global="false" />
+
+					<p:column selectionMode="single" />
+
+					<!--Columnas Resultado Consulta-->
+					<p:column headerText="#{labelRelacionEstadosForm.lbl_tipo_formualario}">
+						<p:outputLabel value="#{registro.tipoFormulario.nombre}" />
+					</p:column>
+
+					<p:column headerText="#{labelRelacionEstadosForm.lbl_estado_form_actual}">
+						<p:outputLabel value="#{registro.estadoFormularioActual.nombre}" />
+					</p:column>
+
+					<p:column headerText="#{labelRelacionEstadosForm.lbl_estado_form_siguiente}">
+						<p:outputLabel value="#{registro.estadoFormularioSiguiente.nombre}" />
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

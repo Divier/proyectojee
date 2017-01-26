@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario" header="#{labelNumeracion.titulo_consultar_numeracion}">
+				<p:fieldset styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">
+
+						<p:outputLabel value="#{labelNumeracion.label_tipo_formulario}" />
+						<p:selectOneMenu id="selTipoFormulario" value="#{numeracionHolderFL.idTipoFormulario}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+							<f:selectItems value="#{fachadaCatalogosMB.catTipoFormulario()}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="#{labelNumeracion.label_estado_numeracion}" />
+						<p:selectOneMenu id="selEstado" value="#{numeracionHolderFL.estado}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" noSelectionOption="true" />
+							<f:selectItem itemLabel="#{lbComun.val_sel_activo}" itemValue="true" />
+							<f:selectItem itemLabel="#{lbComun.val_sel_inactivo}" itemValue="false" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR" action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}" update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultar" value="#{labelNumeracion.tooltip_btnConsultar}" />
+						</p:commandButton>
+						<!--Boton Nuevo-->
+						<p:commandButton id="btnCrear" styleClass="_op-CREAR" action="_op-CREAR" icon="c2-icon-crear" process="@this" value="#{lbComun.btnCrear}"
+							immediate="true">
+							<p:tooltip for="btnCrear" value="#{labelNumeracion.tooltip_btnCrear}" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta" rendered="#{numeracionHolderFL.resultadoConsulta.size() > 0}">
+
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<!--Boton Editar-->
+						<p:commandButton id="btnEditar" styleClass="_op-EDITAR" action="_op-EDITAR" icon="c2-icon-editar" process="@this" value="#{lbComun.btnEditar}"
+							disabled="#{numeracionHolderFL.numeracionSeleccionada==null}">
+							<p:tooltip for="btnEditar" value="#{labelNumeracion.tooltip_btnEditar}" />
+						</p:commandButton>
+						<!--Boton Eliminar-->
+						<p:commandButton id="btnEliminar" styleClass="_op-ELIMINAR" action="_op-ELIMINAR" icon="c2-icon-eliminar" process="@this"
+							value="#{lbComun.btnEliminar}" update=":messages resultado-consulta" disabled="#{numeracionHolderFL.numeracionSeleccionada==null}">
+							<p:tooltip for="btnEliminar" value="#{labelNumeracion.tooltip_btnEliminar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<!--Boton Ver detalle-->
+						<p:commandButton id="btnVerDet" action="VER-DETALLE" icon="c2-icon-detalle" process="@this" value="#{lbComun.btnVerDet}"
+							 disabled="#{numeracionHolderFL.numeracionSeleccionada==null}">
+							<p:tooltip for="btnVerDet" value="#{labelNumeracion.tooltip_btnVerDet}" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados" value="#{numeracionHolderFL.resultadoConsulta}" var="registro" rowKey="#{registro.id}"
+					selection="#{numeracionHolderFL.numeracionSeleccionada}" paginator="true" paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}" rows="#{webPrm.param_initial_rows}">
+
+					<p:ajax event="rowSelectRadio" process=":form-resultado:tabla-resultados" update=":form-resultado:acciones-top,:form-resultado:tabla-resultados"
+						global="false" />
+
+					<p:column selectionMode="single" style="width:20px" />
+					<p:column sortBy="#{registro.tipoFormulario.nombre}" headerText="#{labelNumeracion.label_tipo_formulario}">
+						<h:outputText value="#{registro.tipoFormulario.nombre}" />
+					</p:column>
+					<p:column sortBy="#{registro.fechaInicial}" headerText="#{labelNumeracion.label_fecha_inicial_vigencia}">
+						<c2:outputDateLabel labelValue="#{registro.fechaInicial}" />
+					</p:column>
+					<p:column sortBy="#{registro.fechaFinal}" headerText="#{labelNumeracion.label_fecha_final_vigencia}">
+						<c2:outputDateLabel labelValue="#{registro.fechaFinal}" />
+					</p:column>
+					<p:column sortBy="#{registro.digitos}" headerText="#{labelNumeracion.label_cantidad_digitos}">
+						<h:outputText value="#{registro.digitos}" />
+					</p:column>
+
+					<p:column sortBy="#{registro.activo}" headerText="#{labelNumeracion.label_estado_numeracion}">
+						<h:outputText value="#{registro.activo ? lbComun.val_sel_activo : lbComun.val_sel_inactivo}" />
+					</p:column>				
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

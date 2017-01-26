@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="Circulemos2PWEB-1.10.16">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="SeguridadWebExtras-2.2.12.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/SeguridadWebExtras/SeguridadWebExtras">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="UtilidadesWEB-1.2.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/UtilidadesWEB/UtilidadesWEB">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="webjar-c2-1.0.6.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/webjar-c2/webjar-c2">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="GeneradorReportesC2-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/GeneradorReportesC2/GeneradorReportesC2">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ClienteWSAXISEJBClient-2.0.26.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ClienteWSAXISEJBClient/ClienteWSAXISEJBClient">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="Circulemos2PWEB"/>
+        <property name="java-output-path" value="/Circulemos2PWEB/target/classes"/>
+    </wb-module>
+</project-modules>

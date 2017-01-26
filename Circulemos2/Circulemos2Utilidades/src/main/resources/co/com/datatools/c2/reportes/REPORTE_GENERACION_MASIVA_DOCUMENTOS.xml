@@ -1,0 +1,47 @@
+<reporte>
+	<codigo>REPORTE_13</codigo>
+	<nombre>REPORTE DE GENERACION MASIVA DE DOCUMENTOS</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>PROCESO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>PASO DEL PROCESO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>DOCUMENTO A DESCARGAR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DEL PROCESO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DEL PROCESO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DEL PASO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DE DOCUMENTO DEL DEUDOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DE DOCUMENTO DEL DEUDOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE DEL DEUDOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>DIRECCION DEL DEUDOR</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

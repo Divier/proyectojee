@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+	parent="global">
+
+	<var name="historicoRolesFL"
+		class="co.com.datatools.seguridad.mb.historico_roles.HistoricoRolesFL" />
+
+	<input name="idRol" />
+	<input name="fechaInicial" />
+	<input name="fechaFinal" />
+	<input name="deshabilitarFechas" />
+
+	<decision-state id="decision">
+		<if test="externalContext.sessionMap.historicoRolesMB != null"
+			then="inicio" else="INICIALIZAR-FILTROS" />
+	</decision-state>
+
+	<view-state id="inicio" view="consultar-historico-roles.xhtml">
+		<on-entry>
+			<evaluate
+				expression="historicoRolesFL.inicializarFiltrosBusqueda(idRol,fechaInicial,fechaFinal,deshabilitarFechas)" />
+			<evaluate
+				expression="externalContext.sessionMap.historicoRolesMB.consultarHistorico()" />
+		</on-entry>
+		<transition on="CONSULTAR" to="CONSULTAR"/>
+		
+		<transition on="DETALLE-PERMISOS" to="PERMISOS" />
+		<transition on="VOLVER" to="fin">
+		</transition>
+	</view-state>
+
+	<action-state id="INICIALIZAR-FILTROS">
+		<evaluate
+			expression="historicoRolesFL.inicializarFiltrosBusqueda(idRol,fechaInicial,fechaFinal,deshabilitarFechas)" />
+		<transition on="success" to="VISTA-DEFECTO">
+		</transition>
+	</action-state>
+
+	<view-state id="PERMISOS" view="detalle-permiso.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.historicoRolesMB.cargarDetallePermisos()" />
+		</on-entry>
+		<transition on="VOLVER" to="VISTA-DEFECTO">
+		</transition>
+	</view-state>
+
+	<view-state id="VISTA-DEFECTO" view="consultar-historico-roles.xhtml">
+		<transition on="CONSULTAR" to="CONSULTAR"/>		
+		<transition on="DETALLE-PERMISOS" to="PERMISOS" />
+		<transition on="VOLVER" to="fin">
+		</transition>
+	</view-state>
+
+	<action-state id="CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.historicoRolesMB.consultarHistorico()" />
+		<transition on="success" to="VISTA-DEFECTO">
+		</transition>
+	</action-state>
+
+	<end-state id="fin" />
+</flow>

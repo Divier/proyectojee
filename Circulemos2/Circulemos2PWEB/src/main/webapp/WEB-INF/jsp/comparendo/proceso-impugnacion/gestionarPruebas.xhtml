@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<p:panel header="#{labelProcesoImpugnacion.titulo_gestionar_pruebas}">
+			<ui:include
+				src="/WEB-INF/jsp/comparendo/proceso-impugnacion/encabezadoImpugnacion.xhtml" />
+			<h:form id="form-resultado">
+				<p:panel
+					rendered="#{!(gestionarPruebasFL.solicitudPruebasBackVOs.size() > 0)}">
+					<p:outputLabel
+						value="#{labelProcesoImpugnacion.msg_info_pruebas_proceso}"
+						style="color:red;"></p:outputLabel>
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!-- Boton agregar-->
+						<p:commandButton action="AGREGAR_PRUEBA" icon="c2-icon-crear"
+							process="@form"
+							value="#{labelProcesoImpugnacion.btnAgregarPrueba}"
+							update=":messages :form-resultado">
+							<p:tooltip for="btnAgregar"
+								value="#{labelProcesoImpugnacion.btnAgregarPrueba}" />
+						</p:commandButton>
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:panel>
+
+				<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+					rendered="#{gestionarPruebasFL.solicitudPruebasBackVOs.size() > 0}">
+					<p:fieldset styleClass="fieldset-formulario"
+						legend="#{labelProcesoImpugnacion.msg_fieldset_pruebas}">
+
+						<h:panelGrid id="acciones-top">
+							<f:facet name="footer">
+								<!-- Boton agregar-->
+								<p:commandButton id="btnAgregar" action="AGREGAR_PRUEBA"
+									icon="c2-icon-crear" process="@form"
+									value="#{labelProcesoImpugnacion.btnAgregarPrueba}"
+									update=":messages :form-resultado">
+									<p:tooltip for="btnAgregar"
+										value="#{labelProcesoImpugnacion.btnAgregarPrueba}" />
+								</p:commandButton>
+								<!-- Boton generar prorroga -->
+								<p:commandButton id="btnGenProrroga"
+									action="#{gestionarPruebasMB.generarProrroga()}"
+									oncomplete="PF('popUpProrroga').show();" icon="c2-icon-crear"
+									process="@form"
+									value="#{labelProcesoImpugnacion.btnGenProrroga}"
+									update=":messages :form-resultado :popUpProrroga"
+									disabled="#{!gestionarPruebasMB.generarProrroga}">
+									<p:tooltip for="btnGenProrroga"
+										value="#{labelProcesoImpugnacion.btnGenProrroga}" />
+								</p:commandButton>
+								<!-- Boton registrar pruebas-->
+								<p:commandButton id="btnRegPruebas" action="REG_PRUEBAS"
+									icon="c2-icon-crear" process="@form"
+									value="#{labelProcesoImpugnacion.btnRegPrueba}"
+									update=":messages :form-resultado"
+									disabled="#{!gestionarPruebasMB.registrarPruebas}">
+									<p:tooltip for="btnRegPruebas"
+										value="#{labelProcesoImpugnacion.btnRegPrueba}" />
+								</p:commandButton>
+							</f:facet>
+						</h:panelGrid>
+
+						<p:dataTable id="tabla-resultados" var="registro"
+							value="#{gestionarPruebasFL.solicitudPruebasBackVOs}"
+							rowKey="#{registro.solicitudPruebasBackDTO.id}" paginator="true"
+							selection="#{gestionarPruebasFL.soliciPruebBackSeleccVO}"
+							paginatorTemplate="#{webPrm.param_paginator_template}"
+							rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+							rows="#{webPrm.param_initial_rows}">
+
+							<p:ajax event="rowSelectRadio"
+								listener="#{gestionarPruebasMB.opcionesGestionPruebas()}"
+								process=":form-resultado:tabla-resultados"
+								update=":form-resultado:acciones-top @this" global="false" />
+
+							<p:column selectionMode="single"></p:column>
+
+							<p:column
+								headerText="#{labelProcesoImpugnacion.label_caracteristica_prueba}">
+								<p:outputLabel
+									value="#{registro.solicitudPruebasBackDTO.caracteristicaPrueba.nombre}" />
+							</p:column>
+
+							<p:column
+								headerText="#{labelProcesoImpugnacion.label_tip_prueba}">
+								<p:outputLabel
+									value="#{registro.solicitudPruebasBackDTO.tipoPrueba.nombre}" />
+							</p:column>
+
+							<p:column
+								headerText="#{labelProcesoImpugnacion.label_origen_prueba}">
+								<p:outputLabel
+									value="#{registro.solicitudPruebasBackDTO.origenPrueba.nombre}" />
+							</p:column>
+
+							<p:column
+								headerText="#{labelProcesoImpugnacion.label_fch_soli_prueba}">
+								<c2:outputDateLabel
+									labelValue="#{registro.solicitudPruebasBackDTO.fechaSolicitud}"
+									fullFormat="true" />
+							</p:column>
+
+							<p:column
+								headerText="#{labelProcesoImpugnacion.label_fch_limt_rcb_prueba}">
+								<c2:outputDateLabel
+									labelValue="#{registro.solicitudPruebasBackDTO.fechaLimite}"
+									fullFormat="true" />
+							</p:column>
+
+							<p:column headerText="#{labelProcesoImpugnacion.lable_imlp_deft}">
+								<c2:outputBoolText value="#{registro.impulsoDefinitivo}" />
+							</p:column>
+						</p:dataTable>
+					</p:fieldset>
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar2" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:panel>
+			</h:form>
+			<ui:include
+				src="/WEB-INF/jsp/comparendo/proceso-impugnacion/popup/agregarPruebas.xhtml" />
+			<ui:include
+				src="/WEB-INF/jsp/comparendo/proceso-impugnacion/popup/confirAdicionPruebas.xhtml" />
+			<ui:include
+				src="/WEB-INF/jsp/comparendo/proceso-impugnacion/popup/prorroga.xhtml" />
+		</p:panel>
+	</ui:define>
+</ui:composition>

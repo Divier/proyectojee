@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<valor_configuracion_negocio>
+    <campo>
+        <codigo>inicialEntrada</codigo>
+        <valor>##NULL##</valor>
+    </campo>
+    <campo>
+        <codigo>finalEntrada</codigo>
+        <valor>##NULL##</valor>
+    </campo>
+    <campo>
+        <codigo>numeroSalida</codigo>
+        <valor>1234</valor>
+    </campo>
+    <campo>
+        <codigo>cadenaSalida</codigo>
+        <valor>1234</valor>
+    </campo>
+</valor_configuracion_negocio>

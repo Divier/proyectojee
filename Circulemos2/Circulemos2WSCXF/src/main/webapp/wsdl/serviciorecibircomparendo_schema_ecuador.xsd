@@ -1,0 +1,139 @@
+<xs:schema xmlns:tns="http://recepcion.ecuador.ws.sogit.datatools.com.co/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://recepcion.ecuador.ws.sogit.datatools.com.co/"
+	version="1.0">
+
+	<xs:element name="recibirComparendo" type="tns:recibirComparendo" />
+
+	<xs:element name="recibirComparendoResponse" type="tns:recibirComparendoResponse" />
+
+	<xs:complexType name="recibirComparendo">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="citaciones" type="tns:comparendoWSDTO" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="comparendoWSDTO">
+		<xs:complexContent>
+			<xs:extension base="tns:abstractDTO">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="numeroFactura" type="xs:long" />
+					<xs:element minOccurs="0" name="fechaImposicion" type="xs:date" />
+					<xs:element minOccurs="0" name="horaImposicion" type="xs:time" />
+					<xs:element minOccurs="0" name="codigoInfraccion" type="xs:string" />
+					<xs:element minOccurs="0" name="codigoMedioImposicion"
+						type="xs:string" />
+					<xs:element minOccurs="0" name="codigoTipoAgenteImpositor"
+						type="xs:string" />
+					<xs:element minOccurs="0" name="numeroCitacion" type="xs:long" />
+					<xs:element minOccurs="0" name="codigoEstado" type="xs:string" />
+					<xs:element minOccurs="0" name="direccionInfraccion"
+						type="tns:direccionWSDTO" />
+					<xs:element minOccurs="0" name="codigoOrigen" type="xs:int" />
+					<xs:element minOccurs="0" name="placaVehiculo" type="xs:string" />
+					<xs:element minOccurs="0" name="placaAgente" type="xs:string" />
+					<xs:element minOccurs="0" name="infractor" type="tns:personaWSDTO" />
+					<xs:element minOccurs="0" default="false" name="inmoviliza"
+						type="xs:boolean" />
+					<xs:element minOccurs="0" name="numeroPatio" type="xs:int" />
+					<xs:element minOccurs="0" name="consecutivoInmovilizacion"
+						type="xs:string" />
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="evidencias"
+						nillable="true" type="tns:evidenciaWSDTO" />
+					<xs:element minOccurs="0" name="valorConcepto" type="xs:decimal" />
+					<xs:element minOccurs="0" name="secuenciaUnica" type="xs:string"></xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="abstractDTO">
+		<xs:sequence />
+	</xs:complexType>
+
+	<xs:complexType name="direccionWSDTO">
+		<xs:complexContent>
+			<xs:extension base="tns:abstractDTO">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="direccionBasica">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="150" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element minOccurs="0" name="codigoProvincia" type="xs:string" />
+					<xs:element minOccurs="0" name="codigoCanton" type="xs:string" />
+					<xs:element minOccurs="0" name="codigoParroquia" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="personaWSDTO">
+		<xs:complexContent>
+			<xs:extension base="tns:abstractDTO">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="codigoTipoIdentificacion"
+						type="xs:string" />
+					<xs:element minOccurs="0" name="numeroIdentificacion"
+						type="xs:string" />
+					<xs:element minOccurs="0" name="apellido1" type="xs:string" />
+					<xs:element minOccurs="0" name="apellido2" type="xs:string" />
+					<xs:element minOccurs="0" name="nombre1" type="xs:string" />
+					<xs:element minOccurs="0" name="nombre2" type="xs:string" />
+					<xs:element minOccurs="0" name="nombreEmpresaRazonSocial"
+						type="xs:string" />
+					<xs:element minOccurs="0" name="correoElectronico" type="xs:string" />
+					<xs:element minOccurs="0" name="telefonoFijo" type="xs:string" />
+					<xs:element minOccurs="0" name="telefonoMovil" type="xs:string" />
+					<xs:element minOccurs="0" name="direccion" type="tns:direccionWSDTO" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="evidenciaWSDTO">
+		<xs:complexContent>
+			<xs:extension base="tns:abstractDTO">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="codigoTipoEvidencia"
+						type="xs:string" />
+					<xs:element minOccurs="0" name="nombre" type="xs:string" />
+					<xs:element minOccurs="0" name="archivo" type="xs:base64Binary" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="recibirComparendoResponse">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="return"
+				type="tns:respuestaRecibirComparendoWSDTO" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="respuestaRecibirComparendoWSDTO">
+		<xs:complexContent>
+			<xs:extension base="tns:abstractDTO">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="codigoGeneral" type="xs:string" />
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="detalle"
+						nillable="true" type="tns:detalleRespuestaWSDTO" />
+					<xs:element minOccurs="0" name="errorExepcion" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="detalleRespuestaWSDTO">
+		<xs:complexContent>
+			<xs:extension base="tns:abstractDTO">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="codigo" type="xs:string" />
+					<xs:element minOccurs="0" name="descripcion" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>

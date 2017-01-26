@@ -1,0 +1,64 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+		<artifactId>FachadaIntegracionWebParent</artifactId>
+		<version>1.0.7</version>
+		<relativePath>../FachadaIntegracionWebParent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>FachadaIntegracionWebEJBClient</artifactId>
+	<name>FachadaIntegracionWebEJBClient</name>
+	<packaging>jar</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-6.0</artifactId>
+			<version>${jboss-javaee-6.0.version}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<distributionManagement>
+		<repository>
+			<id>archiva.internal</id>
+			<name>Internal Release Repository</name>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/internal/</url>
+		</repository>
+		<snapshotRepository>
+			<id>archiva.snapshots</id>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.3</version>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<file>${project.build.directory}/classes/artefacto.properties</file>
+					<replacements>
+						<replacement>
+							<token>versionId</token>
+							<value>${project.version}</value>
+						</replacement>
+					</replacements>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

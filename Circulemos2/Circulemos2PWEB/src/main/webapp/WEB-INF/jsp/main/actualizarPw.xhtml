@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standardSinMenu.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-ingreso" styleClass="center-box"
+				header="#{mensajesIngreso.label_modificar_pw}">
+				<h:panelGrid id="panel-formulario" styleClass="center-block"
+					columns="2" columnClasses="label-col,input-col,label-col,input-col"
+					rendered="#{adminCuentaUsuarioMB.mostrarFormulario}">
+
+					<p:outputLabel value="#{mensajesIngreso.label_pw_actual}"
+						styleClass="campo-obligatorio" />
+					<h:panelGroup>
+						<p:password id="pwdActual"
+							label="#{mensajesIngreso.label_pw_actual}"
+							value="#{adminCuentaUsuarioMB.pwActual}" required="true"
+							requiredMessage="#{labelGeneral.val_campo_requerido}"
+							autocomplete="false" />
+						<p:message for="pwdActual" />
+					</h:panelGroup>
+
+					<p:outputLabel value="#{mensajesIngreso.label_pw_nuevo}"
+						styleClass="campo-obligatorio" />
+					<h:panelGroup>
+						<p:password id="pwdNuevo"
+							label="#{mensajesIngreso.label_pw_nuevo}"
+							value="#{adminCuentaUsuarioMB.pwNuevo}" required="true"
+							requiredMessage="#{labelGeneral.val_campo_requerido}" />
+						<p:tooltip id="toolTip" for="pwdNuevo" showEvent="focus"
+							hideEvent="blur">
+							<p:dataTable value="#{adminCuentaUsuarioMB.politicas}"
+								var="politica"
+								style="border: 0 !important; bgcolor: #dcdcdc;cellspacing:0;width:340px !important;">
+								<p:column headerText="#{mensajesIngreso.label_politicas_pw}">
+									<h:outputText value="#{politica}"></h:outputText>
+								</p:column>
+							</p:dataTable>
+						</p:tooltip>
+						<p:message for="pwdNuevo" />
+					</h:panelGroup>
+
+					<p:outputLabel
+						value="#{mensajesIngreso.label_pw_nuevo_confirmacion}"
+						styleClass="campo-obligatorio" />
+					<h:panelGroup>
+						<p:password id="pwdNuevoConfirma"
+							label="#{mensajesIngreso.label_pw_nuevo_confirmacion}"
+							value="#{adminCuentaUsuarioMB.confirmacionPwNuevo}"
+							required="true"
+							requiredMessage="#{labelGeneral.val_campo_requerido}" />
+						<pe:keyFilter for="pwdNuevoConfirma"></pe:keyFilter>
+						<p:message for="pwdNuevoConfirma" />
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:panelGrid styleClass="center-block" columns="2" cellpadding="5"
+					rendered="#{adminCuentaUsuarioMB.mostrarFormulario}">
+					<p:commandButton id="btnCambiarPw" action="cambiarPw"
+						icon="c2-icon-guardar" process="@form"
+						value="#{mensajesIngreso.btnCambiarPw}"
+						update=":messages :form-contenido"
+						rendered="#{adminCuentaUsuarioMB.mostrarFormulario}">
+						<p:tooltip for="btnCambiarPw"
+							value="#{mensajesIngreso.tooltip_btnCambiarPw}" />
+					</p:commandButton>
+				</h:panelGrid>
+				<h:panelGrid styleClass="center-block" columns="2"
+					rendered="#{!adminCuentaUsuarioMB.mostrarFormulario}">
+					<h:outputText value="#{mensajesIngreso.msgContinuarIngreso}" />
+				</h:panelGrid>
+				<h:panelGrid styleClass="center-block" columns="1" cellpadding="5"
+					rendered="#{!adminCuentaUsuarioMB.mostrarFormulario}">
+					<p:commandButton id="btnContinuar" action="continuar"
+						icon="c2-icon-ingresar" process="@this" immediate="true"
+						value="#{mensajesIngreso.btnContinuar}">
+						<p:tooltip for="btnContinuar"
+							value="#{mensajesIngreso.tooltip_btnContinuar}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

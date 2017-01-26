@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<h:form id="formRespuestaConsultaUbi">
+		<p:dialog id="popUpRespuestaConsultaUbi"
+			header="#{labelAnalisisUbicabilidad.encabezado_popup_resultado}"
+			widgetVar="popUpRespuestaConsultaUbi" resizable="false"
+			modal="true" appendToBody="true" dynamic="true" height="300px" closable="false"
+			width="1000px" visible="false">
+			<p:fieldset
+				legend="#{labelAnalisisUbicabilidad.legend_field_resultados}"
+				styleClass="fieldset-formulario">
+				
+				<h:panelGrid columns="3" >
+					<h:panelGrid columns="2" columnClasses="label-col,input-col">
+						<p:outputLabel value="#{labelAnalisisUbicabilidad.label_total}" />
+						<p:outputLabel value="#{analisisUbicabilidadHolderFL.resultadoConsulta.cargueArchivo.totalRegistros}" />
+					</h:panelGrid>
+					<h:panelGrid columns="2" columnClasses="label-col,input-col">
+						<p:outputLabel value="#{labelAnalisisUbicabilidad.label_total_consultados}" />
+						<p:outputLabel value="#{analisisUbicabilidadHolderFL.resultadoConsulta.cargueArchivo.totalLeidos}" />
+					</h:panelGrid>
+					<h:panelGrid columns="2" columnClasses="label-col,input-col">
+						<p:outputLabel value="#{labelAnalisisUbicabilidad.label_total_inconsistencias}" />
+						<p:outputLabel value="#{analisisUbicabilidadHolderFL.resultadoConsulta.cargueArchivo.totalInconsistencias}" />
+					</h:panelGrid>
+				</h:panelGrid>
+				<h:panelGrid columns="2" >
+					<h:panelGrid columns="2" columnClasses="label-col,input-col">
+						<p:outputLabel rendered="#{analisisUbicabilidadHolderFL.resultadoConsulta.docDireccionesPersonas != null}" value="#{labelAnalisisUbicabilidad.label_archivo_direcciones}" />
+						<p:commandButton 
+								id="btnVerUbicabilidadDir"
+								rendered="#{analisisUbicabilidadHolderFL.resultadoConsulta.docDireccionesPersonas != null}"
+								icon="c2-icon-detalle"
+								ajax="false"
+								onclick="PrimeFaces.monitorDownload(start, stop);" 
+								value="#{labelAnalisisUbicabilidad.label_descargar}" >
+							<p:tooltip for="btnVerUbicabilidadDir" value="#{labelAnalisisUbicabilidad.label_ver_ubicabilidad}" />
+							<p:fileDownload value="#{analisisUbicabilidadMB.descargarUbicabilidadDirecciones()}" />
+						</p:commandButton>
+						<p:outputLabel rendered="#{analisisUbicabilidadHolderFL.resultadoConsulta.docTelefonoPersonas != null}" value="#{labelAnalisisUbicabilidad.label_archivo_telefonos}" />
+						<p:commandButton 
+								id="btnVerUbicabilidadTel"
+								rendered="#{analisisUbicabilidadHolderFL.resultadoConsulta.docTelefonoPersonas != null}"
+								icon="c2-icon-detalle"
+								ajax="false"
+								onclick="PrimeFaces.monitorDownload(start, stop);" 
+								value="#{labelAnalisisUbicabilidad.label_descargar}" >
+							<p:tooltip for="btnVerUbicabilidadTel" value="#{labelAnalisisUbicabilidad.label_ver_ubicabilidad}" />
+							<p:fileDownload value="#{analisisUbicabilidadMB.descargarUbicabilidadTelefonos()}" />
+						</p:commandButton>
+						<p:outputLabel rendered="#{analisisUbicabilidadHolderFL.resultadoConsulta.docCorreoPersonas != null}" value="#{labelAnalisisUbicabilidad.label_archivo_correos}" />
+						<p:commandButton 
+								id="btnVerUbicabilidadCor"
+								rendered="#{analisisUbicabilidadHolderFL.resultadoConsulta.docCorreoPersonas != null}"
+								icon="c2-icon-detalle"
+								ajax="false"
+								onclick="PrimeFaces.monitorDownload(start, stop);" 
+								value="#{labelAnalisisUbicabilidad.label_descargar}" >
+							<p:tooltip for="btnVerUbicabilidadCor" value="#{labelAnalisisUbicabilidad.label_ver_ubicabilidad}" />
+							<p:fileDownload value="#{analisisUbicabilidadMB.descargarUbicabilidadCorreos()}" />
+						</p:commandButton>
+					</h:panelGrid>
+				</h:panelGrid>
+				<h:panelGrid columns="3" styleClass="center-block">
+					<p:commandButton 
+							id="btnVerInconsistencias" 
+							icon="c2-icon-detalle"
+							ajax="false"
+							onclick="PrimeFaces.monitorDownload(start, stop);" 
+							value="#{labelAnalisisUbicabilidad.label_ver_incosistencias}" 
+							disabled="#{analisisUbicabilidadHolderFL.resultadoConsulta.docInconsistencias == null}">
+						<p:tooltip for="btnVerInconsistencias" value="#{labelAnalisisUbicabilidad.label_ver_incosistencias}" />
+						<p:fileDownload value="#{analisisUbicabilidadMB.descargarArchivoIncosistencias()}" />
+					</p:commandButton>
+					<p:commandButton 
+							id="btnVerArchivoCargue" 
+							icon="c2-icon-detalle"
+							ajax="false"
+							onclick="PrimeFaces.monitorDownload(start, stop);" 
+							value="#{labelAnalisisUbicabilidad.label_ver_archivo_cargue}" >
+						<p:tooltip for="btnVerArchivoCargue" value="#{labelAnalisisUbicabilidad.label_ver_archivo_cargue}" />
+						<p:fileDownload value="#{analisisUbicabilidadMB.descargarArchivoCargue()}" />
+					</p:commandButton>
+					<p:commandButton id="btnVolver" icon="c2-icon-volver"
+						process="@this" immediate="true" value="#{lbComun.btnVolver}"
+						onclick="PF('popUpRespuestaConsultaUbi').hide();" action="VOLVER_USR">
+						<p:tooltip for="btnVolver" value="#{lbComun.tooltip_volver}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:fieldset>
+		</p:dialog>
+	</h:form>
+
+</ui:composition>

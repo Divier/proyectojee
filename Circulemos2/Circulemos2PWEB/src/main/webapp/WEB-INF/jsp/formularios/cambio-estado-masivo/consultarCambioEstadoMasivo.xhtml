@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario" header="#{labelCambioEstadoMasivo.tit_cambio_estado_masivo}">
+				<p:fieldset styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block" columns="4" columnClasses="label-col,input-col,label-col,input-col">
+
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel value="#{labelCambioEstadoMasivo.lbl_tipo_formulario}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenTipForm" required="true" value="#{cambioEstadoMasivoFormHolderFL.consultaFormularioDTO.idTipoFormulario}" rendered="true">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoFormulario()}" />
+								<p:ajax event="valueChange" listener="#{cambioEstadoFormulariosMasivoMB.cargarEstadosPermitidos()}" update="selManyMenEstForm :messages"
+									process="@this" global="false" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenTipForm" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelCambioEstadoMasivo.lbl_estado_formulario}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectCheckboxMenu id="selManyMenEstForm" label="#{labelGeneral.val_combo_primer_item}" filter="true" filterMatchMode="startsWith"
+								value="#{cambioEstadoMasivoFormHolderFL.consultaFormularioDTO.lstIdEstadoFormulario}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItems value="#{cambioEstadoFormulariosMasivoMB.lstPosiblesEstados}" />
+							</p:selectCheckboxMenu>
+							<p:message for="selManyMenEstForm" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelCambioEstadoMasivo.lbl_fecha_inicial}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar id="calFecIni" value="#{cambioEstadoMasivoFormHolderFL.consultaFormularioDTO.fechaInicial}" navigator="true"
+								pattern="#{webPrm.lab_calendar_pattern}" required="true" requiredMessage="#{labelGeneral.val_campo_requerido}"
+								maxdate="#{cambioEstadoMasivoFormHolderFL.fechaActual}">
+								<p:watermark for="calFecIni" value="#{webPrm.lab_calendar_mask_pattern}" />
+								<p:ajax event="dateSelect" update="calFecFin" global="false"></p:ajax>
+							</p:calendar>
+							<p:message for="calFecIni" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelCambioEstadoMasivo.lbl_fecha_final}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar id="calFecFin" value="#{cambioEstadoMasivoFormHolderFL.consultaFormularioDTO.fechaFinal}" navigator="true"
+								pattern="#{webPrm.lab_calendar_pattern}" required="true" requiredMessage="#{labelGeneral.val_campo_requerido}"
+								mindate="#{cambioEstadoMasivoFormHolderFL.consultaFormularioDTO.fechaInicial}" maxdate="#{cambioEstadoMasivoFormHolderFL.fechaActual}">
+								<p:watermark for="calFecFin" value="#{webPrm.lab_calendar_mask_pattern}" />
+							</p:calendar>
+							<p:message for="calFecFin" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelCambioEstadoMasivo.lbl_tipo_doc_responsable}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenTipDoc" value="#{cambioEstadoMasivoFormHolderFL.consultaFormularioDTO.idTipoDocumento}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelCambioEstadoMasivo.lbl_numero_documento}" />
+						<p:inputText id="txtNumDoc" value="#{cambioEstadoMasivoFormHolderFL.consultaFormularioDTO.numeroDocumentoIdentidad}" />
+
+						<p:outputLabel value="#{labelCambioEstadoMasivo.lbl_numero_placa}" />
+						<p:inputText id="txtNumPlc" value="#{cambioEstadoMasivoFormHolderFL.consultaFormularioDTO.numeroPlacaResponsable}" />
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR" action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}" update=":messages :form-resultado :form-contenido :form-resultado:tabla-resultados2">
+							<p:tooltip for="btnConsultar" value="#{labelCambioEstadoMasivo.tooltip_btn_consulta}" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta" rendered="#{cambioEstadoMasivoFormHolderFL.lstLazyTableFormularios.getRowCount() > 0}">
+
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+
+						<!--Boton Marcar Deteriorados-->
+						<p:commandButton id="btnMarDet" styleClass="_op-MARCAR_DETERIORADO" action="INICIAR_CAMBIO" icon="c2-icon-detalle" process="@this"
+							oncomplete="PF('popUpDeteriorados').show();" value="#{labelCambioEstadoMasivo.btn_deteriorados}"
+							disabled="#{cambioEstadoMasivoFormHolderFL.lstFormSeleccionados.size()==0}">
+							<p:tooltip for="btnMarDet" value="#{labelCambioEstadoMasivo.tooltip_btn_mrcr_deteriorados}" />
+						</p:commandButton>
+
+						<!--Boton Marcar extraviados-->
+						<p:commandButton id="btnMarExt" styleClass="_op-MARCAR_EXTRAVIADO" action="INICIAR_CAMBIO" icon="c2-icon-detalle" process="@this"
+							oncomplete="PF('popUpExtraviados').show();" value="#{labelCambioEstadoMasivo.btn_extraviados}"
+							disabled="#{cambioEstadoMasivoFormHolderFL.lstFormSeleccionados.size()==0}">
+							<p:tooltip for="btnMarExt" value="#{labelCambioEstadoMasivo.tooltip_btn_mrcr_extraviados}" />
+						</p:commandButton>
+
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados2" value="#{cambioEstadoMasivoFormHolderFL.lstLazyTableFormularios}" var="registro" paginator="true"
+					rowKey="#{registro.formulario.id}" paginatorTemplate="#{webPrm.param_paginator_template}" rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}" sortMode="multiple" lazy="true">
+
+
+					<p:column style="width: 18px !important;">
+						<!-- <f:facet name="header">
+							<p:selectBooleanCheckbox id="cmbTodos" value="#{cambioEstadoMasivoFormHolderFL.seleccionarTodos}">
+								<p:ajax event="change" listener="#{cambioEstadoFormulariosMasivoMB.cambiarTodos(cambioEstadoMasivoFormHolderFL.seleccionarTodos)}"
+									process="@this" update=":form-resultado:tabla-resultados :form-resultado:acciones-top" global="false">
+								</p:ajax>
+							</p:selectBooleanCheckbox>
+						</f:facet> -->
+						<p:selectBooleanCheckbox value="#{registro.seleccionado}">
+							<p:ajax event="change" listener="#{cambioEstadoFormulariosMasivoMB.cambioSeleccion(registro)}" process="@this"
+								update=":form-resultado:acciones-top" global="false">
+							</p:ajax>
+						</p:selectBooleanCheckbox>
+					</p:column>
+
+					<!--Columnas Resultado Consulta-->
+					<p:column headerText="#{labelCambioEstadoMasivo.lbl_clm_tipo_asignacion}">
+						<p:outputLabel value="#{registro.tipoAsignacion.nombre}" />
+					</p:column>
+
+					<p:column headerText="#{labelCambioEstadoMasivo.lbl_tipo_formulario}">
+						<p:outputLabel value="#{registro.formulario.tipoFormulario.nombre}"></p:outputLabel>
+					</p:column>
+
+					<p:column headerText="#{labelCambioEstadoMasivo.lbl_tipo_doc_responsable}">
+						<p:outputLabel value="#{registro.responsableFormulario.persona.tipoIdentificacion.nombre}" />
+					</p:column>
+
+					<p:column headerText="#{labelCambioEstadoMasivo.lbl_numero_documento}">
+						<p:outputLabel value="#{registro.responsableFormulario.persona.numeroIdentificacion}" />
+					</p:column>
+
+					<p:column headerText="#{labelCambioEstadoMasivo.lbl_numero_placa}">
+						<p:outputLabel value="#{registro.responsableFormulario.placa}" />
+					</p:column>
+
+					<p:column headerText="#{labelCambioEstadoMasivo.lbl_clm_nombre_responsable}">
+						<p:outputLabel value="#{registro.responsableFormulario.persona.nombreCompleto}" />
+					</p:column>
+
+					<p:column headerText="#{labelCambioEstadoMasivo.lbl_clm_area_responsable}">
+						<p:outputLabel value="#{registro.responsableFormulario.areaResponsable.nombre}" />
+					</p:column>
+
+					<p:column headerText="#{labelCambioEstadoMasivo.lbl_clm_numero_formulario}">
+						<p:outputLabel value="#{registro.formulario.numeroFormulario}" />
+					</p:column>
+
+					<p:column headerText="#{labelCambioEstadoMasivo.lbl_clm_fecha_movimiento}">
+						<c2:outputDateLabel labelValue="#{registro.fechaMovimiento}" />
+					</p:column>
+
+					<p:column headerText="#{labelCambioEstadoMasivo.lbl_estado_formulario}">
+						<p:outputLabel value="#{registro.estadoFormulario.nombre}" />
+					</p:column>
+
+				</p:dataTable>
+				
+			</p:panel>
+		</h:form>
+
+		<ui:include src="/WEB-INF/jsp/formularios/cambio-estado-masivo/marcarDeteriorados.xhtml" />
+		<ui:include src="/WEB-INF/jsp/formularios/cambio-estado-masivo/marcarExtraviados.xhtml" />
+
+	</ui:define>
+
+
+</ui:composition>

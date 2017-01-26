@@ -1,0 +1,79 @@
+<reporte>
+	<codigo>REPORTE_2</codigo>
+	<nombre>REPORTE DE INFRACCIONES</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>TIPO DE INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERAL DE INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>DESCRIPCION DE LA INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NORMATIVIDAD INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>ARTICULO DE LA INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE ARTICULO INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>¿REQUIERE PLACA?</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DE RESPONSABLE SOLIDARIO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>¿INFRACTOR OBLIGATORIO EN EL REGISTRO DEL COMPARENDO?</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>DIAS EN LOS CUALES SE GENERA LA CARTERA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DE DIA PARA GENERAR LA CARTERA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE VIGENCIA INICIAL DE LA INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE VIGENCIA FINAL DE LA INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>ENTIDAD DEL AGENTE DE TRANSITO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CLASIFICACION DE LA INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPOS DE SANCIONES</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>ORDENAMIENTO DE LA INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

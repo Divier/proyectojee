@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="adminFuncionarioHolderFL"
+		class="co.com.datatools.c2.managed_bean.administracion.funcionarios.AdminFuncionariosHolderFL" />
+	<var name="adminFuncionarioFL"
+		class="co.com.datatools.c2.managed_bean.administracion.funcionarios.AdminFuncionariosFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracion/funcionarios/consultarFuncionarios.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('adminFuncionariosMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('ubicabilidadMB')" />
+		</on-entry>
+		<transition on="_op-EDITAR" to="go_to_EDITAR" />
+		<transition on="_op-CREAR" to="_op-CREAR" />
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+		<transition on="VER_DETALLE" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.adminFuncionariosMB.visualizarDetalle()" />
+		</transition>
+	</view-state>
+
+	<view-state id="VER_DETALLE"
+		view="/WEB-INF/jsp/comparendo/configuracion/agentes/detalleAgente.xhtml">
+		<transition on="VOLVER" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.adminFuncionariosMB.consultar()" />
+		</transition>
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate expression="externalContext.sessionMap.adminFuncionariosMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<view-state id="_op-CREAR" view="/WEB-INF/jsp/administracion/funcionarios/registrarFuncionario.xhtml">
+		<transition on="CONTINUAR" to="SOLICITAR_FIRMA"></transition>
+		<transition on="_op-CONSULTAR" to="VALIDAR_PERSONA">
+		</transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.configuracion.agentes.AdminAgentesFL()"
+				result="flowScope.adminAgentesFL"></evaluate>
+		</transition>
+		<transition on="GUARDAR_FIRMA" to="GUARDAR_FIRMA_AGENTE"></transition>
+	</view-state>
+
+	<action-state id="SOLICITAR_FIRMA">
+		<evaluate
+			expression="externalContext.sessionMap.capturaFirmaMB.capturarFirmaDigital()"></evaluate>
+		<transition on="success" to="_op-CREAR" />
+	</action-state>
+
+	<action-state id="GUARDAR_FIRMA_AGENTE">
+		<evaluate expression="externalContext.sessionMap.capturaFirmaMB.asociarFirma()"></evaluate>
+		<transition on="yes" to="_op-CONSULTAR">
+			<set name="flowScope.adminAgentesFL.numeroFirma"
+				value="externalContext.sessionMap.capturaFirmaMB.capturaFirmaFL.capturaFirmaDTO.firma"
+				type="string" />
+			<evaluate expression="externalContext.sessionMap.adminFuncionariosMB.guardarAgente()"></evaluate>
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.configuracion.agentes.AdminAgentesFL()"
+				result="flowScope.adminAgentesFL"></evaluate>
+		</transition>
+		<transition on="no" to="_op-CREAR" />
+	</action-state>
+
+	<action-state id="go_to_EDITAR">
+		<evaluate
+			expression="externalContext.sessionMap.adminFuncionariosMB.irActualizarAgente()" />
+		<transition on="success" to="_op-EDITAR"></transition>
+	</action-state>
+
+	<view-state id="_op-EDITAR"
+		view="/WEB-INF/jsp/comparendo/configuracion/agentes/actualizarAgente.xhtml">
+		<transition on="CONTINUAR" to="actualizar"></transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.configuracion.agentes.AdminAgentesFL()"
+				result="flowScope.adminAgentesFL"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="actualizar">
+		<evaluate
+			expression="externalContext.sessionMap.adminFuncionariosMB.actualizarAgente()" />
+		<transition on="yes" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.adminFuncionariosMB.consultar()" />
+		</transition>
+		<transition on="no" to="_op-EDITAR">
+		</transition>
+	</action-state>
+
+	<!-- se accede al modulo de ubicabilidad -->
+	<action-state id="VALIDAR_PERSONA">
+		<evaluate expression="externalContext.sessionMap.adminFuncionariosMB.validarPersona()"></evaluate>
+		<transition on="no" to="UBICABILIDAD_PERSONA">
+			<set name="flashScope.tipoDocumento"
+				value="flowScope.adminAgentesFL.agente.persona.tipoIdentificacion.id" />
+			<set name="flashScope.documento"
+				value="flowScope.adminAgentesFL.agente.persona.numeroIdentificacion" />
+			<set name="flashScope.soloGuardar" value="true" />
+		</transition>
+		<transition on="yes" to="_op-CREAR" />
+	</action-state>
+
+	<!-- SUB FLUJO ubicabilidad -->
+	<subflow-state id="UBICABILIDAD_PERSONA" subflow="administracion/ubicabilidad">
+		<input name="tipoDocumento" />
+		<input name="documento" />
+		<input name="soloGuardar" />
+
+		<output name="persona" />
+
+		<transition on="CANCELAR_UBI" to="_op-CREAR" />
+		<transition on="ACEPTAR_UBI" to="_op-CREAR">
+			<evaluate
+				expression="externalContext.sessionMap.adminFuncionariosMB.cargarPersona(persona)" />
+		</transition>
+	</subflow-state>
+	<!-- -->
+</flow>

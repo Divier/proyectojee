@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="archivoSimitFL" class="co.com.datatools.c2.managed_bean.comparendo.simit.archivo.ArchivoSimitFL" />
+	<var name="archivoSimitGenerarFL" class="co.com.datatools.c2.managed_bean.comparendo.simit.archivo.ArchivoSimitFL" />
+	<var name="archivoSimitHolderFL" class="co.com.datatools.c2.managed_bean.comparendo.simit.archivo.ArchivoSimitHolderFL" />
+
+	<on-start>
+		<evaluate expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('archivoSimitMB')" />
+		<set name="archivoSimitFL.fechaInicial" value="externalContext.sessionMap.archivoSimitMB.ajustarFechaInicial()" />
+	</on-start>
+
+	<view-state id="inicio" view="/WEB-INF/jsp/comparendo/simit/archivo/consultarArchivoSimit.xhtml">
+		<transition on="_op-CONSULTAR" to="inicio">
+			<set name="archivoSimitGenerarFL.mostrarGenerarArchivo" value="false" />
+			<evaluate expression="externalContext.sessionMap.archivoSimitMB.consultarArchivoSimit()" />
+		</transition>
+		<transition on="_op-CREAR" to="inicio">
+			<evaluate expression="externalContext.sessionMap.archivoSimitMB.preGenerarArchivoSimit()" />
+			<set name="archivoSimitGenerarFL.mostrarGenerarArchivo" value="true" />
+		</transition>
+		<transition on="GENERAR_ARCHIVO" to="inicio">
+			<evaluate expression="externalContext.sessionMap.archivoSimitMB.generarArchivoSimit()" />
+			<evaluate expression="archivoSimitGenerarFL.setMostrarGenerarArchivo(false)" />
+		</transition>
+	</view-state>
+
+</flow>

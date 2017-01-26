@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{consultarSeguimientoFormularioMB.toString()}" />
+		</f:metadata>
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario" header="#{labelConsultasFormularios.tit_consultar_seguimiento_formulario}">
+				<p:fieldset styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block" columns="2" columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel value="#{labelConsultasFormularios.lbl_tipo_formulario}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenTipForm" value="#{consultarSeguimientoFormularioHolderFL.idTipoFormulario}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoFormulario()}" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenTipForm" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelConsultasFormularios.lbl_num_formulario}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="numeroFormulario" value="#{consultarSeguimientoFormularioHolderFL.numeroFormulario}" maxlength="50" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" />
+							<p:message for="numeroFormulario" />
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR" action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}" update=":messages :form-contenido">
+							<p:tooltip for="btnConsultar" value="#{labelConsultasFormularios.tooltip_btn_consultar}" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta" rendered="#{consultarSeguimientoFormularioHolderFL.lstSeguimientos.size() > 0}">
+				<p:fieldset styleClass="fieldset-formulario" legend="#{labelConsultasFormularios.msg_fieldset_info_formulario}">
+					<h:panelGrid id="panel-formulario-info" styleClass="center-block" columns="2" columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel value="#{labelConsultasFormularios.lbl_num_formulario}" />
+						<h:panelGroup>
+							<p:outputLabel value="#{consultarSeguimientoFormularioHolderFL.numeroFormulario}" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelConsultasFormularios.lbl_tipo_formulario}" />
+						<h:panelGroup>
+							<p:outputLabel value="#{consultarSeguimientoFormularioHolderFL.nomTipoFormulario}" />
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<p:fieldset styleClass="fieldset-formulario" legend="#{labelConsultasFormularios.msg_fieldset_historico_estados}">
+					<h:panelGrid id="acciones-top">
+						<f:facet name="footer">
+							<!--Boton Ver detalle-->
+							<p:commandButton id="btnVerDet" action="VER_DETALLE" icon="c2-icon-detalle" process="@this" value="#{lbComun.btnVerDet}"
+								disabled="#{consultarSeguimientoFormularioHolderFL.seguimientoSeleccionado==null}">
+								<p:tooltip for="btnVerDet" value="#{labelConsultasFormularios.tooltip_btnVerDet}" />
+							</p:commandButton>
+						</f:facet>
+					</h:panelGrid>
+
+					<p:dataTable id="tabla-resultados" value="#{consultarSeguimientoFormularioHolderFL.lstSeguimientos}" var="registro"
+						rowKey="#{registro.hashCode()}" selection="#{consultarSeguimientoFormularioHolderFL.seguimientoSeleccionado}" paginator="true"
+						paginatorTemplate="#{webPrm.param_paginator_template}" rowsPerPageTemplate="#{webPrm.param_rows_per_page}" rows="#{webPrm.param_initial_rows}"
+						sortMode="multiple">
+
+						<p:ajax event="rowSelectRadio" process=":form-resultado:tabla-resultados" update=":form-resultado:acciones-top @this" global="false" />
+
+						<p:column selectionMode="single" />
+
+						<p:column headerText="#{labelConsultasFormularios.lbl_estado_formulario}">
+							<p:outputLabel value="#{registro.seguimientoFormulario.estadoFormulario.nombre}" />
+						</p:column>
+
+						<p:column headerText="#{labelConsultasFormularios.lbl_tipo_responsable}">
+							<p:outputLabel value="#{registro.seguimientoFormulario.responsableFormulario.tipoResponsable.nombre}" />
+						</p:column>
+
+						<p:column headerText="#{labelConsultasFormularios.lbl_nombre_responsable}">
+							<p:outputLabel value="#{registro.nombreResponsable}" />
+						</p:column>
+
+						<p:column headerText="#{labelConsultasFormularios.lbl_fecha_hora_aplica_estado}">
+							<p:outputLabel value="#{registro.seguimientoFormulario.fechaAplicacionEstado}" />
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

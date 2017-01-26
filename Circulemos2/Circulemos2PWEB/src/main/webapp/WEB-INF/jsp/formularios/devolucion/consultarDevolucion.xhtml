@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{devolucionesMB.toString()}" />
+			<f:event type="preRenderView" listener="#{devolucionesMB.consultarTipoFormulario()}" />
+		</f:metadata>
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario" header="#{labelCambioEstadosForm.titulo_consultar_devoluciones}">
+				<p:fieldset styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">
+						<p:outputLabel value="#{labelCambioEstadosForm.label_tipo_formulario}"/>
+						<h:outputText value="#{devolucionHolderFL.nombreTipoFormulario}" />
+						<p:outputLabel value="#{labelCambioEstadosForm.label_tipo_asignacion}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selTipoAsignacion" value="#{reasignacionHolderFL.idTipoAsignacion}" >
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTiposAsignacionFormulario()}" />
+							</p:selectOneMenu>								
+							<p:message for="selTipoAsignacion" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelCambioEstadosForm.label_tipo_doc_responsable}"/>	
+						<h:panelGroup>						
+							<p:selectOneMenu id="selTipoDoc" value="#{reasignacionHolderFL.idTipoDocResponsable}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />							
+							</p:selectOneMenu>
+							<p:message for="selTipoDoc" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelCambioEstadosForm.label_numero_doc_responsable}"/>
+						<h:panelGroup>
+							<p:inputText id="numeroDoc" value="#{reasignacionHolderFL.numeroDocResponsable}" maxlength="20"/>
+							<p:message for="numeroDoc" />
+						</h:panelGroup>						
+						<p:outputLabel value="#{labelCambioEstadosForm.label_placa_responsable}"/>
+						<p:inputText id="placa" value="#{reasignacionHolderFL.placaResponsable}" maxlength="20"/>
+						<p:outputLabel value="#{labelCambioEstadosForm.label_area_responsable}"/>
+						<p:selectOneMenu id="selArea" value="#{reasignacionHolderFL.idAreaResp}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{fachadaCatalogosMB.catAreaFisica()}" />									
+						</p:selectOneMenu>						
+						<p:outputLabel value="#{labelCambioEstadosForm.label_numero_inicial}"/>
+						<p:inputText id="numInicial" value="#{reasignacionHolderFL.numeroInicial}" maxlength="50" />
+						<p:outputLabel value="#{labelCambioEstadosForm.label_numero_final}"/>
+						<p:inputText id="numFinal" value="#{reasignacionHolderFL.numeroFinal}" maxlength="50" />
+						<p:outputLabel value="#{labelCambioEstadosForm.label_fecha_devolucion}"/>
+						<p:calendar id="fechaDevolucion" value="#{reasignacionHolderFL.fechaMovimiento}" navigator="true" pattern="#{webPrm.lab_calendar_pattern}" maxdate="new java.util.Date()">
+							<p:watermark for="fechaDevolucion" value="#{webPrm.lab_calendar_mask_pattern}" />
+						</p:calendar>											
+					</h:panelGrid>					
+					
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-contenido">
+							<p:tooltip for="btnConsultar" value="#{labelCambioEstadosForm.tooltip_btnConsultar_devoluciones}" />
+						</p:commandButton>
+						<!--Boton Nuevo-->
+						<p:commandButton id="btnCrear" styleClass="_op-CREAR"
+							action="_op-CREAR" icon="c2-icon-crear" process="@this"
+							value="#{lbComun.btnCrear}" immediate="true">
+							<p:tooltip for="btnCrear" value="#{labelCambioEstadosForm.tooltip_btn_nueva_devolucion}" />
+						</p:commandButton>
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" action="_op-CANCELAR" icon="c2-icon-cancelar" process="@this"
+							value="#{lbComun.btnCancelar}" immediate="true">
+							<p:tooltip for="btnCancelar" value="#{lbComun.tootltp_btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+		
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta" rendered="#{devolucionHolderFL.resultadoConsulta.size() > 0}">
+
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<!--Boton Editar-->
+						<p:commandButton id="btnEditar" styleClass="_op-EDITAR"
+							action="_op-EDITAR" icon="c2-icon-editar" process="@this"
+							value="#{lbComun.btnEditar}"
+							disabled="#{devolucionHolderFL.cambioEstadoSeleccionado==null}">
+							<p:tooltip for="btnEditar" value="#{labelCambioEstadosForm.tooltip_btnEditar}" />
+						</p:commandButton>
+						<!--Boton Eliminar-->
+						<p:commandButton id="btnEliminar" styleClass="_op-ELIMINAR"
+							action="_op-ELIMINAR" icon="c2-icon-eliminar" process="@this"
+							value="#{lbComun.btnEliminar}"
+							update=":messages resultado-consulta tabla-resultados"
+							disabled="#{devolucionHolderFL.cambioEstadoSeleccionado==null}">
+							<p:tooltip for="btnEliminar" value="#{labelCambioEstadosForm.tooltip_btnEliminar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<!--Boton Ver detalle-->
+						<p:commandButton id="btnVerDet"
+							action="#{devolucionesMB.verDetalleCambioEstado()}" icon="c2-icon-detalle"
+							process="@this" value="#{lbComun.btnVerDet}"
+							oncomplete="PF('dlgDetalle').show()" update=":dlg-detalle"
+							disabled="#{devolucionHolderFL.cambioEstadoSeleccionado==null}">
+							<p:tooltip for="btnVerDet" value="#{labelCambioEstadosForm.tooltip_btnVerDet}" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados"
+					value="#{devolucionHolderFL.resultadoConsulta}" var="cambioEstado"
+					rowKey="#{cambioEstado.idDetalleCambioEstado}"
+					selection="#{devolucionHolderFL.cambioEstadoSeleccionado}"
+					paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}">
+					<p:ajax event="rowSelectRadio" process=":form-resultado:tabla-resultados" update=":form-resultado:acciones-top,:form-resultado:tabla-resultados" global="false" />				
+					<p:column selectionMode="single" style="width:20px" />				
+					<p:column headerText="#{labelCambioEstadosForm.label_tipo_asignacion}">
+						<h:outputText value="#{cambioEstado.nombreTipoAsignacion}" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstadosForm.label_tipo_formulario}">
+						<h:outputText value="#{cambioEstado.nombreTipoFormulario}" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstadosForm.label_folios}">
+						<h:outputText value="#{cambioEstado.folio}" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstadosForm.label_tipo_doc_responsable}">
+						<h:outputText value="#{cambioEstado.nombreTipoIdentificacion}" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstadosForm.label_numero_doc_responsable}">
+						<h:outputText value="#{cambioEstado.numeroIdentificacion}" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstadosForm.label_placa_responsable}">
+						<h:outputText value="#{cambioEstado.placa}" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstadosForm.label_nombre_responsable}">
+						<h:outputText value="#{cambioEstado.nombreResponsable}" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstadosForm.label_area_responsable}">
+						<h:outputText value="#{cambioEstado.nombreArea}" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstadosForm.label_numero_inicial}">
+						<h:outputText value="#{cambioEstado.numeroInicial}" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstadosForm.label_numero_final}">
+						<h:outputText value="#{cambioEstado.numeroFinal}" />
+					</p:column>					
+					<p:column headerText="#{labelCambioEstadosForm.label_cantidad_formularios}">
+						<h:outputText value="#{cambioEstado.cantidadFormularios}" />
+					</p:column>					
+					<p:column headerText="#{labelCambioEstadosForm.label_fecha_asignacion}">
+						<h:outputText value="#{cambioEstado.fechaMovimiento}" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstadosForm.label_observaciones}">
+						<h:outputText value="#{cambioEstado.observaciones}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+		
+		<p:dialog widgetVar="dlgDetalle" id="dlg-detalle" header="#{labelCambioEstadosForm.titulo_detalle}" resizable="false" modal="true"
+			appendToBody="@(body)" dynamic="true" width="50%">
+		
+				<p:dataTable value="#{devolucionHolderFL.detalleFormularios}" var="seguimiento"					
+					paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}" rowIndexVar="consecutivo">
+								
+					<p:column  headerText="#{labelCambioEstadosForm.label_consecutivo}">
+						<h:outputText value="#{consecutivo+1}" />
+					</p:column>
+					<p:column  headerText="#{labelCambioEstadosForm.label_numero_formulario}">
+						<h:outputText value="#{seguimiento.formulario.numeroFormulario}" />
+					</p:column>
+					<p:column  headerText="#{labelCambioEstadosForm.label_estado_formulario}">
+						<h:outputText value="#{seguimiento.estadoFormulario.nombre}" />
+					</p:column>
+					<p:column  headerText="#{labelCambioEstadosForm.label_observaciones}">
+						<h:outputText value="#{seguimiento.observaciones}" />
+					</p:column>
+				</p:dataTable>
+			<br />
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

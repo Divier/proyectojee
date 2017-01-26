@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:tns="http://reportegestion.sac.ws.c2.datatools.com.co/" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://reportegestion.sac.ws.c2.datatools.com.co/">
+  <xs:complexType name="gestionCobroWSDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractDTO">
+        <xs:sequence>
+       	  <xs:element minOccurs="0" name="numeroRegistro" >
+       	  		<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:pattern value="[0-9]*" />
+					</xs:restriction>
+				</xs:simpleType>
+       	  </xs:element> 
+          <xs:element minOccurs="0" name="fechaGestion" type="xs:date"/>
+          <xs:element minOccurs="0" name="tipoGestion" >
+         	 	<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[A-Za-z0-9]*" />
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+          </xs:element> 
+          <xs:element minOccurs="0" name="tipoNotificacion" >
+         	 	<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[A-Za-z0-9]*" />
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+          </xs:element> 
+          <xs:element minOccurs="0" name="evidencia" >
+         	 	<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[A-Za-z0-9]*" />
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+          </xs:element> 
+ 		  <xs:element minOccurs="0" name="identificadorUbicabilidad"> 		  
+	 		  <xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:pattern value="[0-9]*" />
+					</xs:restriction>
+				</xs:simpleType>
+ 		  </xs:element>
+          <xs:element minOccurs="0" name="obligacion" >
+          		<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:pattern value="[0-9]*" />
+					</xs:restriction>
+				</xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="resultado">
+          		<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[A-Za-z0-9]*" />
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+          </xs:element> 
+          <xs:element minOccurs="0" name="observaciones">
+          		<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[A-Za-z0-9]*" />
+						<xs:maxLength value="200" />
+					</xs:restriction>
+				</xs:simpleType>
+          </xs:element>          
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="abstractDTO">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="respuestaGestionCobroWSDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="codigo" type="xs:int"/>
+          <xs:element minOccurs="0" name="detalle" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="procesarGestionCobro" type="tns:procesarGestionCobro"/>
+  <xs:complexType name="procesarGestionCobro">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="gestionCobroWSDTO" type="tns:gestionCobroWSDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="procesarGestionCobroResponse" type="tns:procesarGestionCobroResponse"/>
+  <xs:complexType name="procesarGestionCobroResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:respuestaGestionCobroWSDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

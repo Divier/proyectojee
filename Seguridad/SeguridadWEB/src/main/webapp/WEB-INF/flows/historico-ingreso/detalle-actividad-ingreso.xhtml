@@ -1,0 +1,87 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<div>
+			<h2>
+				<h:outputText value="#{mensajesHistoricoIngresos.titulo_detalle_ingreso}"></h:outputText>
+			</h2>
+			<hr />
+			<h:form id="form-content">
+				<h:panelGrid columns="4" cellpadding="5"
+					columnClasses="column1,column2,column1,column2">
+					<h:outputText value="#{mensajesHistoricoIngresos.label_login}:" />
+					<h:outputText value="#{historicoIngresosFL.ingresoSeleccionado.login}" />
+					<h:outputText value="#{mensajesHistoricoIngresos.label_aplicacion}:" />
+					<h:outputText value="#{historicoIngresosFL.ingresoSeleccionado.nombreAplicacion}" />
+					<h:outputText value="#{mensajesHistoricoIngresos.label_fecha_ingreso}:" />
+					<h:outputText value="#{historicoIngresosFL.ingresoSeleccionado.fechaInicio}">
+						<f:convertDateTime
+							pattern="#{webPrm.lab_calendar_pattern_full}"
+							timeZone="#{parametrosBase.param_time_zone}" />
+					</h:outputText>
+					<h:outputText value="#{mensajesHistoricoIngresos.label_fecha_cierre}:" />
+					<h:outputText value="#{historicoIngresosFL.ingresoSeleccionado.fechaCierre}">
+						<f:convertDateTime
+							pattern="#{webPrm.lab_calendar_pattern_full}"
+							timeZone="#{parametrosBase.param_time_zone}" />
+					</h:outputText>
+					<h:outputText value="#{mensajesHistoricoIngresos.label_estado_ingreso}:" />
+					<h:outputText value="#{historicoIngresosFL.ingresoSeleccionado.estadoIngreso}" />
+					<h:outputText value="#{mensajesHistoricoIngresos.label_ip_equipo}:" />
+					<h:outputText value="#{historicoIngresosFL.ingresoSeleccionado.ipIngreso}" />
+					<f:facet name="footer">
+						<p:commandButton action="VOLVER" value="#{lbComun.btnVolver}" icon="c2-icon-volver" />
+					</f:facet>
+				</h:panelGrid>
+				<p:panel
+					header="#{mensajesHistoricoIngresos.label_recursos_solicitados}"
+					toggleable="true">
+					<h:outputLabel
+						value="#{mensajesHistoricoIngresos.msg_ingreso_sin_actividad}"
+						rendered="#{historicoIngresosFL.ingresoSeleccionado.actividadIngreso.size()==0}" />
+					<p:dataTable
+						value="#{historicoIngresosFL.ingresoSeleccionado.actividadIngreso}"
+						var="solicitud" id="detalleSolicitudesIngreso"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						paginator="true"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}"
+						rendered="#{historicoIngresosFL.ingresoSeleccionado.actividadIngreso.size()>0}">
+						<p:column headerText="#{mensajesHistoricoIngresos.label_descripcion_recurso}"
+							sortBy="#{solicitud.descripcionRecurso}">
+							<h:outputText value="#{solicitud.descripcionRecurso}" />
+						</p:column>
+						<p:column headerText="#{mensajesHistoricoIngresos.label_recurso}"
+							sortBy="#{solicitud.nombreRecurso}">
+							<h:outputText value="#{solicitud.nombreRecurso}" />
+						</p:column>
+						<p:column headerText="#{mensajesHistoricoIngresos.label_operacion_solicitada}"
+							sortBy="#{solicitud.nombreOperacion}">
+							<h:outputText value="#{solicitud.nombreOperacion}" />
+						</p:column>
+						<p:column headerText="#{mensajesHistoricoIngresos.label_operacion_permitida}"
+							sortBy="#{solicitud.permitido}">
+							<h:outputText
+								value="#{solicitud.permitido==true?mensajesGeneral.label_si:mensajesGeneral.label_no}" />
+						</p:column>
+						<p:column headerText="#{mensajesHistoricoIngresos.label_fecha_solicitud}"
+							sortBy="#{solicitud.horaSolicitud}">
+							<h:outputText value="#{solicitud.horaSolicitud}">
+								<f:convertDateTime
+									pattern="#{webPrm.lab_calendar_pattern_full}"
+									timeZone="#{parametrosBase.param_time_zone}" />
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

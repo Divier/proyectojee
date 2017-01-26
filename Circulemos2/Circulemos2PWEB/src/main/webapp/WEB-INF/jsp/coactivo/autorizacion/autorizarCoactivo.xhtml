@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:remoteCommand name="updateButton"
+				update=":messages :form-resultado :form-contenido" />
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelCoactivo.titulo_autorizar_coactivo}">
+				<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+					<!--Boton Consultar-->
+					<p:commandButton id="btnConsultar"
+						onclick="PrimeFaces.monitorDownload(startDownReport, stopDownReport);"
+						icon="c2-icon-consultar" process="@form" disabled="#{autorizaCoactivoFL.descargaArchivo}"
+						value="#{lbComun.btnConsultar}" ajax="false"
+						update=":messages :form-resultado :form-contenido">
+						<p:fileDownload value="#{autorizaCoactivoMB.consultar()}" />
+						<p:tooltip for="btnConsultar" value="#{lbComun.btnConsultar}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+			<p:panel id="campos-consulta-resp" styleClass="panel-formulario"
+				header="#{labelCoactivo.msg_res_aut_coativo}"
+				rendered="#{autorizaCoactivoFL.descargaArchivo}">
+				<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+					<p:outputLabel value="#{autorizaCoactivoFL.multasAutorizar}"></p:outputLabel>
+				</h:panelGrid>
+				<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+					<!-- Autorizar -->
+					<p:commandButton id="btnAutorizar" icon="ui-icon-check"
+						onclick="PF('dialogConfirmAutoriza').show()"
+						value="#{labelCoactivo.tooltip_autorizar}" process="@this"
+						styleClass="_op-AUTORIZAR_COACTIVO">
+						<p:tooltip for="btnAutorizar"
+							value="#{labelCoactivo.tooltip_autorizar}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="false">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelCoactivo.msg_fieldset_coactivo}">
+					<h:panelGrid id="acciones-top">
+						<f:facet name="footer">
+						</f:facet>
+					</h:panelGrid>
+					<p:dataTable id="tabla-resultados" var="registro"
+						value="#{autorizaCoactivoFL.precoactivos}"
+						rowKey="#{registro.idFacturaAxis}" paginator="true"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+						<p:column headerText="#{labelCoactivo.label_tipo_doc}">
+							<p:outputLabel value="#{registro.tipoIdentificacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_num_doc}">
+							<p:outputLabel value="#{registro.numeroIdentificacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_nombres}">
+							<p:outputLabel value="#{registro.nombreCompleto}" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_direccion}">
+							<p:outputLabel value="#{registro.direccion}" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_tipo_obligacion}">
+							<p:outputLabel value="#{registro.medioImposicion}" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_numero_factura}">
+							<p:outputLabel value="#{registro.idFacturaAxis}" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_valor_multa}">
+							<c2:outputCurrencyText value="#{registro.valorMulta}" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_numero_citacion}">
+							<p:outputLabel value="#{registro.numeroCitacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_fecha_imposicion}">
+							<c2:outputDateLabel labelValue="#{registro.fechaInfraccion}"
+								fullFormat="true" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_codigo_infraccion}">
+							<p:outputLabel value="#{registro.codigoInfraccion}" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_fecha_notificacion}">
+							<c2:outputDateLabel labelValue="#{registro.fechaNotificacion}"
+								fullFormat="true" />
+						</p:column>
+
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<p:confirmDialog id="dialogConfirmAutor" showEffect="fade"
+			closable="false" header="#{lbComun.msg_tit_confirmar}"
+			appendTo="@(body)"
+			message="#{labelCoactivo.msg_pregunta_confirmacion}" severity="alert"
+			widgetVar="dialogConfirmAutoriza">
+			<h:form id="formConfirm">
+				<h:panelGrid columns="2" styleClass="center-block" cellspacing="7">
+					<p:commandButton value="#{labelGeneral.val_sel_rad_yes}"
+						styleClass="ui-confirmdialog-yes" icon="c2-icon-si"
+						action="_op-AUTORIZAR_COACTIVO" process="@this"
+						oncomplete="PF('dialogConfirmAutoriza').hide()" />
+					<p:commandButton value="#{labelGeneral.val_sel_rad_no}"
+						process="@this" update=":messages" action="NO_AUTORIZAR"
+						oncomplete="PF('dialogConfirmAutoriza').hide()"
+						styleClass="ui-confirmdialog-no" icon="c2-icon-no" />
+				</h:panelGrid>
+			</h:form>
+		</p:confirmDialog>
+		<script type="text/javascript">
+			function startDownReport() {
+			    PF('statusDialog').show();
+			}
+ 
+			function stopDownReport() {
+				updateButton();
+			    PF('statusDialog').hide();
+			}
+		</script>
+	</ui:define>
+</ui:composition>

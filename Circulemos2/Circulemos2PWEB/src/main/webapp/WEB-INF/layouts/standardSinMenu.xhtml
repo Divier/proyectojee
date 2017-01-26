@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view contentType="text/html">
+
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Circulemos 2</title>
+
+		<h:outputStylesheet library="webjars"
+			name="bootstrap-btsp/3.0.1/css/btsp.css" />
+		<h:outputStylesheet library="webjars" name="yamm/3.0.0/yamm.css" />
+
+		<h:outputStylesheet library="webjars" name="c2/css/c2.css" />
+
+		<h:outputStylesheet library="css" name="static/layout-c2.css" />
+		<h:outputStylesheet library="css" name="static/menu-c2.css" />
+		<h:outputStylesheet library="css" name="c2-general.css" />
+
+		<h:outputScript library="webjars"
+			name="bootstrap-btsp/3.0.1/js/bootstrap.js" />
+		<h:outputScript library="webjars" name="holder/2.4.0/holder.js" />
+
+		<h:outputScript library="js" name="jquery.elevateZoom-3.0.8.min.js" />
+		<h:outputScript library="js" name="utils.js" />
+		<h:outputScript library="js" name="calendarEs.js" />
+
+		<ui:insert name="headIncludes" />
+	</h:head>
+
+	<h:body>
+
+		<div id="wrapper">
+			<header class="btsp">
+			<div id="c2-header" role="navigation"
+				class="navbar navbar-default navbar-static-top">
+				<div class="container">
+					<div class="navbar-header">
+						<button data-target=".navbar-collapse" data-toggle="collapse"
+							class="navbar-toggle collapsed" type="button">
+							<span class="sr-only">Toggle navigation</span> <span
+								class="icon-bar" /> <span class="icon-bar" /> <span
+								class="icon-bar" />
+						</button>
+						<a id="logo-c2-header" href="#{request.contextPath}/app/main"
+							class="navbar-brand "> <img
+							src="#{resource['img:static/logo-c2-small.png']}" alt="" />
+						</a> 
+						<a id="logo-cliente-header" href="http://www.atm.gob.ec/"
+							class="navbar-brand "> <img
+							src="#{resource['img:static/atm.png']}" alt="ATM" height="50" width="110"/> 
+						</a>
+					</div>
+				</div>
+			</div>
+			</header>
+
+			<section>
+			<div class="contenido">
+				<h:panelGroup id="contenido" style="border-style:none;">
+					<ui:insert name="contenido" />
+				</h:panelGroup>
+			</div>
+			</section>
+
+			<footer class="btsp"> <ui:include
+				src="/WEB-INF/jsp/footer.xhtml" /> </footer>
+		</div>
+
+		<!-- Componentes generales - INI -->
+
+		<p:growl id="messages" showDetail="true" life="15000"
+			globalOnly="true" />
+		<p:ajaxStatus onstart="PF('statusDialog').show()"
+			onsuccess="PF('statusDialog').hide()" />
+
+		<p:confirmDialog id="dialogConfirm" global="true" showEffect="fade"
+			appendTo="@(body)">
+			<h:form id="formDialogConfirm">
+				<h:panelGrid columns="2" styleClass="center-block" cellspacing="7">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="c2-icon-si" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="c2-icon-no" />
+				</h:panelGrid>
+			</h:form>
+		</p:confirmDialog>
+
+		<p:dialog modal="true" widgetVar="statusDialog"
+			styleClass="status-dialog-c2" showHeader="false" draggable="false"
+			closable="false" resizable="false" appendTo="@(body)">
+			<p:graphicImage library="img" name="static/ajax-loader.png" />
+		</p:dialog>
+
+		<!-- Componentes generales - FIN -->
+
+	</h:body>
+</f:view>
+</html>

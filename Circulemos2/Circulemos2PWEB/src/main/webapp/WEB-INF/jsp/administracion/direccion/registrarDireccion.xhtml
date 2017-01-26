@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog widgetVar="dialogoDireccion" id="dialogoDireccion" header="#{labelDireccion.g_ing_dir}" resizable="false" modal="true"
+		appendTo="@(body)" closable="false" width="1100">
+		<h:form id="form-ingreso-direccion">
+			<p:messages id="messages-dir" globalOnly="true" showDetail="true" closable="true" />
+
+			<!-- 1 -->
+
+<!-- 			<h:panelGrid id="pnlTipoDir" columns="3" styleClass="center-block" columnClasses="label-col,input-col,input-col"> -->
+<!-- 				<p:outputLabel value="#{labelDireccion.lbl_tip_dir}" /> -->
+<!-- 				<p:selectOneMenu id="selOneRadTipoDir" value="#{direccionMB.dirHolderFL.tipoDireccion}"	required="#{direccionMB.dirHolderFL.validaTipoDireccion}" -->
+<!-- 					requiredMessage="#{labelGeneral.val_campo_requerido}" disabled="true">se adiciona disabled="true" -->
+<!-- 					<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" /> -->
+<!-- 					<f:selectItems value="#{catalogoDireccionMB.opcTipoDireccion}" /> -->
+<!-- 					<p:ajax event="change" update="datos-principal"	listener="#{direccionMB.cambiarTipoDireccion}" global="false" /> -->
+<!-- 				</p:selectOneMenu> -->
+<!-- 				<p:message for="selOneRadTipoDir" /> -->
+<!-- 			</h:panelGrid> -->
+			
+			<h:panelGrid id="pnlTipoDir" columns="3" styleClass="center-block" columnClasses="label-col,input-col,input-col">
+				<p:outputLabel value="#{labelDireccion.lbl_tip_dir}" styleClass="campo-obligatorio" />
+				<p:selectOneMenu id="selOneRadTipoDir" value="#{direccionMB.dirFL.direccionDTO.tipoUbicabilidad.id}" 
+					required="true"
+					requiredMessage="#{labelGeneral.val_campo_requerido}" >
+					<f:selectItems value="#{fachadaCatalogosMB.catTipoDireccion()}" />
+					<p:ajax event="change" update="datos-principal"	listener="#{direccionMB.cambiarTipoDireccion}" global="false" 
+						process="@this"/>
+				</p:selectOneMenu>
+				<p:message for="selOneRadTipoDir" />
+			</h:panelGrid>
+			
+
+			<!-- 7 -->
+
+			<h:panelGroup id="datos-principal" styleClass="fieldset-formulario">
+
+				<!-- 2 -->
+
+				<p:fieldset id="datos-ubicacion" styleClass="fieldset-formulario" legend="#{labelDireccion.pnl_title_mun}">
+					<h:panelGrid id="pnlMun" columns="4" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col">
+						<p:outputLabel value="#{labelDireccion.lbl_pais_mun}" rendered="#{direccionMB.dirHolderFL.validaDireccion}" styleClass="campo-obligatorio" />
+						<p:outputLabel value="#{labelDireccion.lbl_pais_mun}" rendered="#{!direccionMB.dirHolderFL.validaDireccion}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+						<p:selectOneMenu id="idPais" filter="true" value="#{direccionMB.dirFL.direccionDTO.pais.id}" required="#{!direccionMB.dirHolderFL.validaDireccion}" requiredMessage="#{labelGeneral.val_campo_requerido}"
+							disabled="#{!direccionMB.dirHolderFL.seleccionaPais}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.opcPais}" />
+							<p:ajax event="change" update="datos-principal"	listener="#{direccionMB.actPais(direccionMB.dirFL.direccionDTO.pais.id)}" global="false" />
+						</p:selectOneMenu>
+						<p:message for="idPais" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelDireccion.lbl_dep_mun}" rendered="#{direccionMB.dirHolderFL.validaDireccion}" styleClass="campo-obligatorio" />
+						<p:outputLabel value="#{labelDireccion.lbl_dep_mun}" rendered="#{!direccionMB.dirHolderFL.validaDireccion}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+						<p:selectOneMenu id="idDepto" filter="true" value="#{direccionMB.dirFL.direccionDTO.departamento.id}" required="#{!direccionMB.dirHolderFL.validaDireccion}" requiredMessage="#{labelGeneral.val_campo_requerido}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.crearOpcionesDepartamento(direccionMB.dirFL.direccionDTO.pais.id)}" />
+							<p:ajax event="change" update="datos-principal" listener="#{direccionMB.actDepartamento(direccionMB.dirFL.direccionDTO.departamento.id)}" global="false" />
+						</p:selectOneMenu>
+						<p:message for="idDepto" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelDireccion.lbl_mun_mun}" rendered="#{direccionMB.dirHolderFL.validaDireccion}" styleClass="campo-obligatorio" />
+						<p:outputLabel value="#{labelDireccion.lbl_mun_mun}" rendered="#{!direccionMB.dirHolderFL.validaDireccion}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+						<p:selectOneMenu id="idMunicipio" filter="true" value="#{direccionMB.dirFL.direccionDTO.municipio.id}" required="#{!direccionMB.dirHolderFL.validaDireccion}" requiredMessage="#{labelGeneral.val_campo_requerido}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.crearOpcionesMunicipio(direccionMB.dirFL.direccionDTO.departamento.id)}" />
+							<p:ajax event="change" update="datos-principal" listener="#{direccionMB.actMunicipio(direccionMB.dirFL.direccionDTO.municipio.id)}" global="false" />
+						</p:selectOneMenu>
+						<p:message for="idMunicipio" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelDireccion.lbl_loc_mun}" />
+						<p:selectOneMenu id="idLocalidad" filter="true" value="#{direccionMB.dirFL.direccionDTO.localidad.id}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.crearOpcionesLocalidad(direccionMB.dirFL.direccionDTO.municipio.id)}" />
+							<p:ajax event="change" process="@this" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<!-- 3 -->
+
+				<p:fieldset id="datos-direccion" styleClass="fieldset-formulario" legend="#{labelDireccion.t_title_dir}">
+				
+					<!-- 8 -->
+				
+					<h:panelGrid id="panel-formulario" columns="8" styleClass="center-block"
+						columnClasses="label-col input-col input-col input-col input-col input-col input-col input-col"
+						rendered="#{direccionMB.dirHolderFL.validaDireccion and direccionMB.dirHolderFL.validaTipoDireccion}">
+						<p:outputLabel />
+						<p:outputLabel value="#{labelDireccion.lbl_dir_tv}" />
+						<p:outputLabel value="#{labelDireccion.lbl_dir_nv}" />
+						<p:outputLabel value="#{labelDireccion.lbl_dir_lv}" rendered="#{direccionMB.dirHolderFL.tipoViaPriNumerico or direccionMB.dirHolderFL.tipoViaSecNumerico}"/>
+						<p:outputLabel rendered="#{!direccionMB.dirHolderFL.tipoViaPriNumerico and !direccionMB.dirHolderFL.tipoViaSecNumerico}"/>
+						<p:outputLabel value="#{labelDireccion.lbl_dir_bv}" rendered="#{direccionMB.dirHolderFL.tipoViaPriNumerico or direccionMB.dirHolderFL.tipoViaSecNumerico}"/>
+						<p:outputLabel rendered="#{!direccionMB.dirHolderFL.tipoViaPriNumerico and !direccionMB.dirHolderFL.tipoViaSecNumerico}"/>
+						<p:outputLabel value="#{labelDireccion.lbl_dir_lbv}" rendered="#{direccionMB.dirHolderFL.tipoViaPriNumerico or direccionMB.dirHolderFL.tipoViaSecNumerico}"/>
+						<p:outputLabel rendered="#{!direccionMB.dirHolderFL.tipoViaPriNumerico and !direccionMB.dirHolderFL.tipoViaSecNumerico}"/>
+						<p:outputLabel value="#{labelDireccion.lbl_dir_np}" rendered="#{direccionMB.dirHolderFL.tipoViaPriNumerico or direccionMB.dirHolderFL.tipoViaSecNumerico}"/>
+						<p:outputLabel rendered="#{!direccionMB.dirHolderFL.tipoViaPriNumerico and !direccionMB.dirHolderFL.tipoViaSecNumerico}"/>
+						<p:outputLabel value="#{labelDireccion.lbl_dir_ca}" rendered="#{direccionMB.dirHolderFL.tipoViaPriNumerico or direccionMB.dirHolderFL.tipoViaSecNumerico}"/>
+						<p:outputLabel rendered="#{!direccionMB.dirHolderFL.tipoViaPriNumerico and !direccionMB.dirHolderFL.tipoViaSecNumerico}"/>
+
+						<p:outputLabel value="#{labelDireccion.t_title_vp}" />
+						<h:panelGroup>
+						<p:selectOneMenu id="codTipoViaPrincipal" filter="true" label="#{labelDireccion.lbl_tvp}"
+							value="#{direccionMB.dirFL.direccionDTO.tipoViaPrincipal.codigo}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.opcTipoVia}" />
+							<p:ajax event="change" partialSubmit="true" update="datos-principal" global="false" 
+								listener="#{direccionMB.actTipoViaPrincipal(direccionMB.dirFL.direccionDTO.tipoViaPrincipal.codigo, direccionMB.dirFL.direccionDTO.municipio.id)}" />
+						</p:selectOneMenu>
+						</h:panelGroup>
+						<h:panelGroup>
+							<p:selectOneMenu id="codNombreViaPrincipal" filter="true" label="#{labelDireccion.lbl_nvp}"
+								value="#{direccionMB.dirFL.direccionDTO.nombreViaPrincipal.codigo}" rendered="#{!direccionMB.dirHolderFL.tipoViaPriNumerico}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+								<f:selectItems value="#{catalogoDireccionMB.opcNombreViaPri}" />
+								<p:ajax event="change" listener="#{direccionMB.actualizarTextoDir()}" update="txtDir" global="false" />
+							</p:selectOneMenu>
+							<p:inputText value="#{direccionMB.dirFL.direccionDTO.numeroViaPrincipal}" label="#{labelDireccion.lbl_num_vp}"
+								rendered="#{direccionMB.dirHolderFL.tipoViaPriNumerico}" size="15">
+								<p:ajax event="blur" update="txtDir" global="false" />
+							</p:inputText>
+						</h:panelGroup>
+						<h:panelGroup>
+						<p:selectOneMenu id="letraViaPrincipal" filter="true"
+							value="#{direccionMB.dirFL.direccionDTO.letraViaPrincipal}" rendered="#{direccionMB.dirHolderFL.tipoViaPriNumerico}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.opcLetraVia}" />
+							<p:ajax event="change" update="datos-principal" global="false"  
+								listener="#{direccionMB.actLetraViaPrincipal(direccionMB.dirFL.direccionDTO.letraViaPrincipal, direccionMB.dirFL.direccionDTO.bisViaPrincipal)}" />
+						</p:selectOneMenu>
+						</h:panelGroup>
+						<h:panelGroup>
+						<p:selectOneMenu id="bisViaPrincipal" filter="true" value="#{direccionMB.dirFL.direccionDTO.bisViaPrincipal}"
+							rendered="#{direccionMB.dirHolderFL.tipoViaPriNumerico}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.opcBisVia}" />
+							<p:ajax event="change" update="datos-principal" global="false"  
+								listener="#{direccionMB.actLetraViaPrincipal(direccionMB.dirFL.direccionDTO.letraViaPrincipal, direccionMB.dirFL.direccionDTO.bisViaPrincipal)}" />
+						</p:selectOneMenu>
+						</h:panelGroup>
+						<h:panelGroup>
+						<p:selectOneMenu id="letraBisViaPrincipal" filter="true" value="#{direccionMB.dirFL.direccionDTO.letraBisViaPrincipal}"
+							rendered="#{direccionMB.dirHolderFL.tipoViaPriNumerico}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.opcLetraVia}" />
+							<p:ajax event="change" update="txtDir" global="false" />
+						</p:selectOneMenu>
+						</h:panelGroup>
+						<p:outputLabel value="" />
+						<h:panelGroup>
+						<p:selectOneMenu id="cardiViaPrincipal" filter="true" value="#{direccionMB.dirFL.direccionDTO.cardinalidadViaPrincipal.codigo}"
+							rendered="#{direccionMB.dirHolderFL.tipoViaPriNumerico}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.opcCardinalidadDir}" />
+							<p:ajax event="change" listener="#{direccionMB.actualizarTextoDir()}" update="txtDir" global="false" />
+						</p:selectOneMenu>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelDireccion.t_title_vs}" />
+						<h:panelGroup>
+						<p:selectOneMenu id="codTipoViaSecundaria" filter="true" label="#{labelDireccion.lbl_tvs}" 
+							value="#{direccionMB.dirFL.direccionDTO.tipoViaSecundaria.codigo}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.opcTipoVia}" />
+							<p:ajax event="change" update="datos-principal" global="false" 
+								listener="#{direccionMB.actTipoViaSecundaria(direccionMB.dirFL.direccionDTO.tipoViaSecundaria.codigo, direccionMB.dirFL.direccionDTO.municipio.id)}" />
+						</p:selectOneMenu>
+						</h:panelGroup>
+						<h:panelGroup>
+							<p:selectOneMenu id="codNombreViaSecundaria" filter="true" label="#{labelDireccion.lbl_nvs}"
+								value="#{direccionMB.dirFL.direccionDTO.nombreViaSecundaria.codigo}" rendered="#{!direccionMB.dirHolderFL.tipoViaSecNumerico}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+								<f:selectItems value="#{catalogoDireccionMB.opcNombreViaSec}" />
+								<p:ajax event="change" listener="#{direccionMB.actualizarTextoDir()}" update="txtDir" global="false" />
+							</p:selectOneMenu>
+							<p:inputText value="#{direccionMB.dirFL.direccionDTO.numeroViaSecundaria}" label="#{labelDireccion.lbl_num_vs}"
+								rendered="#{direccionMB.dirHolderFL.tipoViaSecNumerico}" size="15">
+								<p:ajax event="blur" update="txtDir" global="false" />
+							</p:inputText>
+						</h:panelGroup>
+						<h:panelGroup>
+						<p:selectOneMenu id="letraViaSecundaria" filter="true" value="#{direccionMB.dirFL.direccionDTO.letraViaSecundaria}"
+							rendered="#{direccionMB.dirHolderFL.tipoViaSecNumerico}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.opcLetraVia}" />
+							<p:ajax event="change" update="datos-principal" global="false"
+								listener="#{direccionMB.actLetraViaSecundaria(direccionMB.dirFL.direccionDTO.letraViaSecundaria, direccionMB.dirFL.direccionDTO.bisViaSecundaria)}"	/>
+						</p:selectOneMenu>
+						</h:panelGroup>
+						<h:panelGroup>
+						<p:selectOneMenu id="bisViaSecundaria" filter="true" value="#{direccionMB.dirFL.direccionDTO.bisViaSecundaria}"
+							rendered="#{direccionMB.dirHolderFL.tipoViaSecNumerico}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.opcBisVia}" />
+							<p:ajax event="change" update="datos-principal" global="false" 
+								listener="#{direccionMB.actLetraViaSecundaria(direccionMB.dirFL.direccionDTO.letraViaSecundaria, direccionMB.dirFL.direccionDTO.bisViaSecundaria)}"	/>
+						</p:selectOneMenu>
+						</h:panelGroup>
+						<h:panelGroup>
+						<p:selectOneMenu id="letraBisViaSecundaria" filter="true" value="#{direccionMB.dirFL.direccionDTO.letraBisViaSecundaria}"
+							rendered="#{direccionMB.dirHolderFL.tipoViaSecNumerico}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.opcLetraVia}" />
+							<p:ajax event="change" update="txtDir" global="false" />
+						</p:selectOneMenu>
+						</h:panelGroup>
+						<p:inputText value="#{direccionMB.dirFL.direccionDTO.numeroPlacaDomiciliaria}" rendered="#{direccionMB.dirHolderFL.tipoViaSecNumerico}" size="10">
+							<p:ajax event="blur" update="txtDir" global="false" />
+						</p:inputText>
+						<h:panelGroup>
+						<p:selectOneMenu id="cardiViaSecundaria" filter="true" value="#{direccionMB.dirFL.direccionDTO.cardinalidadViaSecundaria.codigo}"
+							rendered="#{direccionMB.dirHolderFL.tipoViaSecNumerico}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+							<f:selectItems value="#{catalogoDireccionMB.opcCardinalidadDir}" />
+							<p:ajax event="change" listener="#{direccionMB.actualizarTextoDir()}" update="txtDir" global="false" />
+						</p:selectOneMenu>
+						</h:panelGroup>
+					</h:panelGrid>
+					
+					<!-- 4 -->
+					
+					<h:panelGrid id="panel-formulario-complemento" columns="2" styleClass="center-block" columnClasses="label-col input-col">
+						<p:outputLabel value="#{labelDireccion.lbl_comp}" />
+						<p:inputTextarea value="#{direccionMB.dirFL.direccionDTO.complemento}" maxlength="150" rows="1" cols="50">
+							<p:ajax event="blur" update="txtDir" global="false" />
+						</p:inputTextarea>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<!-- 5 -->
+
+				<p:panel id="texto-direccion" legend="#{labelDireccion.lbl_dir}">
+					<h:panelGrid columns="1" styleClass="center-block">
+						<p:outputLabel id="txtDir" style="font-size:200%;font-weight:bold" value="#{direccionMB.dirFL.direccionDTO.toString()}" />
+					</h:panelGrid>
+				</p:panel>
+
+				<!-- 6 -->
+
+				<h:panelGrid id="btnRegistrar" styleClass="center-block"
+					cellspacing="5" columns="3">
+					<p:commandButton id="btnLimpiar"
+						action="#{direccionMB.limpiarDatos()}" icon="c2-icon-limpiar"
+						process="@this"
+						update="form-ingreso-direccion"
+						immediate="true" value="#{lbComun.btnLimpiar}">
+						<p:resetInput target="form-ingreso-direccion" />
+						<p:tooltip for="btnLimpiar" value="#{lbComun.tooltip_limpiar}" />
+					</p:commandButton>
+					<p:commandButton id="btnAgregarDet"
+						action="#{direccionMB.registrarDireccion()}"
+						icon="c2-icon-agregar-det" 
+						value="#{lbComun.btnAgregarDet}" process="@form"
+						update="form-ingreso-direccion">
+					</p:commandButton>
+					<p:commandButton id="btnVolver"
+						action="#{direccionMB.volver()}" icon="c2-icon-volver"
+						process="@this" immediate="true" value="#{lbComun.btnVolver}"
+						oncomplete="PF('dialogoDireccion').hide();">
+						<p:tooltip for="btnVolver" value="#{lbComun.tooltip_volver}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}"
+							message="#{lbComun.msg_confirm_volver_cancelar}"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+				</h:panelGrid>
+
+			</h:panelGroup>
+
+		</h:form>
+	</p:dialog>
+
+	<script>
+ 	$(document).ready(function() {
+		if (#{direccionMB.dirHolderFL.popup}) {
+			PF('dialogoDireccion').show();	
+		}
+ 	});
+	</script>
+
+</ui:composition>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+	<ui:define name="contenido">
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario" header="#{labelRango.titulo_editar_rango}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_edicion}">	
+					<p:fieldset id="datos-rango" styleClass="fieldset-formulario" legend="#{labelRango.label_datos_rango}">			
+						<h:panelGrid id="panel-formulario" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">
+							<!--Componentes del formulario 2 o 4 columnas-->
+							
+							<p:outputLabel value="#{labelRango.label_estado_envio_correo}"/>
+							<h:outputText value="#{rangoFL.rangoModificar.alertaStock ? labelRango.label_enviado : labelRango.label_no_enviado}" />
+												
+							
+							<p:outputLabel value="#{labelRango.label_tipo_formulario}" styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selTipoFormulario" value="#{rangoFL.rangoModificar.tipoFormulario.id}" required="true" requiredMessage="#{labelGeneral.val_campo_requerido}">									
+									<f:selectItems value="#{fachadaCatalogosMB.catTipoFormulario()}" />
+								</p:selectOneMenu>
+								<p:message for="selTipoFormulario" />
+							</h:panelGroup>								
+							<p:outputLabel value="#{labelRango.label_numero_inicial_form}" styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="numeroInicial" value="#{rangoFL.rangoModificar.numeroInicial}" maxlength="50" required="true" requiredMessage="#{labelGeneral.val_campo_requerido}"></p:inputText>
+								<p:message for="numeroInicial" />
+							</h:panelGroup>
+							<p:outputLabel value="#{labelRango.label_numero_final_form}" styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="numeroFinal" value="#{rangoFL.rangoModificar.numeroFinal}" maxlength="50" required="true" requiredMessage="#{labelGeneral.val_campo_requerido}"></p:inputText>
+								<p:message for="numeroFinal" />
+							</h:panelGroup>							
+						</h:panelGrid>	
+					</p:fieldset>			
+				
+					<p:fieldset id="datos-autorizacion" styleClass="fieldset-formulario" legend="#{labelRango.label_datos_autorizacion}">			
+						<h:panelGrid columns="2" id="panelImagen" styleClass="center-block" columnClasses="label-col">
+							<p:outputLabel value="#{labelRango.label_fecha_autorizacion}" styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:calendar id="fechaAutorizacion" value="#{rangoFL.rangoModificar.fechaAutorizacion}" navigator="true" pattern="#{webPrm.lab_calendar_pattern}" required="true"
+										requiredMessage="#{labelGeneral.val_campo_requerido}" maxdate="new java.util.Date()">
+									<p:watermark for="fechaAutorizacion" value="#{webPrm.lab_calendar_mask_pattern}" />
+								</p:calendar>
+								<p:message for="fechaAutorizacion" />
+							</h:panelGroup>						
+								
+							<p:outputLabel value="#{labelRango.label_documento_autorizacion}"></p:outputLabel>
+							<h:panelGrid columns="1">
+								<p:fileUpload id="uploadFile"
+									fileUploadListener="#{rangosMB.cargarArchivo}"
+									mode="advanced" dragDropSupport="false" fileLimit="1"
+									invalidFileMessage="#{labelRango.invalidFileMessage}"
+									fileLimitMessage="#{labelRango.fileLimitMessage}"
+									label="#{labelRango.label_examinar}"
+									uploadLabel="#{labelRango.label_cargar}"
+									cancelLabel="#{labelRango.label_cancelar}"
+									update="panelImagen"
+									sizeLimit="#{rangosMB.tamanioMaximoArch}" 
+									allowTypes="#{rangosMB.extensionesPermitidas}" process="@this,fechaAutorizacion"
+									invalidSizeMessage="#{rangosMB.mesErrLimitSize}"></p:fileUpload>
+								<p:message id="msgFileRequired" for="uploadFile" display="text" />
+								<h:outputText id="msgFileUploaded"
+									value="#{labelRango.label_archivo_cargado}: #{rangosMB.nombreArchivo}"								
+									style="font-weight: bold;" />
+							</h:panelGrid>
+						</h:panelGrid>
+					</p:fieldset>
+					
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5"> 
+						<!--Boton Guardar-->
+						<p:commandButton id="btnGuardar" action="CONTINUAR" icon="c2-icon-guardar" process="@form" value="#{lbComun.btnGuardar}" update=":messages :form-ingreso">
+							<p:tooltip for="btnGuardar" value="#{labelRango.tooltip_btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton> 						
+						<!--Boton Volver-->
+						<p:commandButton id="btnCancelar" action="VOLVER" icon="c2-icon-cancelar" process="@this" immediate="true" value="#{lbComun.btnVolver}">
+							<p:tooltip for="btnCancelar" value="#{labelNumeracion.tooltip_btnVolver}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+						</p:commandButton>						
+					</h:panelGrid>
+					
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

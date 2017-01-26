@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+
+	<ui:define name="contenido">
+
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario" header="#{labelRelacionEstadosForm.tit_actualizar_relacion_estados}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_registro}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block" columns="2" columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+
+						<p:outputLabel value="#{labelRelacionEstadosForm.lbl_tipo_formualario}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenTipForm" value="#{relacionEstadoFormularioHolderFL.relacionEstados.tipoFormulario.id}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" disabled="true">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" noSelectionOption="true"/>
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoFormulario()}" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenTipForm" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelRelacionEstadosForm.lbl_estado_form_actual}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenEstAct" value="#{relacionEstadoFormularioHolderFL.relacionEstados.estadoFormularioActual.id}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" disabled="true">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" noSelectionOption="true" />
+								<f:selectItems value="#{fachadaCatalogosMB.catEstadoFormulario()}" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenEstAct" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelRelacionEstadosForm.lbl_estado_form_siguiente}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenEstSig" value="#{relacionEstadoFormularioHolderFL.relacionEstados.estadoFormularioSiguiente.id}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" noSelectionOption="true" />
+								<f:selectItems value="#{fachadaCatalogosMB.catEstadoFormulario()}" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenEstSig" />
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<!--Boton Guardar-->
+						<p:commandButton id="btnGuardar" action="CONTINUAR" icon="c2-icon-guardar" process="@form" value="#{lbComun.btnGuardar}"
+							update=":messages :form-ingreso">
+							<p:tooltip for="btnGuardar" value="#{labelRelacionEstadosForm.tooltip_btn_guardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" action="VOLVER" icon="c2-icon-cancelar" process="@this" immediate="true" value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{labelRelacionEstadosForm.tooltip_btn_cancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+
+</ui:composition>

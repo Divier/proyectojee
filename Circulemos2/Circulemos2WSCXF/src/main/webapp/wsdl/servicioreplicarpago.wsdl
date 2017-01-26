@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ServicioReplicarPagoService" targetNamespace="http://recepcion.recaudo.ws.c2.datatools.com.co/" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://recepcion.recaudo.ws.c2.datatools.com.co/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://recepcion.recaudo.ws.c2.datatools.com.co/" schemaLocation="servicioreplicarpago_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="replicarPago">
+    <wsdl:part name="parameters" element="tns:replicarPago">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="replicarPagoResponse">
+    <wsdl:part name="parameters" element="tns:replicarPagoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="IServicioReplicarPago">
+    <wsdl:operation name="replicarPago">
+      <wsdl:input name="replicarPago" message="tns:replicarPago">
+    </wsdl:input>
+      <wsdl:output name="replicarPagoResponse" message="tns:replicarPagoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServicioReplicarPagoServiceSoapBinding" type="tns:IServicioReplicarPago">
+	<wsp:PolicyReference URI="#SecurityServiceBindingPolicy" />
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="replicarPago">
+      <soap:operation soapAction="urn:ReplicarPago" style="document"/>
+      <wsdl:input name="replicarPago">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="replicarPagoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ServicioReplicarPagoService">
+    <wsdl:port name="ServicioReplicarPagoPort" binding="tns:ServicioReplicarPagoServiceSoapBinding">
+      <soap:address location="http://localhost:9090/ServicioReplicarPagoPort"/>
+    </wsdl:port>
+  </wsdl:service>
+  
+	<!-- Token en texto plano -->
+	<wsp:Policy wsu:Id="SecurityServiceBindingPolicy">
+		<wsp:ExactlyOne>
+			<wsp:All>
+				<sp:SupportingTokens
+					xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
+					<wsp:Policy>
+						<sp:UsernameToken
+							sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
+							<wsp:Policy>
+								<sp:WssUsernameToken10 />
+							</wsp:Policy>
+						</sp:UsernameToken>
+					</wsp:Policy>
+				</sp:SupportingTokens>
+			</wsp:All>
+		</wsp:ExactlyOne>
+	</wsp:Policy>
+</wsdl:definitions>

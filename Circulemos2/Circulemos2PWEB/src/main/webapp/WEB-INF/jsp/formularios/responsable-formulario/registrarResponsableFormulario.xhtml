@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario" header="#{labelResponsableFormulario.tit_registrar_responsable}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_registro}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block" columns="4" columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+
+						<p:outputLabel value="#{labelResponsableFormulario.lbl_organismo_transito}" />
+						<p:outputLabel
+							value="#{responsableFormularioFL.organismoTransitoDTO.codigoOrganismo} - #{responsableFormularioFL.organismoTransitoDTO.nombreOrganismo}" />
+
+						<p:outputLabel value="#{labelResponsableFormulario.lbl_tipo_responsable}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenTipResp" value="#{responsableFormularioFL.idTipoResponsableFormulario}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" noSelectionOption="true" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTiposResponsableFormulario()}" />
+								<p:ajax event="valueChange" listener="#{responsablesFormulariosMB.limpiarCampoResponsable()}" process="@this" update=":form-ingreso:btnBuscar :form-ingreso:txtNombreResp" global="false" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenTipResp" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelResponsableFormulario.lbl_nombre_responsable_formulario}" styleClass="campo-obligatorio" />
+						<h:panelGroup layout="block" styleClass="inline-block">
+							<!--Input requerido-->
+							<p:inputText id="txtNombreResp" value="#{responsableFormularioFL.identificacionResponsable} - #{responsableFormularioFL.nombre}" readonly="true" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" />
+							<!--Boton-->
+							<p:commandButton id="btnBuscar" action="BUSCAR" icon="c2-icon-consultar" immediate="true" styleClass="inline-btn"
+								title="#{labelResponsableFormulario.tooltip_btn_consultar_persona}" disabled="#{responsableFormularioFL.idTipoResponsableFormulario == null}">
+								<p:tooltip for="btnBuscar" value="#{labelResponsableFormulario.tooltip_btn_buscar}" />
+							</p:commandButton>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelResponsableFormulario.lbl_fec_ini_servicio}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar id="calFecIniSer" value="#{responsableFormularioFL.responsableFormulario.fechaInicioVincula}" navigator="true"
+								pattern="#{webPrm.lab_calendar_pattern}" required="true" requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<p:watermark for="calFecIniSer" value="#{webPrm.lab_calendar_mask_pattern}" />
+								<p:ajax event="dateSelect" process="@this" update="calFecFinSer" global="false" />
+							</p:calendar>
+							<p:message for="calFecIniSer" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelResponsableFormulario.lbl_fec_fin_servicio}" />
+						<h:panelGroup>
+							<p:calendar id="calFecFinSer" value="#{responsableFormularioFL.responsableFormulario.fechaFinVincula}" navigator="true"
+								pattern="#{webPrm.lab_calendar_pattern}" mindate="#{responsableFormularioFL.responsableFormulario.fechaInicioVincula}">
+								<p:watermark for="calFecFinSer" value="#{webPrm.lab_calendar_mask_pattern}" />
+							</p:calendar>
+							<p:message for="calFecFinSer" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelResponsableFormulario.lbl_correo}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="txtCorreo" value="#{responsableFormularioFL.responsableFormulario.correoResponsableFormulario}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" maxlength="50">
+								<f:validator validatorId="co.com.datatools.util.jsf.EmailValidator" />
+								<p:ajax update="@this" global="false" />
+							</p:inputText>
+							<p:message for="txtCorreo" />
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<!--Boton Guardar-->
+						<p:commandButton id="btnGuardar" action="CONTINUAR" icon="c2-icon-guardar" process="@form" value="#{lbComun.btnGuardar}"
+							update=":messages :form-ingreso">
+							<p:tooltip for="btnGuardar" value="#{labelResponsableFormulario.tooltip_btn_guardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+
+						<!--Boton Limpiar-->
+						<p:commandButton id="btnLimpiar" action="LIMPIAR" icon="c2-icon-limpiar" process="@this" update=":form-ingreso" immediate="true"
+							value="#{lbComun.btnLimpiar}">
+							<p:tooltip for="btnLimpiar" value="#{lbComun.tooltip_limpiar}" />
+						</p:commandButton>
+
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" action="VOLVER" icon="c2-icon-cancelar" process="@this" immediate="true" value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{labelResponsableFormulario.tooltip_btn_cancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

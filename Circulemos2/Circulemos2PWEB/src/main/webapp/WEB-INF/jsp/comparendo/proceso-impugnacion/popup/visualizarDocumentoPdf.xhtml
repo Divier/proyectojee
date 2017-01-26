@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="form-pdfviewer">
+		<p:dialog widgetVar="dlgPdfviewer" id="dlg-pdfviewer" closable="false"
+			resizable="false" modal="true" appendTo="@(body)" dynamic="true"
+			closeOnEscape="false" width="50%" visible="#{visualizarDocumentoMB.visible}"
+			header="#{visualizarDocumentoMB.titulo}">
+			<p:ajax event="close" update="@form" listener="#{visualizarDocumentoMB.inicializarDatos()}" />
+			<h:panelGrid columns="1" cellpadding="5"
+				rendered="#{visualizarDocumentoMB.mensaje != null}">
+				<p:outputLabel value="#{visualizarDocumentoMB.mensaje}" />
+			</h:panelGrid>
+			<br />
+			<pe:documentViewer
+				rendered="#{visualizarDocumentoMB.documento != null}" height="500"
+				value="#{visualizarDocumentoMB.documento}" />
+			<br />
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<!--Boton Aceptar-->
+				<p:commandButton action="ACEPTAR" process="@this"
+					rendered="#{!visualizarDocumentoMB.visualizar}"
+					value="#{lbComun.btnAceptar}" onclick="PF('dlgPdfviewer').hide();">
+				</p:commandButton>
+				<!--Boton Volver-->
+				<p:commandButton id="btnCerrar"
+					rendered="#{visualizarDocumentoMB.visualizar}"
+					onclick="PF('dlgPdfviewer').hide();" icon="c2-icon-volver"
+					process="@this" immediate="true" value="#{lbComun.btnVolver}">
+					<p:tooltip for="btnCerrar" value="#{lbComun.btnVolver}" />
+				</p:commandButton>
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+</ui:composition>

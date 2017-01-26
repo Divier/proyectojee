@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelAdminPersona.tit_datos_demograficos}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminPersona.tit_consulta_datos_demograficos}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel value="#{labelAdminPersona.lbl_tipo_documento}" styleClass="campo-obligatorio" rendered="#{!datosDemograficosHolderFL.consultado}" />
+						<h:panelGroup rendered="#{!datosDemograficosHolderFL.consultado}">
+							<p:selectOneMenu id="tipoDocumento" value="#{datosDemograficosHolderFL.personaFiltro.tipoIdentificacion.id}"
+									required="true" requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />
+							</p:selectOneMenu>
+							<p:message for="tipoDocumento" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelAdminPersona.lbl_tipo_documento}" rendered="#{datosDemograficosHolderFL.consultado}" />
+						<p:outputLabel value="#{datosDemograficosHolderFL.personaConsultada.tipoIdentificacion.nombre}" rendered="#{datosDemograficosHolderFL.consultado}" />
+						
+						
+						<p:outputLabel value="#{labelAdminPersona.lbl_numero_documento}" styleClass="campo-obligatorio" rendered="#{!datosDemograficosHolderFL.consultado}"/>
+						<h:panelGroup rendered="#{!datosDemograficosHolderFL.consultado}">
+							<p:inputText id="numeroDocumento" value="#{datosDemograficosHolderFL.personaFiltro.numeroIdentificacion}" 
+								required="true" requiredMessage="#{labelGeneral.val_campo_requerido}" maxlength="20" />
+							<p:message for="numeroDocumento" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelAdminPersona.lbl_numero_documento}" rendered="#{datosDemograficosHolderFL.consultado}" />
+						<p:outputLabel value="#{datosDemograficosHolderFL.personaConsultada.numeroIdentificacion}" rendered="#{datosDemograficosHolderFL.consultado}" />
+						
+						<p:outputLabel value="#{labelAdminPersona.lbl_nombre}" rendered="#{datosDemograficosHolderFL.consultado}" />
+						<p:outputLabel value="#{datosDemograficosHolderFL.personaConsultada.getNombreCompleto()}" rendered="#{datosDemograficosHolderFL.consultado}" />
+					</h:panelGrid>
+					
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR" action="_op-CONSULTAR" icon="c2-icon-consultar"
+								process="@form" value="#{lbComun.btnConsultar}"
+								update=":messages :form-resultado :form-contenido :frmUsuarioNoExiste"
+								rendered="#{!datosDemograficosHolderFL.consultado}" >
+							<p:tooltip for="btnConsultar" value="#{lbComun.btnConsultar}" />
+						</p:commandButton>
+						<!--Boton Ver documentos -->
+						<p:commandButton id="btnVerDocumentos" icon="c2-icon-detalle" 
+								process="@this" value="#{labelAdminPersona.btn_ver_documentos}" 
+								action="#{datosDemograficosMB.verDocumentos()}" 
+								rendered="#{datosDemograficosHolderFL.consultado}" 
+								update=":messages :frmDocumentos" > 
+							<p:tooltip for="btnVerDocumentos" value="#{labelAdminPersona.btn_ver_documentos}" />
+						</p:commandButton>
+						<!-- Boton Ver no ubicabilidad -->
+						<p:commandButton id="btnVerUbicabilidad" action="#{datosDemograficosMB.verNoUbicabilidad()}" icon="c2-icon-detalle" 
+								process="@this" value="#{labelAdminPersona.btn_ver_detalle_ubicabilidad}" 
+								rendered="#{datosDemograficosHolderFL.consultado}"
+								update=":messages :frmDetalleNoUbicabilidad" >
+							<p:tooltip for="btnVerUbicabilidad" value="#{labelAdminPersona.btn_ver_detalle_ubicabilidad}" />
+						</p:commandButton>
+						<!--Boton cancelar-->
+						<p:commandButton id="btnCancelar" action="VOLVER" icon="c2-icon-cancelar"
+								process="@this" immediate="true" update=":messages :form-resultado :form-contenido"
+								value="#{lbComun.btnCancelar}" rendered="#{datosDemograficosHolderFL.consultado}" >
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{datosDemograficosHolderFL.personaConsultada != null and datosDemograficosHolderFL.historicosPersona.size() > 0}">
+
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<!-- Boton Ver Autorizacion -->
+						<p:commandButton id="btnVerAutorizacion" action="#{datosDemograficosMB.verAutorizacion()}" icon="c2-icon-detalle" 
+								process="@this" value="#{labelAdminPersona.btn_ver_autorizacion}" 
+								disabled="#{datosDemograficosHolderFL.historicoSeleccionado.idDocumento == null}" >
+							<p:tooltip for="btnVerAutorizacion" value="#{labelAdminPersona.tooltip_btn_ver_autorizacion}" />
+						</p:commandButton>
+						<!--Boton ver detalle direcciones-->
+						<p:commandButton id="btnVerDirecciones" action="#{datosDemograficosMB.verDirecciones()}" icon="c2-icon-detalle" 
+								process="@this" value="#{labelAdminPersona.btn_ver_detalle_direccion}" 
+								disabled="#{datosDemograficosHolderFL.historicoSeleccionado == null}"
+								update=":frmDetalleDirecciones" >
+							<p:tooltip for="btnVerDirecciones" value="#{labelAdminPersona.btn_ver_detalle_direccion}" />
+						</p:commandButton>
+						<!--Boton ver detalle telefonos-->
+						<p:commandButton id="btnVerTelefonos" action="#{datosDemograficosMB.verTelefonos()}" icon="c2-icon-detalle" 
+								process="@this" value="#{labelAdminPersona.btn_ver_detalle_telefono}" 
+								disabled="#{datosDemograficosHolderFL.historicoSeleccionado == null}"
+								update=":frmDetalleTelefonos" >
+							<p:tooltip for="btnVerTelefonos" value="#{labelAdminPersona.btn_ver_detalle_telefono}" />
+						</p:commandButton>
+						<!--Boton ver detalle direcciones-->
+						<p:commandButton id="btnVerCorreos" action="#{datosDemograficosMB.verCorreos()}" icon="c2-icon-detalle" 
+								process="@this" value="#{labelAdminPersona.btn_ver_detalle_correo}" 
+								disabled="#{datosDemograficosHolderFL.historicoSeleccionado == null}"
+								update=":frmDetalleCorreos" >
+							<p:tooltip for="btnVerCorreos" value="#{labelAdminPersona.btn_ver_detalle_correo}" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados" value="#{datosDemograficosHolderFL.historicosPersona}"
+					var="historico" rowKey="#{historico.id}"
+					selection="#{datosDemograficosHolderFL.historicoSeleccionado}" paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}" sortMode="multiple"
+					emptyMessage="#{labelGeneral.msj_consulta_ko}">
+
+					<p:ajax event="rowSelectRadio"
+						listener="#{datosDemograficosMB.validarTipoFuente()}"
+						process=":form-resultado:tabla-resultados"
+						update=":form-resultado:acciones-top" global="false" />
+						
+					<p:column selectionMode="single" />						
+
+					<!--Columnas Resultado Consulta-->
+					<p:column headerText="#{labelAdminPersona.lbl_fuente_ubicabilidad}">
+						<h:outputText value="#{historico.fuenteInformacion.nombre}" />
+					</p:column>
+					
+					<p:column headerText="#{labelAdminPersona.lbl_fecha_registro}">
+						<c2:outputDateLabel labelValue="#{historico.fechaUltimaActualizacion}" />
+					</p:column>
+					
+					<p:column headerText="#{labelAdminPersona.lbl_usuario}">
+						<h:outputText value="#{historico.usuarioRegistro.login}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+		<ui:include
+			src="/WEB-INF/jsp/persona/datosDemograficos/popups/popupVerAutorizacion.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/persona/datosDemograficos/popups/popupUsuarioNoExiste.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/persona/datosDemograficos/popups/popupDetalleCorreos.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/persona/datosDemograficos/popups/popupDetalleDirecciones.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/persona/datosDemograficos/popups/popupDetalleTelefonos.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/persona/datosDemograficos/popups/popupDetalleNoUbicabilidad.xhtml" />	
+		<ui:include
+			src="/WEB-INF/jsp/persona/datosDemograficos/popups/popupAdicionarNoUbicabilidad.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/persona/datosDemograficos/popups/popupVerDocumentos.xhtml" />
+			
+<!-- 			popupDetalleUbicabilidad.xhtml -->
+<!-- popupVerDocumentos.xhtml -->
+		
+	</ui:define>
+
+</ui:composition>

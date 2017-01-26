@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><xsd:schema xmlns:tns="http://ws.fachadaintegracionweb.datatools.com.co/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://ws.fachadaintegracionweb.datatools.com.co/">
+  <xsd:element name="consultarCatalogos" type="tns:consultarCatalogos"/>
+  <xsd:complexType name="consultarCatalogos">
+    <xsd:sequence/>
+  </xsd:complexType>
+  <xsd:element name="consultarCatalogosResponse" type="tns:consultarCatalogosResponse"/>
+  <xsd:complexType name="consultarCatalogosResponse">
+    <xsd:sequence/>
+  </xsd:complexType>
+</xsd:schema>

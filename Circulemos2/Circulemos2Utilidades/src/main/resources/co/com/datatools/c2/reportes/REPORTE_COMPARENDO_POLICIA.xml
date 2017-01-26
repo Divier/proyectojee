@@ -1,0 +1,156 @@
+<reporte>
+	<codigo>REPORTE_3</codigo>
+	<nombre>REPORTE COMPARENDOS POLICÍA</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>TIPO COMPARENDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>COMPARENDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA COMPARENDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>HORA IMPOSICIÓN</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>DIRECCIÓN COMPARENDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>ÁREA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DOCUMENTO INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NÚMERO DOCUMENTO INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>DIRECCIÓN INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>LOCALIDAD</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TELÉFONO INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DOCUMENTO AGENTE</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NÚMERO DOCUMENTO AGENTE</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>PLACA AGENTE</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE AGENTE</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NIT EMPRESA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>EMPRESA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO SERVICIO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CLASE VEHÍCULO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>PLACA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CÓDIGO DE INFRACCIÓN</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>INMOVILIZADO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>OBSERVACIONES AGENTE</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>OBSERVACIONES INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>PATIO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>GRADO EMBRIAGUEZ</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>RADIO DE ACCIÓN</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>MODALIDAD</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>LICENCIA DE TRANSITO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>LICENCIA DE CONDUCCIÓN</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CATEGORÍA LICENCIA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE EXPEDICIÓN LICENCIA CONDUCCIÓN</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE VENCIMIENTO LICENCIA CONDUCCIÓN</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NÚMERO IDENTIFICACIÓN PROPIETARIO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE PROPIETARIO</contenido>
+			<formato></formato>
+		</atributo>
+
+	</cabeceras>
+</reporte>

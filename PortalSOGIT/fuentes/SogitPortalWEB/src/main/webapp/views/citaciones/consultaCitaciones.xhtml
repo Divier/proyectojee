@@ -1,0 +1,213 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template-principal.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido"
+			style="margin-left: 200px; margin-right: 200px;">
+			<p:panel styleClass="panel-formulario"
+				header="#{bundleCitaciones['tit_con_citaciones']}">
+
+				<p:outputLabel styleClass="campo-opcional"
+					value="#{bundleCitaciones['msg_camp_opcionals']}"></p:outputLabel>
+
+				<p:fieldset styleClass="fieldset-formulario">
+					<h:panelGrid id="panel-formulario" columns="4"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<p:outputLabel value="#{bundleCitaciones['lbl_tip_documento']}"
+							styleClass="campo-opcional"></p:outputLabel>
+						<h:panelGroup>
+							<p:selectOneMenu id="selOnTipDoc"
+								value="#{consultaCitacionesMB.comparendoConsultaDTO.idIdentificacion}"
+								requiredMessage="#{bundleGeneral['val_campo_requerido']}">
+								<f:selectItem itemLabel="#{bundleGeneral['lbl_seleccione']}" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacionPersona()}" />
+								<p:ajax
+									listener="#{consultaCitacionesMB.verificarTipoDocumento()}"
+									process="@this selOnTipDoc" update="panel-formulario"></p:ajax>
+							</p:selectOneMenu>
+							<p:message for="selOnTipDoc"></p:message>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{bundleCitaciones['lbl_numero_documento']}"
+							styleClass="campo-opcional"></p:outputLabel>
+						<h:panelGroup rendered="#{!consultaCitacionesMB.alfanumerico}">
+							<p:inputText id="txtNumDoc" maxlength="20"
+								value="#{consultaCitacionesMB.comparendoConsultaDTO.identificacion}"
+								requiredMessage="#{bundleGeneral['val_campo_requerido']}"
+								validatorMessage="#{bundleGeneral['val_campo_numerico']}">
+								<f:validateRegex
+									pattern="#{consultaCitacionesMB.expresionNumerica}" />
+							</p:inputText>
+							<p:message for="txtNumDoc"></p:message>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{consultaCitacionesMB.alfanumerico}">
+							<p:inputText id="txtNumDocAlfn" maxlength="20"
+								value="#{consultaCitacionesMB.comparendoConsultaDTO.identificacion}"
+								requiredMessage="#{bundleGeneral['val_campo_requerido']}"
+								validatorMessage="#{bundleGeneral['msg_error_alfanumerico']}">
+								<f:validateRegex
+									pattern="#{consultaCitacionesMB.expresionAlfanumerica}" />
+							</p:inputText>
+							<p:message for="txtNumDocAlfn"></p:message>
+						</h:panelGroup>
+
+						<p:outputLabel styleClass="campo-opcional"
+							value="#{bundleCitaciones['lbl_a_imposicion']}"></p:outputLabel>
+						<h:panelGroup>
+							<p:selectOneMenu id="calFiltroAnio"
+								value="#{consultaCitacionesMB.comparendoConsultaDTO.anioInfraccion}">
+								<f:selectItem itemLabel="#{bundleGeneral['lbl_seleccione']}" />
+								<f:selectItems value="#{calendarioMB.anios}" />
+							</p:selectOneMenu>
+							<p:message for="calFiltroAnio" />
+						</h:panelGroup>
+
+						<p:outputLabel styleClass="campo-opcional"
+							value="#{bundleCitaciones['lbl_numero_citacion']}"></p:outputLabel>
+						<h:panelGroup>
+							<p:inputText id="numCit" maxlength="20"
+								validatorMessage="#{bundleGeneral['msg_error_alfanumerico']}"
+								value="#{consultaCitacionesMB.comparendoConsultaDTO.numeroCitacion}">
+								<f:validateRegex
+									pattern="#{consultaCitacionesMB.expresionAlfanumerica}" />
+							</p:inputText>
+							<p:message for="numCit" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{bundleCitaciones['lbl_placa_vehiculo']}"
+							styleClass="campo-opcional"></p:outputLabel>
+						<h:panelGroup>
+							<p:inputText id="placaVehiculo" maxlength="10"
+								validatorMessage="#{bundleCitaciones['msg_error_placa']}"
+								value="#{consultaCitacionesMB.comparendoConsultaDTO.placaVehiculo}">
+								<f:validateRegex
+									pattern="#{consultaCitacionesMB.expresionAlfanumerica}" />
+							</p:inputText>
+							<p:message for="placaVehiculo" />
+						</h:panelGroup>
+					</h:panelGrid>
+					<h:panelGrid id="panel-formulario-captcha" columns="1"
+						styleClass="center-block">
+						<h:panelGroup>
+							<p:captcha id="captcha" label="Captcha" theme="white"
+								language="es"
+								validatorMessage="#{bundleGeneral['val_campo_captcha']}"
+								requiredMessage="#{bundleGeneral['val_campo_requerido']}"></p:captcha>
+							<p:message for="captcha"></p:message>
+						</h:panelGroup>
+					</h:panelGrid>
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton
+							action="#{consultaCitacionesMB.consultarComparendos()}"
+							icon="c2-icon-consultar" process="@form" ajax="false"
+							value="#{bundleGeneral['btn_consulta']}"
+							update=":messages :form-resultado :form-contenido">
+						</p:commandButton>
+						<p:commandButton action="#{consultaCitacionesMB.menu()}"
+							icon="fa fa-home" process="@this"
+							value="#{bundleGeneral['btn_volver']}">
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{consultaCitacionesMB.comparendoReplicaDTOs.size() > 0}">
+				<p:fieldset styleClass="fieldset-formulario">
+					<p:toolbar id="acciones-top">
+						<f:facet name="left">
+							<!--Boton Ver detalle-->
+							<p:commandButton id="btnVerDet"
+								action="#{consultaCitacionesMB.consultarDetalleComparendo()}"
+								oncomplete="PF('popUpDetCitn').show();" update=":frmDetCitn"
+								icon="c2-icon-detalle" process="@this"
+								value="#{bundleGeneral['btn_ver_detalle']}"
+								disabled="#{consultaCitacionesMB.comparendoReplicaSelDTO==null}">
+								<p:tooltip for="btnVerDet"
+									value="#{labelAdminComparendo.tooltip_btnVerDet}" />
+							</p:commandButton>
+							<!--Boton Ver Evidencias-->
+							<p:commandButton id="btnVerEvidencias" rendered="false"
+								action="#{consultaCitacionesMB.consultarEvidencias()}"
+								oncomplete="PF('popUpDetEvin').show();" update=":frmDetEvin"
+								icon="c2-icon-consultar" process="@this"
+								value="#{bundleCitaciones['lbl_ver_evidencias']}"
+								disabled="#{consultaCitacionesMB.comparendoReplicaSelDTO==null}">
+								<p:tooltip for="btnVerEvidencias" value="Ver evidencias" />
+							</p:commandButton>
+						</f:facet>
+					</p:toolbar>
+
+					<p:dataTable id="tabla-resultados"
+						value="#{consultaCitacionesMB.comparendoReplicaDTOs}"
+						var="registro"
+						selection="#{consultaCitacionesMB.comparendoReplicaSelDTO}"
+						rowKey="#{registro.numeroFactura}" paginator="true"
+						sortMode="multiple"
+						paginatorTemplate="#{bundleGeneral['param_paginator_template']}"
+						rowsPerPageTemplate="#{bundleGeneral['param_rows_per_page']}"
+						rows="#{bundleGeneral['param_initial_rows']}">
+
+						<p:ajax event="rowSelectRadio"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this" global="false" />
+
+						<p:column selectionMode="single" />
+
+						<p:column headerText="#{bundleCitaciones['lbl_est_citacion']}">
+							<p:outputLabel value="#{registro.estadoCitacion}" />
+						</p:column>
+
+						<p:column headerText="#{bundleCitaciones['lbl_numero_citacion']}">
+							<p:outputLabel value="#{registro.numeroCitacion}" />
+						</p:column>
+
+						<p:column headerText="#{bundleCitaciones['lbl_placa_vehiculo']}">
+							<p:outputLabel value="#{registro.placaVehiculo}" />
+						</p:column>
+
+						<p:column headerText="#{bundleCitaciones['lbl_fch_imposicion']}">
+							<p:outputLabel value="#{registro.fechaImposicion}">
+								<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="#{bundleCitaciones['lbl_sl_citacion']}">
+							<p:outputLabel value="#{registro.saldoComparendo}">
+								<f:convertNumber pattern="#{utilidadMB.formatoMonedaCompleta}"
+									type="currency" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="#{bundleCitaciones['lbl_int_mora']}">
+							<p:outputLabel value="#{registro.valorIntereses}">
+								<f:convertNumber pattern="#{utilidadMB.formatoMonedaCompleta}"
+									type="currency" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="#{bundleCitaciones['lbl_total']}">
+							<p:outputLabel value="#{registro.valorComparendo}">
+								<f:convertNumber pattern="#{utilidadMB.formatoMonedaCompleta}"
+									type="currency" />
+							</p:outputLabel>
+						</p:column>
+
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+		<ui:include src="/views/citaciones/popup/detalleCitacion.xhtml" />
+		<ui:include src="/views/citaciones/popup/detalleEvidencias.xhtml" />
+	</ui:define>
+</ui:composition>

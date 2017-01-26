@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="cargueMasivoUbicabilidadHolderFL"
+		class="co.com.datatools.c2.managed_bean.administracion.persona.cargue_masivo_ubicabilidad.CargueMasivoUbicabilidadHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/persona/cargueMasivoUbicabilidad/cargueMasivoUbicabilidad.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('cargueMasivoUbicabilidadMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.cargueMasivoUbicabilidadMB.inicializar()" />
+		</on-entry>
+		<transition on="CANCELAR" to="CANCELAR" />
+	</view-state>
+
+	<action-state id="CANCELAR">
+		<evaluate
+			expression="externalContext.sessionMap.cargueMasivoUbicabilidadMB.cancelar()" />
+		<evaluate
+			expression="new co.com.datatools.c2.managed_bean.administracion.persona.cargue_masivo_ubicabilidad.CargueMasivoUbicabilidadHolderFL()"
+			result="flowScope.cargueMasivoUbicabilidadHolderFL"></evaluate>
+		<transition on="success" to="ingresar" />
+	</action-state>
+</flow>

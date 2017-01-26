@@ -1,0 +1,87 @@
+<reporte>
+	<codigo>REPORTE_5</codigo>
+	<nombre>REPORTE DE SOLICITUD DE DEVOLUCION DE DINERO</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>TIPO DOCUMENTO DE INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DOCUMENTO INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE DE INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CONSECUTIVO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE SOLICITUD</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>ESTADO DE SOLICITUD</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CAUSAL POR SALDO A FAVOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TOTAL SALDO PERMITIDO PARA DEVOLVER</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE DE FUNCIONARIO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>MEDIO DE DEVOLUCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>BANCO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE CHEQUE</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>BENEFICIARIO DE CHEQUE</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DE CHEQUE</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DE CUENTA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DE CUENTA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TITULAR DE CUENTA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DOCUMENTO DEL APODERADO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DOCUMENTO DEL APODERADO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE DEL APODERADO</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

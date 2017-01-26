@@ -1,0 +1,79 @@
+<reporte>
+	<codigo>REPORTE_1</codigo>
+	<nombre>REPORTE DE CARTERA DE COMPARENDOS PERSUASIVO</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>COMPARENDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA COMPARENDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOTIFICACION COMPARENDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA NOTIFICACION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DE COMPARENDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DOCUMENTO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>DESCRIPCION TIPO DOCUMENTO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NRO. DOCUMENTO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>DIRECCION INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TELEFONO INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CODIGO LEY</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>DESCRIPCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>VALOR NOMINAL</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>SALDO CARTERA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DE SERVICIO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CATEGORIA</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

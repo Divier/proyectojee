@@ -1,0 +1,125 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{recursosMB.toString()}" />
+			<f:event type="preRenderView"
+				listener="#{recursosMB.cargarListaAplicaciones()}" />
+			<f:event type="preRenderView"
+				listener="#{recursosMB.cargarListaOperaciones()}" />
+		</f:metadata>
+		<div>
+			<h2>
+				<h:outputText value="#{mensajesRecurso.titulo_registrar_recurso}"></h:outputText>
+			</h2>
+			<hr />
+			<h:form id="form-content_injComi">
+				<h:panelGrid columns="3" cellpadding="5"
+					styleClass="formulario-servicio">
+					<h:outputLabel for="app"
+						value="#{mensajesRecurso.label_aplicacion}:"
+						styleClass="campo-obligatorio" />
+					<p:selectOneMenu id="app" value="#{crearRecursoFL.idAplicacion}"
+						label="#{mensajesRecurso.label_aplicacion}" required="true">
+						<f:selectItem itemLabel="#{mensajesGeneral.label_seleccione}" />
+						<f:selectItems value="#{recursosFL.lAplicaciones}" />
+						<p:ajax event="valueChange" process="@this"
+							listener="#{recursosMB.quitarRecursoPadreCrear()}"
+							update=":form-content_injComi:padre,:form-content_injComi:botonQuitarPadre"></p:ajax>
+					</p:selectOneMenu>
+					<p:message for="app" id="msgApp" />
+
+					<h:outputLabel for="nombre"
+						value="#{mensajesRecurso.label_nombre_recurso}:"
+						styleClass="campo-obligatorio" />
+					<p:inputText id="nombre"
+						label="#{mensajesRecurso.label_nombre_recurso}"
+						value="#{crearRecursoFL.nombre}" required="true" maxlength="50" />
+					<p:message for="nombre" />
+
+					<h:outputLabel for="descripcion"
+						value="#{mensajesRecurso.label_descripcion_recurso}:"
+						styleClass="campo-obligatorio" />
+					<p:inputText id="descripcion"
+						label="#{mensajesRecurso.label_descripcion_recurso}"
+						value="#{crearRecursoFL.descripcion}" required="true"
+						maxlength="50" />
+					<p:message for="descripcion" />
+
+					<h:outputLabel value="#{mensajesRecurso.label_tiene_operaciones}"
+						styleClass="campo-obligatorio" />
+					<p:selectOneMenu id="tieneOperaciones"
+						value="#{crearRecursoFL.tieneOperaciones}">
+						<f:selectItems value="#{crearRecursoFL.lSiNo}" />
+						<p:ajax event="valueChange" process="@this"
+							update=":form-content_injComi:panel-operaciones"></p:ajax>
+					</p:selectOneMenu>
+					<p:message for="tieneOperaciones" />
+
+					<h:outputLabel for="padre"
+						value="#{mensajesRecurso.label_recurso_padre}:" styleClass="label-padding"/>
+					<h:panelGroup layout="block" styleClass="inline">
+						<p:inputText id="padre"
+							label="#{mensajesRecurso.label_recurso_padre}"
+							value="#{crearRecursoFL.recursoPadre}" required="true"
+							readonly="true" styleClass="input-fixed"/>
+						<p:commandButton id="botonQuitarPadre"
+							action="#{recursosMB.quitarRecursoPadreCrear()}"
+							disabled="#{crearRecursoFL.recursoPadre == null}"
+							styleClass="float-right" icon="c2-icon-eliminar" immediate="true"
+							update="@this,:form-content_injComi:msgApp,:form-content_injComi:padre"></p:commandButton>
+						<p:commandButton action="#{recursosMB.abrirBusquedaRecPadre()}"
+							styleClass="float-right" icon="c2-icon-consultar" immediate="true"
+							update=":form-content_injComi:msgApp :dialogBusqueda"></p:commandButton>
+					</h:panelGroup>
+					<p:message for="padre" />
+				</h:panelGrid>
+
+				<h:panelGroup id="panel-operaciones">
+					<p:panel rendered="#{crearRecursoFL.tieneOperaciones}"
+						header="#{mensajesRecurso.titulo_operaciones_recurso}"
+						toggleable="true">
+						<p:pickList id="pickListOperaciones"
+							value="#{crearRecursoFL.operaciones}" var="operacion"
+							itemValue="#{operacion}" itemLabel="#{operacion.nombreOperacion}"
+							converter="operacionPickListConverter" showCheckbox="true"
+							showSourceFilter="true" showTargetFilter="true"
+							filterMatchMode="contains">
+							<f:facet name="sourceCaption">
+								<p:outputLabel
+									value="#{mensajesRecurso.label_operaciones_disponibles}" />
+							</f:facet>
+							<f:facet name="targetCaption">
+								<p:outputLabel
+									value="#{mensajesRecurso.label_operaciones_seleccionadas}" />
+							</f:facet>
+							<p:ajax event="transfer" process="@this" />
+							<p:column style="width:85%;">
+								<h:outputText value="#{operacion.nombreOperacion}" />
+							</p:column>
+						</p:pickList>
+					</p:panel>
+				</h:panelGroup>
+
+				<h:panelGrid>
+					<f:facet name="footer">
+						<p:commandButton styleClass="_op-CREAR" action="_op-CREAR"
+							value="#{lbComun.btnGuardar}" icon="c2-icon-guardar" update="form-content_injComi"
+							process="form-content_injComi" />
+						<p:commandButton value="#{lbComun.btnCancelar}" icon="c2-icon-cancelar"
+							action="CANCELAR" immediate="true" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+			<ui:include src="/WEB-INF/flows/recursos/buscar-recursos.xhtml" />
+
+		</div>
+	</ui:define>
+</ui:composition>

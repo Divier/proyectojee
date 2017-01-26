@@ -1,0 +1,93 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{parametrosMB.toString()}" />
+		</f:metadata>
+		<div>
+			<h2>
+				<h:outputText value="#{parametrosBase.titulo_consultar_parametros}"></h:outputText>
+			</h2>
+			<hr />
+			<h:form id="form-content">
+				<h:panelGrid columns="3" cellpadding="5"
+					styleClass="formulario-servicio">
+					<h:outputLabel value="#{parametrosBase.label_nombre_parametro}:" />
+					<p:inputText id="nombre"
+						label="#{parametrosBase.label_nombre_parametro}"
+						value="#{parametrosFL.filtroNombre}" maxlength="150">
+					</p:inputText>
+					<p:message for="nombre" />
+					<f:facet name="footer">
+						<p:commandButton styleClass="_op-CONSULTAR" action="_op-CONSULTAR"
+							value="#{lbComun.btnConsultar}" icon="c2-icon-consultar" update="form-content" />
+						<p:commandButton value="#{lbComun.btnCancelar}" icon="c2-icon-cancelar"
+							action="CANCELAR" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+
+			<h:form id="form-result">
+				<p:panel header="#{mensajesGeneral.titulo_resultados_consulta}"
+					toggleable="true"
+					rendered="#{parametrosFL.resultadoConsulta.size()==0 and parametrosFL.consultaRealizada}">
+					<h:outputLabel value="#{mensajesGeneral.mensaje_no_resultados}" />
+				</p:panel>
+				<p:panel id="panelResultados"
+					header="#{mensajesGeneral.titulo_resultados_consulta}"
+					toggleable="true"
+					rendered="#{parametrosFL.resultadoConsulta.size()>0}">
+					<h:panelGrid id="panelBotones" columns="1">
+						<f:facet name="footer">
+							<p:commandButton styleClass="_op-EDITAR" action="_op-EDITAR"
+								value="#{lbComun.btnEditar}" icon="c2-icon-editar"
+								disabled="#{modificarParametroFL.parametroSeleccionado==null}" />
+						</f:facet>
+					</h:panelGrid>
+					<p:dataTable id="tablaResultados"
+						value="#{parametrosFL.resultadoConsulta}" var="parametro"
+						rowKey="#{parametro.id}"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						paginator="true"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}"
+						selection="#{modificarParametroFL.parametroSeleccionado}">
+						<p:ajax event="rowSelectRadio" update=":form-result:panelBotones"
+							process=":form-result:tablaResultados"></p:ajax>
+						<p:column selectionMode="single"/>
+
+						<p:column headerText="#{parametrosBase.label_nombre_parametro}"
+							style="width:25%" sortBy="#{parametro.nombre}">
+							<h:outputText value="#{parametro.nombre}" />
+						</p:column>
+						<p:column headerText="#{parametrosBase.label_descripcion_parametro}"
+							style="width:20%" sortBy="#{parametro.descripcion}">
+							<h:outputText value="#{parametro.descripcion}" />
+						</p:column>
+						<p:column headerText="#{parametrosBase.label_tipo_parametro}"
+							style="width:10%" sortBy="#{parametro.nombreTipoParametro}">
+							<h:outputText value="#{parametro.nombreTipoParametro}" />
+						</p:column>
+						<p:column headerText="#{parametrosBase.label_valor_parametro}"
+							style="width:38%" sortBy="#{parametro.valor}">
+							<h:outputText value="#{parametro.valor}" />
+						</p:column>
+
+						<p:column headerText="#{parametrosBase.label_es_editable}"
+							style="width:6%" sortBy="#{parametro.editable}">
+							<h:outputText
+								value="#{parametro.editable ? mensajesGeneral.label_si:mensajesGeneral.label_no}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

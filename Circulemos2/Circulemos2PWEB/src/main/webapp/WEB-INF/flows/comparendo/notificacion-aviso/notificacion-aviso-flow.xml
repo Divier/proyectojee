@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="notificarComparendoPorEdictoFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.notificacion_aviso.NotificarComparendoPorEdictoFL" />
+	<var name="notificarComparendoPorEdictoHolderFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.notificacion_aviso.NotificarComparendoPorEdictoHolderFL" />
+
+	<view-state id="ingresar" view="/WEB-INF/jsp/comparendo/notificacion-aviso/notificarComparendosPorEdicto.xhtml">
+		<on-entry>				
+			<evaluate expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('notificarComparendoPorEdictoMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR">
+		</transition>
+		<transition on="_op-CREAR" to="_op-CREAR">
+		</transition>
+		<transition on="_op-NOTIFICAR" to="_op-NOTIFICAR">
+		</transition>
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate expression="externalContext.sessionMap.notificarComparendoPorEdictoMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<action-state id="_op-CREAR">
+		<evaluate expression="externalContext.sessionMap.notificarComparendoPorEdictoMB.generarEdictoNotificacion()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<action-state id="_op-NOTIFICAR">
+		<evaluate expression="externalContext.sessionMap.notificarComparendoPorEdictoMB.notificar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+	
+	<end-state id="fin" />
+
+</flow>

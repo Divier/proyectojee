@@ -1,0 +1,43 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{operacionesMB.toString()}" />
+		</f:metadata>
+		<div>
+			<h2>
+				<h:outputText
+					value="#{mensajesOperacion.titulo_modificar_operacion}"></h:outputText>
+			</h2>
+			<hr />
+			<h:form id="form-content">
+				<h:panelGrid columns="3"
+					styleClass="formulario-servicio">
+					<h:outputLabel for="nombre"
+						value="#{mensajesOperacion.label_nombre_operacion}:"
+						styleClass="campo-obligatorio" />
+					<p:inputText id="nombre"
+						label="#{mensajesOperacion.label_nombre_operacion}"
+						value="#{modificarOperacionFL.operacionModificar.nombreOperacion}" required="true" maxlength="50" />
+					<p:message for="nombre" />
+				</h:panelGrid>
+				<h:panelGrid>
+					<f:facet name="footer">
+						<p:commandButton styleClass="_op-EDITAR" action="MODIFICAR-OPERACION"
+							value="#{lbComun.btnGuardar}" icon="c2-icon-guardar" update="form-content"
+							process="form-content" />
+						<p:commandButton value="#{lbComun.btnVolver}" icon="c2-icon-volver"
+							action="VOLVER" immediate="true" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

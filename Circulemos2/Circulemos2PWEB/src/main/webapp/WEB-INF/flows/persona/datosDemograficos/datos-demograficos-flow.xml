@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="datosDemograficosHolderFL"
+		class="co.com.datatools.c2.maganed_bean.persona.datos_demograficos.DatosDemograficosHolderFL" />
+
+	<input name="tipoDocumento" />
+	<input name="documento" />
+	<input name="subflujo" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/persona/datosDemograficos/consultarDatosDemograficos.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('datosDemograficosMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.datosDemograficosMB.inicializarDatos(tipoDocumento,documento,subflujo)" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('ubicabilidadMB')" />			
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="CONSULTAR_UBICABILIDAD" />
+		<transition on="VOLVER" to="VOLVER" />
+		<transition on="CREAR_PERSONA" to="IR_CREAR_PERSONA" />	
+	</view-state>
+
+	<action-state id="CONSULTAR_UBICABILIDAD">
+		<evaluate
+			expression="externalContext.sessionMap.datosDemograficosMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<action-state id="VOLVER">
+		<evaluate
+			expression="externalContext.sessionMap.datosDemograficosMB.cancelar()" />
+		<transition on="VOLVER" to="ingresar" />
+		<transition on="SALIR" to="SALIR_DATOS_DEMOGRAFICOS" />
+	</action-state>
+	
+	<action-state id="IR_CREAR_PERSONA">
+		<evaluate
+			expression="externalContext.sessionMap.datosDemograficosMB.irCrearPersona()" />
+		<transition on="success" to="UBICABILIDAD" >
+			<set name="flashScope.tipoDocumento" value="flowScope.datosDemograficosHolderFL.personaFiltro.tipoIdentificacion.id" />
+			<set name="flashScope.documento" value="flowScope.datosDemograficosHolderFL.personaFiltro.numeroIdentificacion" />
+			<set name="flashScope.soloGuardar" value="false" />
+			<set name="flashScope.ciudadanoPresente" value="null" />
+		</transition>
+	</action-state>
+		
+	<!-- SUB FLUJO ubicabilidad -->
+	<subflow-state id="UBICABILIDAD" subflow="administracion/ubicabilidad">
+		<input name="tipoDocumento" />
+		<input name="documento" />
+		<input name="soloGuardar" />
+		<input name="ciudadanoPresente" />
+
+		<output name="persona" />
+
+		<transition on="CANCELAR_UBI" to="ingresar" />
+		<transition on="ACEPTAR_UBI" to="CONSULTAR_UBICABILIDAD" />
+	</subflow-state>
+		
+	<end-state id="SALIR_DATOS_DEMOGRAFICOS" />
+	
+</flow>

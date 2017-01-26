@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="adminAccidentalidadFL"
+		class="co.com.datatools.c2.managed_bean.accidentalidad.AdminAccidentalidadFL" />
+	<var name="adminAccidentalidadHolderFL"
+		class="co.com.datatools.c2.managed_bean.accidentalidad.AdminAccidentalidadHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/accidentalidad/administracion/consultarInformes.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('adminAccidentalidadMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('ubicabilidadMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.adminAccidentalidadMB.consultar()" />
+		</transition>
+		<transition on="_op-EDITAR" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.adminAccidentalidadMB.consultarDetalle()" />
+		</transition>
+		<transition on="_op-CREAR" to="_op-CREAR">
+			<evaluate
+				expression="externalContext.sessionMap.adminAccidentalidadMB.reestablecer()" />
+		</transition>
+		<transition on="VER_DETALLE" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.adminAccidentalidadMB.consultarDetalle()" />
+		</transition>
+		<transition on="VER_ANEXOS" to="VER_ANEXOS">
+			<evaluate
+				expression="externalContext.sessionMap.adminAccidentalidadMB.consultarDetalle()" />
+		</transition>
+	</view-state>
+
+	<view-state id="_op-CREAR"
+		view="/WEB-INF/jsp/accidentalidad/administracion/registrarInforme.xhtml">
+		<transition on="CONTINUAR" to="guardar"></transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.accidentalidad.AdminAccidentalidadFL()"
+				result="flowScope.adminAccidentalidadFL"></evaluate>
+		</transition>
+		<transition on="ACEPTAR" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.adminAccidentalidadMB.confirmacionRegistroIPAT()" />
+			<evaluate
+				expression="externalContext.sessionMap.adminAccidentalidadMB.consultar()" />
+		</transition>
+	</view-state>
+
+	<action-state id="guardar">
+		<evaluate expression="externalContext.sessionMap.adminAccidentalidadMB.guardar()" />
+		<transition on="yes" to="_op-CREAR">
+		</transition>
+		<transition on="no" to="_op-CREAR">
+		</transition>
+	</action-state>
+
+	<view-state id="_op-EDITAR"
+		view="/WEB-INF/jsp/accidentalidad/administracion/actualizarInforme.xhtml">
+		<transition on="CONTINUAR" to="actualizar"></transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.accidentalidad.AdminAccidentalidadFL()"
+				result="flowScope.adminAccidentalidadFL"></evaluate>
+		</transition>
+		<transition on="ACEPTAR" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.adminAccidentalidadMB.confirmacionRegistroIPAT()" />
+			<evaluate
+				expression="externalContext.sessionMap.adminAccidentalidadMB.consultar()" />
+		</transition>
+	</view-state>
+
+	<action-state id="actualizar">
+		<evaluate
+			expression="externalContext.sessionMap.adminAccidentalidadMB.actualizarInforme()" />
+		<transition on="yes" to="_op-EDITAR">
+		</transition>
+		<transition on="no" to="_op-EDITAR">
+		</transition>
+	</action-state>
+
+	<view-state id="VER_DETALLE"
+		view="/WEB-INF/jsp/accidentalidad/administracion/detalleInforme.xhtml">
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.adminAccidentalidadMB.consultar()" />
+		</transition>
+	</view-state>
+
+	<view-state id="VER_ANEXOS"
+		view="/WEB-INF/jsp/accidentalidad/administracion/detalleDocumentos.xhtml">
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.adminAccidentalidadMB.consultar()" />
+		</transition>
+	</view-state>
+</flow>

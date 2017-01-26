@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelNotificacionCorreo.notificacion_correo}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<p:outputLabel
+							value="#{labelNotificacionCorreo.label_organismo_transito}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="id1"
+								value="#{notificarComparendoViaCorreoHolderFL.consultarComparendosNoNotificadosDTO.codigoOrganismo}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems
+									value="#{notificarComparendoViaCorreoMB.consultaOrganismosAsociados()}" />
+								<f:selectItem
+									itemLabel="#{labelAdminComparendo.label_option_otros}"
+									itemValue="0" />
+								<p:ajax
+									listener="#{notificarComparendoViaCorreoMB.cambiarCodOrganismoNumeroComparendoConsulta}"
+									update="codigoOrganismoNumero :messages" process="@this"
+									global="false" />
+							</p:selectOneMenu>
+							<p:message for="id1" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelNotificacionCorreo.label_polca}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selPolca"
+								value="#{notificarComparendoViaCorreoHolderFL.consultarComparendosNoNotificadosDTO.esPolca}">
+								<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+									itemValue="true" />
+								<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+									itemValue="false" />
+								<p:ajax
+									listener="#{notificarComparendoViaCorreoMB.cambiarCodOrganismoNumeroComparendoConsulta}"
+									update="codigoOrganismoNumero" process="@this" global="false" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+						<p:outputLabel
+							value="#{labelNotificacionCorreo.label_numero_comparendo}" />
+						<h:panelGroup>
+							<h:panelGrid columns="2">
+								<p:inputText id="codigoOrganismoNumero" style="width:70px"
+									readonly="true" maxlength="8"
+									value="#{notificarComparendoViaCorreoHolderFL.codOrganismoNumeroComparendo}"></p:inputText>
+								<p:inputText id="numeroComparendo" style="width:100px"
+									maxlength="12"
+									validatorMessage="#{labelGeneral.val_campo_numerico}"
+									value="#{notificarComparendoViaCorreoHolderFL.numeroComparendo}">
+									<f:validateRegex pattern="#{notificarComparendoViaCorreoMB.expresionNumerica}" />
+									<p:ajax
+										listener="#{notificarComparendoViaCorreoMB.onNumeroComparendoChangeConsulta()}"
+										update="numeroComparendo, numeroComparendoMessage"
+										global="false" process="@this" event="change" />
+								</p:inputText>
+							</h:panelGrid>
+							<p:message id="numeroComparendoMessage" for="numeroComparendo" />
+						</h:panelGroup>
+					</h:panelGrid>
+					<p:fieldset styleClass="fieldset-formulario"
+						id="fieldset-fecha-imposicion"
+						legend="#{labelNotificacionCorreo.label_fecha_imposicion}">
+						<h:panelGrid id="panel1" styleClass="center-block" columns="4"
+							columnClasses="label-col,input-col,label-col,input-col">
+							<p:outputLabel
+								value="#{labelNotificacionCorreo.label_fecha_inicial}"
+								styleClass="campo-obligatorio"
+								rendered="#{notificarComparendoViaCorreoHolderFL.requiereFecha}" />
+							<p:outputLabel
+								value="#{labelNotificacionCorreo.label_fecha_inicial}"
+								rendered="#{!notificarComparendoViaCorreoHolderFL.requiereFecha}" />
+							<h:panelGroup>
+								<p:calendar id="id3" navigator="true"
+									pattern="#{webPrm.lab_calendar_pattern}"
+									value="#{notificarComparendoViaCorreoHolderFL.consultarComparendosNoNotificadosDTO.fechaInicialImposicion}"
+									maxdate="#{notificarComparendoViaCorreoHolderFL.fechaActual}">
+									<p:watermark for="id3"
+										value="#{webPrm.lab_calendar_mask_pattern}" />
+									<p:ajax event="dateSelect"
+										listener="#{notificarComparendoViaCorreoMB.onFechaChange}"
+										update="fieldset-fecha-imposicion" global="false"
+										process="@this" />
+									<p:ajax event="change"
+										listener="#{notificarComparendoViaCorreoMB.onFechaChange}"
+										update="fieldset-fecha-imposicion" global="false"
+										process="@this" />
+								</p:calendar>
+								<p:message for="id3" />
+							</h:panelGroup>
+							<p:outputLabel
+								value="#{labelNotificacionCorreo.label_fecha_final}"
+								styleClass="campo-obligatorio"
+								rendered="#{notificarComparendoViaCorreoHolderFL.requiereFecha}" />
+							<p:outputLabel
+								value="#{labelNotificacionCorreo.label_fecha_final}"
+								rendered="#{!notificarComparendoViaCorreoHolderFL.requiereFecha}" />
+							<h:panelGroup>
+								<p:calendar id="id4" navigator="true"
+									pattern="#{webPrm.lab_calendar_pattern}"
+									value="#{notificarComparendoViaCorreoHolderFL.consultarComparendosNoNotificadosDTO.fechaFinalImposicion}"
+									mindate="#{notificarComparendoViaCorreoHolderFL.consultarComparendosNoNotificadosDTO.fechaInicialImposicion}">
+									<p:watermark for="id4"
+										value="#{webPrm.lab_calendar_mask_pattern}" />
+									<p:ajax event="dateSelect"
+										listener="#{notificarComparendoViaCorreoMB.onFechaChange}"
+										update="fieldset-fecha-imposicion" global="false"
+										process="@this" />
+									<p:ajax event="change"
+										listener="#{notificarComparendoViaCorreoMB.onFechaChange}"
+										update="fieldset-fecha-imposicion" global="false"
+										process="@this" />
+								</p:calendar>
+								<p:message for="id4" />
+							</h:panelGroup>
+						</h:panelGrid>
+					</p:fieldset>
+					<p:fieldset styleClass="fieldset-formulario"
+						id="fieldset-fecha-registro"
+						legend="#{labelNotificacionCorreo.label_fecha_registro}">
+						<h:panelGrid id="panel2" styleClass="center-block" columns="4"
+							columnClasses="label-col,input-col,label-col,input-col">
+							<p:outputLabel
+								value="#{labelNotificacionCorreo.label_fecha_inicial}"
+								styleClass="campo-obligatorio"
+								rendered="#{notificarComparendoViaCorreoHolderFL.requiereFechaRegistro}" />
+							<p:outputLabel
+								value="#{labelNotificacionCorreo.label_fecha_inicial}"
+								rendered="#{!notificarComparendoViaCorreoHolderFL.requiereFechaRegistro}" />
+							<h:panelGroup>
+								<p:calendar id="id5" navigator="true"
+									pattern="#{webPrm.lab_calendar_pattern}"
+									value="#{notificarComparendoViaCorreoHolderFL.consultarComparendosNoNotificadosDTO.fechaInicialRegistro}"
+									maxdate="#{notificarComparendoViaCorreoHolderFL.fechaActual}">
+									<p:watermark for="id5"
+										value="#{webPrm.lab_calendar_mask_pattern}" />
+									<p:ajax event="dateSelect"
+										listener="#{notificarComparendoViaCorreoMB.onFechaChangeRegistro}"
+										update="fieldset-fecha-registro" global="false"
+										process="@this" />
+									<p:ajax event="change"
+										listener="#{notificarComparendoViaCorreoMB.onFechaChangeRegistro}"
+										update="fieldset-fecha-registro" global="false"
+										process="@this" />
+								</p:calendar>
+								<p:message for="id5" />
+							</h:panelGroup>
+							<p:outputLabel
+								value="#{labelNotificacionCorreo.label_fecha_final}"
+								styleClass="campo-obligatorio"
+								rendered="#{notificarComparendoViaCorreoHolderFL.requiereFechaRegistro}" />
+							<p:outputLabel
+								value="#{labelNotificacionCorreo.label_fecha_final}"
+								rendered="#{!notificarComparendoViaCorreoHolderFL.requiereFechaRegistro}" />
+							<h:panelGroup>
+								<p:calendar id="id6" navigator="true"
+									pattern="#{webPrm.lab_calendar_pattern}"
+									value="#{notificarComparendoViaCorreoHolderFL.consultarComparendosNoNotificadosDTO.fechaFinalRegistro}"
+									mindate="#{notificarComparendoViaCorreoHolderFL.consultarComparendosNoNotificadosDTO.fechaInicialRegistro}">
+									<p:watermark for="id6"
+										value="#{webPrm.lab_calendar_mask_pattern}" />
+									<p:ajax event="dateSelect"
+										listener="#{notificarComparendoViaCorreoMB.onFechaChangeRegistro}"
+										update="fieldset-fecha-registro" global="false"
+										process="@this" />
+									<p:ajax event="change"
+										listener="#{notificarComparendoViaCorreoMB.onFechaChangeRegistro}"
+										update="fieldset-fecha-registro" global="false"
+										process="@this" />
+								</p:calendar>
+								<p:message for="id6" />
+							</h:panelGroup>
+						</h:panelGrid>
+					</p:fieldset>
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultar" />
+						</p:commandButton>
+						<!-- CARGAR ARCHIVO ACUSE RECIBO -->
+						<p:commandButton id="btnCrear" styleClass="_op-CREAR"
+							action="CARGAR_ARCHIVO" icon="c2-icon-crear" process="@this"
+							value="#{labelNotificacionCorreo.btn_cargue}" update="@form :dialogoAcuseCargar">
+							<p:tooltip for="btnCrear"
+								value="#{labelNotificacionCorreo.btn_cargue_tt}" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+
+		</h:form>
+		<p:dialog widgetVar="dialogoNotificaCorreo" id="dialogoNotificaCorreo"
+			header="#{labelNotificacionCorreo.label_genera_archivo_plano}" resizable="false" modal="true"
+			appendTo="@(body)" closable="false" width="700">
+			<h:form id="form-ingreso-generar" styleClass="contenido">
+				<p:panel id="campos-registro" styleClass="panel-formulario"
+					header="#{labelSimit.res_archivo_simit}">
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<!--  -->
+						<p:outputLabel
+							value="#{labelNotificacionCorreo.label_cantidad_comparendos_notificar}" />
+						<p:outputLabel
+							value="#{notificarComparendoViaCorreoHolderFL.cantidadDeComparendos}" />
+						<p:outputLabel value="#{labelNotificacionCorreo.label_generar_documentos}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneRadio id="id30"
+								value="#{notificarComparendoViaCorreoHolderFL.generaDocumento}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+									itemValue="true" />
+								<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+									itemValue="false" />
+								<p:ajax event="change"
+									update="fecha id20 :messages form-ingreso-generar"
+									process="@this" global="false" />
+								<p:ajax event="change" update="fecha :messages" process="@this"
+									global="false" />
+							</p:selectOneRadio>
+							<p:message for="id30" />
+						</h:panelGroup>
+						<p:outputLabel id="fecha" value="#{labelNotificacionCorreo.label_fecha_generacion}"
+							rendered="#{notificarComparendoViaCorreoHolderFL.generaDocumento}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar id="id20" navigator="true"
+								pattern="#{webPrm.lab_calendar_pattern}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								rendered="#{notificarComparendoViaCorreoHolderFL.generaDocumento}"
+								value="#{notificarComparendoViaCorreoHolderFL.fecha}">
+								<p:watermark for="id20"
+									value="#{webPrm.lab_calendar_mask_pattern}" />
+							</p:calendar>
+							<p:message for="id20" />
+						</h:panelGroup>
+					</h:panelGrid>
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton id="btnGuardar" action="_op-CREAR"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}"
+							update=":messages :form-ingreso-generar">
+							<p:tooltip for="btnGuardar" value="#{labelSimit.tt_crear}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<p:commandButton id="btnVolver" icon="c2-icon-volver" action="VOLVER"
+							process="@this" immediate="true" value="#{lbComun.btnVolver}"
+							oncomplete="PF('dialogoNotificaCorreo').hide()">
+							<p:tooltip for="btnVolver" value="#{lbComun.tooltip_volver}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:panel>
+			</h:form>
+		</p:dialog>
+		<p:dialog widgetVar="dialogoAcuseCargar" id="dialogoAcuseCargar"
+			header="#{labelNotificacionCorreo.btn_cargue}" resizable="false" modal="true"
+			appendTo="@(body)" closable="false" width="700">
+			<h:form id="form-cargar" styleClass="contenido">
+				<p:panel id="campos-registro" styleClass="panel-formulario"
+					header="#{labelNotificacionCorreo.btn_cargue}">
+					<h:panelGrid id="panel-formulario" columns="2" columnClasses="label-col,input-col">
+						<!-- ORGANISMO DE TRANSITO -->
+						<p:outputLabel
+							value="#{labelNotificacionCorreo.lbl_org_tra}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup id="org-tra">
+							<p:selectOneMenu id="selOneMenOrgTra"
+								value="#{cargueAcuseReciboHolderFL.codigoOrganismo}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									noSelectionOption="true" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenOrgTra" />
+						</h:panelGroup>
+					</h:panelGrid>
+					<h:panelGrid id="panel-formulario-archivo">
+						<p:fileUpload id="fupArchivo"
+							fileUploadListener="#{notificarComparendoViaCorreoMB.cargarArchivoAcuse}"
+							label="#{lbComun.btnExaminar}" uploadLabel="#{lbComun.btnCargar}"
+							cancelLabel="#{lbComun.btnCancelar}" mode="advanced"
+							dragDropSupport="false" update="form-cargar :messages"
+							process="org-tra"
+							sizeLimit="#{notificarComparendoViaCorreoMB.tamanioMaximoArch}"
+							multiple="true"
+							allowTypes="#{notificarComparendoViaCorreoMB.tiposArchivosPermitidos}"
+							invalidFileMessage="#{labelNotificacionCorreo.msj_formato_archivo}"
+							invalidSizeMessage="#{notificarComparendoViaCorreoMB.mesErrLimitSize}" />
+						<p:outputLabel
+							value="#{labelNotificacionCorreo.lbl_nombre_archvo} #{cargueAcuseReciboHolderFL.archivo.nombre}" />
+					</h:panelGrid>
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Generar -->
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="form-cargar"
+							value="#{lbComun.btnGuardar}" update=":messages form-cargar"
+							immediate="true">
+							<p:tooltip for="btnGuardar"
+								value="#{labelNotificacionCorreo.btn_cargue_tt}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<p:commandButton id="btnVolver" icon="c2-icon-volver"
+							process="@this" immediate="true" value="#{lbComun.btnVolver}"
+							oncomplete="PF('dialogoAcuseCargar').hide()">
+							<p:tooltip for="btnVolver" value="#{lbComun.tooltip_volver}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:panel>
+			</h:form>
+		</p:dialog>
+		<p:dialog widgetVar="dialogoAcuseDescargar" id="dialogoAcuseDescargar"
+			header="#{labelNotificacionCorreo.ttl_descargue_acuse}" resizable="false" modal="true"
+			appendTo="@(body)" closable="true" width="700">
+			<h:form id="form-descargar" styleClass="contenido">
+				<p:panel id="campos-registro" styleClass="panel-formulario"
+					header="#{labelNotificacionCorreo.lbl_descargue_acuse}">
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2" columnClasses="label-col,input-col">
+						<p:outputLabel value="#{labelNotificacionCorreo.lbl_descargue_acuse}" />
+						<p:commandButton ajax="false" icon="ui-icon-arrowthick-1-s"
+							onclick="PrimeFaces.monitorDownload(start, stop);"
+							title="#{labelAdminComparendo.label_btn_descargar}"
+							styleClass="inline-btn">
+							<p:tooltip value="#{labelAdminComparendo.label_btn_descargar}" />
+							<p:fileDownload
+								value="#{notificarComparendoViaCorreoMB.descargarDocumento()}" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:panel>
+			</h:form>
+		</p:dialog>
+		<script>
+	 	$(document).ready(function() {
+		 		if(#{notificarComparendoViaCorreoHolderFL.visible})
+				PF('dialogoNotificaCorreo').show();	
+	 	});
+	 	$(document).ready(function() {
+			if (#{cargueAcuseReciboHolderFL.mostrarGenerarArchivo}) {
+				PF('dialogoAcuseCargar').show();
+			}
+	 	});
+	 	$(document).ready(function() {
+			if (#{cargueAcuseReciboHolderFL.mostrarDescargarArchivo}) {
+				PF('dialogoAcuseDescargar').show();
+			}
+	 	});
+	 	</script>
+	</ui:define>
+
+
+</ui:composition>

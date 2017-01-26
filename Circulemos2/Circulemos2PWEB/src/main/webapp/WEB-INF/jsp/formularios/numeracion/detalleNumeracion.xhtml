@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<ui:define name="contenido">
+		<h:form id="form-detalle">
+			<p:panel id="campos-detalle" styleClass="panel-formulario" header="#{labelNumeracion.titulo_detalle_numeracion}">
+				<p:fieldset id="datos-numeracion" styleClass="fieldset-formulario" legend="#{labelNumeracion.label_datos_numeracion}">
+					<h:panelGrid id="panel-formulario" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">
+						<!--Componentes del formulario 4 columnas-->
+						<h:outputText value="#{labelNumeracion.label_tipo_formulario}" />
+						<h:outputText value="#{numeracionHolderFL.numeracionSeleccionada.tipoFormulario.nombre}" />
+
+						<h:outputText value="#{labelNumeracion.label_fecha_inicial_vigencia}" />
+						<c2:outputDateLabel labelValue="#{numeracionHolderFL.numeracionSeleccionada.fechaInicial}" />
+
+						<h:outputText value="#{labelNumeracion.label_fecha_final_vigencia}" />
+						<c2:outputDateLabel labelValue="#{numeracionHolderFL.numeracionSeleccionada.fechaFinal}" />
+
+						<h:outputText value="#{labelNumeracion.label_estado_numeracion}" />
+						<h:outputText value="#{numeracionHolderFL.numeracionSeleccionada.activo ? lbComun.val_sel_activo : lbComun.val_sel_inactivo}" />
+
+						<h:outputText value="#{labelNumeracion.label_cantidad_digitos}" />
+						<h:outputText value="#{numeracionHolderFL.numeracionSeleccionada.digitos}" />
+					</h:panelGrid>
+				</p:fieldset>
+				<p:fieldset id="casillas" styleClass="fieldset-formulario" legend="#{labelNumeracion.label_configuracion_casillas}">
+					<p:dataTable var="casilla" value="#{numeracionHolderFL.numeracionSeleccionada.detalleNumeracionList}" styleClass="center-block" style="width:60%;" paginator="true" paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}" rows="#{webPrm.param_initial_rows}">
+						<p:column headerText="#{labelNumeracion.label_numero_casilla}">
+							<h:outputText value="#{casilla.digito}" />
+						</p:column>
+						<p:column headerText="#{labelNumeracion.label_caracter_inicial}">
+							<h:outputText value="#{casilla.caracterInicio}" />
+						</p:column>
+						<p:column headerText="#{labelNumeracion.label_caracter_final}">
+							<h:outputText value="#{casilla.caracterFin}" />
+						</p:column>
+						<p:column headerText="#{labelNumeracion.label_estado_casilla}">
+							<h:outputText value="#{casilla.incremental ? labelNumeracion.label_incremental: labelNumeracion.label_no_incremental}" />
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+
+				<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">					
+					<!--Boton Volver-->
+					<p:commandButton id="btnCancelar" action="VOLVER" icon="c2-icon-cancelar" process="@this" immediate="true" value="#{lbComun.btnVolver}">
+						<p:tooltip for="btnCancelar" value="#{labelNumeracion.tooltip_btnVolver}" />						
+					</p:commandButton>
+				</h:panelGrid>		
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui"
+                xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<h:form id="frmDetalleDirecciones">
+		<p:dialog modal="true"
+			closable="false" widgetVar="popupDetalleDirecciones"
+			id="idPopupDetalleDirecciones" resizable="false"
+			closeOnEscape="false" appendToBody="true" dynamic="true">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelAdminPersona.tit_detalle_direcciones}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{labelAdminPersona.fieldset_detalles}">
+					
+					<p:dataTable id="tabla-detalle-direcciones" value="#{datosDemograficosHolderFL.direcciones}"
+	                        var="direccion" paginator="true" 
+	                        paginatorTemplate="#{webPrm.param_paginator_template}"
+	                        rowsPerPageTemplate="#{webPrm.param_rows_per_page}" 
+	                        rows="#{webPrm.param_initial_rows}"
+	                        emptyMessage="#{labelGeneral.msj_consulta_ko}">
+	    
+	    					<p:column headerText="#{labelAdminPersona.lbl_fuente_ubicabilidad}">
+	    						<h:outputText value="#{direccion.tipoFuenteInformacion.nombre}" />
+	    					</p:column>
+	    
+	                        <p:column headerText="#{labelUbicabilidad.label_direccion}">
+								<h:outputText value="#{direccion.direccion.complemento}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_tipo_direccion}">
+								<h:outputText value="#{direccion.direccion.tipoUbicabilidad.nombre}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_provincia}">
+								<h:outputText value="#{direccion.direccion.departamento.nombre}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_canton}">
+								<h:outputText value="#{direccion.direccion.municipio.nombre}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_parroquia}">
+								<h:outputText value="#{direccion.direccion.localidad.nombre}" />
+							</p:column>
+							
+							<p:column headerText="#{labelAdminPersona.lbl_fecha_actualizacion}">
+								<c2:outputDateLabel labelValue="#{direccion.fechaRegistro}" fullFormat="true" />
+							</p:column>
+							
+							<p:column headerText="#{labelAdminPersona.lbl_usuario}">
+								<h:outputText value="#{direccion.usuarioRegistro.login}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_valido}">
+								<h:outputText value="#{datosDemograficosMB.validacion(direccion)}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_calificacion}">
+								<h:outputText value="#{direccion.prioridad}" />
+							</p:column>
+	                        
+	                    </p:dataTable>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<!--Boton cerrar-->
+						<p:commandButton id="btnCerrar"
+								process="@this" value="#{labelAdminPersona.btn_cerrar}"
+								immediate="true" onclick="PF('popupDetalleDirecciones').hide();">
+							<p:tooltip for="btnCerrar" value="#{labelAdminPersona.btn_cerrar}" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</p:dialog>
+	</h:form>
+</ui:composition>

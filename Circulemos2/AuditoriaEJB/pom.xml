@@ -1,0 +1,108 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>co.com.datatools.c2</groupId>
+		<artifactId>Circulemos2Parent</artifactId>
+		<version>2.0.26</version>
+		<relativePath>../Circulemos2Parent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>AuditoriaEJB</artifactId>
+	<name>AuditoriaEJB</name>
+	<packaging>ejb</packaging>
+
+	<dependencies>
+		<!-- jboss api -->
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-6.0</artifactId>
+			<version>${jboss-javaee-6.0.version}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging</artifactId>
+			<version>${jboss-logging.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Interfaces -->
+		
+
+		<!-- Drools -->
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-core</artifactId>
+			<version>${drools.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.antlr</groupId>
+					<artifactId>antlr-runtime</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.antlr</groupId>
+					<artifactId>antlr</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-compiler</artifactId>
+			<version>${drools.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>antlr</groupId>
+					<artifactId>antlr</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>knowledge-api</artifactId>
+			<version>${drools.version}</version>
+		</dependency>
+
+		<!-- Librerias Externas -->
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>${reflections.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate-entitymanager.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+	      <groupId>co.com.datatools.auditoria</groupId>
+	      <artifactId>AuditoriaEJBClient</artifactId>
+	      <version>0.0.1-SNAPSHOT</version>
+	    </dependency>
+		
+	</dependencies>
+
+	<distributionManagement>
+		<repository>
+			<id>archiva.internal</id>
+			<name>Internal Release Repository</name>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/internal/</url>
+		</repository>
+		<snapshotRepository>
+			<id>archiva.snapshots</id>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui"
+                xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<h:form id="frmDocumentos">
+		<p:dialog modal="true"
+			closable="false" widgetVar="popupDocumentos"
+			id="idPopupDocumentos" resizable="false"
+			closeOnEscape="false" appendToBody="true" dynamic="true">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelAdminPersona.tit_documentos}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario" >
+					
+					<h:panelGrid id="acciones-top">
+                        <f:facet name="footer">
+                            <!--Boton descargar documento-->
+                            <p:commandButton id="btnDescargar" value="#{labelAdminPersona.btn_descargar}" ajax="false" 
+                            	onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s"
+                            	process="@this" disabled="#{datosDemograficosHolderFL.documentoSeleccionado==null}" >
+						        <p:fileDownload value="#{datosDemograficosMB.documentoDescargar}" />
+						        <p:tooltip for="btnDescargar" value="#{labelAdminPersona.tooltip_btn_descargar}" />
+						    </p:commandButton>
+                        </f:facet>
+                    </h:panelGrid>
+                    
+                    <p:dataTable id="tabla-detalle-documentos" value="#{datosDemograficosHolderFL.documentos}"
+                        var="documento" rowKey="#{documento.id}"
+                        selection="#{datosDemograficosHolderFL.documentoSeleccionado}" paginator="true" 
+                        paginatorTemplate="#{webPrm.param_paginator_template}"
+                        rowsPerPageTemplate="#{webPrm.param_rows_per_page}" 
+                        rows="#{webPrm.param_initial_rows}"
+                        emptyMessage="#{labelGeneral.msj_consulta_ko}" >
+    
+                        <p:ajax event="rowSelectRadio" process=":frmDocumentos:tabla-detalle-documentos"
+                                update=":frmDocumentos:acciones-top" global="false" />
+                        
+                        <p:column selectionMode="single" style="width:2%" />
+                        
+                        <!--Columnas Resultado Consulta-->
+                        <p:column headerText="#{labelAdminPersona.lbl_anexo}">
+                        	<h:outputText value="#{documento.tipoArchivoPersona.nombre}" />
+                        </p:column>
+                        
+                        <p:column headerText="#{labelAdminPersona.lbl_fecha_actualizacion}">
+							<c2:outputDateLabel labelValue="#{documento.fechaRegistro}" fullFormat="true" />
+						</p:column>
+						
+						<p:column headerText="#{labelAdminPersona.lbl_usuario}">
+                        	<h:outputText value="#{documento.usuarioRegistro.login}" />
+                        </p:column>
+                        
+                    </p:dataTable>
+				</p:fieldset>
+				<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+					<!--Boton cerrar-->
+					<p:commandButton id="btnCerrar"
+							process="@this" value="#{labelAdminPersona.btn_cerrar}"
+							immediate="true" onclick="PF('popupDocumentos').hide();">
+						<p:tooltip for="btnCerrar" value="#{labelAdminPersona.btn_cerrar}" />
+					</p:commandButton>
+				</h:panelGrid>				
+			</p:panel>
+		</p:dialog>
+	</h:form>
+	
+	<script type="text/javascript">
+	function start() {
+	    PF('statusDialog').show();
+	}
+	 
+	function stop() {
+	    PF('statusDialog').hide();
+	}
+	</script>
+</ui:composition>

@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{personaMB.toString()}" />
+		</f:metadata>
+		<h:form id="form-contenido" rendered="#{personaMB.mostrarDetalleNatural()}">
+			<p:panel id="campos-registro" styleClass="panel-formulario" header="#{labelAdmin.titulo_actualizar_persona}">
+				<p:fieldset id="pnlDesc" legend="#{lbComun.msg_fieldset_edicion}" styleClass="fieldset-formulario">
+
+					<h:panelGrid id="panel-filtro" styleClass="center-block" columns="4" columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel value="#{labelAdmin.label_tipo_documento}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.tipoIdentificacion.nombre}" />
+
+						<p:outputLabel value="#{labelAdmin.label_numero_documento}" />
+						<c2:outputNumberText value="#{personaHolderFL.personaSeleccionada.numeroIdentificacion}" />
+
+						<p:outputLabel value="#{labelAdmin.label_primer_apellido}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="txtApellido1" value="#{personaFL.personaNaturalDTO.apellido1}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" maxlength="30" disabled="#{personaMB.personaDesabilitada()}">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+							<p:message for="txtApellido1" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_segundo_apellido}" />
+						<h:panelGroup>
+							<p:inputText id="txtApellido2" value="#{personaFL.personaNaturalDTO.apellido2}" maxlength="30" disabled="#{personaMB.personaDesabilitada()}">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_primer_nombre}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="txtNombre1" value="#{personaFL.personaNaturalDTO.nombre1}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" maxlength="30" disabled="#{personaMB.personaDesabilitada()}">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+							<p:message for="txtNombre1" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_segundo_nombre}" />
+						<h:panelGroup>
+							<p:inputText id="txtNombre2" value="#{personaFL.personaNaturalDTO.nombre2}" maxlength="30" disabled="#{personaMB.personaDesabilitada()}">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_genero}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenGen" value="#{personaFL.personaNaturalDTO.genero}" disabled="#{personaMB.personaDesabilitada()}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+								<f:selectItems value="#{catalogoGeneralMB.opcGenero}" />
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenGen" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_fecha_nacimiento}" />
+						<h:panelGroup layout="block" styleClass="block">
+							<p:calendar id="calFechaNacimiento" value="#{personaFL.personaNaturalDTO.fechaNacimiento}" mode="popup" navigator="true"
+								pattern="#{webPrm.lab_calendar_pattern}" maxlength="10" maxdate="#{personaMB.obtenerMaxFechaNacimiento()}"
+								disabled="#{personaMB.personaDesabilitada()}"
+								mindate="#{webPrm.lab_fecha_minima}" yearRange="#{webPrm.param_rango_ano_largo}">
+								<p:watermark for="calFechaNacimiento" value="#{webPrm.lab_calendar_mask_pattern}" />
+								<p:ajax process="@this" event="dateSelect" update="@this, calFechaExpNat" global="false" />
+							</p:calendar>
+							<p:message for="calFechaNacimiento" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_departamento_expedicion_documento}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenDep" value="#{personaHolderFL.idDepartamentoDoc}" filter="true"
+								disabled="#{personaMB.personaDesabilitada()}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+								<f:selectItems value="#{catalogoGeneralMB.cargueDepartamentosPorPaisLocal()}" />
+								<p:ajax update="selOneMenMun" process="@this"
+									listener="#{catalogoGeneralMB.cargueMunicipiosPorDepartamento(personaHolderFL.idDepartamentoDoc)}"
+									global="false" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenDep" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_ciudad_expedicion_documento}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenMun" value="#{personaHolderFL.idMunicipioDoc}"
+								disabled="#{personaMB.municipioDesabilitado or personaMB.personaDesabilitada()}" filter="true">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+								<f:selectItems
+									value="#{catalogoGeneralMB.cargueMunicipiosPorDepartamento(personaHolderFL.idDepartamentoDoc)}" />
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenMun" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_fecha_expedicion_documento}" />
+						<h:panelGroup>
+							<p:calendar id="calFechaExpNat" value="#{personaFL.personaNaturalDTO.fechaExpedicionDocumento}" mode="popup" navigator="true"
+								pattern="#{webPrm.lab_calendar_pattern}" maxlength="10" mindate="#{personaMB.obtenerMinFechaExpDocumento()}" maxdate="new Date()"
+								disabled="#{personaMB.personaDesabilitada()}"
+								yearRange="#{webPrm.param_rango_ano_largo}">
+								<p:watermark for="calFechaExpNat" value="#{webPrm.lab_calendar_mask_pattern}" />
+								<p:ajax process="@this" event="dateSelect" update="@this, calFechaNacimiento" global="false" />
+							</p:calendar>
+							<p:message for="calFechaExpNat" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_correo_electronico}" />
+						<h:panelGroup>
+							<p:inputText id="txtCorreoElectronico" value="#{personaFL.personaNaturalDTO.correoElectronico}" maxlength="50"
+								validatorMessage="#{labelAdmin.msg_error_email}" disabled="#{personaMB.personaDesabilitada()}">
+								<f:validateRegex pattern="#{personaMB.expresionCorreoE}" />
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+							<p:message for="txtCorreoElectronico" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_numero_telefonico}" />
+						<h:panelGroup>
+							<p:inputText id="txtNumeroTelefonico" value="#{personaFL.personaNaturalDTO.numeroTelefonico}" maxlength="20"
+								disabled="#{personaMB.personaDesabilitada()}">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+							<p:message for="txtNumeroTelefonico" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_numero_celular}" />
+						<h:panelGroup>
+							<p:inputText id="txtNumeroCelular" value="#{personaFL.personaNaturalDTO.numeroCelular}" maxlength="20"
+								disabled="#{personaMB.personaDesabilitada()}">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+							<p:message for="txtNumeroCelular" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_tipo_vivienda}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenTipV" value="#{personaFL.personaNaturalDTO.tipoVivienda.codigo}" disabled="#{personaMB.personaDesabilitada()}">
+								<f:selectItem itemLabel="#{labelAdmin.item_inicial}" itemValue="" noSelectionOption="true" />
+								<f:selectItems value="#{catalogoGeneralMB.opcTipoVivienda}" />
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenTipV" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_direccion_residencia}" />
+						<h:panelGroup layout="block" styleClass="inline-block">
+							<h:outputText id="otxtDirResidencia" value="#{personaFL.direccionResidenciaPersonaNatural.toString()}" maxlength="80" />
+							<p:commandButton id="btnVerDetDireccion" action="CREAR_DIR_PRINCIPAL" icon="c2-icon-detalle" process="@this" immediate="true"
+								disabled="#{personaMB.personaDesabilitada()}" title="#{labelAdmin.label_ver_detalle}" styleClass="inline-btn">
+							</p:commandButton>
+							<p:message for="otxtDirResidencia" />
+							<p:commandButton id="btnLimpiarDireccionResidencia" action="#{personaMB.limpiarDireccionResidenciaNatural()}" icon="c2-icon-limpiar"
+								process="@this" immediate="true" disabled="#{personaMB.personaDesabilitada()}" update="otxtDirResidencia" styleClass="inline-btn"
+								title="#{labelAdmin.label_limpiar_direccion}" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_empresa_trabaja}" />
+						<h:panelGroup>
+							<p:inputText id="txtNombreEmpresaLabora" value="#{personaFL.personaNaturalDTO.nombreEmpresaLabora}" maxlength="60"
+								disabled="#{personaMB.personaDesabilitada()}">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+							<p:message for="txtNombreEmpresaLabora" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_direccion_empresa}" />
+						<h:panelGroup layout="block" styleClass="block">
+							<h:outputText id="otxtDirEmpresa" value="#{personaFL.direccionTrabajoPersonaNatural.toString()}" maxlength="80" />
+							<p:commandButton id="btnVerDetDireccionEmpresa" action="CREAR_DIR_EMPRESA" icon="c2-icon-detalle" process="@this" immediate="true"
+								disabled="#{personaMB.personaDesabilitada()}" title="#{labelAdmin.label_ver_detalle}" styleClass="inline-btn" />
+							<p:message for="otxtDirEmpresa" />
+							<p:commandButton id="btnLimpiarDireccionEmpresa" action="#{personaMB.limpiarDireccionEmpresaNatural()}" icon="c2-icon-limpiar" process="@this"
+								immediate="true" disabled="#{personaMB.personaDesabilitada()}" update="otxtDirEmpresa" styleClass="inline-btn"
+								title="#{labelAdmin.label_limpiar_direccion}" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_cargo}" />
+						<h:panelGroup>
+							<p:inputText id="txtCargoEmpresaLabora" value="#{personaFL.personaNaturalDTO.cargoEmpresaLabora}" maxlength="30"
+								disabled="#{personaMB.personaDesabilitada()}">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+							<p:message for="txtCargoEmpresaLabora" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_fax_empresa_trabaja}" />
+						<h:panelGroup>
+							<p:inputText id="txtFaxEmpresaLabora" value="#{personaFL.personaNaturalDTO.faxEmpresaLabora}" maxlength="30"
+								disabled="#{personaMB.personaDesabilitada()}">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+							<p:message for="txtFaxEmpresaLabora" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_telefono_empresa_trabaja}" />
+						<h:panelGroup>
+							<p:inputText id="txtTelefonoEmpresaLabora" value="#{personaFL.personaNaturalDTO.telefonoEmpresaLabora}" maxlength="30"
+								disabled="#{personaMB.personaDesabilitada()}">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+							<p:message for="txtTelefonoEmpresaLabora" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_notif_direccion_empresa_trabaja}" />
+						<h:panelGroup>
+							<p:selectBooleanCheckbox id="selOneRadNotifEmpresa" value="#{personaFL.personaNaturalDTO.notificaDirEmpresa}"
+								disabled="#{personaMB.personaDesabilitada()}">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:selectBooleanCheckbox>
+							<p:message for="selOneRadNotifEmpresa" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_nivel_educativo}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenNivEd" value="#{personaFL.personaNaturalDTO.nivelEducativo.codigo}" disabled="#{personaMB.personaDesabilitada()}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" />
+								<f:selectItems value="#{catalogoGeneralMB.opcNivelEducacion}" />
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenNivEd" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_estado_civil}" />
+						<h:panelGroup id="panelconyuguebox" layout="block">
+							<p:selectOneMenu id="selOneMenEstCiv" value="#{personaFL.personaNaturalDTO.estadoCivil.id}" disabled="#{personaMB.personaDesabilitada()}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+								<f:selectItems value="#{catalogoGeneralMB.opcEstadoCivil}" />
+								<p:ajax event="change" update="panelconyuguebox" listener="#{personaMB.presentarConyugue()}" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenEstCiv" display="default" />
+							<center>
+								<p:commandButton id="btnMostrarCony" styleClass="_op-CONSULTAR" action="_op-INGRESAR_CONYUGUE" process="@this"
+									value="#{labelAdmin.label_ingresar_conyugue}" rendered="#{personaHolderFL.presentarOpcionConyugue}" immediate="true"
+									disabled="#{personaMB.personaDesabilitada()}">
+									<p:tooltip for="btnMostrarCony" value="#{labelAdmin.label_ver_conyugue}" />
+								</p:commandButton>
+							</center>
+
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_fecha_fallecimiento}" />
+						<h:panelGroup layout="block" styleClass="block">
+							<p:calendar id="calFechaFallecimiento" value="#{personaFL.personaNaturalDTO.fechaFallecimiento}" mode="popup" navigator="true"
+								mindate="#{personaMB.minimaFechaFallecimiento()}" maxdate="new Date()" pattern="#{webPrm.lab_calendar_pattern}" maxlength="10"
+								disabled="#{personaMB.personaDesabilitada()}"
+								yearRange="#{webPrm.param_rango_ano_largo}">
+								<p:watermark for="calFechaFallecimiento" value="#{webPrm.lab_calendar_mask_pattern}" />
+							</p:calendar>
+							<p:message for="calFechaFallecimiento" display="default" />
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+					<h:panelGrid id="pnlGridBotones" columns="2" styleClass="center-block" cellspacing="7">
+						<p:commandButton id="btnUpdNat" action="_op-EDITAR_NATURAL" icon="c2-icon-guardar" process="@form" value="#{lbComun.btnGuardar}"
+							update=":messages,:form-contenido" disabled="#{personaMB.personaDesabilitada()}" onmouseover="ajustarMensajeConfirm()">
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+							<p:tooltip for="btnUpdNat" value="#{labelAdmin.boton_actualizar_persona}" />
+						</p:commandButton>
+
+						<p:commandButton id="btnVolver" action="VOLVER" icon="c2-icon-volver" immediate="true" value="#{lbComun.btnVolver}">
+							<p:tooltip for="btnVolver" value="#{lbComun.btnVolver}" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado" rendered="#{personaMB.mostrarDetalleJuridica()}">
+			<h:panelGroup id="pnlGrpPerJur" styleClass="panel-formulario">
+				<p:fieldset id="datos-juridica" legend="#{personaHolderFL.labelOperacion}" styleClass="fieldset-formulario"
+					rendered="#{personaHolderFL.mostrarPanelJuridico}">
+
+					<p:fieldset id="datos-juridica-basico" legend="#{labelAdmin.label_juridico_basico}" rendered="#{personaHolderFL.mostrarPanelJuridico}"
+						style="width: 98%;margin-left: auto;margin-right: auto;margin-top: 1%;">
+
+						<h:panelGrid columns="4" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col">
+
+							<p:outputLabel value="#{labelAdmin.label_tipo_documento}" />
+							<p:outputLabel value="#{personaHolderFL.personaJuridicaSeleccionada.tipoIdentificacion.nombre}" />
+
+							<p:outputLabel value="#{labelAdmin.label_numero_documento}" />
+							<c2:outputNumberText value="#{personaHolderFL.personaJuridicaSeleccionada.numeroIdentificacion}" />
+
+							<p:outputLabel value="#{labelAdmin.label_digito_verificacion}" />
+							<h:panelGroup>
+								<p:spinner id="spinDigitoverificacion" value="#{personaFL.personaJuridicaDTO.digitoVerificacion}" min="0" max="9">
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:spinner>
+								<p:message for="spinDigitoverificacion" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_nombre_comercial}" styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="txtNombrecomercial" value="#{personaFL.personaJuridicaDTO.nombreComercial}" required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}" maxlength="60">
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:inputText>
+								<p:message for="txtNombrecomercial" display="default" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_sigla}" />
+							<h:panelGroup>
+								<p:inputText id="txtSigla" value="#{personaFL.personaJuridicaDTO.sigla}" maxlength="10">
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:inputText>
+								<p:message for="txtSigla" display="default" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_tipo_sociedad}" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selOneMenTipoSoc" value="#{personaFL.personaJuridicaDTO.tipoSociedad.id}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoGeneralMB.opcTipoSociedad}" />
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:selectOneMenu>
+								<p:message for="selOneMenTipoSoc" display="default" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_pais_origen}" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selOneMenPaisJur" value="#{personaHolderFL.idPaisJuridica}" filter="true">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoGeneralMB.opcPaises}" />
+									<p:ajax update="selOneMenDepJur, selOneMenMunJur" event="valueChange"
+										listener="#{catalogoGeneralMB.cargueDepartamentosPorPais(personaHolderFL.idPaisJuridica)}" />
+								</p:selectOneMenu>
+								<p:message for="selOneMenPaisJur" display="default" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_departamento_origen}" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selOneMenDepJur" value="#{personaHolderFL.idDepartamentoJuridica}"
+									disabled="#{personaMB.departamentoDesabilitado}" filter="true">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoGeneralMB.cargueDepartamentosPorPais(personaHolderFL.idPaisJuridica)}" />
+									<p:ajax update="selOneMenMunJur" event="valueChange"
+										listener="#{catalogoGeneralMB.cargueMunicipiosPorDepartamento(personaHolderFL.idDepartamentoJuridica)}" />
+								</p:selectOneMenu>
+								<p:message for="selOneMenDepJur" display="default" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_municipio_origen}" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selOneMenMunJur" value="#{personaHolderFL.idMunicipioJuridica}" disabled="#{personaMB.municipioDesabilitado}"
+									filter="true">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoGeneralMB.cargueMunicipiosPorDepartamento(personaHolderFL.idDepartamentoJuridica)}" />
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:selectOneMenu>
+								<p:message for="selOneMenMunJur" display="default" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_direccion_residencia}" />
+							<h:panelGroup layout="block" styleClass="inline-block">
+								<h:outputText id="otxtDirResidenciaJur" value="#{personaFL.direccionResidenciaPersonaJuridica.toString()}" maxlength="80" />
+								<p:commandButton id="btnVerDetDireccionJur" action="CREAR_DIR_PRINCIPAL_JURIDICA" icon="c2-icon-detalle" process="@this" immediate="true"
+									title="#{labelAdmin.label_ver_detalle}" styleClass="inline-btn" />
+								<p:message for="otxtDirResidenciaJur" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_notif_direccion_empresa_trabaja}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox id="selOneRadNotifEmpresaJur" value="#{personaFL.personaJuridicaDTO.notificaDirEmpresa}">
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:selectBooleanCheckbox>
+								<p:message for="selOneRadNotifEmpresaJur" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_numero_telefonico}" />
+							<h:panelGroup>
+								<p:inputText id="txtNumeroTelefonicoJuridica" value="#{personaFL.personaJuridicaDTO.numeroTelefonico}" maxlength="20">
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:inputText>
+								<p:message for="txtNumeroTelefonicoJuridica" display="default" />
+							</h:panelGroup>
+
+						</h:panelGrid>
+
+					</p:fieldset>
+
+					<p:fieldset id="juridicaActividad" legend="#{labelAdmin.label_juridico_actividad}" rendered="#{personaHolderFL.mostrarPanelJuridico}"
+						style="width: 98%;margin-left: auto;margin-right: auto;margin-top: 1%;">
+
+						<h:panelGrid columns="4" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col">
+
+							<p:outputLabel value="#{labelAdmin.label_tipo_seccion_act}" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selOneMenActEc" value="#{personaHolderFL.idSeccionActEconomica}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoGeneralMB.opcSeccionActEconimica}" />
+									<p:ajax update="selOneMenDivAct, selOneMenGrupAct, selOneMenClasAct" event="valueChange"
+										listener="#{catalogoGeneralMB.cargueDivisionPorSeccion(personaHolderFL.idSeccionActEconomica)}" />
+								</p:selectOneMenu>
+								<p:message for="selOneMenActEc" display="default" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_tipo_division_act}" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selOneMenDivAct" value="#{personaHolderFL.idDivisionActEconomica}" disabled="#{personaMB.divisionDesabilitada}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoGeneralMB.cargueDivisionPorSeccion(personaHolderFL.idSeccionActEconomica)}" />
+									<p:ajax update="selOneMenGrupAct, selOneMenClasAct" event="valueChange"
+										listener="#{catalogoGeneralMB.cargueGrupoPorDivision(personaHolderFL.idDivisionActEconomica)}" />
+								</p:selectOneMenu>
+								<p:message for="selOneMenDivAct" display="default" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_tipo_grupo_act}" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selOneMenGrupAct" value="#{personaHolderFL.idGrupoActEconomica}" disabled="#{personaMB.grupoDesabilitado}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoGeneralMB.cargueGrupoPorDivision(personaHolderFL.idDivisionActEconomica)}" />
+									<p:ajax update="selOneMenClasAct" event="valueChange"
+										listener="#{catalogoGeneralMB.cargueClasesPorGrupo(personaHolderFL.idGrupoActEconomica)}" />
+								</p:selectOneMenu>
+								<p:message for="selOneMenGrupAct" display="default" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_tipo_clase_act}" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selOneMenClasAct" value="#{personaHolderFL.idClaseActEconomica}"
+									disabled="#{personaMB.claseDesabilitada}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoGeneralMB.cargueClasesPorGrupo(personaHolderFL.idGrupoActEconomica)}" />
+									<p:ajax process="@this" update="@this" global="false" />
+								</p:selectOneMenu>
+								<p:message for="selOneMenClasAct" display="default" />
+							</h:panelGroup>
+
+						</h:panelGrid>
+
+					</p:fieldset>
+
+					<p:fieldset id="juridicaRepresentante" legend="#{labelAdmin.label_juridico_representante}" rendered="#{personaHolderFL.mostrarPanelJuridico}"
+						style="width: 98%;margin-left: auto;margin-right: auto;margin-top: 1%;">
+
+						<h:panelGrid columns="4" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col">
+
+							<p:outputLabel value="#{labelAdmin.label_tipo_documento_representante}" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selOneMenTipIdRep" value="#{personaHolderFL.idTipoIdentificacionRepresentante}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{catalogoGeneralMB.opcTipoIdentRepresLegal}" />
+									<p:ajax event="valueChange"
+										update="calFechaInicioVigencia, txtCorreoElectronicoRepresentante, txtNumeroDocumentoRepresentante, pnlNumDocRepTit, pnlIniVigRepTit" />
+								</p:selectOneMenu>
+								<p:message for="selOneMenTipIdRep" display="default" />
+							</h:panelGroup>
+
+							<h:panelGrid id="pnlNumDocRepTit" columns="2">
+								<h:panelGroup rendered="#{!personaMB.representanteObligatorio}">
+									<p:outputLabel value="#{labelAdmin.label_numero_documento_representante}" />
+								</h:panelGroup>
+								<h:panelGroup rendered="#{personaMB.representanteObligatorio}">
+									<p:outputLabel value="#{labelAdmin.label_numero_documento_representante}" styleClass="campo-obligatorio" />
+								</h:panelGroup>
+							</h:panelGrid>
+							<h:panelGroup>
+								<p:inputText id="txtNumeroDocumentoRepresentante" value="#{personaHolderFL.numeroDocumentoRepresentante}"
+									required="#{personaMB.representanteObligatorio}" requiredMessage="#{labelGeneral.val_campo_requerido}"
+									disabled="#{!personaMB.representanteObligatorio}" maxlength="30">
+									<p:ajax update="@this" global="false" />
+								</p:inputText>
+								<p:message for="txtNumeroDocumentoRepresentante" display="default" />
+							</h:panelGroup>
+
+							<h:panelGrid id="pnlIniVigRepTit" columns="2">
+								<h:panelGroup rendered="#{!personaMB.representanteObligatorio}">
+									<p:outputLabel value="#{labelAdmin.label_fecha_inicio_vigencia}" />
+								</h:panelGroup>
+								<h:panelGroup rendered="#{personaMB.representanteObligatorio}">
+									<p:outputLabel value="#{labelAdmin.label_fecha_inicio_vigencia}" styleClass="campo-obligatorio" />
+								</h:panelGroup>
+							</h:panelGrid>
+							<h:panelGroup>
+								<p:calendar id="calFechaInicioVigencia" value="#{personaFL.representanteLegalDTO.fechaInicio}"
+									required="#{personaMB.representanteObligatorio}" requiredMessage="#{labelGeneral.val_campo_requerido}" mode="popup" navigator="true"
+									pattern="#{webPrm.lab_calendar_pattern}" disabled="#{!personaMB.representanteObligatorio}"
+									mindate="#{webPrm.lab_fecha_minima}" yearRange="#{webPrm.param_rango_ano_largo}">
+									<p:ajax process="@this" event="dateSelect" update="@this, calFechaFinVigencia" global="false" />
+									<p:watermark for="calFechaInicioVigencia" value="#{webPrm.lab_calendar_mask_pattern}" />
+								</p:calendar>
+								<p:message for="calFechaInicioVigencia" display="default" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_correo_electronico_representante}" />
+							<h:panelGroup>
+								<p:inputText id="txtCorreoElectronicoRepresentante" value="#{personaFL.representanteLegalDTO.correoElectronico}" maxlength="255"
+									validatorMessage="#{labelAdmin.msg_error_email}" disabled="#{!personaMB.representanteObligatorio}">
+									<p:ajax update="@this" global="false" />
+									<f:validateRegex pattern="#{personaMB.expresionCorreoE}" />
+								</p:inputText>
+								<p:message for="txtCorreoElectronicoRepresentante" display="default" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelAdmin.label_fecha_fin_vigencia}" />
+							<h:panelGroup layout="block" styleClass="block">
+								<p:calendar id="calFechaFinVigencia" value="#{personaFL.representanteLegalDTO.fechaFin}" mode="popup" navigator="true"
+									pattern="#{webPrm.lab_calendar_pattern}" mindate="#{personaMB.minimaFechaFinVigenciaRepresentante()}"
+									disabled="#{!personaMB.representanteObligatorio}"
+									yearRange="#{webPrm.param_rango_ano_largo}">
+									<p:ajax event="dateSelect" update="@this" global="false" />
+									<p:watermark for="calFechaFinVigencia" value="#{webPrm.lab_calendar_mask_pattern}" />
+								</p:calendar>
+								<p:message for="calFechaFinVigencia" display="default" />
+							</h:panelGroup>
+
+						</h:panelGrid>
+
+					</p:fieldset>
+
+					<h:panelGrid columns="2" styleClass="center-block" cellspacing="7">
+						<p:commandButton id="btnUpdJur" action="_op-EDITAR_JURIDICA" icon="c2-icon-guardar" process="@form" value="#{lbComun.btnGuardar}"
+							update=":messages,form-resultado">
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+							<p:tooltip for="btnUpdJur" value="#{labelAdmin.boton_actualizar_persona}" />
+						</p:commandButton>
+
+						<p:commandButton id="btnVolver2" action="VOLVER" icon="c2-icon-volver" immediate="true" value="#{lbComun.btnVolver}">
+							<p:tooltip for="btnVolver2" value="#{lbComun.btnVolver}" />
+						</p:commandButton>
+
+					</h:panelGrid>
+
+				</p:fieldset>
+
+			</h:panelGroup>
+
+		</h:form>
+
+		<script>
+			function ajustarMensajeConfirm(){
+				var mensajeConfirmBase = "#{lbComun.msg_confirm_guardar}";
+				
+				var mensajeConfirmModFecha = "#{labelAdmin.msg_persona_ineditable}";
+	
+				var valorInicial = $("button[id*='btnUpdNat']").attr('onclick');
+				var valOnClick = "";
+				if($("input[id*='calFechaFallecimiento']").val()==""){ 
+					valOnClick = valorInicial.replace(/,message:".*",/g , ",message:\""+mensajeConfirmBase+"\",");
+				}else{
+					valOnClick = valorInicial.replace(/,message:".*",/g , ",message:\""+mensajeConfirmModFecha+"\",");
+				}
+				console.log(valOnClick);
+				$("button[id*='btnUpdNat']").attr('onclick',valOnClick);
+			}
+		</script>
+	</ui:define>
+
+</ui:composition>

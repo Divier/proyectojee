@@ -1,0 +1,37 @@
+<encabezado>
+	<codigo>ENCABEZADO_GENERAL</codigo>
+	<atributos>
+		<atributo>
+			<contenido>{0}</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>#{nombre_reporte}</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>Generado por: {0} ({1})</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA: #{fecha} HORA: #{hora}</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DE REGISTROS GENERADOS: #{numero_registros}</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido></contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>${filtros}</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido></contenido>
+			<formato></formato>
+		</atributo>
+	</atributos>
+</encabezado>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="generacionMasivaHolderFL"
+		class="co.com.datatools.c2.maganed_bean.administracion.documentos.GeneracionMasivaHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracion/documentos/solicitarDocumentos.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('generacionMasivaMB')" />	
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.generacionMasivaMB.consultarDocumentos()" />
+		</transition>
+		<transition on="SELECCIONAR_TODO" to="SELECCIONAR_TODO" />
+		<transition on="DESMARCAR_TODO" to="DESMARCAR_TODO" />
+		<transition on="GENERAR_DOCUMENTOS_SIG" to="GENERAR_DOCUMENTOS_SIG" />
+		<transition on="FINALIZA_GUARDAR" to="ingresar">
+			<evaluate expression="new co.com.datatools.c2.maganed_bean.administracion.documentos.GeneracionMasivaHolderFL()"
+				result="flowScope.generacionMasivaHolderFL"></evaluate>
+		</transition>		
+	</view-state>
+	
+	<action-state id="SELECCIONAR_TODO">
+		<evaluate
+				expression="externalContext.sessionMap.generacionMasivaMB.seleccionarTodo()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+	
+	<action-state id="DESMARCAR_TODO">
+		<evaluate
+				expression="externalContext.sessionMap.generacionMasivaMB.desmarcarTodo()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+	
+	<action-state id="GENERAR_DOCUMENTOS_SIG">
+		<evaluate
+				expression="externalContext.sessionMap.generacionMasivaMB.generarDocumentos()" />	
+		<transition on="success" to="ingresar" />
+	</action-state>
+</flow>

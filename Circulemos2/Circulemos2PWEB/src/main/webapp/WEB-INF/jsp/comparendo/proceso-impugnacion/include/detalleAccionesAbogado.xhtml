@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<p:fieldset styleClass="fieldset-formulario"
+		legend="#{labelProcesoImpugnacion.label_acciones_abogado}">
+		<h:panelGrid id="acciones-top-detalle-accion">
+			<f:facet name="footer">
+				<!--Boton Ver Detalle-->
+				<p:commandButton id="btnVerDetAccion" oncomplete="PF('dlgDetalleAccion').show();"
+					icon="c2-icon-detalle" process="@this"
+					value="#{labelProcesoImpugnacion.btn_ver_detalle_accion}"
+					disabled="#{detalleProcesoFL.accionSeleccionada == null}"
+					update="idDlgDetalleAccion" >
+					<p:tooltip for="btnVerDetAccion"
+						value="#{labelProcesoImpugnacion.btn_ver_detalle_accion}" />
+				</p:commandButton>
+			</f:facet>
+		</h:panelGrid>
+
+		<p:dataTable id="tabla-acciones"
+			value="#{detalleProcesoFL.listaAcciones}" var="registro"
+			rowKey="#{registro.id}"
+			selection="#{detalleProcesoFL.accionSeleccionada}" paginator="true"
+			paginatorTemplate="#{webPrm.param_paginator_template}"
+			rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+			rows="#{webPrm.param_initial_rows}"
+			emptyMessage="#{labelGeneral.msj_tabla_vacia}">
+
+			<p:ajax event="rowSelectRadio"
+				process="@this"
+				update=":form-detalle-proceso:secciones-detalle:acciones-top-detalle-accion @this" global="false" />
+
+			<p:column selectionMode="single" />
+
+			<!--Columnas Resultado Consulta-->
+			<p:column headerText="#{labelProcesoImpugnacion.label_tipo_accion}">
+				<p:outputLabel value="#{registro.tipoAccionBack.nombre}" />
+			</p:column>
+
+			<p:column
+				headerText="#{labelProcesoImpugnacion.label_descripcion_accion}">
+				<p:outputLabel
+					value="#{registrarAccionesMB.descripcionConcatenada(registro)}" />
+			</p:column>
+
+		</p:dataTable>
+	</p:fieldset>
+
+	<p:dialog widgetVar="dlgDetalleAccion" id="idDlgDetalleAccion"
+		closable="false" resizable="false" modal="true" appendTo="@(body)"
+		dynamic="true" closeOnEscape="false" width="50%"
+		header="#{labelProcesoImpugnacion.label_detalle_accion}">
+		<h:form id="form-dlgDetalleAccion">
+
+			<h:panelGrid styleClass="center-block"
+				columns="2" columnClasses="label-col,input-col">
+
+				<p:outputLabel value="#{labelProcesoImpugnacion.label_tipo_accion}" />
+				<p:outputLabel
+					value="#{detalleProcesoFL.accionSeleccionada.tipoAccionBack.nombre}" />
+
+				<p:outputLabel
+					value="#{labelProcesoImpugnacion.label_característica_accion}" />
+				<p:outputLabel
+					value="#{detalleProcesoFL.accionSeleccionada.caracteristicaPrueba.nombre}" />
+
+				<p:outputLabel
+					value="#{labelProcesoImpugnacion.label_descripcion_accion}" />
+				<p:outputLabel
+					value="#{detalleProcesoFL.accionSeleccionada.descripcion}" />
+
+			</h:panelGrid>
+
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<!--Boton Volver-->
+				<p:commandButton id="btnCerrarDetalleAccion"
+					onclick="PF('dlgDetalleAccion').hide();" icon="c2-icon-volver"
+					process="@this" immediate="true" value="#{lbComun.btnVolver}">
+					<p:tooltip for="btnCerrarDetalleAccion" value="#{lbComun.btnVolver}" />
+				</p:commandButton>
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+
+</ui:composition>

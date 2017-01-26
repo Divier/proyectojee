@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+	<ui:define name="contenido">
+		<p:fieldset id="datos-especificos" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.titulo_seguimiento}">
+			<p:accordionPanel dynamic="true" cache="true">
+				<p:tab id="idTabDetalleComparendo"
+					title="#{labelAdminComparendo.titulo_informacion_comparendo}">
+					<ui:include
+						src="/WEB-INF/jsp/comparendo/administracion/ecuador/datosDetalleComparendo.xhtml" />
+				</p:tab>
+				<p:tab id="idTabResolcionesComp"
+					title="#{labelAdminComparendo.titulo_resoluciones}">
+					<ui:include
+						src="/WEB-INF/jsp/comparendo/resoluciones/resolucionesComparendo.xhtml" />
+				</p:tab>
+				<p:tab id="idTabTrazabilidad"
+					title="#{labelAdminComparendo.titulo_trazabilidad_comparendo}">
+					<ui:include
+						src="/WEB-INF/jsp/comparendo/trazabilidad/trazabilidadComparendo.xhtml" />
+				</p:tab>
+				<p:tab id="idTabComparendoProceso"
+					title="#{labelAdminComparendo.titulo_comparendo_proceso}" rendered="false">
+					<ui:include
+						src="/WEB-INF/jsp/comparendo/comparendo-proceso/comparendoProceso.xhtml" />
+				</p:tab>
+			</p:accordionPanel>
+		</p:fieldset>
+
+		<h:form>
+			<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+				<p:commandButton id="btnVolver" action="VOLVER"
+					icon="c2-icon-volver" process="@this" immediate="true"
+					value="#{lbComun.btnVolver}">
+					<p:tooltip for="btnVolver" value="#{lbComun.btnVolver}" />
+				</p:commandButton>
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>

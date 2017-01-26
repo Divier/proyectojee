@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelSolicitarDocumentos.titulo_generacion_masiva}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelSolicitarDocumentos.titulo_solicitar_documentos}">
+					<p:outputLabel value="#{labelSolicitarDocumentos.msg_info_filtros_opcionales}" styleClass="campo-opcional"></p:outputLabel>
+					<h:panelGrid id="panel-info-cabecera-infr"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">						
+						<p:outputLabel value="#{labelSolicitarDocumentos.label_organismo_transito}" styleClass="campo-obligatorio"></p:outputLabel>
+						<h:panelGroup>
+							<p:selectOneMenu id="selOrganismoTransito" value="#{generacionMasivaHolderFL.filtros.codigoOrganismo}" required="true">
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelSolicitarDocumentos.label_proceso}" styleClass="campo-obligatorio"></p:outputLabel>
+						<h:panelGroup>
+							<p:selectOneMenu id="selProceso" value="#{generacionMasivaHolderFL.filtros.idTipoProceso}" required="true">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>	
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoProceso()}" />
+								<p:ajax event="change" update="selPasoDocumento" global="false" />
+							</p:selectOneMenu>
+							<p:message for="selProceso" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelSolicitarDocumentos.label_paso_documento}" styleClass="campo-obligatorio"></p:outputLabel>
+						<h:panelGroup>
+							<p:selectOneMenu id="selPasoDocumento" value="#{generacionMasivaHolderFL.filtros.idPaso}" required="true">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+								<f:selectItems value="#{fachadaCatalogosMB.catEstadoProceso(generacionMasivaHolderFL.filtros.idTipoProceso)}" />
+							</p:selectOneMenu>
+							<p:message for="selPasoDocumento" />
+						</h:panelGroup>						
+						
+						<p:outputLabel value="#{labelSolicitarDocumentos.label_documento_descargar}" styleClass="campo-obligatorio"></p:outputLabel>
+						<h:panelGroup>
+							<p:selectOneMenu id="selDocumento" value="#{generacionMasivaHolderFL.filtros.idDocumento}" required="true">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoDocumento()}" />
+							</p:selectOneMenu>
+							<p:message for="selDocumento" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelSolicitarDocumentos.label_num_proceso}" styleClass="campo-opcional" />
+						<h:panelGroup>
+							<p:inputText id="numeroProceso" value="#{generacionMasivaHolderFL.filtros.numProc}" maxlength="20"
+								validatorMessage="#{labelGeneral.val_campo_numerico}">
+								<f:validateRegex pattern="#{generacionMasivaMB.expresionNumerica}" />
+							</p:inputText>
+							<p:message for="numeroProceso" />
+						</h:panelGroup>
+							
+						<p:outputLabel value="" />
+						<p:outputLabel value="" />			
+							
+						<p:outputLabel value="#{labelSolicitarDocumentos.label_fecha_proceso_inicial}" styleClass="campo-opcional"/>
+						<h:panelGroup>
+							<p:calendar
+								value="#{generacionMasivaHolderFL.filtros.fechaProcIni}"
+								id="fechaProcIni" navigator="true"
+								pattern="#{utilidadMB.formatoFecha}"
+								maxdate="#{generacionMasivaMB.fechaActual}">
+								<p:watermark for="fechaProcIni"
+									value="#{utilidadMB.formatoFecha}" />
+								<p:ajax event="dateSelect"
+									process="fechaProcIni"
+									update="fechaProcFin" global="false" />
+							</p:calendar>
+							<p:message for="fechaProcIni" />
+						</h:panelGroup>
+							
+						<p:outputLabel value="#{labelSolicitarDocumentos.label_fecha_proceso_final}" styleClass="campo-opcional"/>
+						<h:panelGroup>
+							<p:calendar
+								value="#{generacionMasivaHolderFL.filtros.fechaProcFin}"
+								id="fechaProcFin" navigator="true"
+								pattern="#{utilidadMB.formatoFecha}"
+								mindate="#{generacionMasivaHolderFL.filtros.fechaProcIni}"
+								maxdate="#{generacionMasivaMB.fechaActual}">
+								<p:watermark for="fechaProcFin"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="fechaProcFin" />
+						</h:panelGroup>
+													
+						<p:outputLabel value="#{labelSolicitarDocumentos.label_fecha_paso_inicial}" styleClass="campo-opcional"/>
+						<h:panelGroup>
+							<p:calendar
+								value="#{generacionMasivaHolderFL.filtros.fechaPasoIni}"
+								id="fechaPasoIni" navigator="true"
+								pattern="#{utilidadMB.formatoFecha	}"
+								maxdate="#{generacionMasivaMB.fechaActual}">
+								<p:watermark for="fechaPasoIni"
+									value="#{utilidadMB.formatoFecha}" />
+								<p:ajax event="dateSelect"
+									process="fechaPasoIni"
+									update="fechaPasoFin" global="false" />
+							</p:calendar>
+							<p:message for="fechaPasoIni" />
+						</h:panelGroup>
+							
+						<p:outputLabel value="#{labelSolicitarDocumentos.label_fecha_paso_final}" styleClass="campo-opcional"/>
+						<h:panelGroup>
+							<p:calendar
+								value="#{generacionMasivaHolderFL.filtros.fechaPasoFin}"
+								id="fechaPasoFin" navigator="true"
+								pattern="#{utilidadMB.formatoFecha}"
+								mindate="#{generacionMasivaHolderFL.filtros.fechaPasoIni}"
+								maxdate="#{generacionMasivaMB.fechaActual}">
+								<p:watermark for="fechaPasoFin"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="fechaPasoFin" />
+						</h:panelGroup>	
+					</h:panelGrid>
+				</p:fieldset>
+				<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+					<!--Boton Consultar-->
+					<p:commandButton id="btnBuscar" styleClass="_op-CONSULTAR"
+						action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+						value="#{labelSolicitarDocumentos.btnBuscar}"
+						update=":messages :form-resultado :form-contenido">
+						<p:tooltip for="btnBuscar" value="#{labelSolicitarDocumentos.btnBuscar}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+	    <h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{generacionMasivaHolderFL.lsRespuesta.size() > 0}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelSolicitarDocumentos.titulo_documentos}">
+					<h:panelGrid id="acciones-top">
+						<f:facet name="footer">
+							<!-- Seleccionar Todo -->
+							<p:commandButton rendered="#{generacionMasivaHolderFL.lsRespuestaSelec == null or generacionMasivaHolderFL.lsRespuestaSelec.isEmpty()}" 
+								id="btnSeleccionarTodo" action="SELECCIONAR_TODO" 
+								process="@form"	update=":form-resultado:tabla-resultados :form-resultado:acciones-top @this"
+								value="#{labelSolicitarDocumentos.btn_seleccionar_todo}">
+								<p:tooltip for="btnSeleccionarTodo" value="#{labelSolicitarDocumentos.btn_seleccionar_todo}" />
+							</p:commandButton>
+							<!-- Desmarcar Todo -->
+							<p:commandButton rendered="#{generacionMasivaHolderFL.lsRespuestaSelec.size() != null and !generacionMasivaHolderFL.lsRespuestaSelec.isEmpty()}" 
+								id="btnDesmarcarTodo" action="DESMARCAR_TODO" 
+								process="@form"	update=":form-resultado:tabla-resultados :form-resultado:acciones-top @this"
+								value="#{labelSolicitarDocumentos.btn_desmarcar_todo}">
+								<p:tooltip for="btnDesmarcarTodo" value="#{labelSolicitarDocumentos.btn_desmarcar_todo}" />
+							</p:commandButton>
+							<!-- Generar Documentos -->
+							<p:commandButton id="btnGenerarDocs" process="@form"	
+								value="#{labelSolicitarDocumentos.btn_gen_documentos}"
+								disabled="#{generacionMasivaHolderFL.lsRespuestaSelec.size() == 0 or generacionMasivaHolderFL.lsRespuestaSelec == null}">
+								<p:tooltip for="btnGenerarDocs" value="#{labelSolicitarDocumentos.btn_gen_documentos}" />
+							</p:commandButton>
+							<!-- Exportar y Enviar por E-Mail -->						
+							<c2:reportHandler reportId="REPORTE_GENERACION_MASIVA_DOCUMENTOS"
+								fileName="archivo" formats="xls, xlsx"
+								contentSrc="#{generacionMasivaMB.exportar()}"
+								emailHandler="#{mailExportarMB}" />
+						</f:facet>
+						
+						<p:overlayPanel widgetVar="panelAgrupacion" id="agrupacion" for="btnGenerarDocs" dismissable="false" 
+							at="right middle" my="left middle" showCloseIcon="true" >
+							<h:panelGrid columnClasses="label-col,input-col,label-col,input-col" columns="2" cellpadding="1" style="width:520px !important;">
+								<p:outputLabel value="#{labelSolicitarDocumentos.label_cant_max_docs}" />
+								<h:panelGroup>
+									<p:spinner id="cantMaxDocs" value="#{generacionMasivaHolderFL.filtros.cantMaxDocs}" min="1" max="999999" />
+									<p:message for="cantMaxDocs" />
+								</h:panelGroup>
+							</h:panelGrid>	
+							<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+								<p:commandButton id="btnContinuar" action="GENERAR_DOCUMENTOS_SIG" 
+									process="@this cantMaxDocs"	value="#{labelSolicitarDocumentos.btn_continuar}">
+									<p:tooltip for="btnContinuar" value="#{labelSolicitarDocumentos.btn_continuar}" />
+								</p:commandButton>
+							</h:panelGrid>
+						</p:overlayPanel>	
+										
+						<p:dialog widgetVar="popUpProcesamiento"
+							id="popUpProcesamiento"
+							header="#{labelSolicitarDocumentos.titulo_procesamiento}"
+							resizable="false" modal="true" appendToBody="true" dynamic="true"
+							closable="false" visible="#{generacionMasivaHolderFL.registradaSolicitud}" 
+							width="700px">
+											
+							<h:panelGrid styleClass="center-block">
+								<p:outputLabel value="#{labelSolicitarDocumentos.msg_procesamiento_1}" />
+								<p:outputLabel value="#{labelSolicitarDocumentos.msg_procesamiento_2}" />
+							</h:panelGrid>
+							
+							<h:panelGrid styleClass="center-block">
+								<h:outputText value="#{generacionMasivaHolderFL.consecutivo}" style="font-weight:bold; font-size:2em;"/>
+							</h:panelGrid>
+											
+							<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">								
+								<!--Boton Volver-->
+								<p:commandButton id="btnVolver" action="FINALIZA_GUARDAR"
+									icon="c2-icon-volver" process="@this" immediate="true"
+									value="#{lbComun.btnVolver}">
+									<p:tooltip for="btnVolver" value="#{lbComun.btnVolver}" />
+								</p:commandButton>								
+							</h:panelGrid>
+						</p:dialog>
+					</h:panelGrid>
+					<p:dataTable id="tabla-resultados" var="registro"
+						value="#{generacionMasivaHolderFL.lsRespuesta}"
+						rowKey="#{registro.documentoDTO.id}" paginator="true"
+						selection="#{generacionMasivaHolderFL.lsRespuestaSelec}"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}" >
+													
+						<p:ajax event="rowSelectCheckbox"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this"
+							global="false" />
+		
+						<p:ajax event="rowUnselectCheckbox"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this"
+							global="false" />
+		
+						<p:ajax event="toggleSelect"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this"
+							global="false" />
+							
+						<p:ajax event="rowSelect"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this"
+							global="false" />
+							
+						<p:column selectionMode="multiple" />
+
+						<p:column headerText="#{labelSolicitarDocumentos.lbl_proceso}">
+							<p:outputLabel value="#{registro.procesoDTO.tipoProceso.nombre}" />
+						</p:column>
+
+						<p:column headerText="#{labelSolicitarDocumentos.lbl_paso_proceso}">
+							<p:outputLabel value="#{registro.trazaDTO.estadoProceso.nombre}" />
+						</p:column>
+						
+						<p:column headerText="#{labelSolicitarDocumentos.lbl_documento_descargar}">
+							<p:outputLabel value="#{registro.documentoDTO.tipoDocumento.nombre}" />
+						</p:column>
+						
+						<p:column headerText="#{labelSolicitarDocumentos.lbl_numero_proceso}">
+							<p:outputLabel value="#{registro.procesoDTO.numeroProceso}" />
+						</p:column>
+						
+						<p:column headerText="#{labelSolicitarDocumentos.lbl_fecha_proceso}">
+							<c2:outputDateLabel labelValue="#{registro.procesoDTO.fechaInicio}" fullFormat="false" />
+						</p:column>
+						
+						<p:column headerText="#{labelSolicitarDocumentos.lbl_fecha_paso}">
+							<c2:outputDateLabel labelValue="#{registro.trazaDTO.fechaInicio}" fullFormat="false" />
+						</p:column>
+						
+						<p:column headerText="#{labelSolicitarDocumentos.lbl_tipo_doc_deudor}">
+							<p:outputLabel value="#{registro.partProcesoDTO.persona.tipoIdentificacion.nombre}" />
+						</p:column>
+						
+						<p:column headerText="#{labelSolicitarDocumentos.lbl_numero_doc_deudor}">
+							<p:outputLabel value="#{registro.partProcesoDTO.persona.numeroIdentificacion}" />
+						</p:column>
+						
+						<p:column headerText="#{labelSolicitarDocumentos.lbl_nombre_deudor}">
+							<p:outputLabel value="#{registro.partProcesoDTO.persona.nombreCompleto}" />
+						</p:column>
+						
+						<p:column headerText="#{labelSolicitarDocumentos.lbl_direccion_deudor}">
+							<p:outputLabel value="#{registro.direccionPersonaDTO.direccion.complemento}" />
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+		<script>
+		 	$(document).ready(function() {
+				if (#{generacionMasivaMB.mostrarPopUpProcesamiento()}) {
+					PF('popUpProcesamiento').show();	
+				}
+		 	});
+		</script>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelAdminProcedure.titulo_admin_soporte}">		
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminProcedure.titulo_admin_procedures}">
+					<h:panelGrid id="panel-info-filros" styleClass="center-block"
+						columnClasses="label-col,input-col"
+						columns="2" width="500em">
+						<p:outputLabel value="#{labelAdminProcedure.label_tipo_soporte}" styleClass="campo-obligatorio"/>
+						<h:panelGroup>
+							<p:selectOneMenu id="selTipoSoporte" required="true" value="#{adminProcedureHolderFL.soporte}" >
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" />
+								<f:selectItems value="#{fachadaCatalogosMB.catSoporteProcedimiento()}" />
+								<p:ajax event="change" update="descripcion" global="false" 
+								listener="#{adminProcedureMB.establecerDescripcion(adminProcedureHolderFL.soporte)}"/>
+							</p:selectOneMenu>
+							<p:message for="selTipoSoporte" />
+						</h:panelGroup>
+	
+						<p:outputLabel value="#{labelAdminProcedure.label_descripcion}" styleClass="campo-obligatorio"/>
+						<h:panelGroup>							
+							<p:inputTextarea id="descripcion" autoResize="false" rows="5" cols="50" required="true" value="#{adminProcedureHolderFL.descripcion}" maxlength="150"/>
+							<p:message for="descripcion" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelAdminProcedure.label_datos_entrada}"/>
+						<h:panelGroup>							
+							<p:inputTextarea id="entrada" autoResize="false" rows="3" cols="50" value="#{adminProcedureHolderFL.datosEntrada}" maxlength="150"/>
+							<p:message for="entrada" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelAdminProcedure.label_resultados}" />
+						<h:panelGroup>							
+							<p:inputTextarea id="salida" autoResize="false" rows="3" cols="50" value="#{adminProcedureHolderFL.respuesta}" maxlength="150"/>
+							<p:message for="salida" />
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:fieldset>
+				<h:panelGrid styleClass="center-block" columns="1" cellpadding="5" >
+					<!-- Boton Lanzar Procedure -->
+					<p:commandButton id="btnEjePrc" action="EJECUTAR_PROCEDURE"
+						process="@form"	value="#{labelAdminProcedure.btnEjePrc}"
+						update=":messages :form-contenido">
+						<p:tooltip for="btnEjePrc" value="#{labelAdminProcedure.btnEjePrc}" />
+					</p:commandButton>
+				</h:panelGrid>				
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

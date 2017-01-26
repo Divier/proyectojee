@@ -1,0 +1,35 @@
+<reporte>
+	<codigo>REPORTE_10</codigo>
+	<nombre>REPORTE TIPO FORMULARIOS</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>ORGANISMO DE TRANSITO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE DEL RESPONSABLE</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DEL FORMULARIO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DE ASIGNACION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA Y HORA DE APLICACION DE ESTADO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>ESTADO DEL FORMULARIO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CANTIDAD DE FORMULARIOS</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

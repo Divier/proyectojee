@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+	
+
+	    <h:form id="form-resultado">
+	    	<p:poll interval="120" listener="#{adminParametrosMB.consultarParametros}" update="form-resultado" />				
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta">			
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminPara.titulo_admin_parametros}">
+					<h:panelGrid id="acciones-top">
+						<f:facet name="footer">
+							<!--Boton editar-->
+							<p:commandButton id="btnEditar" action="EDITAR"
+								process="@this" value="#{labelAdminPara.btnEditar}"
+								disabled="#{adminParametrosHolderFL.paraSeleccionado == null}">
+								<p:tooltip for="btnEditar"
+									value="#{labelAdminPara.btnEditar}" />
+							</p:commandButton>
+							<!--Boton genera Documentos-->
+							<p:commandButton id="btnCoactivo" action="#{adminParametrosMB.generarDocumentos}"
+								process="@this" value="Generar documentos coactivo"
+								disabled="#{adminParametrosHolderFL.paraSeleccionado != null}"
+								rendered="true">
+								
+								<p:tooltip for="btnCoactivo"
+									value="Generar documentos coactivo" />									
+							</p:commandButton>
+							<!--Boton consulta coactivos y envia a ws axis-->
+							<p:commandButton id="btnCoactivoAxis" action="#{adminParametrosMB.ejecutarWSCoactivo}"
+								process="@this" value="Envia coactivos axis"
+								disabled="#{adminParametrosHolderFL.paraSeleccionado != null}"
+								rendered="true">
+								<p:tooltip for="btnCoactivoAxis"
+									value="Envia coactivos axis" />									
+							</p:commandButton>
+						</f:facet>
+					</h:panelGrid>					
+					
+					<p:dataTable id="tabla-resultados"
+						value="#{adminParametrosHolderFL.lsParametrosDTO}"
+						var="registro" rowKey="#{registro.idParametro}"
+						selection="#{adminParametrosHolderFL.paraSeleccionado}"
+						paginator="true"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}" sortMode="multiple"
+						emptyMessage="#{labelAdminPara.msg_error_no_parametros}"
+						tableStyle="width:auto" resizableColumns="true">
+
+						<p:ajax event="rowSelectRadio"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this" global="false" />
+
+						<p:column selectionMode="single" />
+
+						<p:column headerText="#{labelAdminPara.lbl_organismo}">
+							<p:outputLabel value="#{registro.organismo}" />							
+						</p:column>
+
+						<p:column headerText="#{labelAdminPara.lbl_modulo}">
+							<p:outputLabel value="#{registro.modulo}" />							
+						</p:column>
+
+						<p:column headerText="#{labelAdminPara.lbl_nombre_parametro}">
+							<p:outputLabel value="#{registro.nombre}" />
+						</p:column>
+						
+						<p:column headerText="#{labelAdminPara.lbl_tipo_parametro}">
+							<p:outputLabel value="#{registro.tipo}" />
+						</p:column>
+						
+						<p:column headerText="#{labelAdminPara.lbl_valor_parametro}">
+							<p:outputLabel value="#{registro.valor}" fullFormat="true" />
+						</p:column>
+						
+						<p:column headerText="#{labelAdminPara.lbl_estado}">
+							<p:outputLabel value="#{registro.estado}" />
+						</p:column>	
+															
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

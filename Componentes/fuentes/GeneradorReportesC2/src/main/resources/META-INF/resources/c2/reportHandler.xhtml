@@ -1,0 +1,79 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+	<composite:interface componentType="reportHandler">
+		<composite:attribute name="showDownload" required="false" type="java.lang.Boolean" default="true" />
+		<composite:attribute name="showEmail" required="false" type="java.lang.Boolean" default="true" />
+		
+		<composite:attribute name="reportId" required="true" type="java.lang.String" />
+		<composite:attribute name="fileName" required="false" type="java.lang.String" />
+		<composite:attribute name="contentSrc" required="true" 
+				method-signature="co.com.datatools.c2.reporte.ContenidoReporte contenidoReporte()"/>
+		<composite:attribute name="formats" required="false" type="java.lang.String" />
+		<composite:attribute name="emailHandler" required="false" type="co.com.datatools.c2.reporte.jsf.EmailProcessor" />
+	</composite:interface>
+
+	<composite:implementation>
+	<style>
+		.control-reporte{
+			display: inline-block;
+		}
+	</style>
+	<h:panelGroup layout="block" styleClass="control-reporte">
+		<h:form id="formReportDownload">
+			<p:commandButton id="showReportPrms" value="#{labelReporte.btn_exportar}" type="button"
+				icon="ui-icon-folder-open"/>
+			<p:commandButton id="showEnviarCorreo" value="#{labelReporte.btn_enviar_correo}" type="button" 
+				rendered="#{cc.attrs.showEmail}" 
+				icon="ui-icon-mail-closed"
+				onclick="PF('popUpEnviarCorreo').show()"
+				update="frmPopUpEnviarCorreo"
+			/>
+			
+			<p:overlayPanel widgetVar="panelReportPrms" id="reportPrms" for="showReportPrms" dismissable="false" 
+				at="right middle" my="left middle" showCloseIcon="true">
+				<h:outputText value="#{labelReporte.lbl_sel_formato_archivo}"/>
+				<h:panelGrid columns="3" cellpadding="1">
+					<p:selectOneMenu id="format" value="#{cc.format}">
+						<f:selectItems value="#{cc.formatosReporte}" />
+					</p:selectOneMenu>
+					
+					<p:commandButton
+						rendered="#{cc.attrs.showDownload}"
+						ajax="false"
+						onclick="PrimeFaces.monitorDownload(startDownReport, stopDownReport);"
+						icon="ui-icon-arrowthick-1-s"
+						title="#{labelReporte.btn_exportar}"
+						styleClass="inline-btn" 
+						>
+						<p:fileDownload value="#{cc.downloadReport()}" />
+						<f:param name="reportId" value="#{cc.attrs.reportId}" />
+						<f:param name="reportContent" value="#{cc.attrs.reportContent}" />
+					</p:commandButton>
+					
+				</h:panelGrid>
+			</p:overlayPanel>
+			
+		</h:form>
+		
+		
+		<script type="text/javascript">
+			function startDownReport() {
+			    PF('panelReportPrms').hide();
+			}
+ 
+			function stopDownReport() {
+			    
+			}
+		</script>
+	</h:panelGroup>
+
+	<ui:include src="popupEnviarCorreo.xhtml" />	
+	</composite:implementation>
+</ui:composition>

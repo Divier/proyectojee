@@ -1,0 +1,71 @@
+<reporte>
+	<codigo>REPORTE_11</codigo>
+	<nombre>REPORTE DE INCONSISTENCIAS DE RECAUDOS o REPORTE DE CONCILIACION DE RECAUDOS</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>ORGANISMO DE TRANSITO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE TRANSACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>HORA DE TRANSACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DEL RECAUDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CUENTA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DE CUENTA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>BANCO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TOTAL EFECTIVO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TOTAL CHEQUE</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TOTAL DEL RECAUDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DE DOCUMENTO DEL DEUDOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DE IDENTIFICACION DEL DEUDOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>OBLIGACION PAGADA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>VALOR DE LA OBLIGACION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DE RECAUDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NRO. DE CUOTAS</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

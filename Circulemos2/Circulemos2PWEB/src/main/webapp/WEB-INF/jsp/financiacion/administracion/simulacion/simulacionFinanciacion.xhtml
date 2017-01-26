@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelSimulacionFinanciacion.lbl_titulo_simulacion}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_gral_tipodocumento}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenTipIde"
+								value="#{simulacionFinanciacionHolderFL.infractorDTO.tipoIdentificacion.id}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" noSelectionOption="true" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenTipIde" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_gral_numerodocumento}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="txtNumIdent"
+								value="#{simulacionFinanciacionHolderFL.infractorDTO.numeroIdentificacion}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" />
+							<p:message for="txtNumIdent" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelSimulacionFinanciacion.lbl_nombre_completo}" />
+						<p:outputLabel
+							value="#{simulacionFinanciacionHolderFL.infractorDTO.nombreCompleto}" />
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultar"
+								value="#{labelSimulacionFinanciacion.lbl_btn_consultar_simulacion}" />
+						</p:commandButton>
+
+						<p:commandButton id="btnLimpiar" action="LIMPIAR"
+							icon="c2-icon-limpiar" process="@this"
+							update=":form-resultado :form-contenido" immediate="true"
+							value="#{lbComun.btnLimpiar}">
+							<p:tooltip for="btnLimpiar" value="#{lbComun.tooltip_limpiar}" />
+						</p:commandButton>
+
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{simulacionFinanciacionHolderFL.listaResultadoInfractor.size() > 0}">
+
+				<p:dataTable id="tabla-resultados"
+					value="#{simulacionFinanciacionHolderFL.listaResultadoInfractor}"
+					var="resultadoInfractorDTO" paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}">
+
+					<!--Columnas Resultado Consulta-->
+					<p:column
+						headerText="#{labelSimulacionFinanciacion.tbl_col_tipo_obligacion}">
+						<h:outputText value="#{resultadoInfractorDTO.medioImposicion}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelSimulacionFinanciacion.tbl_col_numero_obligacion}">
+						<h:outputText value="#{resultadoInfractorDTO.numeroObligacion}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelSimulacionFinanciacion.tbl_col_fecha_obligacion}">
+						<c2:outputDateLabel labelValue="#{resultadoInfractorDTO.fechaObligacion}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelSimulacionFinanciacion.tbl_col_fecha_notificacion}">
+						<c2:outputDateLabel labelValue="#{resultadoInfractorDTO.fechaNotificacion}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelSimulacionFinanciacion.tbl_col_codigo_infraccion}">
+						<h:outputText value="#{resultadoInfractorDTO.codigoInfraccion}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelSimulacionFinanciacion.tbl_col_coactivo}">
+						<h:outputText
+							value="#{resultadoInfractorDTO.estaEnCoactivo == true ? 'SI' : 'NO'}" />
+					</p:column>
+
+					<p:column headerText="#{labelSimulacionFinanciacion.tbl_col_placa}">
+						<h:outputText value="#{resultadoInfractorDTO.placa}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelSimulacionFinanciacion.tbl_col_saldo_obligacion}">
+						<c2:outputCurrencyText value="#{resultadoInfractorDTO.saldoObligacion}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelSimulacionFinanciacion.tbl_col_valor_recarga}">
+						<c2:outputCurrencyText value="#{resultadoInfractorDTO.valorRecargo}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelSimulacionFinanciacion.tbl_col_valor_costas_procesales}">
+						<c2:outputCurrencyText value="#{resultadoInfractorDTO.valorCostaProcesal}" />
+					</p:column>
+
+				</p:dataTable>
+
+				<h:panelGrid columns="3" styleClass="center-block" cellspacing="7">
+					<p:commandButton
+						value="#{labelSimulacionFinanciacion.lbl_btn_simular_simulacion}"
+						styleClass="_op-CREAR" action="_op-CREAR" icon="c2-icon-crear"
+						process="@this" update=":form-resultado :form-contenido :messages">
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

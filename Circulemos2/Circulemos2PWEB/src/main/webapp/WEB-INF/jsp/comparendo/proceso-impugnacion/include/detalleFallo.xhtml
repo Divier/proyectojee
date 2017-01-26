@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<h:panelGrid columns="1" cellpadding="5"
+		rendered="#{detalleProcesoFL.fallo == null}">
+		<p:outputLabel value="#{labelProcesoImpugnacion.msg_no_hay_fallo}" />
+	</h:panelGrid>
+	<p:fieldset id="datos-fallo" styleClass="fieldset-formulario"
+		rendered="#{detalleProcesoFL.fallo != null}"
+		legend="#{labelProcesoImpugnacion.label_datos_fallo}">
+		<h:panelGrid id="panel-formulario-fallo" styleClass="center-block"
+			columnClasses="label-col,input-col" columns="2">
+			<!-- Componentes del formulario 2 o 4 columnas-->
+			<p:outputLabel value="#{labelProcesoImpugnacion.label_tipo_fallo}" />
+			<p:outputLabel value="#{detalleProcesoFL.fallo.tipoFallo.nombre}" />
+
+			<p:outputLabel value="#{labelProcesoImpugnacion.label_porcentaje}" />
+			<c2:outputNumberText value="#{detalleProcesoFL.fallo.porcentaje}%"
+				format="false" />
+
+			<p:outputLabel
+				value="#{labelProcesoImpugnacion.label_valor_descuento}" />
+			<c2:outputCurrencyText
+				value="#{detalleProcesoFL.fallo.valorDescuento}" format="true" />
+
+			<p:outputLabel
+				value="#{labelProcesoImpugnacion.label_valor_obligacion}" />
+			<c2:outputCurrencyText
+				value="#{detalleProcesoFL.fallo.valorObligacion}" format="true" />
+
+			<p:outputLabel value="#{labelProcesoImpugnacion.label_puntos}" />
+			<c2:outputNumberText value="#{detalleProcesoFL.fallo.puntos}"
+				format="false" />
+		</h:panelGrid>
+	</p:fieldset>
+
+	<p:fieldset id="historico-fallo" styleClass="fieldset-formulario"
+		rendered="#{detalleProcesoFL.fallo != null}"
+		legend="#{labelProcesoImpugnacion.label_historico_fallo}">
+		<p:dataTable id="tabla-resultados" var="registro"
+			value="#{detalleProcesoFL.historicoFallo}" paginator="true"
+			paginatorTemplate="#{webPrm.param_paginator_template}"
+			rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+			rows="#{webPrm.param_initial_rows}"
+			emptyMessage="#{labelProcesoImpugnacion.label_no_hay_registros}">
+
+			<p:column headerText="#{labelProcesoImpugnacion.label_nombre_fallo}">
+				<p:outputLabel value="#{registro.revision}" />
+			</p:column>
+
+			<p:column headerText="#{labelProcesoImpugnacion.label_fehca}">
+				<c2:outputDateLabel labelValue="#{registro.fechaRevision}" />
+			</p:column>
+
+			<p:column
+				headerText="#{labelProcesoImpugnacion.label_nombre_observacion}">
+				<p:outputLabel value="#{registro.observacionRevision}" />
+			</p:column>
+
+			<p:column
+				headerText="#{labelProcesoImpugnacion.observacion_rechazo}">
+				<p:outputLabel value="#{registro.observacion}" />
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+
+</ui:composition>

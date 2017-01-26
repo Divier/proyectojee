@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelProcesoImpugnacion.titulo_consultar_proceso}">
+
+				<p:outputLabel styleClass="campo-opcional"
+					value="#{labelProcesoImpugnacion.msg_camp_opcionals}"
+					rendered="#{!impugnacionMB.auxiliar}"></p:outputLabel>
+
+				<h:panelGrid id="panel-info-cabecera" styleClass="center-block"
+					columnClasses="label-col,input-col,label-col,input-col,label-col,input-col"
+					columns="6">
+
+					<p:outputLabel
+						value="#{labelProcesoImpugnacion.label_organismo_transito}"></p:outputLabel>
+					<h:panelGroup>
+						<p:selectOneMenu id="selOrganismoTransito"
+							value="#{impugnacionHolderFL.consultaImpugnacionDTO.codigoOrganismo}"
+							disabled="true">
+							<f:selectItems
+								value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+
+					<p:outputLabel
+						value="#{labelProcesoImpugnacion.label_estado_comparendo}"
+						styleClass="#{impugnacionMB.estComparendo ? 'campo-opcional': ''}"></p:outputLabel>
+					<h:panelGroup>
+						<p:selectOneMenu
+							value="#{impugnacionHolderFL.consultaImpugnacionDTO.idEstadoComparendo}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+							<f:selectItems value="#{impugnacionMB.estadosComparendo}"></f:selectItems>
+						</p:selectOneMenu>
+					</h:panelGroup>
+
+					<p:outputLabel
+						value="#{labelProcesoImpugnacion.label_estado_proceso}"
+						rendered="#{impugnacionMB.estadoProceso}"
+						styleClass="#{impugnacionMB.estProceso ? 'campo-opcional': ''}"></p:outputLabel>
+					<p:selectOneMenu
+						value="#{impugnacionHolderFL.consultaImpugnacionDTO.idEstadoProceso}"
+						rendered="#{impugnacionMB.estadoProceso}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catEstadoProceso(impugnacionHolderFL.idTipoProceso)}"></f:selectItems>
+					</p:selectOneMenu>
+
+					<p:outputLabel value="#{labelProcesoImpugnacion.label_num_proceso}"
+						styleClass="#{impugnacionMB.numProceso ? 'campo-opcional': ''}"></p:outputLabel>
+					<h:panelGroup>
+						<p:inputText maxlength="49"
+							value="#{impugnacionHolderFL.consultaImpugnacionDTO.numeroProceso}">
+						</p:inputText>
+					</h:panelGroup>
+
+					<p:outputLabel value="#{labelProcesoImpugnacion.label_anio}"
+						styleClass="#{impugnacionMB.numProceso ? 'campo-opcional': ''}" />
+					<h:panelGroup>
+						<p:inputText id="anioProceso"
+							value="#{impugnacionHolderFL.consultaImpugnacionDTO.anioProceso}"
+							maxlength="4"
+							converterMessage="#{labelGeneral.val_campo_numerico}"
+							validatorMessage="#{labelGeneral.val_campo_numerico}">
+						</p:inputText>
+						<p:message for="anioProceso" />
+					</h:panelGroup>
+
+					<p:outputLabel
+						value="#{labelProcesoImpugnacion.label_numero_comparendo}"
+						styleClass="#{impugnacionMB.numComparendo ? 'campo-opcional': ''}" />
+					<h:panelGroup>
+						<p:inputText id="numeroFactura"
+							value="#{impugnacionHolderFL.consultaImpugnacionDTO.numeroComparendo}"
+							maxlength="20"
+							validatorMessage="#{labelGeneral.val_campo_numerico}">
+							<f:validateRegex pattern="#{impugnacionMB.expresionNumerica}" />
+						</p:inputText>
+						<p:message for="numeroFactura" />
+					</h:panelGroup>
+					<p:outputLabel
+						value="#{labelProcesoImpugnacion.label_numero_citacion}" />
+					<h:panelGroup>
+						<p:inputText id="numeroCitacion"
+							value="#{impugnacionHolderFL.consultaImpugnacionDTO.numeroCitacion}"
+							maxlength="20"
+							validatorMessage="#{labelGeneral.val_campo_numerico}">
+							<f:validateRegex pattern="#{impugnacionMB.expresionNumerica}" />
+						</p:inputText>
+						<p:message for="numeroCitacion" />
+					</h:panelGroup>
+				</h:panelGrid>
+
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelProcesoImpugnacion.titulo_datos_infractor}">
+					<h:panelGrid id="panel-info-cabecera-infr"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">
+						<p:outputLabel
+							value="#{labelProcesoImpugnacion.label_tipo_doc_infractor}"
+							styleClass="#{impugnacionMB.numComparendo ? 'campo-opcional': ''}" >
+						</p:outputLabel>
+						<h:panelGroup id="pnlTipoDocInf">
+							<p:selectOneMenu id="tipDocInfrac"
+								value="#{impugnacionHolderFL.consultaImpugnacionDTO.tipoDocumentoInfractor}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacion()}"></f:selectItems>
+
+							</p:selectOneMenu>
+							<p:message for="tipDocInfrac" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelProcesoImpugnacion.label_num_doc_infractor}"
+							styleClass="#{impugnacionMB.numComparendo ? 'campo-opcional': ''}" ></p:outputLabel>
+						<h:panelGroup id="pnlNumDocInf">
+							<p:inputText id="numDocInfrac"
+								maxlength="20"
+								value="#{impugnacionHolderFL.consultaImpugnacionDTO.numeroDocumentoInfractor}">
+							</p:inputText>
+							<p:message for="numDocInfrac" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelProcesoImpugnacion.label_nombre_infractor}">
+						</p:outputLabel>
+						<h:panelGroup id="nomInfractor">
+							<p:outputLabel
+								value="#{impugnacionHolderFL.personaFiltroDTO.getNombreCompleto()}">
+							</p:outputLabel>
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelProcesoImpugnacion.titulo_fec_ap_proceso}"
+					rendered="#{impugnacionMB.fechas}">
+					<h:panelGrid id="panel-info-cabecera-fechas"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">
+						<p:outputLabel
+							value="#{labelProcesoImpugnacion.label_fecha_inicial}"
+							styleClass="#{impugnacionMB.fechas ? 'campo-opcional': ''}" />
+						<h:panelGroup>
+							<p:calendar
+								value="#{impugnacionHolderFL.consultaImpugnacionDTO.fechaInicioAperturaProceso}"
+								id="fechaInicial" navigator="true"
+								pattern="#{utilidadMB.formatoFecha}" maxdate="#{impugnacionMB.fechaActual}">
+								<p:watermark for="fechaInicial"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="fechaInicial" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelProcesoImpugnacion.label_fecha_final}"
+							styleClass="#{impugnacionMB.fechas ? 'campo-opcional': ''}" />
+						<h:panelGroup>
+							<p:calendar
+								value="#{impugnacionHolderFL.consultaImpugnacionDTO.fechaFinAperturaProceso}"
+								id="fechaFinal" navigator="true"
+								pattern="#{utilidadMB.formatoFecha}" maxdate="#{impugnacionMB.fechaActual}">
+								<p:watermark for="fechaFinal" value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="fechaFinal" />
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+					<!--Boton Consultar-->
+					<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+						action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+						value="#{lbComun.btnConsultar}"
+						update=":messages :form-resultado :form-contenido">
+						<p:tooltip for="btnConsultar" value="#{lbComun.btnConsultar}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{impugnacionHolderFL.lstComparendos.size() > 0}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelProcesoImpugnacion.msg_fieldset_procesos}">
+					<h:panelGrid id="acciones-top">
+						<f:facet name="footer">
+							<!-- Ver detalle -->
+							<p:commandButton id="btnVerDet" icon="c2-icon-detalle"
+								action="VER_DETALLE" process="@this"
+								value="#{lbComun.btnVerDet}"
+								disabled="#{!impugnacionMB.verDetalle}">
+								<p:tooltip for="btnVerDet"
+									value="#{labelProcesoImpugnacion.tooltip_ver_detalle_encabezado}" />
+							</p:commandButton>
+							<!--Boton Radicar Expediente-->
+							<p:commandButton id="btnRadicarExpediente"
+								styleClass="_op-RADICAR_EXPEDIENTE"
+								action="_op-RADICAR_EXPEDIENTE" icon="c2-icon-crear"
+								process="@form"
+								value="#{labelProcesoImpugnacion.btnRadicarExpediente}"
+								update=":messages :form-resultado :form-contenido"
+								disabled="#{!impugnacionMB.radicarExpediente}">
+								<p:tooltip for="btnRadicarExpediente"
+									value="#{labelProcesoImpugnacion.btnRadicarExpediente}" />
+							</p:commandButton>
+							<!--Boton Evaluar Expediente-->
+							<p:commandButton id="btnEvaluarExpediente"
+								styleClass="_op-EVALUAR_EXPEDIENTE"
+								action="_op-EVALUAR_EXPEDIENTE" icon="c2-icon-crear"
+								process="@form"
+								value="#{labelProcesoImpugnacion.btnEvaluarExpediente}"
+								update=":messages :form-resultado :form-contenido"
+								disabled="#{!impugnacionMB.evaluarExpediente}">
+								<p:tooltip for="btnEvaluarExpediente"
+									value="#{labelProcesoImpugnacion.btnEvaluarExpediente}" />
+							</p:commandButton>
+							<!--Boton Aprobar Fallo-->
+							<p:commandButton id="btnAprobarFallo"
+								styleClass="_op-APROBAR_FALLO" action="_op-APROBAR_FALLO"
+								icon="c2-icon-crear" process="@form"
+								value="#{labelProcesoImpugnacion.btnAprobarFallo}"
+								update=":messages :form-resultado :form-contenido"
+								disabled="#{!impugnacionMB.aprobarFallo}">
+								<p:tooltip for="btnAprobarFallo"
+									value="#{labelProcesoImpugnacion.btnAprobarFallo}" />
+							</p:commandButton>
+							<!--Boton Rechazar Fallo-->
+							<p:commandButton id="btnRechazarFallo"
+								styleClass="_op-RECHAZAR_FALLO" action="_op-RECHAZAR_FALLO"
+								icon="c2-icon-crear" process="@form"
+								value="#{labelProcesoImpugnacion.btnRechazarFallo}"
+								update=":messages :form-resultado :form-contenido"
+								disabled="#{!impugnacionMB.rechazarFallo}">
+								<p:tooltip for="btnRechazarFallo"
+									value="#{labelProcesoImpugnacion.btnRechazarFallo}" />
+							</p:commandButton>
+							<!-- Boton Evaluar expediente continuacion -->
+							<p:commandButton id="btnEvalExpCon"
+								styleClass="_op-EVALUAR_EXPEDIENTE_CONTINUACION"
+								action="_op-EVALUAR_EXPEDIENTE_CONTINUACION"
+								icon="c2-icon-crear" process="@form"
+								value="#{labelProcesoImpugnacion.btnEvaluarExpedienteContinuacion}"
+								update=":messages :form-resultado :form-contenido"
+								disabled="#{!impugnacionMB.evaluarExpedienteContinuacion}">
+								<p:tooltip for="btnEvalExpCon"
+									value="#{labelProcesoImpugnacion.btnEvaluarExpedienteContinuacion}" />
+							</p:commandButton>
+							<!-- Gestionar pruebas -->
+							<p:commandButton id="btnGestPruebas"
+								styleClass="_op-GESTION_PRUEBAS" action="_op-GESTION_PRUEBAS"
+								icon="c2-icon-crear" process="@form"
+								value="#{labelProcesoImpugnacion.btnGestionPruebas}"
+								update=":messages :form-resultado :form-contenido"
+								disabled="#{!impugnacionMB.gestionPruebas}">
+								<p:tooltip for="btnGestPruebas"
+									value="#{labelProcesoImpugnacion.btnGestionPruebas}" />
+							</p:commandButton>
+							<!-- Registrar acciones -->
+							<p:commandButton id="btnRegisAccion"
+								styleClass="_op-REGISTRAR_ACCIONES"
+								action="_op-REGISTRAR_ACCIONES" icon="c2-icon-crear"
+								process="@form"
+								value="#{labelProcesoImpugnacion.btnRegistrarAcciones}"
+								update=":messages :form-resultado :form-contenido"
+								disabled="#{!impugnacionMB.registrarAcciones}">
+								<p:tooltip for="btnRegisAccion"
+									value="#{labelProcesoImpugnacion.btnRegistrarAcciones}" />
+							</p:commandButton>
+							<!--Boton Realizar Fallo-->
+							<p:commandButton id="btnRealizarFallo"
+								rendered="#{!impugnacionMB.realizarFalloContinuacion}"
+								styleClass="_op-REALIZAR_FALLO" action="_op-REALIZAR_FALLO"
+								icon="c2-icon-crear" process="@form"
+								disabled="#{!impugnacionMB.realizarFallo}"
+								value="#{labelProcesoImpugnacion.btnRealizarFallo}"
+								update=":messages :form-resultado :form-contenido">
+								<p:tooltip for="btnRealizarFallo"
+									value="#{labelProcesoImpugnacion.btnRealizarFallo}" />
+							</p:commandButton>
+							<!--Boton Realizar Fallo-->
+							<p:commandButton id="btnRealizarFalloContinuacion"
+								rendered="#{impugnacionMB.realizarFalloContinuacion}"
+								styleClass="_op-REALIZAR_FALLO" action="_op-REALIZAR_FALLO"
+								icon="c2-icon-crear" process="@form"
+								disabled="#{!impugnacionMB.realizarFalloContinuacion}"
+								value="#{labelProcesoImpugnacion.btnRealizarFallo}"
+								update=":messages :form-resultado :form-contenido">
+								<p:tooltip for="btnRealizarFalloContinuacion"
+									value="#{labelProcesoImpugnacion.btnRealizarFallo}" />
+							</p:commandButton>
+							<p:commandButton id="btnSeguimiento" action="HOJA_VIDA"
+								icon="c2-icon-detalle" process="@this"
+								value="#{labelAdminComparendo.btn_ver_det_hoja_vida}"
+								disabled="#{!impugnacionMB.hojaVida}">
+								<p:tooltip for="btnSeguimiento"
+									value="#{labelAdminComparendo.tooltip_ver_det_hoja_vida}" />
+							</p:commandButton>
+						</f:facet>
+					</h:panelGrid>
+					<p:dataTable id="tabla-resultados_mul" var="registro"
+						resizableColumns="true"
+						tableStyleClass="white-space: normal !important; word-wrap: break-word;"
+						value="#{impugnacionHolderFL.lstComparendos}"
+						rowKey="#{registro.idComparendo}" paginator="true"
+						selection="#{impugnacionHolderFL.comparendosSeleccionados}"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}"
+						rendered="#{impugnacionMB.seleccionMultiple}">
+
+						<p:ajax event="rowSelect"
+							listener="#{impugnacionMB.opcionesProcesoMultiple()}"
+							process=":form-resultado:tabla-resultados_mul"
+							update=":form-resultado:acciones-top @this" global="false" />
+
+						<p:ajax event="rowUnselect"
+							listener="#{impugnacionMB.opcionesProcesoMultiple()}"
+							process=":form-resultado:tabla-resultados_mul"
+							update=":form-resultado:acciones-top @this" global="false" />
+
+						<p:ajax event="rowSelectCheckbox"
+							listener="#{impugnacionMB.opcionesProcesoMultiple()}"
+							process=":form-resultado:tabla-resultados_mul"
+							update=":form-resultado:acciones-top @this" global="false" />
+
+						<p:ajax event="rowUnselectCheckbox"
+							listener="#{impugnacionMB.opcionesProcesoMultiple()}"
+							process=":form-resultado:tabla-resultados_mul"
+							update=":form-resultado:acciones-top @this" global="false" />
+
+						<p:ajax event="toggleSelect"
+							listener="#{impugnacionMB.opcionesProcesoMultiple()}"
+							process=":form-resultado:tabla-resultados_mul"
+							update=":form-resultado:acciones-top @this" global="false" />
+
+						<p:column selectionMode="multiple"
+							rendered="#{impugnacionMB.seleccionMultiple}"></p:column>
+
+						<p:column
+							headerText="#{labelProcesoImpugnacion.label_medio_imposicion}">
+							<p:outputLabel value="#{registro.medioImposicion}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelProcesoImpugnacion.label_numero_comparendo}">
+							<p:outputLabel value="#{registro.numeroComparendo}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelProcesoImpugnacion.label_numero_citacion}">
+							<p:outputLabel value="#{registro.numeroCitacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelProcesoImpugnacion.label_fech_impos}">
+							<c2:outputDateLabel labelValue="#{registro.fechaImposicion}"
+								fullFormat="true" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelProcesoImpugnacion.label_fech_notifi}">
+							<c2:outputDateLabel labelValue="#{registro.fechaNotificacion}"
+								fullFormat="false" />
+						</p:column>
+
+						<p:column width="193px"
+							headerText="#{labelProcesoImpugnacion.label_cod_infrac}">
+							<p:outputLabel value="#{registro.detalleInfraccion}" />
+						</p:column>
+
+						<p:column headerText="#{labelProcesoImpugnacion.label_valor}">
+							<c2:outputCurrencyText value="#{registro.valor}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelProcesoImpugnacion.label_estado_comparendo}">
+							<p:outputLabel value="#{registro.estadoComparendo}" />
+						</p:column>
+
+						<p:column headerText="#{labelProcesoImpugnacion.label_Impugnable}">
+							<c2:outputBoolText value="#{registro.impugnable}" />
+						</p:column>
+
+						<p:column headerText="#{labelProcesoImpugnacion.label_proceso}">
+							<p:outputLabel value="#{registro.proceso}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelProcesoImpugnacion.label_estado_proceso}">
+							<p:outputLabel value="#{registro.estadoProceso}" />
+						</p:column>
+					</p:dataTable>
+
+					<p:dataTable id="tabla-resultados" var="registro"
+						resizableColumns="true"
+						tableStyleClass="white-space: normal !important; word-wrap: break-word;"
+						value="#{impugnacionHolderFL.lstComparendos}"
+						rowKey="#{registro.idComparendo}" paginator="true"
+						selection="#{impugnacionHolderFL.comparendoSeleccionado}"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}"
+						rendered="#{!impugnacionMB.seleccionMultiple}">
+						<p:ajax event="rowSelectRadio"
+							listener="#{impugnacionMB.opcionesProceso()}"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this" global="false" />
+						<p:column selectionMode="single"
+							rendered="#{impugnacionMB.seleccion}" />
+
+						<p:column
+							headerText="#{labelProcesoImpugnacion.label_medio_imposicion}">
+							<p:outputLabel value="#{registro.medioImposicion}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelProcesoImpugnacion.label_numero_comparendo}">
+							<p:outputLabel value="#{registro.numeroComparendo}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelProcesoImpugnacion.label_numero_citacion}">
+							<p:outputLabel value="#{registro.numeroCitacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelProcesoImpugnacion.label_fech_impos}">
+							<c2:outputDateLabel labelValue="#{registro.fechaImposicion}"
+								fullFormat="true" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelProcesoImpugnacion.label_fech_notifi}">
+							<c2:outputDateLabel labelValue="#{registro.fechaNotificacion}"
+								fullFormat="false" />
+						</p:column>
+
+						<p:column width="193px"
+							headerText="#{labelProcesoImpugnacion.label_cod_infrac}">
+							<p:outputLabel value="#{registro.detalleInfraccion}" />
+						</p:column>
+
+						<p:column headerText="#{labelProcesoImpugnacion.label_valor}">
+							<c2:outputCurrencyText value="#{registro.valor}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelProcesoImpugnacion.label_estado_comparendo}">
+							<p:outputLabel value="#{registro.estadoComparendo}" />
+						</p:column>
+
+						<p:column headerText="#{labelProcesoImpugnacion.label_Impugnable}">
+							<p:outputLabel rendered="#{registro.impugnable}"
+								value="#{labelGeneral.val_sel_rad_yes}" />
+							<p:outputLabel rendered="#{!registro.impugnable}"
+								value="#{labelGeneral.val_sel_rad_no}" />
+						</p:column>
+
+						<p:column headerText="#{labelProcesoImpugnacion.label_proceso}">
+							<p:outputLabel value="#{registro.proceso}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelProcesoImpugnacion.label_estado_proceso}">
+							<p:outputLabel value="#{registro.estadoProceso}" />
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+		<ui:include
+			src="/WEB-INF/jsp/comparendo/proceso-impugnacion/popup/evaluar_expediente_especialista.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/comparendo/proceso-impugnacion/popup/confirCierrePruebas.xhtml" />
+	</ui:define>
+</ui:composition>

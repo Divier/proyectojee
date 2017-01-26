@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="gestionarInconsistenciasComparendoHolderFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.reporte_inconsistencias.GestionarInconsistenciasComparendoHolderFL" />
+	<var name="gestionarInconsistenciasComparendoFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.reporte_inconsistencias.GestionarInconsistenciasComparendoFL" />
+	<var name="diaNoHabilFL"
+		class="co.com.datatools.c2.managed_bean.administracion.calendario.DiaNoHabilFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/comparendo/reporte-inconsistencias/gestionarInconsistenciasComparendo.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('gestionarInconsistenciasComparendoMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('calendarioMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR">
+		</transition>
+		<transition on="_op-EDITAR" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.gestionarInconsistenciasComparendoMB.cargarProcesaComparendo()"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.gestionarInconsistenciasComparendoMB.consultarProcesaComparendo()"></evaluate>
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<view-state id="_op-EDITAR"
+		view="/WEB-INF/jsp/comparendo/reporte-inconsistencias/reporteInconsistenciasComparendo.xhtml">
+		<transition on="CONTINUAR" to="CONTINUAR">
+		</transition>
+		<transition on="VOLVER" to="_op-CONSULTAR">
+			<evaluate
+				expression="externalContext.sessionMap.gestionarInconsistenciasComparendoMB.cerrarErroresProcesaComparendo()"></evaluate>
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.reporte_inconsistencias.GestionarInconsistenciasComparendoFL()"
+				result="flowScope.gestionarInconsistenciasComparendoFL"></evaluate>
+		</transition>
+		<transition on="DIRECCION_INFRACCION" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.inicializarDireccion(flowScope.gestionarInconsistenciasComparendoFL.direccionInfraccion)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.validarTipoDireccion()"></evaluate>
+			<evaluate expression="true"
+				result="flowScope.gestionarInconsistenciasComparendoFL.editaDireccionInfraccion"></evaluate>
+		</transition>
+		<transition on="DIRECCION_INFRACTOR" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.inicializarDireccion(flowScope.gestionarInconsistenciasComparendoFL.direccionInfractor)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.validarTipoDireccion()"></evaluate>
+			<evaluate expression="true"
+				result="flowScope.gestionarInconsistenciasComparendoFL.editaDireccionInfractor"></evaluate>
+		</transition>
+		<transition on="DIRECCION_INMOVILIZACION" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.inicializarDireccion(flowScope.gestionarInconsistenciasComparendoFL.direccionInmovilizacion)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.validarTipoDireccion()"></evaluate>
+			<evaluate expression="true"
+				result="flowScope.gestionarInconsistenciasComparendoFL.editaDireccionInmovilizacion"></evaluate>
+		</transition>
+		<transition on="DIRECCION_TESTIGO" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.inicializarDireccion(flowScope.gestionarInconsistenciasComparendoFL.direccionTestigo)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.validarTipoDireccion()"></evaluate>
+			<evaluate expression="true"
+				result="flowScope.gestionarInconsistenciasComparendoFL.editaDireccionTestigo"></evaluate>
+		</transition>
+		<transition on="AGREGAR_DIRECCION" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.dirHolderFL.setPopup(false)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.dirHolderFL.setValidaTipoDireccion(false)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.gestionarInconsistenciasComparendoMB.recargarDireccion(externalContext.sessionMap.direccionMB.dirFL.direccionDTO)"></evaluate>
+		</transition>
+		<transition on="FINALIZA_GUARDAR" to="_op-EDITAR">
+			<evaluate expression="false"
+				result="flowScope.gestionarInconsistenciasComparendoFL.existeError" />
+		</transition>
+	</view-state>
+
+	<action-state id="CONTINUAR">
+		<evaluate
+			expression="externalContext.sessionMap.gestionarInconsistenciasComparendoMB.validacionesGlobales()"></evaluate>
+		<transition on="yes" to="_op-EDITAR">
+		</transition>
+		<transition on="no" to="GESTIONAR" />
+	</action-state>
+
+	<action-state id="GESTIONAR">
+		<evaluate
+			expression="externalContext.sessionMap.gestionarInconsistenciasComparendoMB.registrarCorreccionInconsistenciasComparendo()"></evaluate>
+		<transition on="yes" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.gestionarInconsistenciasComparendoMB.consultarProcesaComparendo()"></evaluate>
+		</transition>
+		<transition on="no" to="_op-EDITAR" />
+	</action-state>
+</flow>

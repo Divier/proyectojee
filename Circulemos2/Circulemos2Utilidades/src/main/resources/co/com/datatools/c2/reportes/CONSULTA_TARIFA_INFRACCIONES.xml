@@ -1,0 +1,27 @@
+<reporte>
+	<codigo>REPORTE_3</codigo>
+	<nombre>REPORTE DE TARIFAS</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>TIPO DE INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CODIGO DE INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>VALOR TARIFA INFRACCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA INICIAL DE VIGENCIA TARIFA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA FINAL DE VIGENCIA TARIFA</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

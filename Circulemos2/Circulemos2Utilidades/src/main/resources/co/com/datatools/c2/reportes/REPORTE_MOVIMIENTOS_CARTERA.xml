@@ -1,0 +1,35 @@
+<reporte>
+	<codigo>REPORTE_8</codigo>
+	<nombre>REPORTE MOVIMIENTOS CARTERA</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>AÑO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>MES</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>COODIGO CONCEPTO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE CONCEPTO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO CONCEPTO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CANTIDAD MOVIMIENTOS</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>SUMA TOTAL VALOR MOVIMIENTOS</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

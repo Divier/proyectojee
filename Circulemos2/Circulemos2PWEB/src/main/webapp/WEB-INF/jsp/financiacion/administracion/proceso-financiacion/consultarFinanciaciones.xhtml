@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelFinanciaciones.titulo_consultar_financiacion}">
+				<h:panelGrid id="panel-info-cabecera" styleClass="center-block"
+					columnClasses="label-col,input-col,label-col,input-col,label-col,input-col"
+					columns="4">
+					<p:outputLabel value="#{labelFinanciaciones.label_ano_finan}"></p:outputLabel>
+					<p:selectOneMenu value="#{diaNoHabilFL.anioSeleccionado}"
+						required="true">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+						<f:selectItems value="#{diaNoHabilFL.anios}" />
+						<p:ajax event="change"
+							listener="#{calendarioMB.cambioFechaConsultada()}"
+							update=":form-contenido:campos-consulta @this" process="@this"
+							global="false" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="#{labelFinanciaciones.label_num_finan}"></p:outputLabel>
+					<h:panelGroup>
+						<p:inputText id="txtNumFinan"
+							value="#{consultaFinanciacionHolderFL.filtroConsultaFinanciacionDTO.numeroFinanciacion}"
+							validatorMessage="#{labelGeneral.val_campo_numerico}">
+							<f:validateRegex
+								pattern="#{consultarFinanciacionMB.expresionNumerica}" />
+						</p:inputText>
+						<p:message for="txtNumFinan"></p:message>
+					</h:panelGroup>
+				</h:panelGrid>
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelFinanciaciones.titulo_datos_persona}">
+					<h:panelGrid id="panel-info-cabecera-infr"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">
+						<p:outputLabel value="#{labelFinanciaciones.label_tipo_doc}"
+							styleClass="campo-obligatorio">
+						</p:outputLabel>
+						<h:panelGroup id="pnlTipoDocInf">
+							<p:selectOneMenu id="tipDocInfrac" required="true"
+								value="#{consultaFinanciacionHolderFL.filtroConsultaFinanciacionDTO.idTipoIdentificacion}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacion()}"></f:selectItems>
+							</p:selectOneMenu>
+							<p:message for="tipDocInfrac" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelFinanciaciones.label_num_doc}"
+							styleClass="campo-obligatorio"></p:outputLabel>
+						<h:panelGroup id="pnlNumDocInf">
+							<p:inputText id="numDocInfrac" required="true"
+								value="#{consultaFinanciacionHolderFL.filtroConsultaFinanciacionDTO.numeroIdentificacion}"
+								maxlength="20">
+							</p:inputText>
+							<p:message for="numDocInfrac" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelFinanciaciones.label_nombre_razon_social}"
+							rendered="#{consultaFinanciacionHolderFL.filtroConsultaFinanciacionDTO.idTipoIdentificacion == 2 ? true:false}">
+						</p:outputLabel>
+						<p:outputLabel value="#{labelFinanciaciones.label_nombre}"
+							rendered="#{consultaFinanciacionHolderFL.filtroConsultaFinanciacionDTO.idTipoIdentificacion != 2 ? true:false}">
+						</p:outputLabel>
+						<h:panelGroup id="nomInfractor">
+							<p:outputLabel
+								value="#{consultaFinanciacionHolderFL.personaFiltroDTO.getNombreCompleto()}">
+							</p:outputLabel>
+						</h:panelGroup>
+
+					</h:panelGrid>
+				</p:fieldset>
+				<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+					<!--Boton Consultar-->
+					<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+						action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+						value="#{lbComun.btnConsultar}"
+						update=":messages :form-resultado :form-contenido">
+						<p:tooltip for="btnConsultar" value="#{lbComun.btnConsultar}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{consultaFinanciacionHolderFL.consultaFinanciacionDTOs.size() >0}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelFinanciaciones.msg_fieldset_financiacion}">
+					<h:panelGrid id="acciones-top">
+						<f:facet name="footer">
+							<!-- Ver detalle -->
+							<p:commandButton id="btnVerDet" icon="c2-icon-detalle"
+								action="VER_DETALLE" process="@this"
+								value="#{lbComun.btnVerDet}"
+								disabled="#{!consultaFinanciacionHolderFL.detalle}">
+								<p:tooltip for="btnVerDet"
+									value="#{labelFinanciaciones.tooltip_ver_detalle}" />
+							</p:commandButton>
+						</f:facet>
+					</h:panelGrid>
+					<p:dataTable id="tabla-resultados" var="registro"
+						value="#{consultaFinanciacionHolderFL.consultaFinanciacionDTOs}"
+						selection="#{consultaFinanciacionHolderFL.consultaFinanciacionSelecDTO}"
+						rowKey="#{registro.idFinanciacion}" paginator="true"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+
+						<p:ajax event="rowSelectRadio"
+							listener="#{consultarFinanciacionMB.opcionesFinanciacion()}"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this" global="false" />
+						<p:column selectionMode="single" />
+
+						<p:column headerText="#{labelFinanciaciones.label_origen_finan}">
+							<p:outputLabel value="#{registro.origenFinanciacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_num_finan}">
+							<p:outputLabel value="#{registro.numeroFinanciacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_est_finan}">
+							<p:outputLabel value="#{registro.estadoFinaciacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_fecha_solic}">
+							<c2:outputDateLabel labelValue="#{registro.fechaSolicitud}"
+								fullFormat="true" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_cant_obli}">
+							<p:outputLabel value="#{registro.cantidadObligaciones}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_to_cap_oblig}">
+							<c2:outputCurrencyText
+								value="#{registro.totalSaldoCapitalObligaciones}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_vlr_recargo}">
+							<c2:outputCurrencyText value="#{registro.valorTotalRecargo}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_vlr_total}">
+							<c2:outputCurrencyText value="#{registro.valorTotal}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_vlr_interes}">
+							<c2:outputCurrencyText
+								value="#{registro.valorTotalFinanciarInteres}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_vlr_mora}">
+							<c2:outputCurrencyText value="#{registro.valorMora}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_saldo_pagar}">
+							<c2:outputCurrencyText value="#{registro.saldoPagar}" />
+						</p:column>
+
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

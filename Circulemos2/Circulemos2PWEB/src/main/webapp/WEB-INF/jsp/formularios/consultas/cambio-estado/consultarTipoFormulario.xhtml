@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelCambioEstado.msg_fieldset_estados}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<!-- 						Componentes del formulario 2 o 4 columnas -->
+						<p:outputLabel value="#{labelCambioEstado.lbl_org_transito}" styleClass="campo-obligatorio"/>
+						<h:panelGroup>
+						<p:selectOneMenu id="id1"
+							value="#{consultarEstadosAsignacionHolderFL.organismoTransitoDTO.codigoOrganismo}"
+							required="true" requiredMessage="#{labelGeneral.val_campo_requerido}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+								itemDisabled="true"/>
+							<f:selectItems
+								value="#{consultarEstadosAsignacionMB.consultaOrganismosAsociados()}" />
+							<p:ajax event="valueChange" process="@this" global="false" />
+						</p:selectOneMenu>
+						<p:message for="id1" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelCambioEstado.lbl_tipo_formulario}" styleClass="campo-obligatorio"/>
+						<h:panelGroup>
+						<p:selectOneMenu id="id2"
+							value="#{consultarEstadosAsignacionHolderFL.tipoFormulario}"
+							required="true" requiredMessage="#{labelGeneral.val_campo_requerido}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+								itemDisabled="true" />
+							<f:selectItems value="#{fachadaCatalogosMB.catTipoFormulario()}" />
+							<p:ajax event="valueChange" process="@this"
+								update="form-contenido" global="false" />
+						</p:selectOneMenu>
+						<p:message for="id2" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelCambioEstado.lbl_responsable}" rendered="true" styleClass="campo-obligatorio"/>
+						<h:panelGroup>
+						<p:selectOneMenu id="id3"
+							value="#{consultarEstadosAsignacionHolderFL.idResponsable}"
+							rendered="true"
+							required="true" requiredMessage="#{labelGeneral.val_campo_requerido}"
+							disabled="#{consultarEstadosAsignacionHolderFL.tipoFormulario==null}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+								itemDisabled="true" />
+							<f:selectItems
+								value="#{consultarEstadosAsignacionMB.consultarResponsables()}" />
+							<p:ajax event="valueChange" process="@this" global="false" />
+						</p:selectOneMenu>
+						<p:message for="id3" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultar" value="#{labelCambioEstado.tooltip_btn_consultar}"/>
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{consultarEstadosAsignacionHolderFL.estadoFormularioAsignacionDTO != null}">
+
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<c2:reportHandler reportId="CONSULTA_TIPO_FORMULARIO" fileName="archivo" formats="xls, xlsx" 
+							contentSrc="#{consultarEstadosAsignacionMB.procesarContenidoReporte()}" emailHandler="#{mailExportarMB}"/>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados" paginator="true"
+					value="#{consultarEstadosAsignacionHolderFL.estadoFormularioAsignacionDTO.cifrasControl}"
+					var="registro"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+					<p:column headerText="#{labelCambioEstado.lbl_org_transito}">
+						<p:outputLabel
+							value="#{consultarEstadosAsignacionHolderFL.estadoFormularioAsignacionDTO.codigoOrganismo}&lt;br /&gt;#{consultarEstadosAsignacionHolderFL.estadoFormularioAsignacionDTO.nombreOrganismo}"
+							escape="false" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstado.lbl_responsable}"
+						rendered="#{consultarEstadosAsignacionHolderFL.estadoFormularioAsignacionDTO.responsable.organismoTransito!=null}">
+						<p:outputLabel
+							value="#{consultarEstadosAsignacionHolderFL.estadoFormularioAsignacionDTO.responsable.organismoTransito.codigoOrganismo} #{consultarEstadosAsignacionHolderFL.estadoFormularioAsignacionDTO.responsable.organismoTransito.nombreOrganismo}" 
+							escape="false"/>
+					</p:column>
+					<p:column headerText="#{labelCambioEstado.lbl_responsable}"
+						rendered="#{consultarEstadosAsignacionHolderFL.estadoFormularioAsignacionDTO.responsable.persona!=null}">
+						<p:outputLabel
+							value="#{consultarEstadosAsignacionHolderFL.estadoFormularioAsignacionDTO.responsable.persona.tipoIdentificacion.nombre}-#{consultarEstadosAsignacionHolderFL.personaJuridica.numeroIdentificacion}-#{consultarEstadosAsignacionHolderFL.personaJuridica.nombreComercial}" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstado.lbl_tipo_formulario}">
+						<p:outputLabel
+							value="#{consultarEstadosAsignacionHolderFL.estadoFormularioAsignacionDTO.nombreTipoFormulario}" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstado.lbl_numero_asignacion}" rendered="true">
+						<p:outputLabel value="#{registro.idDetalleCambioEstado}" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstado.lbl_fecha_hora_ap}"
+						rendered="true">
+						<c2:outputDateLabel labelValue="#{registro.fechaAplicacion}" fullFormat="true" />
+					</p:column>
+					<p:column headerText="#{labelCambioEstado.lbl_estado_formulario}" rendered="true">
+						<p:outputLabel value="#{registro.nombreEstado}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelCambioEstado.lbl_cantidad_formularios}">
+						<!-- rendered="#{!responsableFormularioHolderFL.porOrganismo}"-->
+						<p:outputLabel value="#{registro.cantidad}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+
+</ui:composition>

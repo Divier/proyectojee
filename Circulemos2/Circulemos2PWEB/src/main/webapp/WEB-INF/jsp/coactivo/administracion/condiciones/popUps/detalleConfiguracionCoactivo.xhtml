@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<h:form id="formdetConfCoactivo">
+
+		<p:dialog id="popUpDetConfCoactivo"
+			header="#{labelCondicionesCoactivo.tit_detalle_conf_coactivo}"
+			widgetVar="detConfCoactivo" resizable="false" modal="true"
+			appendToBody="true" dynamic="true" height="550px">
+			<p:fieldset legend="#{labelCondicionesCoactivo.tit_fieldset_detalle}"
+				styleClass="fieldset-formulario">
+
+				<h:panelGrid columns="2" columnClasses="label-col,input-col">
+
+					<p:outputLabel
+						value="#{labelCondicionesCoactivo.lbl_nombre_conf_coactivo}:" />
+					<h:panelGroup>
+						<p:inputText id="txtRegNomConfCoactivo" disabled="true"
+							value="#{condicionesCoactivoHolderFL.configuracionCoactivoVO.configuracionCoactivoDTO.nombre}" />
+						<p:message for="txtRegNomConfCoactivo" display="default" />
+					</h:panelGroup>
+
+					<p:outputLabel
+						value="#{labelCondicionesCoactivo.lbl_fecha_inicial_vig_cond}:" />
+					<h:panelGroup>
+						<c2:outputDateLabel
+							labelValue="#{condicionesCoactivoHolderFL.configuracionCoactivoVO.configuracionCoactivoDTO.fechaInicial}" />
+					</h:panelGroup>
+
+					<p:outputLabel
+						value="#{labelCondicionesCoactivo.lbl_fecha_final_vig_cond}:" />
+					<h:panelGroup>
+						<c2:outputDateLabel id="calRegFecFin"
+							labelValue="#{condicionesCoactivoHolderFL.configuracionCoactivoVO.configuracionCoactivoDTO.fechaFinal}" />
+					</h:panelGroup>
+
+				</h:panelGrid>
+
+				<p:dataGrid id="dtaGridCondiciones" var="condCoactivoVO"
+					value="#{condicionesCoactivoHolderFL.configuracionCoactivoVO.lstCondicionCoactivoVOs}"
+					columns="1">
+					<h:panelGrid columns="2" styleClass="dataGridNoBorder">
+						<p:fieldset
+							legend="#{condCoactivoVO.condicionCoactivoDTO.nombre}"
+							styleClass="fieFormStaticWide">
+							<p:dataGrid id="dtaGridVariables" var="valCondVO"
+								value="#{condCoactivoVO.lstValorCondicionVOs}" columns="1"
+								styleClass="dataGridNoBorder">
+								<h:panelGrid columns="2"
+									columnClasses="label-colancha,input-col">
+
+									<p:outputLabel
+										value="#{valCondVO.variableCondicionCoactivoDTO.nombre}:" />
+
+									<h:panelGroup>
+
+										<!-- Campos de tipo entero -->
+										<c2:outputNumberText id="txtEntero"
+											value="#{valCondVO.valInteger}"
+											rendered="#{valCondVO.tipEntero}" format="false">
+										</c2:outputNumberText>
+
+
+										<!-- Campos de tipo real -->
+										<p:inputText id="txtReal" value="#{valCondVO.valDouble}"
+											rendered="#{valCondVO.tipReal}" readonly="true"></p:inputText>
+										<p:message for="txtReal" display="default"
+											rendered="#{valCondVO.tipReal}" />
+
+										<!-- Campos de tipo booleano -->
+										<c2:outputBoolText id="selTypBoolean"
+											value="#{valCondVO.valBooleano}"
+											rendered="#{valCondVO.tipBooleano}" />
+
+
+										<!-- Campos de tipo texto -->
+										<p:inputText id="txtTexto" value="#{valCondVO.valCadena}"
+											rendered="#{valCondVO.tipCadena}" disabled="true"></p:inputText>
+										<p:message for="txtTexto" display="default"
+											rendered="#{valCondVO.tipCadena}" />
+
+										<!-- Campos de tipo fecha -->
+										<c2:outputDateLabel id="calFecha"
+											labelValue="#{valCondVO.valFecha}"
+											rendered="#{valCondVO.tipFecha}" />
+
+
+										<!-- Campos de tipo Combo box seleccion unica -->
+										<p:selectOneMenu id="selUni"
+											value="#{valCondVO.valorCondicionCoactivoDTO.valor}"
+											rendered="#{valCondVO.tipSeleccionUnica}" disabled="true">
+											<f:selectItem
+												itemLabel="#{labelGeneral.val_combo_primer_item}"
+												itemValue="" />
+											<f:selectItems value="#{valCondVO.catalogo}" />
+										</p:selectOneMenu>
+
+										<!-- Campos de tipo Combo box selecion multiple -->
+										<p:dataList value="#{valCondVO.lstNombresValores}" var="value"
+											type="ordered" rendered="#{valCondVO.tipSeleccionMultiple}">
+											<p:outputLabel value="#{value}" />
+										</p:dataList>
+
+
+									</h:panelGroup>
+
+								</h:panelGrid>
+
+							</p:dataGrid>
+						</p:fieldset>
+						<h:panelGrid columns="2">
+							<h:outputLabel value="Tipo de condición activa" />
+							<p:selectBooleanCheckbox
+								value="#{condCoactivoVO.estadoCondicionCoactivoDTO.activo}"
+								disabled="true">
+							</p:selectBooleanCheckbox>
+						</h:panelGrid>
+
+					</h:panelGrid>
+				</p:dataGrid>
+
+				<h:panelGrid columns="2" styleClass="center-block" cellspacing="7">
+					<p:commandButton value="#{lbComun.btnVolver}" icon="c2-icon-volver"
+						process="@this" onclick="PF('detConfCoactivo').hide();"
+						update=":messages" />
+				</h:panelGrid>
+			</p:fieldset>
+		</p:dialog>
+	</h:form>
+
+</ui:composition>

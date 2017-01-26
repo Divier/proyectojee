@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-inmovilizacion"
+		styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_inmovilizacion}">
+
+		<p:dataList id="idDetallesIN"
+			rendered="#{not empty gestionarInconsistenciasComparendoFL.respuestaValidacionVO.detalleProcesamientoInmovilizacionDTOs}"
+			value="#{gestionarInconsistenciasComparendoFL.respuestaValidacionVO.detalleProcesamientoInmovilizacionDTOs}"
+			var="error" itemType="circle">
+			<p:outputLabel value="#{error.errorProcesamiento.descripcion}"
+				style="color:red;" />
+		</p:dataList>
+
+		<p:fieldset id="datos-inmovilizacion" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_inmovilizacion}">
+
+			<h:panelGrid id="panel-formulario-inmovilizacion"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+
+				<p:outputLabel value="#{labelAdminComparendo.label_numero_patio}"
+					rendered="#{!gestionarInconsistenciasComparendoFL.requiereInmovilizacion}" />
+				<h:panelGroup>
+					<p:inputText id="numeroPatio"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.numeroPatio}"
+						converterMessage="#{labelGeneral.val_campo_numerico}">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="numeroPatio" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_nombre_patio}" />
+				<h:panelGroup>
+					<p:inputText id="nombrePatio"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.nombrePatio}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(59)}">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="nombrePatio" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_numero_grua}" />
+				<h:panelGroup>
+					<p:inputText id="numeroGrua"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.numeroGrua}"
+						converterMessage="#{labelGeneral.val_campo_numerico}">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="numeroGrua" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_placa_grua}" />
+				<h:panelGroup>
+					<p:inputText id="placaGrua"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.placaGrua}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(56)}" required="false"
+						validatorMessage="#{labelAdminComparendo.msg_error_placa}">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="placaGrua" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_consecutivo}" />
+				<h:panelGroup>
+					<p:inputText id="consecutivo"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.consecutivoInmovilizacion}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(57)}"
+						validatorMessage="#{labelGeneral.val_campo_numerico}">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="consecutivo" />
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:fieldset>
+
+		<p:fieldset id="datos-direccion-inmovilizacion"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_direccion_inmovilizacion}">
+			<h:panelGrid id="panel-formulario-direccion-inmovilizacion"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="3">
+				<!-- Modulo de direcciones-->
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_direccion_inmovilizacion}" />
+				<h:panelGroup>
+					<p:inputTextarea id="direccionInmovilizacion" rows="3"
+						readonly="true" maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(109)}"
+						value="#{gestionarInconsistenciasComparendoFL.direccionInmovilizacionTexto}"></p:inputTextarea>
+					<p:message for="direccionInmovilizacion" />
+				</h:panelGroup>
+				<!--Boton Direccion-->
+				<p:commandButton id="btnDireccionInmovilizacion"
+					action="DIRECCION_INMOVILIZACION" process="@this"
+					update="direccionInmovilizacion" immediate="true"
+					value="#{labelAdminComparendo.tooltip_btnDireccion}">
+					<p:tooltip for="btnDireccionInmovilizacion"
+						value="#{labelAdminComparendo.tooltip_btnDireccion}" />
+				</p:commandButton>
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

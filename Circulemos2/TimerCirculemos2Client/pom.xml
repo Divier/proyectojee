@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+
+	<parent>
+		<groupId>co.com.datatools.c2</groupId>
+		<artifactId>Circulemos2Parent</artifactId>
+		<version>2.0.26</version>
+		<relativePath>../Circulemos2Parent/pom.xml</relativePath>
+	</parent>
+
+  <groupId>co.com.datatools.datatimer.c2</groupId>
+  <artifactId>TimerCirculemos2Client</artifactId>
+<!--   <version>1.0.0-SNAPSHOT</version> --> 
+  <packaging>jar</packaging>
+
+	<dependencies>
+		<!-- jboss api -->
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-6.0</artifactId>
+			<version>${jboss-javaee-6.0.version}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging</artifactId>
+			<version>${jboss-logging.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		 <dependency>
+  		   <groupId>co.com.datatools</groupId>
+  		   <artifactId>datatimer</artifactId>
+  		   <version>${datatimer.version}</version>
+  	    </dependency>
+		
+
+		
+	</dependencies>
+
+</project>

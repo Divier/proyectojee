@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelConfFinanciaciones.tit_registro_conf_financiaciones}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_registro}">
+
+					<!--Cuando el formulario tiene multiples secciones de campos, repetir este fieldset-->
+					<p:fieldset id="datos-basicos-registro"
+						styleClass="fieldset-formulario"
+						legend="#{labelConfFinanciaciones.tit_datos_basicos_registro}">
+						<p:messages id="msgs" showDetail="true" for="confFin" />
+
+						<h:panelGrid styleClass="center-block" columns="2"
+							columnClasses="label-col,input-col">
+
+							<p:outputLabel
+								value="#{labelConfFinanciaciones.lbl_nombre_conf_financiacion}:"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="txtRegNomConfFinan"
+									value="#{configuracionFinanciacionHolderFL.configuracionFinanVO.configuracionFinanciacionDTO.nombre}"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<p:ajax update="@form" process="@this" global="false" />
+								</p:inputText>
+								<p:message for="txtRegNomConfFinan" />
+							</h:panelGroup>
+
+							<p:outputLabel
+								value="#{labelConfFinanciaciones.lbl_fecha_inicial_vig_cond}:"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:calendar id="calRegFecIni"
+									value="#{configuracionFinanciacionHolderFL.configuracionFinanVO.configuracionFinanciacionDTO.fechaInicial}"
+									navigator="true" pattern="#{utilidadMB.formatoFecha}"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<!-- <p:ajax event="dateSelect"  listener="#{registrarConfiguracionFinanciacionMB.consultarConfiguracionFinanciciacionExistente}" process="@this"
+										global="false" /> -->
+									<p:ajax event="dateSelect" update="@form" process="@this" global="false" />
+									<p:ajax event="change" update="@form" process="@this" global="false" />
+									<p:watermark for="calRegFecIni"
+										value="#{utilidadMB.formatoFecha}" />
+								</p:calendar>
+								<p:message for="calRegFecIni" />
+							</h:panelGroup>
+
+							<p:outputLabel
+								value="#{labelConfFinanciaciones.lbl_fecha_final_vig_cond}:" />
+							<h:panelGroup>
+								<p:calendar id="calRegFecFin"
+									value="#{configuracionFinanciacionHolderFL.configuracionFinanVO.configuracionFinanciacionDTO.fechaFinal}"
+									navigator="true" pattern="#{utilidadMB.formatoFecha}">
+									<p:ajax event="dateSelect" update="@form" process="@this" global="false" />
+									<p:ajax event="change" update="@form" process="@this" global="false" />
+									<p:watermark for="calRegFecFin"
+										value="#{utilidadMB.formatoFecha}" />
+								</p:calendar>
+								<p:message for="calRegFecFin" display="default" />
+							</h:panelGroup>
+
+						</h:panelGrid>
+
+					</p:fieldset>
+
+					<ui:repeat var="condFinanVO"
+						value="#{configuracionFinanciacionHolderFL.configuracionFinanVO.lstCondicionFinanciacionVOs}">
+						<fieldset
+							class="ui-fieldset ui-widget ui-widget-content ui-corner-all ui-hidden-container fieForm">
+							<legend class="ui-fieldset-legend ui-corner-all ui-state-default">
+								<p:selectBooleanCheckbox
+									value="#{condFinanVO.estadoCondicionFinanciacionDTO.activo}"
+									style="padding-right:10px;">
+									<p:ajax update="@form" global="false" />
+								</p:selectBooleanCheckbox>
+
+								<h:outputText
+									value="#{condFinanVO.condicionFinanciacionDTO.nombre}" />
+							</legend>
+							<p:dataGrid var="valCondVO"
+								value="#{condFinanVO.lstValorCondicionVOs}" columns="1"
+								style="border:0 important!;">
+								<h:panelGrid columns="2"
+									columnClasses="label-colancha,input-col">
+
+									<h:panelGroup>
+
+										<p:outputLabel
+											value="#{valCondVO.variableCondicionFinanDTO.nombre}:"
+											rendered="#{!valCondVO.tipTablaDetCantCuota and !valCondVO.tipTablaDetPorcCuotaInici}"
+											style="#{valCondVO.styleTextLabel}"
+											styleClass="campo-obligatorio" />
+
+										<p:commandButton
+											value="#{labelConfFinanciaciones.lbl_btn_adicionar}"
+											action="#{configuracionFinanciacionHolderFL.verAdicionCantidadCuota()}"
+											oncomplete="PF('addDetCantCuoReg').show();"
+											icon="c2-icon-agregar-det" process="@this"
+											rendered="#{valCondVO.tipTablaDetCantCuota}"
+											update=":formAddDetCantCuoReg,:messages"
+											disabled="#{!condFinanVO.estadoCondicionFinanciacionDTO.activo}">
+											<f:setPropertyActionListener
+												target="#{configuracionFinanciacionHolderFL.selValorCondicionVO}"
+												value="#{valCondVO}" />
+										</p:commandButton>
+										<p:commandButton value="#{lbComun.btnEditar}"
+											icon="c2-icon-editar-det"
+											action="#{configuracionFinanciacionHolderFL.editarDetCantidadCuota()}"
+											process="@this,tblDetCantCuota"
+											rendered="#{valCondVO.tipTablaDetCantCuota}"
+											update=":formAddDetCantCuoReg,:messages"
+											disabled="#{!condFinanVO.estadoCondicionFinanciacionDTO.activo}">
+											<f:setPropertyActionListener
+												target="#{configuracionFinanciacionHolderFL.selValorCondicionVO}"
+												value="#{valCondVO}" />
+										</p:commandButton>
+										<p:commandButton value="#{lbComun.btnEliminar}"
+											icon="c2-icon-remover-det"
+											action="#{configuracionFinanciacionHolderFL.eliminarDetCantidadCuota()}"
+											process="@this,tblDetCantCuota"
+											rendered="#{valCondVO.tipTablaDetCantCuota}"
+											update="tblDetCantCuota,:messages"
+											disabled="#{!condFinanVO.estadoCondicionFinanciacionDTO.activo}">
+											<p:confirm header="#{lbComun.msg_tit_confirmar}"
+												message="#{lbComun.msg_confirm_eliminar}"
+												icon="ui-icon-alert" />
+											<f:setPropertyActionListener
+												target="#{configuracionFinanciacionHolderFL.selValorCondicionVO}"
+												value="#{valCondVO}" />
+										</p:commandButton>
+
+										<p:commandButton
+											value="#{labelConfFinanciaciones.lbl_btn_adicionar}"
+											icon="c2-icon-agregar-det"
+											action="#{configuracionFinanciacionHolderFL.verAdicionDetPorcCuoIni()}"
+											oncomplete="PF('addDetPorcCuoIniReg').show();"
+											process="@this"
+											rendered="#{valCondVO.tipTablaDetPorcCuotaInici}"
+											update=":formAddDetPorcCuoReg,:messages"
+											disabled="#{!condFinanVO.estadoCondicionFinanciacionDTO.activo}">
+											<f:setPropertyActionListener
+												target="#{configuracionFinanciacionHolderFL.selValorCondicionVO}"
+												value="#{valCondVO}" />
+										</p:commandButton>
+										<p:commandButton value="#{lbComun.btnEditar}"
+											icon="c2-icon-editar-det"
+											action="#{configuracionFinanciacionHolderFL.editarDetPorcCuoIni()}"
+											process="@this,tblDetPorcCuotaIni"
+											rendered="#{valCondVO.tipTablaDetPorcCuotaInici}"
+											update=":formAddDetPorcCuoReg,:messages"
+											disabled="#{!condFinanVO.estadoCondicionFinanciacionDTO.activo}">
+											<f:setPropertyActionListener
+												target="#{configuracionFinanciacionHolderFL.selValorCondicionVO}"
+												value="#{valCondVO}" />
+										</p:commandButton>
+										<p:commandButton value="#{lbComun.btnEliminar}"
+											icon="c2-icon-remover-det"
+											action="#{configuracionFinanciacionHolderFL.eliminarDetPorcCuoIni()}"
+											process="@this,tblDetPorcCuotaIni"
+											rendered="#{valCondVO.tipTablaDetPorcCuotaInici}"
+											update="tblDetPorcCuotaIni,:messages"
+											disabled="#{!condFinanVO.estadoCondicionFinanciacionDTO.activo}">
+											<p:confirm header="#{lbComun.msg_tit_confirmar}"
+												message="#{lbComun.msg_confirm_eliminar}"
+												icon="ui-icon-alert" />
+											<f:setPropertyActionListener
+												target="#{configuracionFinanciacionHolderFL.selValorCondicionVO}"
+												value="#{valCondVO}" />
+										</p:commandButton>
+
+									</h:panelGroup>
+
+									<h:panelGroup>
+
+										<!-- Campos de tipo entero -->
+										<p:inputText id="txtEntero" value="#{valCondVO.valInteger}"
+											required="#{condFinanVO.estadoCondicionFinanciacionDTO.activo}"
+											requiredMessage="#{labelGeneral.val_campo_requerido}"
+											rendered="#{valCondVO.tipEntero}"
+											converterMessage="#{labelGeneral.val_campo_numerico}"
+											disabled="#{!condFinanVO.estadoCondicionFinanciacionDTO.activo}">
+											<p:ajax update="@this" process="@this" global="false" />
+										</p:inputText>
+										<p:message for="txtEntero" rendered="#{valCondVO.tipEntero}" />
+
+										<!-- Campos de tipo real -->
+										<h:panelGroup>
+											<pe:inputNumber id="txtReal" value="#{valCondVO.valDouble}"
+												required="#{condFinanVO.estadoCondicionFinanciacionDTO.activo}"
+												requiredMessage="#{labelGeneral.val_campo_requerido}"
+												rendered="#{valCondVO.tipReal}"
+												disabled="#{!condFinanVO.estadoCondicionFinanciacionDTO.activo}">
+												<p:ajax update="@this" process="@this" global="false" />
+											</pe:inputNumber>
+											<p:message for="txtReal" rendered="#{valCondVO.tipReal}" />
+										</h:panelGroup>
+
+										<!-- Campos de tipo booleano -->
+										<p:selectOneRadio id="selTypBoolean"
+											value="#{valCondVO.valBooleano}"
+											requiredMessage="#{labelGeneral.val_campo_requerido}"
+											required="#{condFinanVO.estadoCondicionFinanciacionDTO.activo}"
+											rendered="#{valCondVO.tipBooleano}"
+											disabled="#{!condFinanVO.estadoCondicionFinanciacionDTO.activo}">
+											<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+												itemValue="true" />
+											<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+												itemValue="false" />
+											<p:ajax update="@this" process="@this" global="false" />
+										</p:selectOneRadio>
+										<p:message for="selTypBoolean"
+											rendered="#{valCondVO.tipBooleano}" />
+
+										<!-- Campos de tipo texto -->
+										<p:inputText id="txtTexto" value="#{valCondVO.valCadena}"
+											required="#{condFinanVO.estadoCondicionFinanciacionDTO.activo}"
+											requiredMessage="#{labelGeneral.val_campo_requerido}"
+											rendered="#{valCondVO.tipCadena}"
+											disabled="#{!condFinanVO.estadoCondicionFinanciacionDTO.activo}">
+											<p:ajax update="@this" process="@this" global="false" />
+										</p:inputText>
+										<p:message for="txtTexto" rendered="#{valCondVO.tipCadena}" />
+
+										<!-- Campos de tipo fecha -->
+										<p:calendar id="calFecha" value="#{valCondVO.valFecha}"
+											navigator="true"
+											required="#{condFinanVO.estadoCondicionFinanciacionDTO.activo}"
+											requiredMessage="#{labelGeneral.val_campo_requerido}"
+											rendered="#{valCondVO.tipFecha}"
+											disabled="#{!condFinanVO.estadoCondicionFinanciacionDTO.activo}"
+											pattern="#{webPrm.lab_calendar_pattern}">
+											<p:ajax update="@this" process="@this" global="false" />
+											<p:watermark for="calFecha"
+												value="#{webPrm.lab_calendar_mask_pattern}" />
+										</p:calendar>
+										<p:message for="calFecha" rendered="#{valCondVO.tipFecha}" />
+
+										<!-- Campos de tipo Combo box seleccion unica -->
+										<p:selectOneMenu id="selUni"
+											value="#{valCondVO.valorCondicionFinanciacionDTO.valor}"
+											rendered="#{valCondVO.tipSeleccionUnica}"
+											required="#{condFinanVO.estadoCondicionFinanciacionDTO.activo}"
+											requiredMessage="#{labelGeneral.val_campo_requerido}"
+											disabled="#{!condFinanVO.estadoCondicionFinanciacionDTO.activo}">
+											<f:selectItem
+												itemLabel="#{labelGeneral.val_combo_primer_item}"
+												itemValue="" />
+											<f:selectItems value="#{valCondVO.catalogo}" />
+											<p:ajax update="@this" process="@this" global="false" />
+										</p:selectOneMenu>
+										<p:message for="selUni" rendered="#{valCondVO.tipFecha}" />
+
+										<!-- Campos de tipo Combo box selecion multiple -->
+										<p:selectCheckboxMenu id="selMul"
+											value="#{valCondVO.lstValoresEscogidos}"
+											label="#{labelGeneral.val_combo_primer_item}"
+											filterText="Filter" filterMatchMode="startsWith"
+											rendered="#{valCondVO.tipSeleccionMultiple}"
+											required="#{condFinanVO.estadoCondicionFinanciacionDTO.activo}"
+											requiredMessage="#{labelGeneral.val_campo_requerido}"
+											disabled="#{!condFinanVO.estadoCondicionFinanciacionDTO.activo}">
+											<f:selectItems value="#{valCondVO.catalogo}" />
+											<p:ajax update="@this" process="@this" global="false" />
+										</p:selectCheckboxMenu>
+										<p:message for="selMul" rendered="#{valCondVO.tipFecha}" />
+
+									</h:panelGroup>
+
+								</h:panelGrid>
+
+								<p:dataTable id="tblDetCantCuota" var="detCantCuotDTO"
+									widgetVar="wvTblDetCantCuota"
+									value="#{valCondVO.detalleCantidadCuotaDM}"
+									rowKey="#{detCantCuotDTO.index}" paginator="true"
+									paginatorTemplate="#{webPrm.param_paginator_template}"
+									rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+									rows="#{webPrm.param_initial_rows}"
+									selection="#{configuracionFinanciacionHolderFL.selDetCantidadCuotaDTO}"
+									rendered="#{valCondVO.tipTablaDetCantCuota}">
+
+									<p:column selectionMode="single" />
+
+									<p:column
+										headerText="#{labelConfFinanciaciones.lbl_clm_dcc_val_min_financiar}">
+										<c2:outputCurrencyText
+											value="#{detCantCuotDTO.valorMinimoFinanciar}"
+											style="#{detCantCuotDTO.styleText}" />
+									</p:column>
+
+									<p:column
+										headerText="#{labelConfFinanciaciones.lbl_clm_dcc_val_max_financiar}">
+										<c2:outputCurrencyText
+											value="#{detCantCuotDTO.valorMaximoFinanciar}"
+											style="#{detCantCuotDTO.styleText}" />
+									</p:column>
+
+									<p:column
+										headerText="#{labelConfFinanciaciones.lbl_clm_dcc_cant_min_cuotas}">
+										<c2:outputNumberText
+											value="#{detCantCuotDTO.cantidadMinimaCoutas}"
+											style="#{detCantCuotDTO.styleText}" />
+									</p:column>
+
+									<p:column
+										headerText="#{labelConfFinanciaciones.lbl_clm_dcc_cant_max_cuotas}">
+										<c2:outputNumberText
+											value="#{detCantCuotDTO.cantidadMaximaCouta}"
+											style="#{detCantCuotDTO.styleText}" />
+									</p:column>
+
+								</p:dataTable>
+
+
+								<p:dataTable id="tblDetPorcCuotaIni" var="detPorcCuoIniDTO"
+									widgetVar="wvTblDetPorcCuotaIni"
+									rowKey="#{detPorcCuoIniDTO.index}"
+									value="#{valCondVO.detallePorcentajeCuotaIniciDM}"
+									paginator="true"
+									paginatorTemplate="#{webPrm.param_paginator_template}"
+									rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+									rows="#{webPrm.param_initial_rows}"
+									selection="#{configuracionFinanciacionHolderFL.selDetPorcCuoIniDTO}"
+									rendered="#{valCondVO.tipTablaDetPorcCuotaInici}">
+
+									<p:column selectionMode="single" />
+
+									<p:column
+										headerText="#{labelConfFinanciaciones.lbl_clm_dpci_val_min_financiar}">
+										<c2:outputCurrencyText
+											value="#{detPorcCuoIniDTO.valorMinimoFinanciar}"
+											style="#{detPorcCuoIniDTO.styleText}" />
+									</p:column>
+
+									<p:column
+										headerText="#{labelConfFinanciaciones.lbl_clm_dpci_val_max_financiar}">
+										<c2:outputCurrencyText
+											value="#{detPorcCuoIniDTO.valorMaximoFinanciar}"
+											style="#{detPorcCuoIniDTO.styleText}" />
+									</p:column>
+
+									<p:column
+										headerText="#{labelConfFinanciaciones.lbl_clm_dpci_porc_finan_cuot_ini}">
+										<c2:outputPercentText
+											value="#{detPorcCuoIniDTO.porcentajeCuotaInicial}"
+											style="#{detPorcCuoIniDTO.styleText}" />
+									</p:column>
+
+								</p:dataTable>
+
+							</p:dataGrid>
+						</fieldset>
+
+					</ui:repeat>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+
+						<!--Boton Guardar-->
+						<p:commandButton id="btnGuardar" value="#{lbComun.btnGuardar}"
+							icon="c2-icon-guardar" action="CONTINUAR" process="@form"
+							update=":form-ingreso msgs">
+							<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+
+						<!--Boton Limpiar-->
+						<p:commandButton id="btnLimpiar" action="LIMPIAR"
+							icon="c2-icon-limpiar" process="@this" update=":form-ingreso"
+							immediate="true" value="#{lbComun.btnLimpiar}">
+							<p:tooltip for="btnLimpiar" value="#{lbComun.tooltip_limpiar}" />
+						</p:commandButton>
+
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" value="#{lbComun.btnCancelar}"
+							icon="c2-icon-cancelar" action="VOLVER" process="@this"
+							update=":messages">
+							<p:tooltip for="btnCancelar"
+								value="#{labelConfFinanciaciones.cancelar_guardar_configuracion}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<ui:include
+			src="/WEB-INF/jsp/financiacion/administracion/configuracionFinanciacion/popUps/addDetCantCuotaReg.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/financiacion/administracion/configuracionFinanciacion/popUps/addDetPorcCuotaReg.xhtml" />
+
+	</ui:define>
+
+</ui:composition>

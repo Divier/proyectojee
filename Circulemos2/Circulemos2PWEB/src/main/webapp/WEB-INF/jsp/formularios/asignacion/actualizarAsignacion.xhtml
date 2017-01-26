@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+<ui:define name="contenido">
+
+    <h:form id="form-ingreso">
+        <p:panel id="campos-registro" styleClass="panel-formulario" header="#{labelCambioEstadosForm.tit_actualizacion_asignacion}">
+            <p:fieldset id="datos-principal" styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_edicion}">
+				<p:fieldset id="datos-generales" styleClass="fieldset-formulario" legend="#{labelCambioEstadosForm.label_datos_generales}">
+					<h:panelGrid id="panel-formulario" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">							
+						<p:outputLabel value="#{labelCambioEstadosForm.label_tipo_formulario}"/>
+						<h:outputText value="#{asignacionFL.nombreTipoFormulario}" />
+						<p:outputLabel value="#{labelCambioEstadosForm.label_tipo_asignacion}" styleClass="campo-obligatorio"/>
+						<h:outputText value="#{asignacionFL.nombreTipoAsignacion}" />
+						<p:outputLabel value="#{labelCambioEstadosForm.label_folios}" styleClass="campo-obligatorio"/>
+						<h:panelGroup>
+							<p:inputText id="folio" value="#{asignacionFL.folio}" required="true" requiredMessage="#{labelGeneral.val_campo_requerido}" maxlength="20"/>
+							<p:message for="folio" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelCambioEstadosForm.label_fecha_asignacion}" styleClass="campo-obligatorio"/>
+						<c2:outputDateLabel labelValue="#{asignacionFL.fechaAsignacion}" />
+						<p:outputLabel value="#{labelCambioEstadosForm.label_observaciones}"/>						
+						<p:inputTextarea id="observaciones" value="#{asignacionFL.observaciones}" maxlength="100"/>						
+					</h:panelGrid>
+				</p:fieldset>
+				
+				<p:fieldset id="datos-valida-responsable" styleClass="fieldset-formulario" legend="#{labelCambioEstadosForm.label_datos_responsable}">
+					<h:panelGrid id="panel-formulario-valida-resp" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">
+						<p:outputLabel value="#{labelCambioEstadosForm.label_placa_responsable}"/>
+						<h:panelGroup>
+							<h:outputText id="placa" value="#{asignacionFL.placaResponsable}" />
+							<p:message for="placa" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelCambioEstadosForm.label_tipo_doc_responsable}"/>							
+						<h:outputText value="#{asignacionFL.nombreTipoIdentificacion}" />
+						<p:outputLabel value="#{labelCambioEstadosForm.label_numero_doc_responsable}"/>
+						<h:outputText value="#{asignacionFL.numeroDocResponsable}" />	
+					</h:panelGrid>
+						
+					<h:panelGrid id="panel-nombre-resp" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4" >
+						<p:outputLabel value="#{labelCambioEstadosForm.label_nombre_responsable}"/>
+						<h:outputText value="#{asignacionFL.nombreResponsable}" />
+						<p:outputLabel value="#{labelCambioEstadosForm.label_area_responsable}"/>
+						<h:outputText value="#{asignacionFL.areaResponsable}" />
+					</h:panelGrid>
+				</p:fieldset>	
+				
+				<p:fieldset id="datos-formularios" styleClass="fieldset-formulario" legend="#{labelCambioEstadosForm.label_datos_formulario}">
+					<h:panelGrid id="panel-formulario-resp" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col" columns="4">
+						<p:outputLabel value="#{labelCambioEstadosForm.label_numero_inicial}" styleClass="campo-obligatorio"/>
+						<h:outputText value="#{asignacionFL.numInicial}" />		
+						<p:outputLabel value="#{labelCambioEstadosForm.label_numero_final}" styleClass="campo-obligatorio"/>
+						<h:outputText value="#{asignacionFL.numFinal}" />
+						<p:outputLabel value="#{labelCambioEstadosForm.label_cantidad_formularios}"/>
+						<h:outputText id="cantidad" value="#{asignacionFL.cantidadFormularios}"/>
+					</h:panelGrid>
+				</p:fieldset>
+
+                <h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+                    <!--Boton Guardar-->
+                    <p:commandButton id="btnGuardar" action="EDITAR" icon="c2-icon-guardar"
+							process="@form" value="#{lbComun.btnGuardar}" update=":messages :form-ingreso">
+						<p:tooltip for="btnGuardar" value="#{labelNumeracion.tooltip_btnGuardar}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+					</p:commandButton>
+                    <!--Boton Volver-->
+                    <p:commandButton id="btnVolver" action="VOLVER" icon="c2-icon-volver"
+							process="@this" immediate="true"
+							value="#{lbComun.btnVolver}">
+						<p:tooltip for="btnVolver" value="#{lbComun.tooltip_volver}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+					</p:commandButton>
+                </h:panelGrid>
+            </p:fieldset>
+        </p:panel>
+    </h:form>
+    
+</ui:define>
+			
+</ui:composition>

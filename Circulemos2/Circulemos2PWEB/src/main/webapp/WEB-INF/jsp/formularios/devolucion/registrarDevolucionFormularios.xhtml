@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-detalle-formularios">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelCambioEstadosForm.titulo_detalle}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario">
+
+					<h:panelGrid id="acciones-top" columns="4" cellspacing="5"
+						styleClass="center-block">
+						<p:outputLabel
+							value="#{labelCambioEstadosForm.label_observaciones}" />
+						<p:inputText value="#{reasignacionFL.observacionesMasivas}"
+							maxlength="100" />
+						<!--Boton Adicionar masivamente observaciones-->
+						<p:commandButton id="btnAdicionar"
+							action="#{reasignacionesMB.adicionarMasivamenteObservaciones()}"
+							icon="c2-icon-guardar" process="@form"
+							value="#{labelCambioEstadosForm.btnAdicionar_observaciones}"
+							update=":form-detalle-formularios:tabla-detalle-formularios">
+							<p:tooltip for="btnAdicionar"
+								value="#{labelCambioEstadosForm.tooltip_btnAdicionar_observciones}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+
+					<!--Fieldset para seccion de detalles-->
+					<p:fieldset id="datos-detalle" styleClass="fieldset-formulario"
+						legend="#{labelCambioEstadosForm.titulo_detalle}">
+
+						<p:dataTable value="#{reasignacionHolderFL.detalleFormularios}"
+							var="seguimiento" paginator="true" rowKey="#{seguimiento.id}"
+							id="tabla-detalle-formularios"
+							paginatorTemplate="#{webPrm.param_paginator_template}"
+							rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+							rows="#{webPrm.param_initial_rows}" rowIndexVar="consecutivo"
+							sortMode="multiple"
+							selection="#{reasignacionFL.formulariosSeleccionados}">
+
+							<p:ajax event="rowSelectCheckbox"
+								process=":form-detalle-formularios:tabla-detalle-formularios"
+								update=":form-detalle-formularios:acciones-top @this"
+								global="false" />
+							<p:ajax event="rowUnselectCheckbox"
+								process=":form-detalle-formularios:tabla-detalle-formularios"
+								update=":form-detalle-formularios:acciones-top @this"
+								global="false" />
+							<p:ajax event="rowSelect"
+								process=":form-detalle-formularios:tabla-detalle-formularios"
+								update=":form-detalle-formularios:acciones-top @this"
+								global="false" />
+							<p:ajax event="rowUnselect"
+								process=":form-detalle-formularios:tabla-detalle-formularios"
+								update=":form-detalle-formularios:acciones-top @this"
+								global="false" />
+							<p:ajax event="toggleSelect"
+								process=":form-detalle-formularios:tabla-detalle-formularios"
+								update=":form-detalle-formularios:acciones-top @this"
+								global="false" />
+
+							<p:column selectionMode="multiple" />
+							<p:column
+								headerText="#{labelCambioEstadosForm.label_consecutivo}">
+								<h:outputText value="#{consecutivo+1}" />
+							</p:column>
+							<p:column
+								headerText="#{labelCambioEstadosForm.label_numero_formulario}">
+								<h:outputText value="#{seguimiento.formulario.numeroFormulario}" />
+							</p:column>
+							<p:column
+								headerText="#{labelCambioEstadosForm.label_estado_formulario}">
+								<h:outputText value="#{seguimiento.estadoFormulario.nombre}" />
+							</p:column>
+							<p:column
+								headerText="#{labelCambioEstadosForm.label_observaciones}">
+								<p:inputText value="#{seguimiento.observaciones}"
+									maxlength="100" />
+							</p:column>
+						</p:dataTable>
+					</p:fieldset>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<!--Boton Reasignar-->
+						<p:commandButton id="btnReasignar"
+							action="VALIDAR-CANTIDAD-FORMULARIOS" icon="c2-icon-guardar"
+							process="@form"
+							value="#{labelCambioEstadosForm.btnReasignar_formulario}"
+							update=":messages,:form-detalle-formularios">
+							<p:tooltip for="btnReasignar"
+								value="#{labelCambioEstadosForm.tooltip_btnReasignar_formulario}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" action="_op-CANCELAR" icon="c2-icon-cancelar"
+							process="@this" immediate="true" value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar"
+								value="#{labelNumeracion.tooltip_btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<!-- Popup para confirmar que se desea asignar una cantidad menor al stock minimo configurado -->
+		<p:dialog widgetVar="confirmaCantidadFormularios"
+			id="confirmaCantidadFormularios"
+			header="#{labelCambioEstadosForm.titulo_confirmacion_cantidad}"
+			resizable="false" modal="true" appendToBody="true" dynamic="true">
+			<h:form>
+				<h:panelGrid styleClass="center-block" columns="4">
+					<p:outputLabel value="#{reasignacionesMB.msgConfirmaCantidad}" />
+				</h:panelGrid>
+				<h:panelGrid columns="2" styleClass="center-block" cellspacing="5">
+					<p:commandButton value="Si" action="CONTINUAR" immediate="true"
+						oncomplete="PF('confirmaCantidadFormularios').hide();"
+						styleClass="ui-confirmdialog-yes" icon="c2-icon-si"
+						update=":form-detalle-formularios" />
+					<p:commandButton value="No" action="CANCELAR-REASIGNACION"
+						immediate="true"
+						oncomplete="PF('confirmaCantidadFormularios').hide();"
+						styleClass="ui-confirmdialog-no" icon="c2-icon-no" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<script>
+	 	$(document).ready(function(){
+			var popUp = #{reasignacionFL.cantidadInferiorMinimo}; 
+			if(popUp){
+				PF('confirmaCantidadFormularios').show();	
+			}
+	 	 });
+		</script>
+	</ui:define>
+</ui:composition>

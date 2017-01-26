@@ -1,0 +1,63 @@
+<reporte>
+	<codigo>REPORTE_4</codigo>
+	<nombre>REPORTE DE SOLICITUD PAGO A OTRA OBLIGACION</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>TIPO DOCUMENTO DE INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DOCUMENTO INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE DE INFRACTOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CONSECUTIVO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE SOLICITUD</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>ESTADO DE SOLICITUD</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE TRANSFERENCIA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NOMBRE DE FUNCIONARIO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO OBLIGACION FINANCIERA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CODIGO DE OBLIGACION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE OBLIGACION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>VALOR DE OBLIGACION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>VALOR ABONO POR DEVOLUCION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>SALDO POR PAGAR DE OBLIGACION</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

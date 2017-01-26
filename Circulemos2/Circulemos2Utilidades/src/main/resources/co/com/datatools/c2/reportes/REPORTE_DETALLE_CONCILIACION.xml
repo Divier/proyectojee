@@ -1,0 +1,47 @@
+<reporte>
+	<codigo>REPORTE_7</codigo>
+	<nombre>REPORTE DETALLE CONCILIACION CARTERA</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>TIPO DE OBLIGACION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DE OBLIGACION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE OBLIGACION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>TIPO DE DOCUMENTO DEUDOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NUMERO DE DOCUMENTO DEUDOR</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>SALDO DE OBLIGACION</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CANTIDAD DE CONCEPTOS DEBITO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CANTIDAD DE CONCEPTOS CREDITO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>RESULTADOS DE CONCEPTOS CONTABLES</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>VALOR DIFERENCIA SALDOS</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

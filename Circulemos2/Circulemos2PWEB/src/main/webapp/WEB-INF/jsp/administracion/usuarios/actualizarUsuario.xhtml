@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+
+	<ui:define name="contenido">
+
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelUsuarios.titulo_modificar_usuario}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_edicion}">
+
+					<p:fieldset id="password" styleClass="fieldset-formulario"
+						legend="#{labelUsuarios.titulo_password_usuario}"
+						rendered="#{!usuariosFL.usuarioModificar.autenticacionConLdap}">
+						<h:panelGrid styleClass="center-block" columns="2"
+							cellpadding="5">
+							<p:commandButton id="btnCambiarPw" icon="c2-icon-editar"
+								rendered="#{!usuariosFL.usuarioModificar.autenticacionConLdap}"
+								value="#{labelUsuarios.boton_cambiar_pw}"
+								update=":messages :form-ingreso:campos-registro" immediate="true"
+								action="ACTUALIZAR-PW">
+								<p:tooltip for="btnCambiarPw"
+									value="#{labelUsuarios.tooltip_btnCambiarPw}" />
+							</p:commandButton>
+							<p:commandButton id="btnDesbloquear" icon="c2-icon-editar"
+								rendered="#{usuariosFL.pwBloqueado}"
+								value="#{labelUsuarios.boton_desbloquear_pw}"
+								update=":messages :form-ingreso:campos-registro" immediate="true"
+								action="DESBLOQUEAR-PW">
+								<p:tooltip for="btnDesbloquear"
+									value="#{labelUsuarios.tooltip_btnDesbloquear}" />
+							</p:commandButton>
+						</h:panelGrid>
+					</p:fieldset>
+
+					<p:fieldset id="datos-basicos" styleClass="fieldset-formulario"
+						legend="#{labelUsuarios.titulo_datos_usuario}">
+						<h:panelGrid styleClass="center-block" columns="4"
+							columnClasses="label-col,input-col,label-col,input-col">
+
+							<p:outputLabel value="#{labelUsuarios.label_nombre_usuario}" />
+							<h:outputText value="#{usuariosFL.usuarioModificar.login}" />
+
+							<p:outputLabel value="#{labelUsuarios.label_estado_usuario}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selOneMen"
+									value="#{usuariosFL.usuarioModificar.idEstadoUsuario}"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+										noSelectionOption="true" />
+									<f:selectItems value="#{usuariosMB.lEstadosUsuario}" />
+								</p:selectOneMenu>
+								<p:message for="selOneMen" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelUsuarios.label_nombres_usuario}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="txtNombre" maxlength="60"
+									value="#{usuariosFL.usuarioModificar.nombres}" required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}" />
+								<p:message for="txtNombre" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelUsuarios.label_apellidos_usuario}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="txtApellido" maxlength="60"
+									value="#{usuariosFL.usuarioModificar.apellidos}" />
+								<p:message for="txtApellido" />
+							</h:panelGroup>
+
+							<p:outputLabel value="#{labelUsuarios.label_correo}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="txtCorreoElectronico"
+									label="#{labelUsuarios.label_correo}"
+									value="#{usuariosFL.usuarioModificar.email}" required="true"
+									validatorMessage="#{labelGeneral.val_campo_email}"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									maxlength="256">
+									<f:validator
+										validatorId="co.com.datatools.util.jsf.EmailValidator" />
+									<p:ajax event="change" process="@this"></p:ajax>
+								</p:inputText>
+								<p:message for="txtCorreoElectronico" />
+							</h:panelGroup>
+						</h:panelGrid>
+
+					</p:fieldset>
+					<p:fieldset id="roles" styleClass="fieldset-formulario"
+						legend="#{labelUsuarios.titulo_roles_usuario}">
+						<h:panelGrid styleClass="center-block">
+							<p:pickList id="pickListRoles" value="#{usuariosFL.rolesUsuario}"
+								var="rol" itemValue="#{rol}" itemLabel="#{rol.nombre}"
+								converter="rolPickListConverter" showCheckbox="true"
+								showSourceFilter="true" showTargetFilter="true"
+								filterMatchMode="contains">
+								<f:facet name="sourceCaption">
+									<h:outputText value="#{labelUsuarios.label_roles_disponibles}" />
+								</f:facet>
+								<f:facet name="targetCaption">
+									<h:outputText value="#{labelUsuarios.label_roles_asignados}" />
+								</f:facet>
+								<p:ajax event="transfer" process="@this" />
+								<p:column style="width:100%;">
+									<h:outputText value="#{rol.nombre}" />
+								</p:column>
+							</p:pickList>
+						</h:panelGrid>
+					</p:fieldset>
+					<h:panelGrid styleClass="center-block" columns="3"
+						cellpadding="5">
+						<!--Boton Guardar-->
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="@form" value="#{lbComun.btnGuardar}"
+							update=":messages :form-ingreso">
+							<p:tooltip for="btnGuardar"
+								value="#{labelUsuarios.tooltip_btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<!--Boton Volver-->
+
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnVolver}">
+							<p:tooltip for="btnCancelar"
+								value="#{labelUsuarios.tooltip_btnVolver}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

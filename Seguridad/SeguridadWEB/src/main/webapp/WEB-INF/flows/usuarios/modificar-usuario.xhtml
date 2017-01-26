@@ -1,0 +1,135 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<div>
+			<h2>
+				<h:outputText value="#{mensajesUsuario.titulo_modificar_usuario}"></h:outputText>
+			</h2>
+			<hr />
+			<h:form id="form-content">
+				<h:panelGroup id="panel-datos"
+					rendered="#{modificarUsuarioFL.permiteModificar}">
+					<p:panel 
+						header="#{mensajesUsuario.titulo_datos_usuario}" toggleable="true">
+						<h:panelGrid columns="3" cellpadding="5" id="campos"
+							styleClass="formulario-servicio">
+							<h:outputText value="#{mensajesUsuario.label_nombre_usuario}:"
+								styleClass="campo-obligatorio" />
+							<h:outputText id="nombreUsuario"
+								value="#{modificarUsuarioFL.usuarioModificar.login}" />
+							<h:panelGroup layout="block" styleClass="inline">
+								<p:commandButton
+									rendered="#{!modificarUsuarioFL.usuarioModificar.autenticacionConLdap}"
+									value="#{mensajesUsuario.boton_cambiar_pw}"
+									update=":form-content:panel-datos" immediate="true"
+									action="MODIFICAR-PW" />
+								<p:commandButton rendered="#{modificarUsuarioFL.pwBloqueado}"
+									value="#{mensajesUsuario.boton_desbloquear_pw}"
+									update=":form-content:panel-datos" immediate="true"
+									action="DESBLOQUEAR-PW" />
+							</h:panelGroup>
+							<h:outputLabel for="nombres"
+								value="#{mensajesUsuario.label_nombres_usuario}:"
+								styleClass="campo-obligatorio" />
+							<p:inputText id="nombres"
+								label="#{mensajesUsuario.label_nombres_usuario}"
+								value="#{modificarUsuarioFL.usuarioModificar.nombres}"
+								required="true" maxlength="60" />
+							<p:message for="nombres" />
+							<h:outputLabel for="apellidos"
+								value="#{mensajesUsuario.label_apellidos_usuario}:"
+								styleClass="campo-obligatorio" />
+							<p:inputText id="apellidos"
+								label="#{mensajesUsuario.label_apellidos_usuario}"
+								value="#{modificarUsuarioFL.usuarioModificar.apellidos}"
+								required="true" maxlength="60" />
+							<p:message for="apellidos" />
+							<h:outputLabel for="email"
+								value="#{mensajesUsuario.label_correo}:"
+								styleClass="campo-obligatorio" />
+							<p:inputText id="email" label="#{mensajesUsuario.label_correo}"
+								value="#{modificarUsuarioFL.usuarioModificar.email}"
+								required="true"
+								validatorMessage="#{mensajesGeneral.mensaje_email_invalido}"
+								maxlength="256">
+								<f:validator
+									validatorId="co.com.datatools.util.jsf.EmailValidator" />
+								<p:ajax event="change" process="@this"></p:ajax>
+							</p:inputText>
+							<p:message for="email" />
+							<h:outputLabel for="estado"
+								value="#{mensajesUsuario.label_estado_usuario}:"
+								styleClass="campo-obligatorio" />
+							<p:selectOneMenu id="estado"
+								value="#{modificarUsuarioFL.usuarioModificar.idEstadoUsuario}">
+								<f:selectItems value="#{usuariosMB.lEstadosUsuario}" />
+							</p:selectOneMenu>
+							<p:message for="estado" />
+						</h:panelGrid>
+					</p:panel>
+					<br />
+					<p:panel id="panel-roles"
+						header="#{mensajesUsuario.titulo_roles_usuario}" toggleable="true">
+						<p:pickList id="pickListRoles"
+							value="#{modificarUsuarioFL.rolesUsuario}" var="rol"
+							itemValue="#{rol}" itemLabel="#{rol.nombre}"
+							converter="rolPickListConverter" showCheckbox="true"
+							showSourceFilter="true" showTargetFilter="true"
+							filterMatchMode="contains">
+							<f:facet name="sourceCaption">
+								<h:outputText value="#{mensajesUsuario.label_roles_disponibles}" />
+							</f:facet>
+							<f:facet name="targetCaption">
+								<h:outputText value="#{mensajesUsuario.label_roles_asignados}" />
+							</f:facet>
+							<p:ajax event="transfer" process="@this" />
+							<p:column style="width:100%;">
+								<h:outputText value="#{rol.nombre}" />
+							</p:column>
+						</p:pickList>
+					</p:panel>
+					<br />
+					<p:panel id="panel-grupos"
+						header="#{mensajesUsuario.titulo_grupos_usuario}"
+						toggleable="true">
+						<p:pickList id="pickListGrupos"
+							value="#{modificarUsuarioFL.gruposUsuario}" var="grupo"
+							itemValue="#{grupo}" itemLabel="#{grupo.nombre}"
+							converter="grupoPickListConverter" showCheckbox="true"
+							showSourceFilter="true" showTargetFilter="true"
+							filterMatchMode="contains">
+							<f:facet name="sourceCaption">
+								<h:outputText
+									value="#{mensajesUsuario.label_grupos_disponibles}" />
+							</f:facet>
+							<f:facet name="targetCaption">
+								<h:outputText value="#{mensajesUsuario.label_grupos_asignados}" />
+							</f:facet>
+							<p:ajax event="transfer" process="@this" />
+							<p:column id="nombre" style="width:100%;">
+								<h:outputText value="#{grupo.nombre}" />
+							</p:column>
+						</p:pickList>
+					</p:panel>
+				</h:panelGroup>
+				<h:panelGrid>
+					<f:facet name="footer">
+						<p:commandButton styleClass="_op-EDITAR"
+							action="MODIFICAR-USUARIO"
+							value="#{lbComun.btnGuardar}" icon="c2-icon-guardar" update="form-content"
+							rendered="#{modificarUsuarioFL.permiteModificar}" />
+						<p:commandButton value="#{lbComun.btnVolver}" icon="c2-icon-volver"
+							action="VOLVER" immediate="true" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

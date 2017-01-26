@@ -1,0 +1,38 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="WEB-INF/layouts/error.xhtml">
+
+	<ui:define name="content">
+		<div>
+			<h2>#{mensajesGeneral.mensaje_acceso_restringido}</h2>
+			<hr />			
+			<c:if
+				test="${sessionScope.autorizacionSegMB.errorAutorizacion != null}">
+				<h3>#{mensajesGeneral.label_recurso}</h3>
+				<p>
+					#{mensajesGeneral.mensaje_recurso_denegado}:
+					<h:outputLabel
+						value="#{autorizacionSegMB.errorAutorizacion.nombreRecurso}" />
+				</p>				
+				<c:if
+					test="${sessionScope.autorizacionSegMB.errorAutorizacion.nombreOperacion != null}">
+					<h3>#{mensajesGeneral.label_operacion}</h3>
+					<p>
+						#{mensajesGeneral.mensaje_operacion_denegada}:
+						<h:outputLabel
+							value="#{autorizacionSegMB.errorAutorizacion.nombreOperacion}" />
+					</p>
+				</c:if>
+			</c:if>
+			<h:form>
+				<p:commandButton value="#{mensajesGeneral.boton_ir_atras}"
+					onclick="history.back()"></p:commandButton>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

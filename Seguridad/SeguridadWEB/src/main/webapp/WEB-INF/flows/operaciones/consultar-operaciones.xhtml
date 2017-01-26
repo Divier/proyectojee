@@ -1,0 +1,83 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{operacionesMB.toString()}" />
+		</f:metadata>
+		<div>
+			<h2>
+				<h:outputText
+					value="#{mensajesOperacion.titulo_consultar_operaciones}"></h:outputText>
+			</h2>
+			<hr />
+			<h:form id="form-content">
+				<h:panelGrid columns="2" cellpadding="5"
+					styleClass="formulario-servicio">
+					<h:outputLabel for="nombre"
+						value="#{mensajesOperacion.label_nombre_operacion}:" />
+					<p:inputText id="nombre"
+						label="#{mensajesOperacion.label_nombre_operacion}"
+						value="#{operacionesFL.nombre}" />
+					<f:facet name="footer">
+						<p:commandButton styleClass="_op-CONSULTAR" action="_op-CONSULTAR"
+							value="#{lbComun.btnConsultar}" icon="c2-icon-consultar" update="form-content,:form-result" />
+						<p:commandButton value="#{lbComun.btnCancelar}" icon="c2-icon-cancelar"
+							action="CANCELAR" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+
+			<h:form id="form-result">
+				<p:panel header="#{mensajesGeneral.titulo_resultados_consulta}"
+					toggleable="true"
+					rendered="#{operacionesFL.resultadoConsulta.size()==0 and operacionesFL.consultaRealizada}">
+					<h:outputLabel value="#{mensajesGeneral.mensaje_no_resultados}" />
+				</p:panel>
+				<p:panel id="panelResultados"
+					header="#{mensajesGeneral.titulo_resultados_consulta}"
+					toggleable="true"
+					rendered="#{operacionesFL.resultadoConsulta.size()>0}">
+					<h:panelGrid id="panelBotones" columns="1">
+						<f:facet name="footer">
+							<p:commandButton styleClass="_op-EDITAR" action="_op-EDITAR"
+								value="#{lbComun.btnEditar}" icon="c2-icon-editar"
+								disabled="#{operacionesFL.operacionSeleccionada==null}" />
+							<p:commandButton styleClass="_op-ELIMINAR" action="_op-ELIMINAR"
+								value="#{lbComun.btnEliminar}" icon="c2-icon-eliminar"
+								update=":form-result:tablaResultados"
+								disabled="#{operacionesFL.operacionSeleccionada==null}">
+								<p:confirm header="#{mensajesGeneral.label_confirmacion}"
+									message="#{mensajesGeneral.mensaje_confirmacion}"
+									icon="ui-icon-alert" />
+							</p:commandButton>
+						</f:facet>
+					</h:panelGrid>
+					<p:dataTable id="tablaResultados" resizableColumns="true"
+						value="#{operacionesFL.resultadoConsulta}" var="operacion"
+						rowKey="#{operacion.idOperacion}"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						paginator="true"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}"
+						selection="#{operacionesFL.operacionSeleccionada}">
+						<p:ajax event="rowSelectRadio" update=":form-result:panelBotones"
+							process=":form-result:tablaResultados"></p:ajax>
+						<p:column selectionMode="single"/>
+
+						<p:column headerText="#{mensajesOperacion.label_nombre_operacion}"
+							sortBy="#{operacion.nombreOperacion}">
+							<h:outputText value="#{operacion.nombreOperacion}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

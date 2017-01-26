@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="frmDetImpug">
+		<p:dialog widgetVar="popUpDetImpug" id="popUpDetImpug" header=""
+			resizable="false" modal="true" appendTo="@(body)" dynamic="true"
+			closable="false" >
+
+			<p:tabView>
+				<p:tab title="#{bundleImpugnacion['tit_info_impugnacion']}">
+					<h:panelGrid id="panel-formulario" columns="4"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel value="#{bundleImpugnacion['lbl_num_proceso']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaImpugnacionMB.detalleProcesoImpugnacionDTO.numeroProceso}"></p:outputLabel>
+
+						<p:outputLabel value="#{bundleImpugnacion['lbl_fch_apertura']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaImpugnacionMB.detalleProcesoImpugnacionDTO.fechaInicio}">
+							<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+						</p:outputLabel>
+
+						<p:outputLabel value="#{bundleImpugnacion['lbl_num_citacion']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaImpugnacionMB.detalleProcesoImpugnacionDTO.numeroCitacion}"></p:outputLabel>
+
+						<p:outputLabel value="#{bundleImpugnacion['lbl_fch_ips_citacion']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaImpugnacionMB.detalleProcesoImpugnacionDTO.fechaInfraccion}">
+							<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+						</p:outputLabel>
+
+						<p:outputLabel value="#{bundleImpugnacion['lbl_est_proceso']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaImpugnacionMB.detalleProcesoImpugnacionDTO.estadoProceso}"></p:outputLabel>
+
+						<p:outputLabel value="#{bundleImpugnacion['lbl_des_infracción']}"></p:outputLabel>
+						<p:outputLabel
+							value="#{consultaImpugnacionMB.detalleProcesoImpugnacionDTO.descripcionInfraccion}"></p:outputLabel>
+					</h:panelGrid>
+				</p:tab>
+			</p:tabView>
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<!--Boton Consultar-->
+				<p:commandButton oncomplete="PF('popUpDetImpug').hide();"
+					icon="c2-icon-cancelar" process="@this"
+					value="#{bundleGeneral['btn_volver']}">
+				</p:commandButton>
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+</ui:composition>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+
+	<ui:define name="contenido">
+
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelStockTipoAsignacion.tit_actualizar_stock}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_registro}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel
+							value="#{labelStockTipoAsignacion.lbl_tipo_formulario}" />
+						<p:outputLabel
+							value="#{stockTipoResponsableHolderFL.stockTipoResponsableCrearDTO.tipoFormulario.nombre}" />
+
+						<p:outputLabel
+							value="#{labelStockTipoAsignacion.lbl_tipo_responsable_formulario}" />
+						<p:outputLabel
+							value="#{stockTipoResponsableHolderFL.stockTipoResponsableCrearDTO.tipoResponsable.nombre}" />
+
+						<p:outputLabel
+							value="#{labelStockTipoAsignacion.lbl_stock_minimo}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup id="pnlSpinStockMin">
+							<pe:inputNumber id="spinStockMin"
+								value="#{stockTipoResponsableHolderFL.stockTipoResponsableCrearDTO.stockMinimo}"
+								maxValue="2147483647" required="true" decimalPlaces="0"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								validatorMessage="#{labelStockTipoAsignacion.msg_val_rango}">
+								<f:validateLongRange minimum="1" />
+								<p:ajax event="change" process="@this"
+									update="pnlSpinStockMin pnlSpinStockMax" />
+							</pe:inputNumber>
+							<p:message for="spinStockMin" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelStockTipoAsignacion.lbl_stock_maximo}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup id="pnlSpinStockMax">
+							<pe:inputNumber id="spinStockMax"
+								value="#{stockTipoResponsableHolderFL.stockTipoResponsableCrearDTO.stockMaximo}"
+								maxValue="2147483647" required="true" decimalPlaces="0"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								validatorMessage="#{labelStockTipoAsignacion.msg_val_rango}">
+								<f:validateLongRange minimum="1" />
+								<p:ajax event="change" process="@this"
+									update="pnlSpinStockMin pnlSpinStockMax" />
+							</pe:inputNumber>
+							<p:message for="spinStockMax" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelStockTipoAsignacion.lbl_estado_Activo}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selEstado"
+								value="#{stockTipoResponsableHolderFL.stockTipoResponsableCrearDTO.estadoStock}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{lbComun.val_sel_activo}"
+									itemValue="true" />
+								<f:selectItem itemLabel="#{lbComun.val_sel_inactivo}"
+									itemValue="false" />
+							</p:selectOneMenu>
+
+							<p:message for="selEstado" />
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+
+						<!--Boton Guardar-->
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}" update=":messages :form-ingreso">
+							<p:tooltip for="btnGuardar"
+								value="#{labelStockTipoAsignacion.tooltip_btn_guardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+
+						<!--Boton Volver-->
+						<p:commandButton id="btnVolver" action="VOLVER"
+							icon="c2-icon-volver" process="@this" immediate="true"
+							value="#{lbComun.btnVolver}">
+							<p:tooltip for="btnVolver" value="#{lbComun.tooltip_volver}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+
+</ui:composition>

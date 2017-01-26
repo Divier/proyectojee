@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<h:form id="form-seguimiento">
+
+		<p:dialog widgetVar="popUpSeguimineto" id="popUpSeguimineto"
+			resizable="false" modal="true" appendToBody="true" dynamic="true"
+			closable="false" visible="#{detalleFinanciacionFL.seguimiento}">
+
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelFinanciaciones.msg_fieldset_finan_sgm}">
+
+					<h:panelGrid id="acciones-top-seguimiento">
+						<f:facet name="footer">
+							<!--Boton Visualizar-->
+							<p:commandButton
+								action="#{detalleFinanciacionMB.consultarDocumentoDetalle()}"
+								icon="ui-icon-document" process="@this" update=":form-pdfviewer"
+								disabled="#{detalleFinanciacionFL.trazabilidadProcesoSelDTO == null or detalleFinanciacionFL.trazabilidadProcesoSelDTO.documentos.isEmpty()}"
+								value="#{labelFinanciaciones.btn_visualizar}">
+							</p:commandButton>
+						</f:facet>
+					</h:panelGrid>
+
+					<p:dataTable id="tabla-resultados"
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.trazabilidadProcesoDTOs}"
+						var="registro" rowKey="#{registro.id}" paginator="true"
+						selection="#{detalleFinanciacionFL.trazabilidadProcesoSelDTO}"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}">
+
+						<p:ajax event="rowSelectRadio"
+							process=":form-seguimiento:tabla-resultados"
+							update=":form-seguimiento:acciones-top-seguimiento @this"
+							global="false" />
+
+						<p:column selectionMode="single" />
+
+						<p:column headerText="#{labelFinanciaciones.label_fch_accion}">
+							<c2:outputDateLabel labelValue="#{registro.fechaInicio}"
+								fullFormat="true" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_est_finan}">
+							<p:outputLabel value="#{registro.estadoProceso.nombre}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_acto_adm}">
+							<ui:repeat value="#{registro.documentos}" var="doc">
+								<p:outputLabel value="#{doc.numeroDocumento} " />
+							</ui:repeat>
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_usuario}">
+							<p:outputLabel value="#{registro.usuario.login} (#{registro.usuario.persona.nombreCompleto})" />
+						</p:column>
+
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<!--Boton Cancelar-->
+				<p:commandButton id="btnCancelar" action="VOLVER_SEG"
+					icon="c2-icon-cancelar" process="@this" immediate="true"
+					value="#{lbComun.btnCancelar}">
+					<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}"
+						message="#{lbComun.msg_confirm_volver_cancelar}"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+			</h:panelGrid>
+
+		</p:dialog>
+	</h:form>
+</ui:composition>

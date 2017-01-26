@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelFinanciaciones.titulo_detalle_financiacion}">
+				<h:panelGrid id="panel-info-cabecera" styleClass="center-block"
+					columnClasses="label-col,input-col,label-col,input-col,label-col,input-col"
+					columns="4">
+
+					<p:outputLabel value="#{labelFinanciaciones.label_tipo_doc}"></p:outputLabel>
+					<p:outputLabel
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.tipoDocumento}"></p:outputLabel>
+
+					<p:outputLabel value="#{labelFinanciaciones.label_num_doc}"></p:outputLabel>
+					<p:outputLabel
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.numeroDocumento}"></p:outputLabel>
+
+					<p:outputLabel
+						value="#{labelFinanciaciones.label_nombre_razon_social}"
+						rendered="#{consultaFinanciacionHolderFL.filtroConsultaFinanciacionDTO.idTipoIdentificacion == 2 ? true:false}">
+					</p:outputLabel>
+					<p:outputLabel
+						value="#{labelFinanciaciones.label_nombres_infractor}"
+						rendered="#{consultaFinanciacionHolderFL.filtroConsultaFinanciacionDTO.idTipoIdentificacion != 2 ? true:false}">
+					</p:outputLabel>
+					<p:outputLabel
+						value="#{consultaFinanciacionHolderFL.personaFiltroDTO.getNombreCompleto()}"></p:outputLabel>
+
+					<p:outputLabel value="#{labelFinanciaciones.label_fecha_solic}"></p:outputLabel>
+					<c2:outputDateLabel
+						labelValue="#{detalleFinanciacionFL.consultaFinanciacionDTO.fechaSolicitud}"
+						fullFormat="true" />
+
+					<p:outputLabel value="#{labelFinanciaciones.label_num_finan}"></p:outputLabel>
+					<p:outputLabel
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.numeroFinanciacion}"></p:outputLabel>
+
+					<p:outputLabel value="#{labelFinanciaciones.label_numero_tramite}" />
+					<p:outputLabel
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.idTramite}"></p:outputLabel>
+
+					<p:outputLabel value="#{labelFinanciaciones.label_est_finan}"></p:outputLabel>
+					<p:outputLabel
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.estadoFinaciacion}"></p:outputLabel>
+
+					<p:outputLabel value="#{labelFinanciaciones.label_num_cuotas}"></p:outputLabel>
+					<p:outputLabel
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.numeroCuotas}"></p:outputLabel>
+
+					<p:outputLabel value="#{labelFinanciaciones.label_tot_obligacion}"></p:outputLabel>
+					<c2:outputCurrencyText
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.totalSaldoCapitalObligaciones}" />
+
+					<p:outputLabel value="#{labelFinanciaciones.label_vlr_recargo}"></p:outputLabel>
+					<c2:outputCurrencyText
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.valorTotalRecargo}" />
+
+				</h:panelGrid>
+
+				<br />
+				<p:separator style="height:2px" />
+				<br />
+
+				<h:panelGrid styleClass="center-block" columns="4"
+					columnClasses="label-col,input-col,label-col,input-col">
+
+					<p:outputLabel value="#{labelFinanciaciones.label_vlr_total}"></p:outputLabel>
+					<c2:outputCurrencyText
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.valorTotal}" />
+
+					<p:outputLabel value="#{labelFinanciaciones.label_tasa_finan}"></p:outputLabel>
+					<h:outputText value="#{detalleFinanciacionFL.consultaFinanciacionDTO.tasaInteresFinanciacion}" style="text-align:right" layout="block">
+						<f:convertNumber pattern="#,##0.000'%'" />
+					</h:outputText>
+
+					<p:outputLabel
+						value="#{labelSimulacionFinanciacion.lbl_total_interes}" />
+					<c2:outputCurrencyText
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.valorTotal * detalleFinanciacionFL.consultaFinanciacionDTO.tasaInteresFinanciacion / 100}" />
+
+					<p:outputLabel value="#{labelFinanciaciones.label_vlr_interes}"></p:outputLabel>
+					<c2:outputCurrencyText
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.valorTotalFinanciarInteres}" />
+
+				</h:panelGrid>
+				<br />
+
+				<h:panelGrid styleClass="center-block" columns="4" cellpadding="5">
+					<!-- Ver obligaciones -->
+					<p:commandButton id="btnVerObligaciones"
+						styleClass="VER_OBLIGACIONES" action="VER_OBLIGACIONES"
+						icon="c2-icon-crear" process="@form"
+						value="#{labelFinanciaciones.btn_ver_obligacion}"
+						update=":messages :form-resultado :form-contenido">
+						<p:tooltip for="btnVerObligaciones"
+							value="#{labelFinanciaciones.btn_ver_obligacion}" />
+					</p:commandButton>
+					<!-- Dejar en firme -->
+					<p:commandButton id="btnDejarFirme" styleClass="DEJAR_FIRME"
+						action="DEJAR_FIRME" icon="c2-icon-crear" process="@form"
+						value="#{labelFinanciaciones.btn_dejar_firme}"
+						update=":form-contenido :messages :form-resultado :form-pdfviewer"
+						disabled="#{!detalleFinanciacionFL.dejarFirme}">
+						<p:confirm header="#{lbComun.msg_tit_confirmar}"
+							message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						<p:tooltip for="btnDejarFirme"
+							value="#{labelFinanciaciones.btn_dejar_firme}" />
+					</p:commandButton>
+					<!-- Imprimir cuadro de amortizacion -->
+					<p:commandButton id="btnCuAmor" styleClass="CUADRO_AMORTIZACION"
+						action="CUADRO_AMORTIZACION" icon="c2-icon-crear" process="@form"
+						value="#{labelFinanciaciones.btn_imp_amortizacion}"
+						update=":messages :form-resultado :form-contenido">
+						<p:tooltip for="btnCuAmor"
+							value="#{labelFinanciaciones.btn_imp_amortizacion}" />
+					</p:commandButton>
+					<!-- Seguimiento -->
+					<p:commandButton id="btnSeguimiento" styleClass="SEGUIMIENTO"
+						action="SEGUIMIENTO" icon="c2-icon-crear" process="@form"
+						value="#{labelFinanciaciones.btn_seguimiento}"
+						update=":messages :form-resultado :form-contenido">
+						<p:tooltip for="btnSeguimiento"
+							value="#{labelFinanciaciones.btn_seguimiento}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelFinanciaciones.msg_fieldset_financiacion}">
+					<h:panelGrid id="acciones-top">
+						<f:facet name="footer">
+							<!-- Imprimir recibo de pago -->
+							<p:commandButton id="btnReciboPago" styleClass="IMP_RECIBO_PAGO"
+								action="IMP_RECIBO_PAGO" icon="c2-icon-crear" process="@form"
+								value="#{labelFinanciaciones.btn_imp_recibo_pago}"
+								update=":messages :form-resultado :form-contenido"
+								disabled="#{!detalleFinanciacionFL.btnDejarFirme}">
+								<p:tooltip for="btnReciboPago"
+									value="#{labelFinanciaciones.btn_imp_recibo_pago}" />
+							</p:commandButton>
+						</f:facet>
+					</h:panelGrid>
+					<p:dataTable id="tabla-resultados" var="registro"
+						value="#{detalleFinanciacionFL.consultaFinanciacionDTO.consultaDetalleFinanciacionDTOs}"
+						rowKey="#{registro.idDetalleFinanciacion}" paginator="true"
+						selection="#{detalleFinanciacionFL.consultaDetalleFinanciacionSelDTO}"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}">
+						<p:ajax event="rowSelectRadio"
+							listener="#{detalleFinanciacionMB.opcionesDetalleFinanciacion()}"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this" global="false" />
+						<p:column selectionMode="single" />
+
+						<p:column headerText="#{labelFinanciaciones.label_num_cuota}">
+							<c2:outputNumCuota
+								value="#{registro.numeroCuota}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelFinanciaciones.label_fch_pago_oportuno}">
+							<c2:outputDateLabel labelValue="#{registro.fechaPagoOportuno}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_vlr_capital}">
+							<c2:outputCurrencyText value="#{registro.valorCapital}" />
+						</p:column>
+
+						<p:column headerText="#{labelSimulacionFinanciacion.lbl_valor_interes}">
+							<c2:outputCurrencyText value="#{registro.valorInteres}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_vlr_cta}">
+							<c2:outputCurrencyText value="#{registro.valorTotalCuota}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_sld_obligacion}">
+							<c2:outputCurrencyText value="#{registro.saldoObligacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelFinanciaciones.label_fch_real_pago}">
+							<c2:outputDateLabel labelValue="#{registro.fechaRealPago}" />
+						</p:column>
+
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<!--Boton Cancelar-->
+				<p:commandButton id="btnCancelar" action="VOLVER"
+					icon="c2-icon-cancelar" process="@this" immediate="true"
+					value="#{lbComun.btnCancelar}">
+					<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}"
+						message="#{lbComun.msg_confirm_volver_cancelar}"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+			</h:panelGrid>
+		</h:form>
+		<ui:include
+			src="/WEB-INF/jsp/financiacion/administracion/proceso-financiacion/popup/obligaciones.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/financiacion/administracion/proceso-financiacion/popup/imprimirReciboPago.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/financiacion/administracion/proceso-financiacion/popup/imprimirCuadroAmortizacion.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/financiacion/administracion/proceso-financiacion/popup/seguimiento.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/comparendo/proceso-impugnacion/popup/visualizarDocumentoPdf.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/administracion/captura-firma/capturaFirma.xhtml" />
+	</ui:define>
+</ui:composition>

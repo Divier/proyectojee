@@ -1,0 +1,88 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{historicoRolesMB.toString()}" />
+		</f:metadata>
+		<div>
+			<h2>
+				<h:outputText value="#{mensajesRol.titulo_consultar_historico}"></h:outputText>
+			</h2>
+			<hr />
+			<h:form id="form-content">
+				<h:panelGrid columns="2" cellpadding="5" styleClass="formulario-servicio">
+					<h:outputText value="#{mensajesRol.label_nombre_rol}:" />
+					<h:outputText value="#{historicoRolesFL.nombreRol}" />
+					<h:outputText value="#{mensajesRol.fecha_filtro_cambio_rol}:" />
+				</h:panelGrid>
+				<h:panelGrid columns="3" cellpadding="5">
+					<h:outputLabel for="fechaInicial" value="#{mensajesRol.fecha_filtro_desde}:" styleClass="campo-obligatorio" />
+					<p:calendar id="fechaInicial" navigator="true" value="#{historicoRolesFL.fechaInicial}" pattern="#{webPrm.lab_calendar_pattern_full}"
+						required="true" label="#{mensajesRol.fecha_filtro_desde}" disabled="#{historicoRolesFL.deshabilitaIngresofechas}" readonlyInput="true">
+						<f:convertDateTime pattern="#{webPrm.lab_calendar_pattern_full}" timeZone="#{parametrosBase.param_time_zone}" />
+					</p:calendar>
+					<p:message for="fechaInicial" />
+
+					<h:outputLabel for="fechaFinal" value="#{mensajesRol.fecha_filtro_hasta}:" styleClass="campo-obligatorio" />
+					<p:calendar id="fechaFinal" navigator="true" value="#{historicoRolesFL.fechaFinal}" pattern="#{webPrm.lab_calendar_pattern_full}" required="true"
+						label="#{mensajesRol.fecha_filtro_hasta}" maxdate="#{historicoRolesFL.fechaActual}" disabled="#{historicoRolesFL.deshabilitaIngresofechas}"
+						readonlyInput="true">
+						<f:convertDateTime pattern="#{webPrm.lab_calendar_pattern_full}" timeZone="#{parametrosBase.param_time_zone}" />
+					</p:calendar>
+					<p:message for="fechaFinal" />
+
+					<f:facet name="footer">
+						<p:commandButton action="CONSULTAR" value="#{lbComun.btnConsultar}" icon="c2-icon-consultar" update="form-content" />
+						<p:commandButton action="VOLVER" value="#{lbComun.btnVolver}" icon="c2-icon-volver" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+
+			<h:form id="form-result">
+				<p:panel header="#{mensajesGeneral.titulo_resultados_consulta}" toggleable="true"
+					rendered="#{historicoRolesFL.resultadoConsulta.size()==0 and historicoRolesFL.consultaRealizada}">
+					<h:outputLabel value="#{mensajesGeneral.mensaje_no_resultados}" />
+				</p:panel>
+				<p:panel id="panelResultados" header="#{mensajesGeneral.titulo_resultados_consulta}" toggleable="true"
+					rendered="#{historicoRolesFL.resultadoConsulta.size()>0 and historicoRolesFL.consultaRealizada}">
+					<h:outputLabel value="#{historicoRolesFL.msgNoResultados}"
+						rendered="#{historicoRolesFL.muestraHistoricoVigente and historicoRolesFL.consultaRealizada}" />
+					<h:panelGrid id="panelBotones" columns="1">
+						<f:facet name="footer">
+							<p:commandButton action="DETALLE-PERMISOS" value="#{mensajesRol.boton_ver_detalle_permisos}" icon="c2-icon-detalle"
+								disabled="#{historicoRolesFL.historicoSeleccionado==null}" />
+						</f:facet>
+					</h:panelGrid>
+					<p:dataTable id="tablaResultados" resizableColumns="true" value="#{historicoRolesFL.resultadoConsulta}" var="historico"
+						rowKey="#{historico.idHistoricoRol}" paginatorTemplate="#{webPrm.param_paginator_template}" paginator="true"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}" rows="#{webPrm.param_initial_rows}" selection="#{historicoRolesFL.historicoSeleccionado}">
+						<p:ajax event="rowSelectRadio" update=":form-result:panelBotones,:form-result:tablaResultados" process=":form-result:tablaResultados"></p:ajax>
+						<p:column selectionMode="single" />
+
+						<p:column headerText="#{mensajesRol.label_nombre_rol}" sortBy="#{historico.rolDetalleDto.nombre}">
+							<h:outputText value="#{historico.rolDetalleDto.nombre}" />
+						</p:column>
+						<p:column headerText="#{mensajesRol.label_estado_rol}" sortBy="#{historico.rolDetalleDto.activo}" style="width:70px">
+							<h:outputText value="#{historico.rolDetalleDto.activo ? mensajesGeneral.label_activo:mensajesGeneral.label_inactivo}" />
+						</p:column>
+						<p:column headerText="#{mensajesRol.label_rol_padre}" sortBy="#{historico.rolDetalleDto.rolPadre.nombre}">
+							<h:outputText value="#{historico.rolDetalleDto.rolPadre != null ? historico.rolDetalleDto.rolPadre.nombre:''}" />
+						</p:column>
+						<p:column headerText="#{mensajesRol.fecha_cambio_rol}" sortBy="#{historico.fechaInicioRol}">
+							<c2:outputDateLabel labelValue="#{historico.fechaInicioRol}" fullFormat="true" />
+						</p:column>
+						<p:column headerText="#{mensajesRol.fecha_fin_cambio_rol}" sortBy="#{historico.fechaFinRol}">
+							<c2:outputDateLabel labelValue="#{historico.fechaFinRol}" fullFormat="true" />
+						</p:column>
+						<p:column headerText="#{mensajesRol.usuario_realiza_cambio}" sortBy="#{historico.usuarioModifica}">
+							<h:outputText value="#{historico.usuarioModifica}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

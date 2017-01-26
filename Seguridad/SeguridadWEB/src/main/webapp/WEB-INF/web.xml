@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+	<display-name>SeguridadWEB</display-name>
+	<welcome-file-list>
+		<welcome-file>index.xhtml</welcome-file>
+	</welcome-file-list>
+
+	<servlet>
+		<servlet-name>FacesServlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<!-- -->
+		<servlet-name>SpringNegocio</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/negocio-spring-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>SpringExtra</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/extra-spring-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>SpringNegocio</servlet-name>
+		<url-pattern>/app/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SpringExtra</servlet-name>
+		<url-pattern>/extra/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FacesServlet</servlet-name>
+		<url-pattern>/faces/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FacesServlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FacesServlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FacesServlet</servlet-name>
+		<url-pattern>*.faces</url-pattern>
+	</servlet-mapping>
+
+	<!-- SEGURIDAD -->
+	<context-param>
+		<!-- Clase concreta con la implementacion de nodos autorizables -->
+		<param-name>co.com.datatools.seguridad.NODOS_AUTORIZABLES</param-name>
+		<param-value>co.com.datatools.seguridad.util.NodosAutorizablesSeguridad</param-value>
+	</context-param>
+	<context-param>
+		<!-- Nombre de la aplicacion que utiliza autorizacion y autenticacion - 
+			Tabla Aplicacion -->
+		<param-name>co.com.datatools.seguridad.ID_APLICACION</param-name>
+		<param-value>SEGURIDAD</param-value>
+	</context-param>
+	<context-param>
+		<!-- Modo de autorizacion [USUARIO,ROLES] -->
+		<param-name>co.com.datatools.seguridad.MODO_AUTORIZACION</param-name>
+		<param-value>USUARIO</param-value>
+	</context-param>
+
+	<!-- FACES -->
+	<context-param>
+		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+		<param-value>.xhtml</param-value>
+	</context-param>
+	<context-param>
+		<!-- Enables special Facelets debug output during development -->
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value id="PROJECT_STAGE">Development</param-value>
+	</context-param>
+	<context-param>
+		<!-- Causes Facelets to refresh templates during development -->
+		<param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
+		<param-value id="FACELETS_REFRESH_PERIOD">1</param-value>
+	</context-param>
+	<context-param>
+		<description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>client</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+		<param-value>resources.application</param-value>
+	</context-param>
+	<context-param>
+		<param-name>facelets.SKIP_COMMENTS</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- PRIMEFACES -->
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>delta</param-value>
+	</context-param>
+
+	<!-- Enforce Character Encoding -->
+	<filter>
+		<filter-name>charEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>charEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- XSS FILTER -->
+	<filter>
+		<filter-name>antiXSSFilter</filter-name>
+		<filter-class>co.com.datatools.util.xss.AntiXSSFilter</filter-class>
+		<init-param>
+			<param-name>logging</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<!-- <init-param>
+			<param-name>behavior</param-name>
+			<param-value>throw</param-value>
+		</init-param> -->
+	</filter>
+
+	<filter-mapping>
+		<filter-name>antiXSSFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<listener>
+		<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>co.com.datatools.util.jsf.NoCoerceELParser</listener-class>
+	</listener>
+
+	<mime-mapping>
+		<extension>woff</extension>
+		<mime-type>application/x-font-woff</mime-type>
+	</mime-mapping>
+
+	<!-- Error -->
+	<error-page>
+		<error-code>400</error-code>
+		<location>/error/denied.xhtml</location>
+	</error-page>
+	<error-page>
+		<error-code>401</error-code>
+		<location>/error/denied.xhtml</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/error/unavailable.xhtml</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error/not_found.xhtml</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error/server_error.xhtml</location>
+	</error-page>
+
+	<error-page>
+		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+		<location>/error/errorViewExpired.xhtml</location>
+	</error-page>
+	
+	<error-page>
+		<exception-type>javax.servlet.ServletException</exception-type>
+		<location>/error/errorCararcteres.xhtml</location>
+	</error-page>
+	<!-- Fin Error -->
+
+	<!-- Enable Clustering of your application web -->
+	<!-- <distributable /> -->
+
+	<security-constraint>
+		<display-name>Circulemos Security Constraint</display-name>
+		<web-resource-collection>
+			<web-resource-name>Area protegida</web-resource-name>
+			<url-pattern>/protegido/*</url-pattern>
+			<url-pattern>/app/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+			<http-method>PUT</http-method>
+			<http-method>DELETE</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>gen_SEGURIDAD</role-name>
+		</auth-constraint>
+		<user-data-constraint>
+			<transport-guarantee>NONE</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<realm-name>sso</realm-name>
+		<form-login-config>
+			<form-login-page>/publico/login.xhtml</form-login-page>
+			<form-error-page>/publico/login.xhtml</form-error-page>
+		</form-login-config>
+	</login-config>
+	<security-role>
+		<role-name>gen_SEGURIDAD</role-name>
+	</security-role>
+
+</web-app>

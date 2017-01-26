@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+		<artifactId>FachadaIntegracionWebParent</artifactId>
+		<version>1.0.7</version>
+		<relativePath>../FachadaIntegracionWebParent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>FachadaIntegracionWebEJB</artifactId>
+	<name>FachadaIntegracionWebEJB</name>
+	<packaging>ejb</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-6.0</artifactId>
+			<version>${jboss-javaee-6.0.version}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging</artifactId>
+			<version>${jboss-logging.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>co.com.datatools.fachadaintegracionweb</groupId>
+			<artifactId>FachadaIntegracionWebEJBClient</artifactId>
+			<version>${FachadaIntegracionWebEJB.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ejb-plugin</artifactId>
+				<configuration>
+					<modulename>FachaIntegracionWebEJB</modulename>
+					<ejbVersion>3.1</ejbVersion>
+					<!-- Esta entrada en el manifest se requiere por infinispan -->
+					<!-- https://docs.jboss.org/author/display/ISPN/Getting+Started+Guide+-+JBoss+AS+7 -->
+					<archive>
+						<manifestEntries>
+							<Dependencies>org.infinispan export</Dependencies>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>archiva.internal</id>
+			<name>Internal Release Repository</name>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/internal/</url>
+		</repository>
+		<snapshotRepository>
+			<id>archiva.snapshots</id>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelAdminEventos.tit_admin_eventos}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel value="#{labelAdminEventos.lbl_tipo_proceso}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="tipoProceso" value="#{administracionEventosHolderFL.eventoConsulta.tipoProcesoEvento.id}"
+									required="true" requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoProcesoEvento()}" />
+							</p:selectOneMenu>
+							<p:message for="tipoProceso" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelAdminEventos.lbl_tipo_evento}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="tipoEvento" value="#{administracionEventosHolderFL.eventoConsulta.tipoEvento.id}"
+									required="true" requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoEvento()}" />
+							</p:selectOneMenu>
+							<p:message for="tipoEvento" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR" action="_op-CONSULTAR" icon="c2-icon-consultar"
+								process="@form" value="#{lbComun.btnConsultar}"
+								update=":messages :form-resultado :form-contenido" >
+							<p:tooltip for="btnConsultar" value="#{lbComun.btnConsultar}" />
+						</p:commandButton>
+						<!--Boton Nuevo-->
+						<p:commandButton id="btnCrear" styleClass="_op-CREAR" action="_op-CREAR" icon="c2-icon-crear"
+								process="@this" value="#{lbComun.btnCrear}" immediate="true">
+							<p:tooltip for="btnCrear" value="#{lbComun.btnCrear}" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{administracionEventosHolderFL.resultadoConsulta.size() > 0}">
+
+				<p:dataTable id="tabla-resultados" value="#{administracionEventosHolderFL.resultadoConsulta}"
+					var="registro" rowKey="#{registro.id}" paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+					
+					<!--Columnas Resultado Consulta-->
+					<p:column headerText="#{labelAdminEventos.lbl_proceso}">
+						<h:outputText value="#{registro.tipoProcesoEvento.nombre}" />
+					</p:column>
+					
+					<p:column headerText="#{labelAdminEventos.lbl_tipo_evento}">
+						<h:outputText value="#{registro.tipoEvento.nombre}" />
+					</p:column>
+					
+					<p:column headerText="#{labelAdminEventos.lbl_evento_nombre}">
+						<h:outputText value="#{registro.nombreEvento}" />
+					</p:column>
+					
+					<p:column headerText="#{labelAdminEventos.lbl_evento_lugar}">
+						<h:outputText value="#{registro.lugar}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdminEventos.lbl_evento_referencia}">
+						<h:outputText value="#{registro.numeroReferencia}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdminEventos.lbl_evento_fecha}">
+						<c2:outputDateLabel labelValue="#{registro.fecha}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdminEventos.lbl_evento_hora_inicio}">
+						<h:outputText value="#{administracionEventosMB.getHoraString(registro.horaInicio)}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdminEventos.lbl_evento_hora_fin}">
+						<h:outputText value="#{administracionEventosMB.getHoraString(registro.horaFin)}" />
+					</p:column>
+					
+					<p:column headerText="#{labelAdminEventos.lbl_evento_usuario}">
+						<h:outputText value="#{registro.usuario.persona.nombreCompleto}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdminEventos.lbl_evento_fecha_registro}">
+						<c2:outputDateLabel labelValue="#{registro.fechaRegistro}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+		
+	</ui:define>
+
+</ui:composition>

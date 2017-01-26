@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-empresa" styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_empresa}">
+		
+		<p:fieldset id="datos-vehiculo-empresa"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_empresa}">
+			<h:panelGrid id="panel-formulario-vehiculo-empresa"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_documento}"
+					styleClass="campo-obligatorio"
+					rendered="#{adminComparendoPeruFL.tipoDocEmpresaRequerido}" />
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_documento}"
+					rendered="#{!adminComparendoPeruFL.tipoDocEmpresaRequerido}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selTipoDocumentoEmpresa"
+						value="#{adminComparendoPeruFL.empresaVehiculo.idTipoIdentificacion}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItem
+							itemLabel="#{adminComparendoPeruFL.tipoIdentificacionEmpresa.nombre}"
+							itemValue="#{adminComparendoPeruFL.tipoIdentificacionEmpresa.id}" />
+						<f:selectItem
+							itemLabel="#{labelAdminComparendo.label_option_otros}"
+							itemValue="#{labelAdminComparendo.value_option_otros}" />
+						<p:ajax
+							listener="#{adminComparendoPeruMB.onTipoDocumentoEmpresaChange}"
+							update="panel-formulario-vehiculo-empresa" process="@this"
+							event="change" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selTipoDocumentoEmpresa" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_documento}"
+					styleClass="campo-obligatorio"
+					rendered="#{adminComparendoPeruFL.tipoDocEmpresaRequerido}" />
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_documento}"
+					rendered="#{!adminComparendoPeruFL.tipoDocEmpresaRequerido}" />
+				<h:panelGroup>
+					<p:inputText id="numeroDocumentoEmpresa"
+						value="#{adminComparendoPeruFL.empresaVehiculo.numeroIdentificacion}"
+						maxlength="20">
+						<p:ajax
+							listener="#{adminComparendoPeruMB.onTipoDocumentoEmpresaChange}"
+							update="panel-formulario-vehiculo-empresa" process="@this"
+							event="change" global="false" />
+					</p:inputText>
+					<p:message for="numeroDocumentoEmpresa" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_nombre_empresa}"
+					styleClass="campo-obligatorio"
+					rendered="#{adminComparendoPeruFL.tipoDocEmpresaRequerido}" />
+				<p:outputLabel value="#{labelAdminComparendo.label_nombre_empresa}"
+					rendered="#{!adminComparendoPeruFL.tipoDocEmpresaRequerido}" />
+				<h:panelGroup>
+					<p:inputText id="nombreEmpresa"
+						value="#{adminComparendoPeruFL.empresaVehiculo.razonSocial}"
+						maxlength="200">
+						<p:ajax process="@this" event="change" global="false" />
+					</p:inputText>
+					<p:message for="nombreEmpresa" />
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:fieldset>
+
+		<p:fieldset id="datos-direccion-empresa"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_direccion_empresa}">
+			<h:panelGrid id="panel-formulario-direccion-empresa"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="3">
+				<!-- Modulo de direcciones-->
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_direccion_empresa}"/>
+				<h:panelGroup>
+					<p:inputTextarea id="direccionEmpresa" rows="3"
+						readonly="true" maxlength="150"
+						value="#{adminComparendoPeruFL.direccionEmpresaTexto}"></p:inputTextarea>
+					<p:message for="direccionEmpresa" />
+				</h:panelGroup>
+				<!--Boton Direccion-->
+				<p:commandButton id="btnDireccionEmpresa" action="DIRECCION_EMPRESA"
+					process="@this" update="direccionEmpresa" immediate="true"
+					value="#{labelAdminComparendo.tooltip_btnDireccion}">
+					<p:tooltip for="btnDireccionEmpresa"
+						value="#{labelAdminComparendo.tooltip_btnDireccion}" />
+				</p:commandButton>
+			</h:panelGrid>
+		</p:fieldset>		
+
+		<p:fieldset id="datos-ruta-empresa"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_ruta}">
+			<h:panelGrid id="panel-formulario-ruta-empresa"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_ruta_empresa}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selRutaEmpresa"
+						value="#{adminComparendoPeruFL.procesaComparendo.idRuta}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catRuta(adminComparendoPeruFL.idEmpresaTransporte)}" />
+						<f:selectItem
+							itemLabel="#{labelAdminComparendo.label_option_otros}"
+							itemValue="#{labelAdminComparendo.value_option_otros}" />
+						<p:ajax process="@this" event="change" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selRutaEmpresa" />
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

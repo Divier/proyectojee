@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelConfiguracionEntidad.tit_con_entidaa}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2" columnClasses="label-col,input-col">
+						<p:outputLabel
+							value="#{labelConfiguracionEntidad.lbl_tipo_entidad}" />
+						<p:selectOneMenu id="selOnTipEn"
+							value="#{configuracionEntidadHolderFL.configuracionEntidadDTO.tipoEntidadDTO.id}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+							<f:selectItems value="#{fachadaCatalogosMB.catTipoEntidad()}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultar"
+								value="#{labelConfiguracionEntidad.tit_consular}" />
+						</p:commandButton>
+						<!--Boton Nuevo-->
+						<p:commandButton id="btnCrear" styleClass="_op-CREAR"
+							action="_op-CREAR" icon="c2-icon-crear" process="@this"
+							value="#{lbComun.btnCrear}" immediate="true">
+							<p:tooltip for="btnCrear"
+								value="#{labelConfiguracionEntidad.tit_nuevo}" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{configuracionEntidadHolderFL.configuracionEntidadDTOs.size() > 0}">
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<!--Boton Editar-->
+						<p:commandButton id="btnEditar" styleClass="_op-EDITAR"
+							action="_op-EDITAR" icon="c2-icon-editar" process="@this"
+							value="#{lbComun.btnEditar}"
+							disabled="#{configuracionEntidadHolderFL.configuracionEntidadSelDTO==null}">
+							<p:tooltip for="btnEditar"
+								value="#{labelConfiguracionEntidad.txt_tooltip_editar_catalogo}" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados" var="registro"
+					rowKey="#{registro.id}" paginator="true"
+					value="#{configuracionEntidadHolderFL.configuracionEntidadDTOs}"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}" sortMode="multiple"
+					selection="#{configuracionEntidadHolderFL.configuracionEntidadSelDTO}">
+
+					<p:ajax event="rowSelectRadio"
+						process=":form-resultado:tabla-resultados"
+						update=":form-resultado:acciones-top" global="false" />
+
+					<p:column selectionMode="single" />
+
+					<!--Columnas Resultado Consulta-->
+					<p:column
+						headerText="#{labelConfiguracionEntidad.lbl_tipo_entidad}">
+						<h:outputText value="#{registro.tipoEntidadDTO.nombre}" />
+					</p:column>
+
+					<p:column headerText="#{labelConfiguracionEntidad.lbl_nom_entidad}">
+						<h:outputText value="#{registro.entidadOficioDTO.nombre}" />
+					</p:column>
+
+					<p:column headerText="#{labelConfiguracionEntidad.lbl_contacto}">
+						<h:outputText value="#{registro.contacto}" />
+					</p:column>
+
+					<p:column headerText="#{labelConfiguracionEntidad.lbl_direccion}">
+						<h:outputText value="#{registro.direccion}" />
+					</p:column>
+
+					<p:column headerText="#{labelConfiguracionEntidad.lbl_ciudad}">
+						<h:outputText value="#{registro.municipioDTO.nombre}" />
+					</p:column>
+
+					<p:column headerText="#{labelConfiguracionEntidad.lbl_sigla_ofic}">
+						<h:outputText value="#{registro.siglaOficio}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelConfiguracionEntidad.lbl_fecha_inicio}">
+						<h:outputText value="#{registro.fechaInicio}" />
+					</p:column>
+
+					<p:column headerText="#{labelConfiguracionEntidad.lbl_fecha_fin}">
+						<h:outputText value="#{registro.fechaFin}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

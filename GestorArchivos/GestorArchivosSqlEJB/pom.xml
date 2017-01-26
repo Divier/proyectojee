@@ -1,0 +1,92 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>co.com.datatools.documentos.cm</groupId>
+		<artifactId>GestorArchivosParent</artifactId>
+		<version>2.0.4</version>
+		<relativePath>../GestorArchivosParent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>GestorArchivosSqlEJB</artifactId>
+	<name>GestorArchivosSqlEJB</name>
+	<packaging>ejb</packaging>
+	
+
+	<!-- Propiedades del proyecto -->
+	<properties>
+		<jboss-javaee-ejb-3.2.version>1.0.0.Final</jboss-javaee-ejb-3.2.version>
+		<jboss-logging.version>3.2.1.Final</jboss-logging.version>
+		<hibernate-jpa-2.0-api.version>1.0.1.Final</hibernate-jpa-2.0-api.version>
+		<persistence-api.version>1.0</persistence-api.version>
+		<hibernate-entitymanager.version>4.1.4.Final</hibernate-entitymanager.version>
+
+		<!-- dependencias internas -->
+		<GestorArchivosClient.version>2.0.4</GestorArchivosClient.version>
+		<UtilidadesJSE.version>1.1.0-SNAPSHOT</UtilidadesJSE.version>
+	</properties>
+	<dependencies>
+		<!-- jboss -->
+		<dependency>
+			<groupId>org.jboss.spec.javax.ejb</groupId>
+			<artifactId>jboss-ejb-api_3.2_spec</artifactId>
+			<version>${jboss-javaee-ejb-3.2.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging</artifactId>
+			<version>${jboss-logging.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- jpa -->
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<version>${hibernate-jpa-2.0-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<version>${persistence-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate-entitymanager.version}</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- internas -->
+		<dependency>
+			<groupId>co.com.datatools.documentos.cm</groupId>
+			<artifactId>GestorArchivosClient</artifactId>
+			<version>${GestorArchivosClient.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>co.com.datatools.util</groupId>
+			<artifactId>UtilidadesJSE</artifactId>
+			<version>${UtilidadesJSE.version}</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<distributionManagement>
+		<repository>
+			<id>archiva.internal</id>
+			<name>Internal Release Repository</name>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/internal/</url>
+		</repository>
+		<snapshotRepository>
+			<id>archiva.snapshots</id>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	
+</project>

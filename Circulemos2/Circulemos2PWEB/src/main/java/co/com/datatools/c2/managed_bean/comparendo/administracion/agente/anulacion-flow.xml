@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="anulacionHolderFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.administracion.anulacion.AnulacionHolderFL" />
+	<var name="anulacionFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.administracion.anulacion.AnulacionFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/comparendo/administracion/anulacion/anulacion.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('anulacionMB')" />
+		</on-entry>
+	<transition on="_op-CONSULTAR" to="ingresar">
+		<evaluate expression="externalContext.sessionMap.anulacionMB.consultar()" />
+	</transition>
+		<transition on="_op-CREAR" to="ANULAR_COMPARENDOS" />
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.administracion.anulacion.AnulacionHolderFL()"
+				result="flowScope.anulacionHolderFL" />
+		</transition>
+	</view-state>
+
+	<view-state id="ANULAR_COMPARENDOS"
+		view="/WEB-INF/jsp/comparendo/administracion/anulacion/guardarAnulacion.xhtml">
+		<transition on="CONTINUAR" to="GUARDAR" />
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.administracion.anulacion.AnulacionFL()"
+				result="flowScope.anulacionFL" />
+			<evaluate expression="externalContext.sessionMap.anulacionMB.consultar()" />	
+		</transition>
+	</view-state>
+
+	<action-state id="GUARDAR">
+		<evaluate expression="externalContext.sessionMap.anulacionMB.anularComparendos()" />
+		<transition on="yes" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.administracion.anulacion.AnulacionFL()"
+				result="flowScope.anulacionFL" />
+			<evaluate expression="externalContext.sessionMap.anulacionMB.consultar()" />
+		</transition>
+		<transition on="no" to="ANULAR_COMPARENDOS" />
+	</action-state>
+	
+</flow>

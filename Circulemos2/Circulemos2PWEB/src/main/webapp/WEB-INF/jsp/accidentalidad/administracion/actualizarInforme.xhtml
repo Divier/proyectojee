@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelAdminAccidentalidad.titulo_registrar_informe}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminAccidentalidad.titulo_encabezado}">
+					<h:panelGrid id="panel-cabecera1" styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4" width="750em">
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_nro_informe}"
+							styleClass="campo-obligatorio" />
+						<p:outputLabel
+							value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.consecutivo}" />
+
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_tipo_accidente}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selTipoAccidente" required="true"
+								value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.tipoAccidente.id}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTiposAccidentes()}" />
+							</p:selectOneMenu>
+							<p:message for="selTipoAccidente" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid id="panel-cabecera2" styleClass="center-block"
+						columnClasses="label-col,input-col,input-col" columns="3"
+						width="750em">
+
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_consecuencias}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputTextarea id="consecuencias" autoResize="false" rows="3"
+								cols="10" required="true"
+								value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.consecuencias}"
+								maxlength="500" />
+							<p:message for="consecuencias" />
+						</h:panelGroup>
+
+						<h:panelGrid id="panel-cabecera2_int" styleClass="center-block"
+							columnClasses="label-col,input-col" columns="2">
+							<p:outputLabel
+								value="#{labelAdminAccidentalidad.label_ubicacion_gps}" />
+							<h:panelGroup>
+								<p:inputText id="ubicacionGPS"
+									value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.ubicacionGps}"
+									maxlength="25">
+								</p:inputText>
+								<p:message for="ubicacionGPS" />
+							</h:panelGroup>
+
+							<p:outputLabel
+								value="#{labelAdminAccidentalidad.label_parte_finalizado}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:calendar
+									value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.parteFinalizado}"
+									id="parteFinalizado" navigator="true"
+									pattern="#{utilidadMB.formatoFechaCompleta}" required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<p:watermark for="parteFinalizado"
+										value="#{utilidadMB.formatoFecha}" />
+								</p:calendar>
+								<p:message for="parteFinalizado" />
+							</h:panelGroup>
+						</h:panelGrid>
+					</h:panelGrid>
+
+					<h:panelGrid id="panel-cabecera3" styleClass="center-block"
+						columnClasses="label-col,input-col" columns="2" width="750em">
+						<p:outputLabel value="#{labelAdminAccidentalidad.label_lugar}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="lugar"
+								value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.lugarAccidente}"
+								maxlength="500" required="true">
+							</p:inputText>
+							<p:message for="lugar" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid id="panel-cabecera4" styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4" width="750em">
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_fecha_accidente}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar
+								value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.fechaAccidente}"
+								id="fechaAccidente" navigator="true"
+								pattern="#{utilidadMB.formatoFechaCompleta}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<p:watermark for="fechaAccidente"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="fechaAccidente" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_fecha_av_central}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar
+								value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.fechaAviso}"
+								id="fechaAvisoCentral" navigator="true"
+								pattern="#{utilidadMB.formatoFechaCompleta}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<p:watermark for="fechaAvisoCentral"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="fechaAvisoCentral" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_prevencion}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selPrevencion"
+								value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.prevencion.id}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catUnidadesJudiciales()}" />
+							</p:selectOneMenu>
+							<p:message for="selPrevencion" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_delegacion}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selDelegacion" required="true"
+								value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.delegacion.id}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catDelegacionAgente()}" />
+							</p:selectOneMenu>
+							<p:message for="selDelegacion" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_referencia_hechos}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="refHechos"
+								value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.referenciaHechos}"
+								maxlength="500" required="true">
+							</p:inputText>
+							<p:message for="refHechos" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_agente_intervino}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="agenteIntervino"
+								value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.agente}"
+								maxlength="150" required="true">
+							</p:inputText>
+							<p:message for="agenteIntervino" />
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:fieldset>
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminAccidentalidad.titulo_breve_relacion}">
+					<h:panelGrid id="panel-detalle9" styleClass="center-block"
+						columns="1">
+						<p:commandButton id="addPart" process="@this form-contenido:tabs"
+							action="#{adminAccidentalidadMB.adicionarParte()}"
+							value="#{labelAdminAccidentalidad.btnAgregarRegistro}"
+							update="tabs" />
+					</h:panelGrid>
+					<p:tabView scrollable="false" widgetVar="tabView" id="tabs"
+						onTabShow="true" value="#{adminAccidentalidadMB.tabs}" var="parte"
+						onTabClose="true">
+						<p:ajax event="tabChange"
+							listener="#{adminAccidentalidadMB.onTabChange}" />
+						<p:tab title="#{parte.nombreTab}" disabled="false"
+							closable="false">
+							<h:panelGrid id="panel-detalle1" styleClass="center-block"
+								columnClasses="label-col,input-col" columns="2" width="1200em">
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.titulo_breve_relacion}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputText id="breveRelacion"
+										value="#{parte.detalleAccidentalidadDTO.breveRelacion}"
+										maxlength="50" required="true">
+									</p:inputText>
+									<p:message for="breveRelacion" />
+								</h:panelGroup>
+							</h:panelGrid>
+
+							<h:panelGrid id="panel-detalle2" styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col,label-col,input-col,label-col,input-col"
+								columns="8" width="1200em">
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_nombres_apellidos}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputText id="nombresApellidos"
+										value="#{parte.detalleAccidentalidadDTO.nombrePersona}"
+										maxlength="200" required="true">
+									</p:inputText>
+									<p:message for="nombresApellidos" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_tipo_persona}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:selectOneMenu id="selTipoPersonaAccidente" required="true"
+										value="#{parte.detalleAccidentalidadDTO.tipoPersonaIPAT.id}"
+										disabled="true">
+										<f:selectItem
+											itemLabel="#{labelGeneral.val_combo_primer_item}"
+											itemValue="" />
+										<f:selectItems
+											value="#{fachadaCatalogosMB.catTipoPersonaAccidente()}" />
+										<p:ajax event="change"
+											update="panel-detalle2 panel-detalle3 panel-detalle4 panel-detalle5 panel-detalle6 panel-detalle7"
+											listener="#{adminAccidentalidadMB.cambiarEstructuraFormulario(parte.detalleAccidentalidadDTO.tipoPersonaIPAT.id)}"
+											global="false" />
+									</p:selectOneMenu>
+									<p:message for="selTipoPersonaAccidente" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_licencia}"
+									styleClass="campo-obligatorio" rendered="#{parte.conductor}" />
+								<p:outputLabel value="#{labelAdminAccidentalidad.label_cedula}"
+									styleClass="campo-obligatorio" rendered="#{!parte.conductor}" />
+								<h:panelGroup>
+									<p:inputText id="numCedula"
+										value="#{parte.detalleAccidentalidadDTO.licencia}"
+										maxlength="10" required="true">
+									</p:inputText>
+									<p:message for="numCedula" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_tipo_licencia}"
+									styleClass="campo-obligatorio" rendered="#{parte.conductor}" />
+								<h:panelGroup rendered="#{parte.conductor}">
+									<p:selectOneMenu id="selCategoriaLicencia" required="true"
+										value="#{parte.detalleAccidentalidadDTO.tipoLicencia.id}">
+										<f:selectItem
+											itemLabel="#{labelGeneral.val_combo_primer_item}"
+											itemValue="" />
+										<f:selectItems
+											value="#{fachadaCatalogosMB.catCategoriaLicencia()}" />
+									</p:selectOneMenu>
+									<p:message for="selCategoriaLicencia" />
+								</h:panelGroup>
+							</h:panelGrid>
+
+
+							<h:panelGrid id="panel-detalle3" styleClass="center-block"
+								columnClasses="label-col,input-col" columns="2" width="1200em">
+								<p:outputLabel value="#{labelAdminAccidentalidad.label_origen}"
+									styleClass="campo-obligatorio" rendered="#{parte.conductor}" />
+								<h:panelGroup rendered="#{parte.conductor}">
+									<p:inputText id="origen"
+										value="#{parte.detalleAccidentalidadDTO.origen}"
+										maxlength="20" required="true">
+									</p:inputText>
+									<p:message for="origen" />
+								</h:panelGroup>
+							</h:panelGrid>
+
+							<h:panelGrid id="panel-detalle4" styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col,label-col,input-col,label-col,input-col"
+								columns="8" width="1200em">
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_estado_fisico}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:selectOneMenu id="selEstadoFisico" required="true"
+										value="#{parte.detalleAccidentalidadDTO.estadoFisico.id}">
+										<f:selectItem
+											itemLabel="#{labelGeneral.val_combo_primer_item}"
+											itemValue="" />
+										<f:selectItems
+											value="#{fachadaCatalogosMB.catEstadoFisicoImpliAccid()}" />
+									</p:selectOneMenu>
+									<p:message for="selEstadoFisico" />
+								</h:panelGroup>
+
+								<p:outputLabel value="#{labelAdminAccidentalidad.label_edad}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputText id="edad"
+										value="#{parte.detalleAccidentalidadDTO.edad}" maxlength="3"
+										required="true"
+										validatorMessage="#{labelAdminAccidentalidad.msg_val_edad}">
+										<f:validateLongRange minimum="0" maximum="120"></f:validateLongRange>
+									</p:inputText>
+									<p:message for="edad" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_aliento_licor}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:selectOneMenu id="selAlientoLicor" required="true"
+										value="#{parte.detalleAccidentalidadDTO.embriaguez}">
+										<f:selectItem
+											itemLabel="#{labelGeneral.val_combo_primer_item}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+											itemValue="true" />
+										<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+											itemValue="false" />
+									</p:selectOneMenu>
+									<p:message for="selAlientoLicor" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_aprehendido}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:selectOneMenu id="selAprehendido" required="true"
+										value="#{parte.detalleAccidentalidadDTO.aprehendido}">
+										<f:selectItem
+											itemLabel="#{labelGeneral.val_combo_primer_item}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+											itemValue="true" />
+										<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+											itemValue="false" />
+									</p:selectOneMenu>
+									<p:message for="selAprehendido" />
+								</h:panelGroup>
+							</h:panelGrid>
+
+							<h:panelGrid id="panel-detalle5" styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col,label-col,input-col,label-col,input-col"
+								columns="8" width="1200em">
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_tipo_vehiculo}"
+									styleClass="campo-obligatorio" rendered="#{parte.conductor}" />
+								<h:panelGroup rendered="#{parte.conductor}">
+									<p:selectOneMenu id="selTipoVehiculo" required="true"
+										value="#{parte.detalleAccidentalidadDTO.claseVehiculo.id}">
+										<f:selectItem
+											itemLabel="#{labelGeneral.val_combo_primer_item}"
+											itemValue="" />
+										<f:selectItems value="#{fachadaCatalogosMB.catTipoVehiculo()}" />
+									</p:selectOneMenu>
+									<p:message for="selTipoVehiculo" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_marca_vehiculo}"
+									styleClass="campo-obligatorio" rendered="#{parte.conductor}" />
+								<h:panelGroup rendered="#{parte.conductor}">
+									<p:inputText id="marcaVehiculoStr"
+										value="#{parte.detalleAccidentalidadDTO.tipoVehiculo}"
+										maxlength="30" required="true">
+									</p:inputText>
+									<p:message for="marcaVehiculoStr" />
+								</h:panelGroup>
+
+								<p:outputLabel value="#{labelAdminAccidentalidad.label_placa}"
+									styleClass="campo-obligatorio" rendered="#{parte.conductor}" />
+								<h:panelGroup rendered="#{parte.conductor}">
+									<p:inputText id="placa"
+										value="#{parte.detalleAccidentalidadDTO.placa}" maxlength="8"
+										required="true">
+									</p:inputText>
+									<p:message for="placa" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_servicio}"
+									styleClass="campo-obligatorio" rendered="#{parte.conductor}" />
+								<h:panelGroup rendered="#{parte.conductor}">
+									<p:selectOneMenu id="selServicio" required="true"
+										value="#{parte.detalleAccidentalidadDTO.tipoServicio.id}">
+										<f:selectItem
+											itemLabel="#{labelGeneral.val_combo_primer_item}"
+											itemValue="" />
+										<f:selectItems
+											value="#{fachadaCatalogosMB.catClaseServicio()}" />
+									</p:selectOneMenu>
+									<p:message for="selServicio" />
+								</h:panelGroup>
+							</h:panelGrid>
+
+							<h:panelGrid id="panel-detalle6" styleClass="center-block"
+								columnClasses="label-col,input-col" columns="2" width="1200em">
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_calle_carretera}"
+									styleClass="campo-obligatorio" rendered="#{parte.conductor}" />
+								<h:panelGroup rendered="#{parte.conductor}">
+									<p:inputText id="calleCarretera"
+										value="#{parte.detalleAccidentalidadDTO.calleCarretera}"
+										maxlength="500" required="true">
+									</p:inputText>
+									<p:message for="calleCarretera" />
+								</h:panelGroup>
+							</h:panelGrid>
+
+							<h:panelGrid id="panel-detalle7" styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col,label-col,input-col"
+								columns="6" width="1200em">
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_sentido_circulacion}"
+									styleClass="campo-obligatorio" rendered="#{parte.conductor}" />
+								<h:panelGroup rendered="#{parte.conductor}">
+									<p:selectOneMenu id="selSentidoCirculacion" required="true"
+										value="#{parte.detalleAccidentalidadDTO.sentido.id}">
+										<f:selectItem
+											itemLabel="#{labelGeneral.val_combo_primer_item}"
+											itemValue="" />
+										<f:selectItems
+											value="#{fachadaCatalogosMB.catSentidoCirculacionAccidente()}" />
+									</p:selectOneMenu>
+									<p:message for="selSentidoCirculacion" />
+								</h:panelGroup>
+
+								<p:outputLabel value="#{labelAdminAccidentalidad.label_carril}"
+									styleClass="campo-obligatorio" rendered="#{parte.conductor}" />
+								<h:panelGroup rendered="#{parte.conductor}">
+									<p:selectOneMenu id="selCarril" required="true"
+										value="#{parte.detalleAccidentalidadDTO.carril.id}">
+										<f:selectItem
+											itemLabel="#{labelGeneral.val_combo_primer_item}"
+											itemValue="" />
+										<f:selectItems
+											value="#{fachadaCatalogosMB.catCarrilAccidente()}" />
+									</p:selectOneMenu>
+									<p:message for="selCarril" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_retenido}"
+									styleClass="campo-obligatorio" rendered="#{parte.conductor}" />
+								<h:panelGroup rendered="#{parte.conductor}">
+									<p:selectOneMenu id="selRetenido" required="true"
+										value="#{parte.detalleAccidentalidadDTO.retenido}">
+										<f:selectItem
+											itemLabel="#{labelGeneral.val_combo_primer_item}"
+											itemValue="" />
+										<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+											itemValue="true" />
+										<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+											itemValue="false" />
+									</p:selectOneMenu>
+									<p:message for="selRetenido" />
+								</h:panelGroup>
+							</h:panelGrid>
+
+							<h:panelGrid id="panel-detalle8" styleClass="center-block"
+								columnClasses="label-col,input-col" columns="2" width="1200em">
+								<p:outputLabel value="#{labelAdminAccidentalidad.label_version}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputTextarea id="version" autoResize="false" rows="5"
+										cols="50" required="true"
+										value="#{parte.detalleAccidentalidadDTO.version}"
+										maxlength="500" />
+									<p:message for="version" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_danos_vehiculo}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputTextarea id="danosVehiculo" autoResize="false" rows="5"
+										cols="50" required="true"
+										value="#{parte.detalleAccidentalidadDTO.danosVehiculo}"
+										maxlength="500" />
+									<p:message for="danosVehiculo" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_circunstancias}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputTextarea id="circunstancias" autoResize="false"
+										rows="5" cols="50" required="true"
+										value="#{parte.detalleAccidentalidadDTO.circustancias}"
+										maxlength="2500" />
+									<p:message for="circunstancias" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_observaciones}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputTextarea id="observaciones" autoResize="false" rows="5"
+										cols="50" required="true"
+										value="#{parte.detalleAccidentalidadDTO.observaciones}"
+										maxlength="2500" />
+									<p:message for="observaciones" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_zona_impacto}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputTextarea id="zonaImpacto" autoResize="false" rows="5"
+										cols="50" required="true"
+										value="#{parte.detalleAccidentalidadDTO.zona_impacto}"
+										maxlength="2500" />
+									<p:message for="zonaImpacto" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_datos_adjuntos}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputTextarea id="datosAdjuntos" autoResize="false" rows="5"
+										cols="50" required="true"
+										value="#{parte.detalleAccidentalidadDTO.datos_adjuntos}"
+										maxlength="2500" />
+									<p:message for="datosAdjuntos" />
+								</h:panelGroup>
+							</h:panelGrid>
+						</p:tab>
+					</p:tabView>
+				</p:fieldset>
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminAccidentalidad.tit_anexar_doc}">
+
+					<p:fileUpload id="fupArchivo"
+						fileUploadListener="#{adminAccidentalidadMB.cargaArchivoEvidencia}"
+						label="#{lbComun.btnExaminar}" uploadLabel="#{lbComun.btnCargar}"
+						cancelLabel="#{lbComun.btnCancelar}" mode="advanced"
+						dragDropSupport="false" update="panel-archivos"
+						process="@this panel-archivos" multiple="true"
+						sizeLimit="#{adminAccidentalidadMB.tamanioMaximoArch}"
+						allowTypes="#{adminAccidentalidadMB.tiposArchivosPermitidos}"
+						invalidFileMessage="#{labelAdminAccidentalidad.msg_error_tipo_dato}"
+						invalidSizeMessage="#{adminComparendoMB.mesErrLimitSize}"></p:fileUpload>
+
+					<h:panelGrid id="panel-archivos" styleClass="center-block"
+						columns="1" columnClasses="label-colancha">
+						<p:dataTable id="tabla-resultados"
+							value="#{adminAccidentalidadFL.datosAccidentalidadDTO.adjuntos}"
+							var="registro" paginator="true"
+							paginatorTemplate="#{webPrm.param_paginator_template}"
+							rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+							rows="#{webPrm.param_initial_rows}"
+							emptyMessage="#{labelAdminAccidentalidad.mensaje_vacio}">
+
+							<p:column headerText="#{labelAdminAccidentalidad.lbl_anexo}">
+								<p:outputLabel value="#{registro.adjuntos.nombreArchivo}" />
+							</p:column>
+
+							<p:column>
+								<p:commandButton id="btnEliminar" icon="c2-icon-eliminar"
+									update="tabla-resultados :messages" process="@this"
+									style="width: 16px !important"
+									disabled="#{registro.adjuntos.id==null ? false: true}">
+									<p:tooltip for="btnEliminar"
+										value="#{labelAdminAccidentalidad.label_btn_eliminar_doc}" />
+									<p:confirm header="#{lbComun.msg_tit_confirmar}"
+										message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+					</h:panelGrid>
+				</p:fieldset>
+				<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+					<p:commandButton id="btnGuardar" action="CONTINUAR"
+						icon="c2-icon-guardar" process="@form"
+						value="#{lbComun.btnGuardar}" update=":messages :form-contenido">
+						<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}"
+							message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+					</p:commandButton>
+
+					<p:commandButton id="btnCancelar" action="VOLVER"
+						icon="c2-icon-cancelar" process="@this" immediate="true"
+						value="#{lbComun.btnCancelar}">
+						<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}"
+							message="#{lbComun.msg_confirm_volver_cancelar}"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+		<ui:include
+			src="/WEB-INF/jsp/accidentalidad/administracion/popup/confirmacionInformeIPAT.xhtml" />
+	</ui:define>
+</ui:composition>

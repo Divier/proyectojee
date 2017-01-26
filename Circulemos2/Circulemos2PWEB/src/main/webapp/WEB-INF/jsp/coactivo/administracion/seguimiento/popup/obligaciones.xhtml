@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<h:form id="form-obligacion">
+
+		<p:dialog widgetVar="popUpObligaciones" id="popUpObligaciones"
+			resizable="false" modal="true" appendTo="@(body)" dynamic="true"
+			closable="false" width="750" header="#{labelCoactivo.btn_ver_obligacion}">
+
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelCoactivo.msg_fieldset_coac_obl}">
+					<p:dataTable id="tabla-resultados" var="registro"
+						value="#{consultaTrazaSeguimientoHolderFL.lstObligaciones}"
+						rowKey="#{registro.id}" paginator="true"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}">
+
+						<p:column headerText="#{labelCoactivo.label_tip_oblig}">
+							<p:outputLabel value="#{registro.nombreTipoObligacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_num_oblig}">
+							<p:outputLabel value="#{registro.numeroCitacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_fecha_oblig}">
+							<c2:outputDateLabel labelValue="#{registro.fechaObligacion}"
+								fullFormat="true" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_vlr_oblig}">
+							<c2:outputCurrencyText value="#{registro.valorObligacion}" />
+						</p:column>
+
+						<p:column headerText="#{labelCoactivo.label_vlr_costo_procesales}">
+							<c2:outputCurrencyText value="#{registro.valorCostasProcesales}" />
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<p:commandButton id="btnCerrar"
+					onclick="PF('popUpObligaciones').hide();"
+					icon="c2-icon-volver" process="@this" immediate="true"
+					value="#{lbComun.btnVolver}">
+					<p:tooltip for="btnCerrar" value="#{lbComun.btnVolver}" />
+				</p:commandButton>
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+</ui:composition>

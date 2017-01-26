@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="personaHolderFL" class="co.com.datatools.c2.managed_bean.administracion.personas.PersonaHolderFL" />
+	<var name="personaFL" class="co.com.datatools.c2.managed_bean.administracion.personas.PersonaFL" />
+	<var name="dirFL" class="co.com.datatools.c2.managed_bean.administracion.direccion.DireccionFL" />
+	<var name="dirHolderFL" class="co.com.datatools.c2.managed_bean.administracion.direccion.DireccionHolderFL" />
+	
+	<decision-state id="decision">
+		<if test="requestParameters.stateId=='registrar'" then="ingresar" else="consultar" />
+	</decision-state>
+	
+	<view-state id="ingresar" view="/WEB-INF/jsp/administracion/persona/registrarPersona.xhtml">
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR">
+			<evaluate expression="externalContext.sessionMap.personaMB.cargueParametros()"/>
+		</transition>
+		<transition on="CREAR_DIR_PRINCIPAL" to="direccionResidenciaNatural" >
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareDireccionResidencia()"/>
+		</transition>
+		<transition on="CREAR_DIR_EMPRESA" to="direccionEmpresaNatural" >
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareDireccionEmpresa()"/>
+		</transition>
+		<transition on="_op-CREAR_NATURAL" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.personaMB.ingresarPersona()"/>
+		</transition>
+		<transition on="CREAR_DIR_PRINCIPAL_JURIDICA" to="direccionResidenciaJuridica" >
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareDireccionResidenciaJuridica()"/>
+		</transition>
+		<transition on="_op-CREAR_JURIDICA" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.personaMB.ingresarJuridico()"/>
+		</transition>
+		<transition on="_op-INGRESAR_CONYUGUE" to="ingresarConyugue">
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareConyugue()"/>
+		</transition>
+		<transition on="LIMPIAR" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.personaMB.limpiar()"/>
+		</transition>
+	</view-state>
+
+	<view-state id="direccionResidenciaNatural" view="/WEB-INF/jsp/administracion/direccion/registrarDireccion.xhtml">
+		<transition on="LIMPIAR">
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()"/>
+		</transition>		
+		<transition on="CONTINUAR" to="INGRESAR_DIR_RES_NAT" />
+		<transition on="VOLVER" to="ingresar" >
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()" />
+		</transition>
+	</view-state>
+
+	<action-state id="INGRESAR_DIR_RES_NAT">
+		<evaluate expression="externalContext.sessionMap.personaMB.ingresarDireccionResidenciaNatural()" />
+		<transition on="yes" to="ingresar" />
+		<transition on="no" to="direccionResidenciaNatural"/>
+	</action-state>
+
+	<view-state id="direccionEmpresaNatural" view="/WEB-INF/jsp/administracion/direccion/registrarDireccion.xhtml">
+		<transition on="LIMPIAR">
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()"/>
+		</transition>		
+		<transition on="CONTINUAR" to="INGRESAR_DIR_EMP_NAT" />
+		<transition on="VOLVER" to="ingresar" >
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()" />
+		</transition>
+	</view-state>
+
+	<action-state id="INGRESAR_DIR_EMP_NAT">
+		<evaluate expression="externalContext.sessionMap.personaMB.ingresarDireccionEmpresaNatural()" />
+		<transition on="yes" to="ingresar" />
+		<transition on="no" to="direccionEmpresaNatural"/>
+	</action-state>
+
+	<view-state id="direccionResidenciaJuridica" view="/WEB-INF/jsp/administracion/direccion/registrarDireccion.xhtml">
+		<transition on="LIMPIAR">
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()"/>
+		</transition>		
+		<transition on="CONTINUAR" to="INGRESAR_DIR_RES_JUR" />
+		<transition on="VOLVER" to="ingresar" >
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()" />
+		</transition>
+	</view-state>
+
+	<action-state id="INGRESAR_DIR_RES_JUR">
+		<evaluate expression="externalContext.sessionMap.personaMB.ingresarDireccionResidenciaJuridica()" />
+		<transition on="yes" to="ingresar" />
+		<transition on="no" to="direccionResidenciaJuridica"/>
+	</action-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate expression="externalContext.sessionMap.personaMB.buscarPrincipalNuevo()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+	
+	<view-state id="ingresarConyugue" view="/WEB-INF/jsp/administracion/persona/registrarConyugue.xhtml">
+		<transition on="VOLVER" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.personaMB.limpiarFiltroConyugue()" />
+		</transition>
+		<transition on="VOLVER_ACTUALIZAR" to="actualizar">
+			<evaluate expression="externalContext.sessionMap.personaMB.limpiarFiltroConyugue()" />
+		</transition>
+		<transition on="_op-CONSULTAR" to="ingresarConyugue">
+			<evaluate expression="externalContext.sessionMap.personaMB.buscarConyugue()" />
+		</transition>
+		<transition on="_op-CREAR" to="ingresarConyugue">
+			<evaluate expression="externalContext.sessionMap.personaMB.ingresarConyugue()" />
+		</transition>
+		<transition on="_op-EDITAR" to="ingresarConyugue">
+			<evaluate expression="externalContext.sessionMap.personaMB.ingresarConyugue()" />
+		</transition>
+		<transition on="CREAR_DIR_CONYUGUE" to="direccionResidenciaConyugue" >
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareDireccionResidenciaConyugue()"/>
+		</transition>
+		<transition on="CREAR_DIR_EMPRESA_CONYUGUE" to="direccionEmpresaConyugue" >
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareDireccionEmpresaConyugue()"/>
+		</transition>
+	</view-state>
+
+	<view-state id="direccionResidenciaConyugue" view="/WEB-INF/jsp/administracion/direccion/registrarDireccion.xhtml">
+		<transition on="LIMPIAR">
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()"/>
+		</transition>		
+		<transition on="CONTINUAR" to="INGRESAR_DIR_RES_CONY"/>
+		<transition on="VOLVER" to="ingresarConyugue" >
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()" />
+		</transition>
+	</view-state>
+
+	<action-state id="INGRESAR_DIR_RES_CONY">
+		<evaluate expression="externalContext.sessionMap.personaMB.ingresarDireccionResidenciaConyugue()" />
+		<transition on="yes" to="ingresarConyugue" />
+		<transition on="no" to="direccionResidenciaConyugue"/>
+	</action-state>
+
+	<view-state id="direccionEmpresaConyugue" view="/WEB-INF/jsp/administracion/direccion/registrarDireccion.xhtml">
+		<transition on="LIMPIAR">
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()"/>
+		</transition>		
+		<transition on="CONTINUAR" to="INGRESAR_DIR_EMP_CONY"/>
+		<transition on="VOLVER" to="ingresarConyugue" >
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()" />
+		</transition>
+	</view-state>
+
+	<action-state id="INGRESAR_DIR_EMP_CONY">
+		<evaluate expression="externalContext.sessionMap.personaMB.ingresarDireccionEmpresaConyugue()" />
+		<transition on="yes" to="ingresarConyugue" />
+		<transition on="no" to="direccionEmpresaConyugue"/>
+	</action-state>
+	
+	<view-state id="consultar" view="/WEB-INF/jsp/administracion/persona/consultarPersona.xhtml">
+		<transition on="_op-CONSULTAR" to="consultar">
+			<evaluate expression="externalContext.sessionMap.personaMB.filtrarPersona()"/>
+		</transition>
+		<transition on="DETALLE_NATURAL" to="detalle">
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareDetallePersonaNatural()"/>
+		</transition>
+		<transition on="DETALLE_JURIDICA" to="detalle">
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareDetallePersonaJuridica()"/>
+		</transition>
+		<transition on="_op-EDITAR_NATURAL" to="actualizar">
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareEdicionPersonaNatural()"/>
+		</transition>
+		<transition on="_op-EDITAR_JURIDICA" to="actualizar">
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareEdicionPersonaJuridica()"/>
+		</transition>
+	</view-state>
+
+	<view-state id="detalle" view="/WEB-INF/jsp/administracion/persona/detallePersona.xhtml">
+		<transition on="_op-DETALLE_NATURAL" to="detalle">
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareDetallePersonaNatural()"/>
+		</transition>
+		<transition on="VOLVER_DETALLE" to="detalle">
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareDetalleConyugue()"/>
+		</transition>
+		<transition on="VOLVER" to="consultar" >
+			<evaluate expression="externalContext.sessionMap.personaMB.limpieDatosDetalle()"/>
+		</transition>
+	</view-state>
+
+	<view-state id="actualizar" view="/WEB-INF/jsp/administracion/persona/actualizarPersona.xhtml">
+		<transition on="CREAR_DIR_PRINCIPAL" to="editarDireccionResidenciaNatural" >
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareDireccionResidencia()"/>
+		</transition>
+		<transition on="CREAR_DIR_EMPRESA" to="editarDireccionEmpresaNatural" >
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareDireccionEmpresa()"/>
+		</transition>
+		<transition on="_op-EDITAR_NATURAL" to="actualizar">
+			<evaluate expression="externalContext.sessionMap.personaMB.modificarPersona()"/>
+		</transition>
+		<transition on="_op-INGRESAR_CONYUGUE" to="ingresarConyugue">
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareConyugue()"/>
+		</transition>
+		<transition on="_op-EDITAR_JURIDICA" to="actualizar">
+			<evaluate expression="externalContext.sessionMap.personaMB.modificarJuridico()"/>
+		</transition>
+		<transition on="CREAR_DIR_PRINCIPAL_JURIDICA" to="editarDireccionResidenciaJuridica" >
+			<evaluate expression="externalContext.sessionMap.personaMB.prepareDireccionResidenciaJuridica()"/>
+		</transition>
+		<transition on="VOLVER" to="consultar" >
+			<evaluate expression="externalContext.sessionMap.personaMB.actualiceEstadosFL()" />
+		</transition>
+	</view-state>
+
+	<view-state id="editarDireccionResidenciaNatural" view="/WEB-INF/jsp/administracion/direccion/registrarDireccion.xhtml">
+		<transition on="LIMPIAR">
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()"/>
+		</transition>		
+		<transition on="CONTINUAR" to="EDITAR_DIR_RES_NAT" />
+		<transition on="VOLVER" to="actualizar" >
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()" />
+		</transition>
+	</view-state>
+
+	<action-state id="EDITAR_DIR_RES_NAT">
+		<evaluate expression="externalContext.sessionMap.personaMB.ingresarDireccionResidenciaNatural()" />
+		<transition on="yes" to="actualizar" />
+		<transition on="no" to="editarDireccionResidenciaNatural"/>
+	</action-state>
+
+	<view-state id="editarDireccionEmpresaNatural" view="/WEB-INF/jsp/administracion/direccion/registrarDireccion.xhtml">
+		<transition on="LIMPIAR">
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()"/>
+		</transition>		
+		<transition on="CONTINUAR" to="EDITAR_DIR_EMP_NAT" />
+		<transition on="VOLVER" to="actualizar" >
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()" />
+		</transition>
+	</view-state>
+
+	<action-state id="EDITAR_DIR_EMP_NAT">
+		<evaluate expression="externalContext.sessionMap.personaMB.ingresarDireccionEmpresaNatural()" />
+		<transition on="yes" to="actualizar" />
+		<transition on="no" to="editarDireccionEmpresaNatural"/>
+	</action-state>
+
+	<view-state id="editarDireccionResidenciaJuridica" view="/WEB-INF/jsp/administracion/direccion/registrarDireccion.xhtml">
+		<transition on="LIMPIAR">
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()"/>
+		</transition>		
+		<transition on="CONTINUAR" to="EDITAR_DIR_EMP_JUR" />
+		<transition on="VOLVER" to="actualizar" >
+			<evaluate expression="externalContext.sessionMap.direccionMB.limpiarDatos()" />
+		</transition>
+	</view-state>
+
+	<action-state id="EDITAR_DIR_EMP_JUR">
+		<evaluate expression="externalContext.sessionMap.personaMB.ingresarDireccionResidenciaJuridica()" />
+		<transition on="yes" to="actualizar" />
+		<transition on="no" to="editarDireccionResidenciaJuridica"/>
+	</action-state>
+
+</flow>

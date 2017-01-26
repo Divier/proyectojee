@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+
+	<ui:define name="contenido">
+
+		<h:form id="form-ingreso">
+        <p:panel id="campos-registro" styleClass="panel-formulario" header="#{labelIntereses.tit_registrar_interes}">
+            <p:fieldset id="datos-principal" styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_registro}">
+
+                <h:panelGrid id="panel-formulario" styleClass="center-block" columns="4" 
+                    columnClasses="label-col,input-col,label-col,input-col">
+                    <!--Componentes del formulario 2 o 4 columnas-->
+                    <p:outputLabel value="#{labelIntereses.lab_perido_interes}" styleClass="campo-obligatorio"/>
+					<h:panelGroup rendered="#{!interesFL.actualizar}">
+						<p:selectOneMenu id="periodo"
+							value="#{interesFL.interesRegistrar.periodoInteres.id}"
+							required="true" requiredMessage="#{labelGeneral.val_campo_requerido}" >
+							<f:selectItems value="#{fachadaCatalogosMB.catPeriodoInteres()}" />
+							<p:ajax event="change" process="@this" />
+						</p:selectOneMenu>
+						<p:message for="periodo" />
+					</h:panelGroup>
+					<p:outputLabel value="#{interesFL.interesRegistrar.periodoInteres.nombre}" 
+						rendered="#{interesFL.actualizar}" />
+
+					<p:outputLabel value="#{labelIntereses.lab_clase_interes}" styleClass="campo-obligatorio"/>
+					<h:panelGroup rendered="#{!interesFL.actualizar}">
+						<p:selectOneMenu id="clase"
+							value="#{interesFL.interesRegistrar.claseInteres.id}"
+							required="true" requiredMessage="#{labelGeneral.val_campo_requerido}" >
+							<f:selectItems value="#{fachadaCatalogosMB.catClaseInteres()}" />
+							<p:ajax event="change" process="@this" />
+						</p:selectOneMenu>
+						<p:message for="clase" />
+					</h:panelGroup>
+					<p:outputLabel value="#{interesFL.interesRegistrar.claseInteres.nombre}" 
+						rendered="#{interesFL.actualizar}" />
+
+					<p:outputLabel value="#{labelIntereses.lab_fecha_vig_inicial}" styleClass="campo-obligatorio"/>
+					<h:panelGroup rendered="#{!interesFL.actualizar}">
+						<p:calendar id="fechaInicial"
+							value="#{interesFL.interesRegistrar.fechaInicial}"
+							navigator="true" pattern="#{utilidadMB.formatoFecha}"
+							required="true" requiredMessage="#{labelGeneral.val_campo_requerido}"
+							readonlyInput="true" mindate="#{interesFL.fechaActual}" >
+							<p:watermark for="fechaInicial"
+								value="#{utilidadMB.formatoFecha}" />
+							<p:ajax event="dateSelect" update="fechaFinal" process="@this" global="false" listener="#{interesMB.actualizarMinFechaFinal()}" />
+							<p:ajax event="change" update="fechaFinal" process="@this" global="false" listener="#{interesMB.actualizarMinFechaFinal()}" />
+						</p:calendar>
+						<p:message for="fechaInicial" />
+					</h:panelGroup>
+					<p:outputLabel value="#{interesFL.interesRegistrar.fechaInicial}" 
+						rendered="#{interesFL.actualizar}" />
+					
+					<p:outputLabel value="#{labelIntereses.lab_fecha_vig_final}" />
+					<p:calendar id="fechaFinal"
+						value="#{interesFL.interesRegistrar.fechaFinal}"
+						navigator="true" pattern="#{utilidadMB.formatoFecha}" 
+						mindate="#{interesFL.minFechaFinal}" >
+						<p:watermark for="fechaFinal"
+							value="#{utilidadMB.formatoFecha}" />
+						<p:ajax event="change" process="@this" />
+					</p:calendar>
+				
+					<p:outputLabel value="#{labelIntereses.lab_porcentaje_tasa_interes}" styleClass="campo-obligatorio" />
+					<h:panelGroup rendered="#{!interesFL.actualizar}">
+						<p:spinner id="porcentajeTasa"
+							value="#{interesFL.interesRegistrar.porcentajeTasaInteres}"
+							min="0.001" required="true" suffix="%" stepFactor="0.001"
+							requiredMessage="#{labelGeneral.val_campo_requerido}"
+							validatorMessage="#{labelSimulacionFinanciacion.err_msg_validation}">
+							<f:validateLongRange minimum="0"  />
+							<p:ajax event="change" process="@this" />
+						</p:spinner>
+						<p:message for="porcentajeTasa" />
+					</h:panelGroup>
+                    <p:outputLabel value="#{interesFL.interesRegistrar.porcentajeTasaInteres * 100}" 
+						rendered="#{interesFL.actualizar}" >
+						<f:convertNumber pattern="#,##0.000 '%'" />
+					</p:outputLabel>
+                    
+                </h:panelGrid>
+
+                <h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+                    <!--Boton Guardar-->
+                    <p:commandButton id="btnGuardar" action="CONTINUAR" icon="c2-icon-guardar"
+							process="@form" value="#{lbComun.btnGuardar}" update=":messages :form-ingreso">
+						<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+					</p:commandButton>
+                    <!--Boton Cancelar-->
+                    <p:commandButton id="btnCancelar" action="VOLVER" icon="c2-icon-cancelar"
+							process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+						<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+					</p:commandButton>
+                </h:panelGrid>
+            </p:fieldset>
+        </p:panel>
+    </h:form>
+    
+    <h:form id="frmConfirmaRegistro">
+		<p:dialog appendToBody="true" header="#{labelIntereses.msg_confirmacion}"
+			modal="true" closable="false"
+			widgetVar="popupConfirmaRegistro" id="idPopupConfirmaRegistro"
+			resizable="false" closeOnEscape="false" 
+			height="100" width="350"
+			visible="#{interesFL.visiblePopupRegistro}" >
+			<h:panelGrid columns="1" cellspacing="5" styleClass="center-block" rendered="#{interesFL.actualizar}">
+				<h:outputLabel value="#{labelIntereses.msg_actualizado_ok}" />
+			</h:panelGrid>
+			<h:panelGrid columns="1" cellspacing="5" styleClass="center-block" rendered="#{!interesFL.actualizar}" >
+				<h:outputLabel value="#{interesFL.porcentajeGuardado}" />
+			</h:panelGrid>
+			<h:panelGrid columns="1" cellspacing="5" styleClass="center-block">
+				<p:commandButton value="#{labelIntereses.lab_btn_aceptar}"
+					process="@this" action="ACEPTAR" update=":frmConfirmaRegistro :messages :form-ingreso"
+					oncomplete="PF('popupConfirmaRegistro').hide();">
+				</p:commandButton>
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+
+	</ui:define>
+
+
+</ui:composition>

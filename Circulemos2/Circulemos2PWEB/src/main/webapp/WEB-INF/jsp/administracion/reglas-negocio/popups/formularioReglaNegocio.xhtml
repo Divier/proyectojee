@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+
+<ui:define name="contenido">
+
+    <h:form id="form-contenido">
+        <p:panel id="campos-consulta" styleClass="panel-formulario" header="Reglas de Negocio" >
+            <p:fieldset styleClass="fieldset-formulario" legend="#{lbComun.msg_fieldset_consultar}">
+                
+                <h:panelGrid id="panel-formulario" styleClass="center-block" columns="2" 
+                        columnClasses="label-col,input-col,label-col,input-col">
+                	<p:outputLabel value="Regla de Negocio" styleClass="campo-obligatorio" />
+					<h:panelGroup>
+						<p:selectOneMenu id="selOneMenReglas" value="#{reglasNegocioMB.reglaSeleccionada}"
+							required="true" requiredMessage="#{labelGeneral.val_campo_requerido}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" noSelectionOption="true"/>
+							<f:selectItems value="#{reglasNegocioMB.reglas}" />
+						</p:selectOneMenu>
+						<p:message for="selOneMenReglas" />
+					</h:panelGroup>
+                </h:panelGrid>
+            
+                <h:panelGrid styleClass="center-block" columns="1" cellpadding="5" >
+					<f:facet name="footer">
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR" action="_op-CONSULTAR" icon="c2-icon-consultar"
+								process="@form" value="#{lbComun.btnConsultar}"
+								update=":messages :form-resultado :form-contenido" >
+							<p:tooltip for="btnConsultar" value="Consultar los valores parametrizados para la regla" />
+						</p:commandButton>
+					</f:facet>
+                </h:panelGrid>
+                
+            </p:fieldset>
+        </p:panel>
+    </h:form>
+
+    <h:form id="form-resultado">
+        <p:panel id="resultado-consulta" styleClass="panel-res-consulta" rendered="#{reglasNegocioMB.registrosRegla.size() > 0}">
+            
+            <h:panelGrid id="acciones-top">
+                <f:facet name="footer">
+                
+					<p:commandButton id="btnAgregarDet" action="AGREGAR_DETALLE" icon="c2-icon-agregar-det" 
+							immediate="true"
+							value="#{lbComun.btnAgregarDet}">
+						<p:tooltip for="btnAgregarDet" value="Agregar Nuevo Registro a la Regla" />
+					</p:commandButton>
+
+					<p:commandButton id="btnEditarDet" action="EDITAR_DETALLE" icon="c2-icon-editar-det" 
+							immediate="true" disabled="#{reglasNegocioMB.registroReglaSeleccionado==null}"
+							value="#{lbComun.btnEditarDet}">
+						<p:tooltip for="btnEditarDet" value="Modificar Registro Seleccionado" />
+					</p:commandButton>
+					
+					<p:commandButton id="btnRemoverDet" action="REMOVER_DETALLE" icon="c2-icon-remover-det"
+							immediate="true" disabled="#{reglasNegocioMB.registroReglaSeleccionado==null}"
+							value="#{lbComun.btnRemoverDet}">
+						<p:tooltip for="btnRemoverDet" value="Eliminar Registro Seleccionado" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+					</p:commandButton>
+
+                </f:facet>
+            </h:panelGrid>
+            
+            <p:dataTable id="tabla-resultados" value="#{registrosRegla}" var="registro" rowKey="#{registro.id}"
+                    selection="#{reglasNegocioMB.registroReglaSeleccionado}" paginator="true"
+                    paginatorTemplate="#{webPrm.param_paginator_template}"
+                    rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+                    rows="#{webPrm.param_initial_rows}" sortMode="multiple" >
+                
+                <p:ajax event="rowSelectRadio" process=":form-resultado:tabla-resultados"
+                        update=":form-resultado:acciones-top" global="false" />
+                
+                <p:column selectionMode="single" style="width:20px">                         
+                </p:column>        
+                
+                <!--Columnas Resultado Consulta-->
+                
+            </p:dataTable>
+            
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<f:facet name="footer">
+					<p:commandButton id="btnGuardar" action="_op-EDITAR" icon="c2-icon-guardar"
+							process="@form" value="#{lbComun.btnGuardar}" update=":messages :form-contenido :form-resultado">
+						<p:tooltip for="btnGuardar" value="Guardar los cambios de los valore de la regla" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+					</p:commandButton>
+				</f:facet>
+			    <!--Boton Cancelar-->
+			</h:panelGrid>
+			
+        </p:panel>
+    </h:form>
+    
+</ui:define>
+			
+			
+</ui:composition>

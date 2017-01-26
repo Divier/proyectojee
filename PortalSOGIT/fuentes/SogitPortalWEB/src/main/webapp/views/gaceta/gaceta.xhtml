@@ -1,0 +1,142 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template-principal.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="pnlForm" styleClass="panel-formulario"
+				header="#{bundleGaceta['tit_gaceta']}">
+				<p:fieldset styleClass="fieldset-formulario"
+					rendered="#{gacetaMB.datosPublicacion}">
+					<p:toolbar id="toolSuperior">
+						<f:facet name="left">
+							<h:panelGrid columns="2">
+								<p:outputLabel value="#{bundleGaceta['lbl_public']}"></p:outputLabel>
+								<p:outputLabel
+									value="#{gacetaMB.fechaPublicacionDTO.fechaPublicacion}"
+									style="color:red; font-weight: bold;">
+									<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+								</p:outputLabel>
+							</h:panelGrid>
+						</f:facet>
+						<f:facet name="right">
+							<p:outputLabel value="#{bundleGaceta['lbl_public_ant']}: "></p:outputLabel>
+							<p:selectOneMenu id="selPublic"
+								value="#{gacetaMB.fechaSeleccionada}">
+								<f:selectItems value="#{gacetaMB.fechasPublicacion}" />
+								<p:ajax listener="#{gacetaMB.consultarPublicacionesFecha()}"
+									process="@this"
+									update="tabla-resultados toolSuperior toolInferior fheIni fheFin fheIni2 fheFin2 fhePie"></p:ajax>
+							</p:selectOneMenu>
+							<p:commandButton id="btnVerFiltros"
+								action="#{gacetaMB.activarConsultaGaceta()}"
+								icon="c2-icon-detalle" process="@this" update="pnlForm"
+								value="#{bundleGaceta['lbl_filtros']}">
+							</p:commandButton>
+							<p:commandButton action="#{gacetaMB.menu()}"
+								icon="fa fa-home" process="@this"
+								value="#{bundleGeneral['btn_volver']}">
+							</p:commandButton>
+						</f:facet>
+					</p:toolbar>
+					<p
+						style="font-weight: bold; text-align: justify; background-color: white; padding: 20px;">
+						<p:outputLabel style="text-transform: uppercase;"
+							value="#{bundleGaceta['nota_dt_gaceta_uno']} " />
+						<p:outputLabel id="fheIni"
+							value="#{gacetaMB.convertirFecha(gacetaMB.gacetaDTO.fechaPeriodoInicio)}" />
+						AL
+						<p:outputLabel id="fheFin"
+							value="#{gacetaMB.convertirFecha(gacetaMB.gacetaDTO.fechaPeriodoFin)}. " />
+					</p>
+					<p
+						style="text-align: justify; background-color: white; padding: 20px;">
+						<p:outputLabel value="#{bundleGaceta['nota_dt_gaceta_dos']} " />
+						<p:outputLabel id="fheIni2"
+							value="#{gacetaMB.convertirFecha(gacetaMB.gacetaDTO.fechaPeriodoInicio)} " />
+						al
+						<p:outputLabel id="fheFin2"
+							value="#{gacetaMB.convertirFecha(gacetaMB.gacetaDTO.fechaPeriodoFin)}. " />
+						<p:outputLabel value="#{bundleGaceta['nota_dt_gaceta_tres']}" />
+					</p>
+					<p:dataTable id="tabla-resultados"
+						value="#{gacetaMB.detalleGacetaDTOs}" var="registro"
+						paginator="true" emptyMessage="#{bundleGaceta['lbl_datos_tabla']}"
+						paginatorTemplate="#{bundleGeneral['param_paginator_template']}"
+						rowsPerPageTemplate="#{bundleGeneral['param_rows_per_page']}"
+						rows="#{bundleGeneral['param_initial_rows']}">
+
+						<p:column headerText="#{bundleGaceta['lbl_placa_vehiculo']}">
+							<p:outputLabel value="#{registro.placaVehiculo}" />
+						</p:column>
+
+						<p:column headerText="#{bundleGaceta['lbl_propietario']}">
+							<p:outputLabel value="#{registro.propietario}" />
+						</p:column>
+
+						<p:column headerText="#{bundleGaceta['lbl_des_infraccion']}">
+							<p:outputLabel value="#{registro.descripcionInfraccion}" />
+						</p:column>
+
+						<p:column headerText="#{bundleGaceta['lbl_lugar_infraccion']}">
+							<p:outputLabel value="#{registro.lugarInfraccion}" />
+						</p:column>
+
+						<p:column headerText="#{bundleGaceta['lbl_fecha_imposicion']}">
+							<p:outputLabel value="#{registro.fechaImposicion}">
+								<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="#{bundleGaceta['lbl_valor_us']}">
+							<p:outputLabel value="#{registro.valor}">
+								<f:convertNumber pattern="#{utilidadMB.formatoMonedaCompleta}"
+									type="currency" />
+							</p:outputLabel>
+						</p:column>
+
+					</p:dataTable>
+					<p:toolbar id="toolInferior">
+						<f:facet name="left">
+							<h:panelGrid columns="2">
+								<p:outputLabel value="#{bundleGaceta['lbl_public']}"></p:outputLabel>
+								<p:outputLabel
+									value="#{gacetaMB.fechaPublicacionDTO.fechaPublicacion}"
+									style="color:red; font-weight: bold;">
+									<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+								</p:outputLabel>
+							</h:panelGrid>
+						</f:facet>
+					</p:toolbar>
+
+					<p
+						style="font-weight: bold; text-align: center; background-color: white;">
+						<p:outputLabel value="Guayaquil, "></p:outputLabel>
+						<p:outputLabel id="fhePie"
+							value="#{gacetaMB.fechaPublicacionDTO.fechaPublicacion}">
+							<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+						</p:outputLabel>
+						<br /> <br /> <br />
+						<p:outputLabel value="Ab. Mgs. Edgar Lupera Valencia, Esp." />
+						<br />
+						<p:outputLabel
+							value="Director de Gestión de Infracciones y Servicios de Tránsito" />
+						<br />
+						<p:outputLabel value="Autoridad de Tránsito Municipal" />
+					</p>
+				</p:fieldset>
+
+				<p:fieldset styleClass="fieldset-formulario"
+					rendered="#{!gacetaMB.datosPublicacion}">
+					<p:outputLabel value="#{bundleGaceta['msg_no_data']}"></p:outputLabel>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+		<ui:include src="/views/impugnacion/popup/detalleImpugnacion.xhtml" />
+	</ui:define>
+</ui:composition>

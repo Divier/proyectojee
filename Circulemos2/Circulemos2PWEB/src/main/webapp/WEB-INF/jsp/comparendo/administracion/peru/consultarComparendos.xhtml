@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header='#{adminComparendoPeruMB.obtenerMensajeConsulta("titulo_consultar_comparendo")}'>
+				<h:panelGrid id="panel-info-cabecera" styleClass="center-block"
+					columnClasses="label-col,input-col,label-col,input-col" columns="2">						
+					<p:outputLabel value="#{labelAdminComparendo.label_organismo_transito}"
+						rendered="#{adminComparendoPeruHolderFL.tipoComparendoPeru == adminComparendoPeruHolderFL.tipoPapeleta}"
+						styleClass="campo-obligatorio" />
+					<p:outputLabel value="#{labelAdminComparendo.label_organismo_transito}"
+						rendered="#{adminComparendoPeruHolderFL.tipoComparendoPeru == adminComparendoPeruHolderFL.tipoActa}" />
+					<h:panelGroup>
+						<p:selectOneMenu id="selOrganismoTransito" 
+							required="#{adminComparendoPeruMB.establecerEstadoDeCampo()}"
+							requiredMessage="#{labelGeneral.val_campo_requerido}"
+							value="#{adminComparendoPeruHolderFL.comparendo.ordenComparendoNacional.organismoTransito.codigoOrganismo}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+							<f:selectItems
+								value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+							<f:selectItem
+								itemLabel="#{labelAdminComparendo.label_option_otros}"
+								itemValue="0" />
+						</p:selectOneMenu>
+						<p:message for="selOrganismoTransito" />
+					</h:panelGroup>
+
+					<p:outputLabel
+						value='#{adminComparendoPeruMB.obtenerMensajeConsulta("label_numero_comparendo")}' />
+					<h:panelGroup>
+						<h:panelGrid columns="2">
+							<p:inputText id="numeroComparendo"
+								value="#{adminComparendoPeruHolderFL.numeroComparendo}"
+								maxlength="11"
+								validatorMessage="#{labelGeneral.val_campo_numerico}">
+								<f:validateRegex pattern="#{adminComparendoPeruMB.expresionNumerica}" />
+								<p:ajax
+									listener="#{adminComparendoPeruMB.onNumeroComparendoChangeConsulta}"
+									update="numeroComparendo, numeroComparendoMessage"
+									global="false" process="@this" event="change" />
+							</p:inputText>
+							<h:outputText value="#{adminComparendoPeruMB.consultarSufijos()}" />
+						</h:panelGrid>
+						<p:message id="numeroComparendoMessage" for="numeroComparendo" />
+					</h:panelGroup>
+					
+					<p:outputLabel value="#{labelAdminComparendo.label_placa_vehiculo}"/>
+					<h:panelGroup>
+						<p:inputText id="placaVehiculo"
+							value="#{adminComparendoPeruHolderFL.comparendo.comparendoVehiculo.placaVehiculo}"
+							maxlength="10"
+							validatorMessage="#{labelAdminComparendo.msg_error_placa}">
+							<f:validateRegex pattern="#{adminComparendoPeruMB.expresionPlaca}" />
+						</p:inputText>
+						<p:message for="placaVehiculo" />
+					</h:panelGroup>
+				</h:panelGrid>				
+
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminComparendo.label_conductor}">
+					<h:panelGrid id="panel-info-infractor" styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">
+						<p:outputLabel
+							value="#{labelAdminComparendo.label_tipo_documento}"/>
+						<h:panelGroup>
+							<p:selectOneMenu id="selTipoDocumentoInfractor"
+								value="#{adminComparendoPeruHolderFL.comparendo.infractor.tipoIdentificacion.id}"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacionNoJuridica()}" />
+								<f:selectItem
+									itemLabel="#{labelAdminComparendo.label_option_otros}"
+									itemValue="0" />
+							</p:selectOneMenu>
+							<p:message for="selTipoDocumentoInfractor" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdminComparendo.label_numero_documento}"/>
+						<h:panelGroup>
+							<p:inputText id="numeroDocumentoInfractor"
+								value="#{adminComparendoPeruHolderFL.comparendo.infractor.numeroIdentificacion}"
+								maxlength="20"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+							</p:inputText>
+							<p:message for="numeroDocumentoInfractor" />
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminComparendo.label_propietario}">
+					<h:panelGrid id="panel-info-propietario" styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">
+						<p:outputLabel
+							value="#{labelAdminComparendo.label_tipo_documento}"/>
+						<h:panelGroup>
+							<p:selectOneMenu id="selTipoDocumentoPropietario"
+								value="#{adminComparendoPeruHolderFL.comparendo.propietario.tipoIdentificacion.id}"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacionNoJuridica()}" />
+								<f:selectItem
+									itemLabel="#{labelAdminComparendo.label_option_otros}"
+									itemValue="0" />
+							</p:selectOneMenu>
+							<p:message for="selTipoDocumentoPropietario" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdminComparendo.label_numero_documento}"/>
+						<h:panelGroup>
+							<p:inputText id="numeroDocumentoPropietario"
+								value="#{adminComparendoPeruHolderFL.comparendo.propietario.numeroIdentificacion}"
+								maxlength="20"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+							</p:inputText>
+							<p:message for="numeroDocumentoPropietario" />
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<p:fieldset styleClass="fieldset-formulario"
+					legend='#{adminComparendoPeruMB.obtenerMensajeConsulta("label_autoridad")}'>
+					<h:panelGrid id="panel-info-agente" styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">
+						<p:outputLabel
+							value="#{labelAdminComparendo.label_tipo_documento}"/>
+						<h:panelGroup>
+							<p:selectOneMenu id="selTipoDocumentoAgente"
+								value="#{adminComparendoPeruHolderFL.comparendo.comparendoAgente.tipoIdentificacionPersona.id}"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacionNoJuridica()}" />
+								<f:selectItem
+									itemLabel="#{labelAdminComparendo.label_option_otros}"
+									itemValue="0" />
+							</p:selectOneMenu>
+							<p:message for="selTipoDocumentoAgente" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdminComparendo.label_numero_documento}"/>
+						<h:panelGroup>
+							<p:inputText id="numeroDocumentoAgente"
+								value="#{adminComparendoPeruHolderFL.comparendo.comparendoAgente.numeroIdentificacion}"
+								maxlength="20"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+							</p:inputText>
+							<p:message for="numeroDocumentoAgente" />
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:fieldset>				
+
+				<h:panelGrid id="panel-info-imposicion" styleClass="center-block"
+					columns="4"
+					columnClasses="label-col,input-col,label-col,input-col">
+					<p:outputLabel
+						value='#{adminComparendoPeruMB.obtenerMensajeConsulta("label_fecha_inicial_comparendo")}'/>
+					<h:panelGroup>
+						<p:calendar id="fechaImposicionInicial" 
+							value="#{adminComparendoPeruHolderFL.fechaImposicionInicial}"
+							navigator="true" pattern="#{webPrm.lab_calendar_pattern}">
+							<p:watermark for="fechaImposicionInicial"
+								value="#{webPrm.lab_calendar_mask_pattern}" />
+							<p:ajax event="dateSelect" process="@this fechaImposicionInicial"
+								update="fechaImposicionFinal"></p:ajax>
+						</p:calendar>
+						<p:message for="fechaImposicionInicial" />							
+					</h:panelGroup>
+
+					<p:outputLabel
+						value='#{adminComparendoPeruMB.obtenerMensajeConsulta("label_fecha_final_comparendo")}'/>
+					<h:panelGroup>
+						<p:calendar id="fechaImposicionFinal" 
+							value="#{adminComparendoPeruHolderFL.fechaImposicionFinal}"
+							navigator="true" pattern="#{webPrm.lab_calendar_pattern}"
+							mindate="#{adminComparendoPeruHolderFL.fechaImposicionInicial}">
+							<p:watermark for="fechaImposicionFinal"
+								value="#{webPrm.lab_calendar_mask_pattern}" />
+							<p:ajax process="@this fechaImposicionFinal" update="fechaImposicionFinal"></p:ajax>
+						</p:calendar>							
+						<p:message for="fechaImposicionFinal" />
+					</h:panelGroup>
+				</h:panelGrid>
+				
+				<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+					<!--Boton Consultar-->
+					<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+						action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+						value="#{lbComun.btnConsultar}"
+						update=":messages :form-resultado :form-contenido">
+						<p:tooltip for="btnConsultar"
+							value="#{labelRango.tooltip_btnConsultar}" />
+					</p:commandButton>
+					<!--Boton Nuevo-->
+					<p:commandButton id="btnCrear" styleClass="_op-CREAR"
+						action="_op-CREAR" icon="c2-icon-crear" process="@this"
+						value="#{lbComun.btnCrear}" immediate="true">
+						<p:tooltip for="btnCrear" value="#{labelRango.tooltip_btnCrear}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{adminComparendoPeruHolderFL.lstComparendos.size() > 0}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminComparendo.msg_fieldset_comparendos}">
+					<h:panelGrid id="acciones-top">
+						<f:facet name="footer">
+							<!--Boton Ver detalle-->
+							<p:commandButton id="btnVerDet" action="VER_DETALLE"
+								icon="c2-icon-detalle" process="@this"
+								value="#{lbComun.btnVerDet}"
+								disabled="#{adminComparendoPeruHolderFL.comparendoSeleccionado==null}">
+								<p:tooltip for="btnVerDet"
+									value="#{labelAdminComparendo.tooltip_btnVerDet}" />
+							</p:commandButton>
+						</f:facet>
+					</h:panelGrid>
+
+					<p:dataTable id="tabla-resultados"
+						value="#{adminComparendoPeruHolderFL.lstComparendos}" var="registro"
+						rowKey="#{registro.cicomparendo}"
+						selection="#{adminComparendoPeruHolderFL.comparendoSeleccionado}"
+						paginator="true"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+
+						<p:ajax event="rowSelectRadio"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this" global="false" />
+
+						<p:column selectionMode="single" />
+
+						<p:column
+							headerText="#{labelAdminComparendo.label_numero_comparendo}">
+							<p:outputLabel
+								value="#{registro.ordenComparendoNacional.numeroComparendo}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelAdminComparendo.label_estado_comparendo}">
+							<p:outputLabel value="#{registro.estadoComparendo.nombre}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelAdminComparendo.label_placa_vehiculo}">
+							<p:outputLabel
+								value="#{registro.comparendoVehiculo.placaVehiculo}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelAdminComparendo.label_fecha_imposicion_fielset}">
+							<p:outputLabel value="#{registro.fechaInfraccion} #{registro.horaInfraccion}" />
+						</p:column>					
+
+						<p:column
+							headerText="#{labelAdminComparendo.label_numero_doc_infractor}">
+							<p:outputLabel value="#{registro.infractor.numeroIdentificacion}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelAdminComparendo.label_primer_apellido_infractor}">
+							<p:outputLabel value="#{registro.infractor.apellido1}" />
+						</p:column>
+
+						<p:column
+							headerText="#{labelAdminComparendo.label_primer_nombre_infractor}">
+							<p:outputLabel value="#{registro.infractor.nombre1}" />
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

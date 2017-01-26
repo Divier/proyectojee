@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.1" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd">
+
+	<application>
+		<locale-config>
+			<default-locale>es</default-locale>
+			<supported-locale>es_EC</supported-locale>
+		</locale-config>
+		<resource-bundle>
+			<base-name>co.com.datatools.sogit.bundle.citaciones.Mensajes</base-name>
+			<var>bundleCitaciones</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.sogit.bundle.financiacion.Mensajes</base-name>
+			<var>bundleFinanciacion</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.sogit.bundle.gaceta.Mensajes</base-name>
+			<var>bundleGaceta</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.sogit.bundle.general.Mensajes</base-name>
+			<var>bundleGeneral</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.sogit.bundle.impugnacion.Mensajes</base-name>
+			<var>bundleImpugnacion</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.sogit.bundle.menu.Mensajes</base-name>
+			<var>bundleMenu</var>
+		</resource-bundle>
+	</application>
+</faces-config>

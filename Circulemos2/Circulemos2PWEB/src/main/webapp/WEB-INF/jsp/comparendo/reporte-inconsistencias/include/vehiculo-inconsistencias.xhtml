@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-vehiculo" styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_vehiculo}">
+
+		<p:growl id="messagesVehiculo" showDetail="true" life="15000"
+			globalOnly="true" />
+
+		<p:dataList id="idDetallesV"
+			rendered="#{not empty gestionarInconsistenciasComparendoFL.respuestaValidacionVO.detalleProcesamientoVehiculoDTOs}"
+			value="#{gestionarInconsistenciasComparendoFL.respuestaValidacionVO.detalleProcesamientoVehiculoDTOs}"
+			var="error" itemType="circle">
+			<p:outputLabel value="#{error.errorProcesamiento.descripcion}"
+				style="color:red;" />
+		</p:dataList>
+
+		<p:fieldset id="datos-vehiculo" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_vehiculo}">
+
+			<h:panelGrid id="panel-formulario-vehiculo" styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+				<p:outputLabel value="#{labelAdminComparendo.label_placa_vehiculo}" />
+				<h:panelGroup>
+					<p:inputText id="placaVehiculo"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.placaVehiculo}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(29)}"
+						validatorMessage="#{labelAdminComparendo.msg_error_placa}"
+						disabled="#{gestionarInconsistenciasComparendoFL.placaVehiculoDeshabilitado}">
+						<p:ajax
+							listener="#{gestionarInconsistenciasComparendoMB.onPlacaChange}"
+							global="false"
+							update="campos-registro-vehiculo,campos-registro-propietario"
+							process="@this" event="blur" />
+					</p:inputText>
+					<p:message for="placaVehiculo" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_identificacion_vehiculo}" />
+				<h:panelGroup>
+					<p:inputText id="identificacionVehiculo"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.identificacionVehiculo}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(30)}"
+						disabled="#{gestionarInconsistenciasComparendoFL.idVehiculoDeshabilitado}">
+						<p:ajax
+							listener="#{gestionarInconsistenciasComparendoMB.onIdentificacionVehiculoChange}"
+							global="false" update="campos-registro-vehiculo" process="@this"
+							event="change" />
+					</p:inputText>
+					<p:message for="identificacionVehiculo" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_matriculado_en}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selMatriculadoEn"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.codigoOrganismoMatriculaVehiculo}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+					</p:selectOneMenu>
+					<p:message for="selMatriculadoEn" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_clase_servicio}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selClaseServicio"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.idTipoServicio}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems value="#{fachadaCatalogosMB.catClaseServicio()}" />
+					</p:selectOneMenu>
+					<p:message for="selClaseServicio" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_vehiculo}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selTipoVehiculo"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.idClaseVehiculo}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems value="#{fachadaCatalogosMB.catTipoVehiculo()}" />
+					</p:selectOneMenu>
+					<p:message for="selTipoVehiculo" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_radio_operacion}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selRadioOperacion"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.idRadioAccion}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems value="#{fachadaCatalogosMB.catRadioAccion()}" />
+					</p:selectOneMenu>
+					<p:message for="selRadioOperacion" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_modalidad_transporte}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selModalidadTransporte"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.idModalidad}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems value="#{fachadaCatalogosMB.catModalidad()}" />
+					</p:selectOneMenu>
+					<p:message for="selModalidadTransporte" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_transporte_pasajeros}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selTransportePasajeros"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.codigoTipoTransPasajero}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItems
+							value="#{fachadaCatalogosMB.catTransportePasajero()}" />
+					</p:selectOneMenu>
+					<p:message for="selTransportePasajeros" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_tarjeta_operacion}" />
+				<h:panelGroup>
+					<p:inputText id="tarjetaOperacion"
+						value="#{gestionarInconsistenciasComparendoFL.procesaComparendo.numeroTarjetaOperacion}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(31)}"
+						validatorMessage="#{labelGeneral.val_campo_numerico}">
+						</p:inputText>
+					<p:message for="tarjetaOperacion" />
+				</h:panelGroup>
+
+			</h:panelGrid>
+		</p:fieldset>
+		<p:fieldset id="datos-vehiculo-empresa"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_empresa}">
+			<h:panelGrid id="panel-formulario-vehiculo-empresa"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_documento}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="selTipoDocumento"
+						value="#{gestionarInconsistenciasComparendoFL.empresaVehiculo.idTipoIdentificacion}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+							itemValue="" />
+						<f:selectItem
+							itemLabel="#{gestionarInconsistenciasComparendoFL.tipoIdentificacionEmpresa.nombre}"
+							itemValue="#{gestionarInconsistenciasComparendoFL.tipoIdentificacionEmpresa.id}" />
+						<f:selectItem
+							itemLabel="#{labelAdminComparendo.label_option_otros}"
+							itemValue="#{labelAdminComparendo.value_option_otros}" />
+						<p:ajax
+							listener="#{gestionarInconsistenciasComparendoMB.onTipoDocumentoEmpresaChange}"
+							update="panel-formulario-vehiculo-empresa" process="@this"
+							event="change" global="false" />
+					</p:selectOneMenu>
+					<p:message for="selTipoDocumento" />
+				</h:panelGroup>
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_documento}" />
+				<h:panelGroup>
+					<p:inputText id="numeroDocumento"
+						value="#{gestionarInconsistenciasComparendoFL.empresaVehiculo.numeroIdentificacion}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(92)}">
+						<p:ajax
+							listener="#{gestionarInconsistenciasComparendoMB.onTipoDocumentoEmpresaChange}"
+							update="panel-formulario-vehiculo-empresa" process="@this"
+							event="change" global="false" />
+					</p:inputText>
+					<p:message for="numeroDocumento" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelAdminComparendo.label_nombre_empresa}" />
+				<h:panelGroup>
+					<p:inputText id="nombreEmpresa"
+						value="#{gestionarInconsistenciasComparendoFL.empresaVehiculo.razonSocial}"
+						maxlength="#{enumeracionMB.consultarEnumCampoDetalleComparendo(90)}">
+						<p:ajax process="@this" event="change" />
+					</p:inputText>
+					<p:message for="nombreEmpresa" />
+				</h:panelGroup>
+
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

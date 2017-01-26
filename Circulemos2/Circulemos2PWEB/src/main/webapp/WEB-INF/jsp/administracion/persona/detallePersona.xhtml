@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{personaMB.toString()}" />
+		</f:metadata>
+		<h:form id="form-contenido-natural" rendered="#{personaMB.mostrarDetalleNatural()}">
+			<p:panel id="campos-registro" styleClass="panel-formulario">
+				<p:fieldset id="datos-principal" legend="#{labelAdmin.titulo_datos_persona}" styleClass="fieldset-formulario">
+
+					<h:panelGrid id="panel-filtro" styleClass="center-block" columns="4" columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel value="#{labelAdmin.label_tipo_documento}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.tipoIdentificacion.nombre}" />
+
+						<p:outputLabel value="#{labelAdmin.label_numero_documento}" />
+						<c2:outputNumberText value="#{personaHolderFL.personaSeleccionada.numeroIdentificacion}" />
+
+						<p:outputLabel value="#{labelAdmin.label_primer_apellido}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.apellido1}" />
+
+						<p:outputLabel value="#{labelAdmin.label_segundo_apellido}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.apellido2}" />
+
+						<p:outputLabel value="#{labelAdmin.label_primer_nombre}:" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.nombre1}" />
+
+						<p:outputLabel value="#{labelAdmin.label_segundo_nombre}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.nombre2}" />
+
+						<p:outputLabel value="#{labelAdmin.label_genero}" />
+						<p:outputLabel value="#{personaMB.nombreGenero(personaHolderFL.personaSeleccionada.genero)}" />
+
+						<p:outputLabel value="#{labelAdmin.label_fecha_nacimiento}" />
+						<c2:outputDateLabel labelValue="#{personaHolderFL.personaSeleccionada.fechaNacimiento}" />
+
+						<p:outputLabel value="#{labelAdmin.label_departamento_expedicion_documento}" rendered="#{!personaHolderFL.fuenteExterna}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.municipioExpedicionDocumento.departamento.nombre}"
+							rendered="#{!personaHolderFL.fuenteExterna}" />
+
+						<p:outputLabel value="#{labelAdmin.label_ciudad_expedicion_documento}" rendered="#{!personaHolderFL.fuenteExterna}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.municipioExpedicionDocumento.nombre}" rendered="#{!personaHolderFL.fuenteExterna}" />
+
+						<p:outputLabel value="#{labelAdmin.label_fecha_expedicion_documento}" />
+						<c2:outputDateLabel labelValue="#{personaHolderFL.personaSeleccionada.fechaExpedicionDocumento}" />
+
+						<p:outputLabel value="#{labelAdmin.label_correo_electronico}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.correoElectronico}" />
+
+						<p:outputLabel value="#{labelAdmin.label_numero_telefonico}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.numeroTelefonico}" />
+
+						<p:outputLabel value="#{labelAdmin.label_numero_celular}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.numeroCelular}" />
+
+						<p:outputLabel value="#{labelAdmin.label_tipo_vivienda}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.tipoVivienda.nombre}" />
+
+						<p:outputLabel value="#{labelAdmin.label_direccion_residencia}" />
+						<p:outputLabel value="#{personaMB.direccionResidencia(personaHolderFL.personaSeleccionada.direccionPersonaList)}" />
+
+						<p:outputLabel value="#{labelAdmin.label_empresa_trabaja}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.nombreEmpresaLabora}" />
+
+						<p:outputLabel value="#{labelAdmin.label_direccion_empresa}" />
+						<p:outputLabel value="#{personaMB.direccionEmpresa(personaHolderFL.personaSeleccionada.direccionPersonaList)}" />
+
+						<p:outputLabel value="#{labelAdmin.label_cargo}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.cargoEmpresaLabora}" />
+
+						<p:outputLabel value="#{labelAdmin.label_fax_empresa_trabaja}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.faxEmpresaLabora}" />
+
+						<p:outputLabel value="#{labelAdmin.label_telefono_empresa_trabaja}" rendered="#{!personaHolderFL.fuenteExterna}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.telefonoEmpresaLabora}" rendered="#{!personaHolderFL.fuenteExterna}" />
+
+						<p:outputLabel value="#{labelAdmin.label_notif_direccion_empresa_trabaja}" />
+						<c2:outputBoolText value="#{personaHolderFL.personaSeleccionada.notificaDirEmpresa}" />
+
+						<p:outputLabel value="#{labelAdmin.label_nivel_educativo}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.nivelEducativo.nombre}" />
+
+						<p:outputLabel value="#{labelAdmin.label_estado_civil}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.estadoCivil.nombre}" />
+
+						<p:outputLabel value="#{labelAdmin.label_fecha_ultima_actualizacion}" rendered="#{personaHolderFL.fuenteExterna}" />
+						<c2:outputDateLabel labelValue="#{personaHolderFL.personaSeleccionada.fechaUltimaActualizacion}" rendered="#{personaHolderFL.fuenteExterna}" />
+
+						<p:outputLabel value="#{labelAdmin.label_origen_actualizacion}" rendered="#{personaHolderFL.fuenteExterna}" />
+						<p:outputLabel value="#{personaHolderFL.personaSeleccionada.fuenteInformacion.nombre}" rendered="#{personaHolderFL.fuenteExterna}" />
+
+					</h:panelGrid>
+
+					<p:fieldset id="datos-detalle" styleClass="fieldset-formulario" legend="#{labelAdmin.titulo_historial_conyugue}"
+						rendered="#{!personaHolderFL.fuenteExterna}">
+						<h:panelGrid id="acciones-top">
+							<f:facet name="footer">
+								<p:commandButton id="btnVerDetNatural" action="_op-DETALLE_NATURAL" icon="c2-icon-detalle" process="@form" value="#{lbComun.btnVerDet}"
+									disabled="#{personaHolderFL.conyugueSeleccionado==null}">
+									<p:tooltip for="btnVerDetNatural" value="#{labelAdmin.label_ver_detalle}" />
+								</p:commandButton>
+							</f:facet>
+						</h:panelGrid>
+
+						<p:dataTable id="tabla-detalle" value="#{personaHolderFL.personaSeleccionada.parentescoPersonaList}" var="varConyugue"
+							rowKey="#{varConyugue.id}" selection="#{personaHolderFL.conyugueSeleccionado}" paginator="true"
+							paginatorTemplate="#{webPrm.param_paginator_template}" rowsPerPageTemplate="#{webPrm.param_rows_per_page}" rows="#{webPrm.param_initial_rows}"
+							emptyMessage="#{labelAdmin.label_no_existe_conyugues}">
+
+							<f:facet name="header">#{labelAdmin.titulo_resultado_historial_conyugue}</f:facet>
+
+							<p:ajax event="rowSelectRadio" process=":form-contenido-natural:tabla-detalle" update=":form-contenido-natural:acciones-top" global="false" />
+
+							<p:column selectionMode="single" />
+
+							<p:column headerText="#{labelAdmin.label_tipo_documento}">
+								<h:outputText value="#{varConyugue.pariente.tipoIdentificacion.nombre}" />
+							</p:column>
+
+							<p:column headerText="#{labelAdmin.label_numero_documento}">
+								<c2:outputNumberText value="#{varConyugue.pariente.numeroIdentificacion}" />
+							</p:column>
+
+							<p:column headerText="#{labelAdmin.label_primer_apellido}">
+								<h:outputText value="#{varConyugue.pariente.apellido1}" />
+							</p:column>
+
+							<p:column headerText="#{labelAdmin.label_segundo_apellido}">
+								<h:outputText value="#{varConyugue.pariente.apellido2}" />
+							</p:column>
+
+							<p:column headerText="#{labelAdmin.label_primer_nombre}">
+								<h:outputText value="#{varConyugue.pariente.nombre1}" />
+							</p:column>
+
+							<p:column headerText="#{labelAdmin.label_segundo_nombre}">
+								<h:outputText value="#{varConyugue.pariente.nombre2}" />
+							</p:column>
+
+							<p:column headerText="#{labelAdmin.label_fecha_registro_conyugue}">
+								<c2:outputDateLabel labelValue="#{varConyugue.fechaInicio}" />
+							</p:column>
+							
+							<p:column headerText="#{labelAdmin.label_direccion_residencia}">
+								<h:outputText value="#{personaMB.direccionResidencia(varConyugue.pariente.direccionPersonaList)}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:fieldset>
+
+					<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+						<p:commandButton id="btnVolver" action="VOLVER" icon="c2-icon-volver" immediate="true" value="#{lbComun.btnVolver}"
+							rendered="#{!personaHolderFL.hayElementosEnPila()}">
+							<p:tooltip for="btnVolver" value="#{lbComun.btnVolver}" />
+						</p:commandButton>
+
+						<p:commandButton id="btnVolverDetalle" action="VOLVER_DETALLE" icon="c2-icon-volver" immediate="true" value="#{lbComun.btnVolver}"
+							rendered="#{personaHolderFL.hayElementosEnPila()}">
+							<p:tooltip for="btnVolverDetalle" value="#{lbComun.btnVolver}" />
+						</p:commandButton>
+
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-contenido-juridica" rendered="#{personaMB.mostrarDetalleJuridica()}">
+			<p:panel id="campos-registro-juridica" styleClass="panel-formulario">
+				<p:fieldset id="datos-juridica" legend="#{labelAdmin.titulo_datos_persona}" styleClass="fieldset-formulario">
+
+					<h:panelGrid columns="4" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel value="#{labelAdmin.label_digito_verificacion}" />
+						<c2:outputNumberText value="#{personaHolderFL.personaJuridicaSeleccionada.digitoVerificacion}" format="false" />
+
+						<p:outputLabel value="#{labelAdmin.label_nombre_comercial}" />
+						<p:outputLabel value="#{personaHolderFL.personaJuridicaSeleccionada.nombreComercial}" />
+
+						<p:outputLabel value="#{labelAdmin.label_sigla}" />
+						<p:outputLabel value="#{personaHolderFL.personaJuridicaSeleccionada.sigla}" />
+
+						<p:outputLabel value="#{labelAdmin.label_tipo_sociedad}" />
+						<p:outputLabel value="#{personaHolderFL.personaJuridicaSeleccionada.tipoSociedad.nombre}" />
+
+						<p:outputLabel value="#{labelAdmin.label_pais_origen}" />
+						<p:outputLabel value="#{personaHolderFL.personaJuridicaSeleccionada.municipio.departamento.pais.nombre}" />
+
+						<p:outputLabel value="#{labelAdmin.label_departamento_origen}" />
+						<p:outputLabel value="#{personaHolderFL.personaJuridicaSeleccionada.municipio.departamento.nombre}" />
+
+						<p:outputLabel value="#{labelAdmin.label_municipio_origen}" />
+						<p:outputLabel value="#{personaHolderFL.personaJuridicaSeleccionada.municipio.nombre}" />
+
+						<p:outputLabel value="#{labelAdmin.label_direccion_residencia}" />
+						<p:outputLabel value="#{personaMB.direccionResidencia(personaHolderFL.personaJuridicaSeleccionada.direccionPersonaList)}" />
+
+						<p:outputLabel value="#{labelAdmin.label_notif_direccion_empresa_trabaja}" />
+						<c2:outputBoolText value="#{personaHolderFL.personaJuridicaSeleccionada.notificaDirEmpresa}" />
+
+						<p:outputLabel value="#{labelAdmin.label_numero_telefonico}" />
+						<p:outputLabel value="#{personaHolderFL.personaJuridicaSeleccionada.numeroTelefonico}" />
+
+						<p:outputLabel value="#{labelAdmin.label_tipo_seccion_act}" />
+						<p:outputLabel
+							value="#{personaHolderFL.personaJuridicaSeleccionada.claseActividadEconomica.grupoActividadEconomica.divisionActividadEconomica.seccionActividadEconomica.nombre}" />
+
+						<p:outputLabel value="#{labelAdmin.label_tipo_division_act}" />
+						<p:outputLabel
+							value="#{personaHolderFL.personaJuridicaSeleccionada.claseActividadEconomica.grupoActividadEconomica.divisionActividadEconomica.nombre}" />
+
+						<p:outputLabel value="#{labelAdmin.label_tipo_grupo_act}" />
+						<p:outputLabel value="#{personaHolderFL.personaJuridicaSeleccionada.claseActividadEconomica.grupoActividadEconomica.nombre}" />
+
+						<p:outputLabel value="#{labelAdmin.label_tipo_clase_act}" />
+						<p:outputLabel value="#{personaHolderFL.personaJuridicaSeleccionada.claseActividadEconomica.nombre}" />
+
+						<p:outputLabel value="#{labelAdmin.label_tipo_documento_representante}" />
+						<p:outputLabel value="#{personaMB.tipoDocumentoRepresentante()}" />
+
+						<p:outputLabel value="#{labelAdmin.label_numero_documento_representante}" />
+						<c2:outputNumberText value="#{personaMB.numeroDocumentoRepresentante()}" />
+
+						<p:outputLabel value="#{labelAdmin.label_fecha_inicio_vigencia}" />
+						<c2:outputDateLabel labelValue="#{personaMB.inicioVigenciaRepresentante()}" />
+
+						<p:outputLabel value="#{labelAdmin.label_correo_electronico_representante}" />
+						<p:outputLabel value="#{personaMB.emailRepresentante()}" />
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+						<p:commandButton id="btnVolverJur" action="VOLVER" icon="c2-icon-volver" value="#{lbComun.btnVolver}">
+							<p:tooltip for="btnVolverJur" value="#{lbComun.btnVolver}" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+
+			</p:panel>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

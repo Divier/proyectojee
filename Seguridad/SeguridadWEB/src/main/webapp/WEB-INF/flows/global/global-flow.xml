@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+	abstract="true">
+
+	<view-state id="logout"
+		view="externalRedirect:contextRelative:logout.xhtml" />
+
+	<view-state id="login"
+		view="externalRedirect:contextRelative:index.xhtml" />
+
+	<view-state id="global-cambioPw" view="/WEB-INF/flows/global/cambioPw.xhtml">
+		<transition on="cambiarPw" to="global-cambioPw">
+			<evaluate
+				expression="externalContext.sessionMap.cambioContrasenaMB.cambiarPassword()" />
+		</transition>
+		<transition on="continuar" to="login">
+			<evaluate expression="externalContext.sessionMap.cambioContrasenaMB.logout()" />
+		</transition>
+	</view-state>
+</flow>

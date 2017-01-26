@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+		legend="#{labelAdminComparendo.titulo_comparendo}">
+
+		<h:form id="form-detalle" enctype="multipart/form-data">
+
+			<p:fieldset id="datos-comparendo" styleClass="fieldset-formulario"
+				legend="#{labelAdminComparendo.label_datos_comparendo}">
+				<h:panelGrid id="panel-formulario" styleClass="center-block"
+					columnClasses="label-col,input-col,label-col,input-col" columns="4">
+					<!-- Componentes del formulario 2 o 4 columnas-->
+
+					<p:outputLabel
+						value="#{labelAdminComparendo.label_organismo_transito}" />
+					<p:outputLabel value="#{detalleComparendoFL.nomOrganismoTransito}" />
+
+					<p:outputLabel
+						value="#{labelAdminComparendo.label_tipo_comparendo}" />
+					<p:outputLabel
+						value="#{detalleComparendoFL.seguimientoComparendoDTO.comparendoDTO.medioImposicion.nombre}" />
+
+					<p:outputLabel
+						value="#{labelAdminComparendo.label_numero_comparendo}" />
+					<c2:outputNumComparendo
+						value="#{detalleComparendoFL.comparendo.ordenComparendoNacional.numeroComparendo}" />
+
+					<p:outputLabel value="#{labelAdminComparendo.label_fecha_imposicion}" />
+					<c2:outputDateLabel
+						labelValue="#{adminComparendoEcuadorMB.concatenarHoraFechaInfraccion(detalleComparendoFL.comparendo)}"
+						fullFormat="true" />
+
+					<p:outputLabel
+						value="#{labelAdminComparendo.label_direccion_infraccion}" />
+					<p:outputLabel
+						value="#{detalleComparendoFL.seguimientoComparendoDTO.comparendoDTO.direccion.complemento}" />
+
+					<p:outputLabel value="#{labelAdminComparendo.label_placa_vehiculo}" />
+					<p:outputLabel
+						value="#{detalleComparendoFL.seguimientoComparendoDTO.comparendoDTO.comparendoVehiculo.placaVehiculo}" />
+
+					<p:outputLabel
+						value="#{labelAdminComparendo.label_fecha_notificacion}" />
+					<c2:outputDateLabel
+						labelValue="#{detalleComparendoFL.seguimientoComparendoDTO.comparendoDTO.fechaNotificacion}"
+						fullFormat="false" />
+
+					<p:outputLabel
+						value="#{labelAdminComparendo.label_medio_notificacion}" />
+					<p:outputLabel
+						value="#{detalleComparendoFL.seguimientoComparendoDTO.comparendoDTO.tipoNotificacion.nombre}" />
+
+					<p:outputLabel
+						value="#{labelAdminComparendo.label_estado_comparendo}" />
+					<p:outputLabel
+						value="#{detalleComparendoFL.seguimientoComparendoDTO.comparendoDTO.estadoComparendo.nombre}" />
+
+					<p:outputLabel
+						value="#{labelAdminComparendo.label_valor_infraccion}" />
+					<c2:outputCurrencyText
+						value="#{detalleComparendoFL.seguimientoComparendoDTO.valorInfraccion}" />
+				</h:panelGrid>
+			</p:fieldset>
+
+			<p:fieldset id="datos-infraccion" styleClass="fieldset-formulario"
+				legend="#{labelAdminComparendo.label_datos_infraccion}">
+				<p:fieldset id="datos-codigo-infraccion"
+					styleClass="fieldset-formulario"
+					legend="#{labelAdminComparendo.label_infraccion}">
+					<h:panelGrid id="panel-formulario-infraccion"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">
+						<!-- Componentes del formulario 2 o 4 columnas-->
+
+						<p:outputLabel
+							value="#{labelAdminComparendo.label_codigo_infraccion}" />
+						<p:outputLabel
+							value="#{detalleComparendoFL.comparendo.infraccion.codigo}" />
+
+						<p:outputLabel
+							value="#{labelAdminComparendo.label_descripcion_infraccion}" />
+						<p:outputLabel
+							value="#{detalleComparendoFL.descripcionInfraccion}" />
+
+					</h:panelGrid>
+				</p:fieldset>
+			</p:fieldset>
+
+		</h:form>
+
+		<h:form id="form-detalle-detalle-comparendo"
+			enctype="multipart/form-data">
+			<p:fieldset id="datos-especificos" styleClass="fieldset-formulario"
+				legend="#{labelAdminComparendo.label_datos_comparendo_detalle}">
+				<h:panelGrid columns="1" id="panelDatosEspecificos"
+					styleClass="center-block">
+					<!-- TODO : WIZARD-->
+					<p:tabView>
+						<p:tab id="infractor"
+							title="#{labelAdminComparendo.label_infractor}">
+							<ui:include
+								src="/WEB-INF/jsp/comparendo/administracion/ecuador/include/detalle/detInfractor.xhtml" />
+						</p:tab>
+						<p:tab id="agente_transito"
+							title="#{labelAdminComparendo.label_agente_transito}">
+							<ui:include
+								src="/WEB-INF/jsp/comparendo/administracion/ecuador/include/detalle/detAgenteTransito.xhtml" />
+						</p:tab>
+						<p:tab id="evidencias_fisicas"
+							title="#{labelAdminComparendo.label_evidencias_fisicas}">
+							<ui:include
+								src="/WEB-INF/jsp/comparendo/administracion/ecuador/include/detalle/detEvidenciasFisicas.xhtml" />
+						</p:tab>
+					</p:tabView>
+				</h:panelGrid>
+
+			</p:fieldset>
+		</h:form>
+	</p:fieldset>
+</ui:composition>

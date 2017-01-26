@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelCatalogoCompuesto.lbl_tit_editar_cat_comp} #{catalogoCompuestoFL.tituloEditar}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_edicion}">
+
+					<!--Agregar Secciones o Panel Grid de campos-->
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<p:outputLabel
+							value="#{labelCatalogoCompuesto.lbl_col_edit_cod_catalogo}" />
+						<p:outputLabel value="#{catalogoCompuestoFL.catalogoDTO.codigo}" />
+
+						<p:outputLabel
+							value="#{labelCatalogoCompuesto.lbl_col_edit_sig_catalogo}" />
+						<p:inputText id="txtSigCatalogo"
+							value="#{catalogoCompuestoFL.catalogoDTO.sigla}" maxlength="5" />
+
+						<p:outputLabel
+							value="#{labelCatalogoCompuesto.lbl_col_edit_nom_catalogo}" />
+						<p:outputLabel value="#{catalogoCompuestoFL.catalogoDTO.nombre}" />
+
+						<p:outputLabel
+							value="#{labelCatalogoCompuesto.lbl_col_edit_des_catalogo}" />
+						<p:inputTextarea id="txaDesCatalogo"
+							value="#{catalogoCompuestoFL.catalogoDTO.descripcion}"
+							maxlength="150" />
+
+						<p:outputLabel
+							value="#{labelCatalogoCompuesto.lbl_col_edit_editable}"></p:outputLabel>
+						<p:outputLabel value="#{labelCatalogoCompuesto.lbl_estado_true}"
+							rendered="#{catalogoCompuestoFL.catalogoDTO.editable}"></p:outputLabel>
+						<p:outputLabel value="#{labelCatalogoCompuesto.lbl_estado_false}"
+							rendered="#{!catalogoCompuestoFL.catalogoDTO.editable}"></p:outputLabel>
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<!--Boton Guardar-->
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}" update=":messages :form-ingreso">
+							<p:tooltip for="btnGuardar"
+								value="#{labelCatalogoCompuesto.txt_tooltip_guardar_catalogo}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar"
+								value="#{labelCatalogoCompuesto.txt_tooltip_cancelar_catalogo}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelCatalogoCompuesto.lbl_tit_item_catalogo}  #{catalogoCompuestoFL.tituloEditar}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="6"
+						columnClasses="label-col,input-col,label-col,input-col,label-col,input-col">
+
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel value="#{labelCatalogoCompuesto.lbl_edit_nom_item}" />
+						<p:inputText id="txtNomItem"
+							value="#{catalogoCompuestoFL.filtroItemCatalogoDTO.nombre}" />
+
+						<p:outputLabel value="#{labelCatalogoCompuesto.lbl_edit_sig_item}" />
+						<p:inputText id="txtSigItem"
+							value="#{catalogoCompuestoFL.filtroItemCatalogoDTO.sigla}" />
+
+						<p:outputLabel
+							value="#{labelCatalogoCompuesto.lbl_edit_estado_item}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenEstItem"
+								value="#{catalogoCompuestoFL.tipoEstadoItem}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" noSelectionOption="true" />
+								<f:selectItem itemLabel="#{lbComun.val_sel_activo}"
+									itemValue="true" />
+								<f:selectItem itemLabel="#{lbComun.val_sel_inactivo}"
+									itemValue="false" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelCatalogoCompuesto.lbl_edit_codigo_item}"></p:outputLabel>
+						<p:inputText id="txtCodItem"
+							value="#{catalogoCompuestoFL.filtroItemCatalogoDTO.codigo}" />
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultar"
+								value="#{labelCatalogoCompuesto.txt_tooltip_consultar_items}" />
+						</p:commandButton>
+						<!--Boton Nuevo-->
+						<p:commandButton id="btnCrear" styleClass="_op-CREAR"
+							action="_op-CREAR" icon="c2-icon-crear" process="@this"
+							value="#{lbComun.btnCrear}" immediate="true"
+							rendered="#{catalogoCompuestoFL.catalogoDTO.editable}">
+							<p:tooltip for="btnCrear"
+								value="#{labelCatalogoCompuesto.txt_tooltip_nuevo_item}" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{catalogoCompuestoFL.itemCatalogoDTOs.size() > 0}">
+
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<!--Boton Editar-->
+						<p:commandButton id="btnEditar" styleClass="_op-EDITAR"
+							action="_op-EDITAR" icon="c2-icon-editar" process="@this"
+							value="#{lbComun.btnEditar}"
+							disabled="#{catalogoCompuestoFL.seleccionItemCatalogoDTO==null}"
+							rendered="#{catalogoCompuestoFL.catalogoDTO.editable}">
+							<p:tooltip for="btnEditar"
+								value="#{labelCatalogoCompuesto.txt_tooltip_editar_itme_catalogo}" />
+						</p:commandButton>
+						<!--Boton Eliminar-->
+						<p:commandButton id="btnEliminar" styleClass="_op-ELIMINAR"
+							action="_op-ELIMINAR" icon="c2-icon-eliminar" process="@this"
+							value="#{lbComun.btnEliminar}"
+							update=":messages resultado-consulta"
+							disabled="#{catalogoCompuestoFL.seleccionItemCatalogoDTO==null}"
+							rendered="#{catalogoCompuestoFL.catalogoDTO.editable}">
+							<p:tooltip for="btnEliminar"
+								value="#{labelCatalogoCompuesto.txt_tooltip_eliminar_itme_catalogo}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<!--Boton Ver Detalle-->
+						<p:commandButton id="btnVerDet" action="VER_DETALLE"
+							icon="c2-icon-detalle" process="@this"
+							value="#{lbComun.btnVerDet}"
+							disabled="#{catalogoCompuestoFL.seleccionItemCatalogoDTO==null}">
+							<p:tooltip for="btnVerDet"
+								value="#{labelCatalogoCompuesto.txt_tooltip_ver_detalle}" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados"
+					value="#{catalogoCompuestoFL.itemCatalogoDTOs}" var="registro"
+					rowKey="#{registro.id}"
+					selection="#{catalogoCompuestoFL.seleccionItemCatalogoDTO}"
+					paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+
+					<p:ajax event="rowSelectRadio"
+						process=":form-resultado:tabla-resultados"
+						update=":form-resultado:acciones-top" global="false" />
+
+					<p:column selectionMode="single" />
+
+					<!--Columnas Resultado Consulta-->
+					<p:column
+						headerText="#{labelCatalogoCompuesto.lbl_col_edit_cod_items}">
+						<p:outputLabel value="#{registro.codigo}"></p:outputLabel>
+					</p:column>
+
+					<p:column
+						headerText="#{labelCatalogoCompuesto.lbl_col_edit_sig_items}">
+						<p:outputLabel value="#{registro.sigla}"></p:outputLabel>
+					</p:column>
+
+					<p:column
+						headerText="#{labelCatalogoCompuesto.lbl_col_edit_nom_items}">
+						<p:outputLabel value="#{registro.nombre}"></p:outputLabel>
+					</p:column>
+
+					<p:column
+						headerText="#{labelCatalogoCompuesto.lbl_col_edit_depd_items}">
+						<p:outputLabel
+							value="#{registro.itemCatalogoDependenciaDTO.nombre}"></p:outputLabel>
+					</p:column>
+
+					<p:column
+						headerText="#{labelCatalogoCompuesto.lbl_col_edit_est_items}">
+						<p:outputLabel
+							value="#{labelCatalogoCompuesto.lbl_estado_item_true}"
+							rendered="#{registro.activo}"></p:outputLabel>
+						<p:outputLabel
+							value="#{labelCatalogoCompuesto.lbl_estado_item_false}"
+							rendered="#{!registro.activo}"></p:outputLabel>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

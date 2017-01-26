@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+	parent="global">
+
+	<var name="parametrosFL" class="co.com.datatools.seguridad.mb.parametros.ParametrosFL" />
+	<var name="modificarParametroFL"
+		class="co.com.datatools.seguridad.mb.parametros.ModificarParametroFL" />
+
+	<!-- INICIO- Estados del flujo de consulta -->
+	<view-state id="ingresar" view="consultar-parametros.xhtml">
+		<on-entry>
+			<evaluate
+				expression="new co.com.datatools.seguridad.mb.parametros.ModificarParametroFL()"
+				result="flowScope.modificarParametroFL" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+		<transition on="CANCELAR" to="fin" />
+		<transition on="_op-EDITAR" to="VALIDAR-MODIFICACION" />
+	</view-state>
+
+	<action-state id="VALIDAR-MODIFICACION">
+		<evaluate
+			expression="externalContext.sessionMap.parametrosMB.validarModificacion()" />
+		<transition on="yes" to="_op-EDITAR">
+			<evaluate expression="externalContext.sessionMap.parametrosMB.validarTipoDato()"></evaluate>
+		</transition>
+		<transition on="no" to="ingresar" />
+	</action-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.parametrosMB.consultarParametros()" />
+		<transition on="success" to="ingresar"></transition>
+	</action-state>
+
+	<view-state id="_op-EDITAR" view="modificar-parametro.xhtml">
+		<transition on="MODIFICAR-PARAMETRO" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.parametrosMB.actualizarParametro()" />
+		</transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.parametrosMB.consultarParametros()" />
+		</transition>
+	</view-state>
+	<end-state id="fin" />
+</flow>
+	

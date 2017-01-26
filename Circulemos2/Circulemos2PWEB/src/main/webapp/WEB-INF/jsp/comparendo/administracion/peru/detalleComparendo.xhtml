@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+	<ui:define name="contenido">
+
+		<p:panel id="campos-registro" styleClass="panel-formulario"
+			header="#{labelAdminComparendo.titulo_ingresar_comparendo}">
+
+			<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+				legend="#{lbComun.msg_fieldset_registro}">
+
+				<h:form id="form-ingreso" enctype="multipart/form-data">
+
+					<p:fieldset id="datos-comparendo" styleClass="fieldset-formulario"
+						legend="#{labelAdminComparendo.label_datos_comparendo}">
+						<h:panelGrid id="panel-formulario" styleClass="center-block"
+							columnClasses="label-col,input-col,label-col,input-col"
+							columns="4">
+							<!-- Componentes del formulario 2 o 4 columnas-->
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_organismo_transito}" />
+							<p:outputLabel
+								value="#{detalleComparendoPeruFL.nomOrganismoTransito}" />
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_fecha_registro}" />
+							<c2:outputDateLabel
+								labelValue="#{detalleComparendoPeruFL.comparendo.fechaRegistro}"
+								fullFormat="true" />
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_tipo_comparendo}" />
+							<p:outputLabel
+								value="#{detalleComparendoPeruFL.comparendo.tipoComparendo.nombre}" />
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_numero_comparendo}" />
+							<c2:outputNumComparendo
+								value="#{detalleComparendoPeruFL.comparendo.ordenComparendoNacional.numeroComparendo}" />
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_fecha_imposicion}" />
+							<p:outputLabel value="#{detalleComparendoPeruFL.comparendo.fechaInfraccion} #{detalleComparendoPeruFL.comparendo.horaInfraccion}" />
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_estado_comparendo}" />
+							<p:outputLabel
+								value="#{detalleComparendoPeruFL.comparendo.estadoComparendo.nombre}" />
+
+						</h:panelGrid>
+					</p:fieldset>
+
+					<p:fieldset id="datos-infraccion" styleClass="fieldset-formulario"
+						legend="#{labelAdminComparendo.label_datos_infraccion}">
+						<p:fieldset id="datos-codigo-infraccion"
+							styleClass="fieldset-formulario"
+							legend="#{labelAdminComparendo.label_infraccion}">
+							<h:panelGrid id="panel-formulario-infraccion"
+								styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col"
+								columns="2">
+								<!-- Componentes del formulario 2 o 4 columnas-->
+
+								<p:outputLabel
+									value="#{labelAdminComparendo.label_codigo_infraccion}" />
+								<p:outputLabel
+									value="#{detalleComparendoPeruFL.comparendo.infraccion.codigo}" />
+
+								<p:outputLabel
+									value="#{labelAdminComparendo.label_descripcion_infraccion}" />
+								<p:outputLabel
+									value="#{detalleComparendoPeruFL.descripcionInfraccion}" />
+
+
+							</h:panelGrid>
+						</p:fieldset>
+						<p:fieldset id="datos-lugar-infraccion"
+							styleClass="fieldset-formulario"
+							legend="#{labelAdminComparendo.label_lugar_infraccion}">
+							<h:panelGrid id="panel-formulario-lugar-infraccion"
+								styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col"
+								columns="3">
+								<!-- Modulo de direcciones-->
+								<p:outputLabel
+									value="#{labelAdminComparendo.label_direccion_infraccion}" />
+								<h:panelGroup>
+									<p:inputTextarea id="direccionInfraccion" rows="3"
+										readonly="#{facesContext.renderResponse}" maxlength="150"
+										disabled="true"
+										value="#{detalleComparendoPeruFL.direccionInfraccionTexto}" />
+								</h:panelGroup>
+							</h:panelGrid>
+						</p:fieldset>
+					</p:fieldset>
+
+				</h:form>
+
+				<h:form id="form-ingreso-detalle-comparendo"
+					enctype="multipart/form-data">
+					<p:fieldset id="datos-especificos" styleClass="fieldset-formulario"
+						legend="#{labelAdminComparendo.label_datos_comparendo_detalle}">
+						<h:panelGrid columns="1" id="panelDatosEspecificos"
+							styleClass="center-block">
+							<!-- TODO : WIZARD-->
+							<p:tabView>
+								<p:tab id="vehiculo"
+									title="#{labelAdminComparendo.label_vehiculo}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/detalle/detVehiculo.xhtml" />
+								</p:tab>
+								<p:tab id="infractor"
+									title="#{labelAdminComparendo.label_infractor}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/detalle/detInfractor.xhtml" />
+								</p:tab>
+								<p:tab id="propietario"
+									title="#{labelAdminComparendo.label_propietario}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/detalle/detPropietario.xhtml" />
+								</p:tab>
+								<p:tab id="empresa"
+									title="#{labelAdminComparendo.label_empresa}"
+									rendered="#{!adminComparendoPeruFL.papeleta}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/detalle/detEmpresa.xhtml" />
+								</p:tab>
+								<p:tab id="agente_transito"
+									title="#{labelAdminComparendo.label_agente_transito}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/detalle/detAgenteTransito.xhtml" />
+								</p:tab>
+								<p:tab id="observaciones"
+									title="#{labelAdminComparendo.label_observaciones}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/detalle/detObservaciones.xhtml" />
+								</p:tab>
+								<p:tab id="evidencias_fisicas"
+									title="#{labelAdminComparendo.label_evidencias_fisicas}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/peru/include/detalle/detEvidenciasFisicas.xhtml" />
+								</p:tab>
+							</p:tabView>
+						</h:panelGrid>
+
+						<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+							<p:commandButton id="btnVolver" action="VOLVER"
+								icon="c2-icon-volver" process="@this" immediate="true"
+								value="#{lbComun.btnVolver}">
+								<p:tooltip for="btnVolver" value="#{lbComun.tooltip_volver}" />
+							</p:commandButton>
+						</h:panelGrid>
+
+
+					</p:fieldset>
+				</h:form>
+			</p:fieldset>
+
+		</p:panel>
+
+	</ui:define>
+</ui:composition>

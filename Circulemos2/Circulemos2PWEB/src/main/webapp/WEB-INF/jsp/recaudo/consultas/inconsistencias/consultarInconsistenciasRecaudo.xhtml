@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelRecaudo.label_incosistencias}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<p:outputLabel value="#{labelRecaudo.label_organismo}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="id1"
+								value="#{consultarInconsistenciasRecaudoHolderFL.codigoOrganismo}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemDisabled="true" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+								<p:ajax event="valueChange" process="@this" global="false" />
+							</p:selectOneMenu>
+							<p:message for="id1" />
+						</h:panelGroup>
+						<h:outputLabel value="#{labelRecaudo.label_numero_recaudo}"/>
+						<p:inputText value="#{consultarInconsistenciasRecaudoHolderFL.numeroRecaudo}" />
+						<h:outputLabel value="#{labelRecaudo.label_obligacion}"/>
+						<p:inputText value="#{consultarInconsistenciasRecaudoHolderFL.numeroObligacion}" />
+						<h:outputLabel value="#{labelRecaudo.label_tipo_reporte}"/>
+						<h:panelGroup>
+							<p:selectOneMenu id="id10"
+								value="#{consultarInconsistenciasRecaudoHolderFL.tipoReporte}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemDisabled="true" />
+								<f:selectItems
+									value="#{consultarInconsistenciasRecaudoMB.tipoReporteRecaudo}" />
+								<p:ajax event="valueChange" process="@this" global="false" />
+							</p:selectOneMenu>
+							<p:message for="id10" />
+						</h:panelGroup>
+					</h:panelGrid>
+					<p:fieldset styleClass="fieldset-formulario"
+							id="fieldset-fecha-imposicion"
+							legend="#{labelRecaudo.label_fecha_generacion}">
+							<h:panelGrid id="panel1" styleClass="center-block" columns="4"
+								columnClasses="label-col,input-col,label-col,input-col">
+								<p:outputLabel value="#{labelRecaudo.label_fecha_inicial}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:calendar id="id3" navigator="true"
+										pattern="#{utilidadMB.formatoFecha}"
+										value="#{consultarInconsistenciasRecaudoHolderFL.fechaInicialGeneracion}" 
+										required="true"
+										maxdate="#{consultarInconsistenciasRecaudoMB.fechaSistema}">
+										<p:watermark for="id3"
+											value="#{utilidadMB.formatoFecha}" />
+										<p:ajax event="dateSelect"
+											listener="#{consultarInconsistenciasRecaudoMB.calcularRangoConsultaFechaGeneracion()}"
+											process="@this id3"
+											update="id4"></p:ajax>
+									</p:calendar>
+									<p:message for="id3" />
+								</h:panelGroup>
+								<p:outputLabel value="#{labelRecaudo.label_fecha_final}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:calendar id="id4" navigator="true"
+										pattern="#{utilidadMB.formatoFecha}"
+										value="#{consultarInconsistenciasRecaudoHolderFL.fechaFinalGeneracion}" 
+										required="true"
+										maxdate="#{consultarInconsistenciasRecaudoMB.fechaGeneracionDiasMaximo}"
+										mindate="#{consultarInconsistenciasRecaudoHolderFL.fechaInicialGeneracion}">
+										<p:watermark for="id4"
+											value="#{utilidadMB.formatoFecha}" />
+										<p:ajax process="@this id4"
+											update="id4"></p:ajax>
+									</p:calendar>
+									<p:message for="id4" />
+								</h:panelGroup>
+							</h:panelGrid>
+						</p:fieldset>	
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido :form-resultado-rechazos">
+							<p:tooltip for="btnConsultar"
+								value="#{labelCambioEstado.tooltip_btn_consultar}" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{consultarInconsistenciasRecaudoHolderFL.detallePagoInconsistenciaResDTO.size()>0}">
+								<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<c2:reportHandler reportId="REPORTE_DE_INCONSISTENCIAS_CONCILIACION_RECAUDO" fileName="REPORTE_DE_INCONSISTENCIAS_CONCILIACION_RECAUDO" formats="xls, xlsx" 
+							contentSrc="#{consultarInconsistenciasRecaudoMB.procesarContenidoReporte()}" emailHandler="#{mailExportarMB}"/>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados" value="#{consultarInconsistenciasRecaudoHolderFL.detallePagoInconsistenciaResDTO}" var="registro" rowKey="#{registro.numeroRecaudo}" paginator="true"
+                    rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+                    paginatorTemplate="#{webPrm.param_paginator_template}"
+                    rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+                     
+                    <p:column headerText="#{labelRecaudo.label_consulta_organismo}" rendered="true">
+						<p:outputLabel value="#{registro.organismoTransito}" />				
+					</p:column>     
+                    <p:column headerText="#{labelRecaudo.label_consulta_fecha_transaccion}" rendered="true">
+						<c2:outputDateLabel labelValue="#{registro.fechaTransaccion}" />				
+					</p:column>  
+					<p:column headerText="#{labelRecaudo.label_consulta_hora_transaccion}" rendered="true">
+						<p:outputLabel value="#{registro.horaTransaccion}" />				
+					</p:column> 
+					<p:column headerText="#{labelRecaudo.label_consulta_recaudo}" rendered="true">
+						<p:outputLabel value="#{registro.numeroRecaudo}" />				
+					</p:column>                                 
+                	<p:column headerText="#{labelRecaudo.label_consulta_cuenta}" rendered="true">
+						<p:outputLabel value="#{registro.cuenta}" />				
+					</p:column> 
+					<p:column headerText="#{labelRecaudo.label_consulta_tipo_cuenta}" rendered="true">
+						<p:outputLabel value="#{registro.codigoTipoCuenta}" />				
+					</p:column> 
+					<p:column headerText="#{labelRecaudo.label_consulta_banco}" rendered="true">
+						<p:outputLabel value="#{registro.codigoBanco}" />				
+					</p:column> 
+					<p:column headerText="#{labelRecaudo.label_consulta_total_efectivo}" rendered="true">
+						<p:outputLabel value="#{registro.totalEfectivo}" />				
+					</p:column> 
+					<p:column headerText="#{labelRecaudo.label_consulta_total_cheque}" rendered="true">
+						<p:outputLabel value="#{registro.totalCheque}" />				
+					</p:column> 
+					<p:column headerText="#{labelRecaudo.label_consulta_total_recaudo}" rendered="true">
+						<p:outputLabel value="#{registro.totalRecaudo}" />				
+					</p:column> 
+					<p:column headerText="#{labelRecaudo.label_consulta_tipo_documento}" rendered="true">
+						<p:outputLabel value="#{registro.codigoTipoDocumento}" />				
+					</p:column> 
+					<p:column headerText="#{labelRecaudo.label_consulta_identificacion}" rendered="true">
+						<p:outputLabel value="#{registro.numeroIdentificacion}" />				
+					</p:column> 
+					<p:column headerText="#{labelRecaudo.label_consulta_obligacion}" rendered="true">
+						<p:outputLabel value="#{registro.obligacionPagada}" />				
+					</p:column> 
+					<p:column headerText="#{labelRecaudo.label_consulta_valor}" rendered="true">
+						<p:outputLabel value="#{registro.valorObligacion}" />				
+					</p:column> 
+					<p:column headerText="#{labelRecaudo.label_consulta_tipo_recaudo}" rendered="true">
+						<p:outputLabel value="#{registro.codigoTipoRecaudo}" />				
+					</p:column> 
+					<p:column headerText="#{labelRecaudo.label_consulta_cuotas}" rendered="true">
+						<p:outputLabel value="#{registro.numeroCuota}" />				
+					</p:column> 
+					<p:column headerText="" rendered="true">
+						<p:outputLabel value="#{registro.inconsistencias}" />				
+					</p:column>
+            </p:dataTable>
+			</p:panel>
+		</h:form>
+		<!-- otro formulario -->
+		 <h:form id="form-resultado-rechazos">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{consultarInconsistenciasRecaudoHolderFL.recuadoRechazosDTOList.size()>0}">
+								<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<c2:reportHandler reportId="REPORTE_DE_RECHAZOS_RECAUDO" fileName="REPORTE_DE_RECHAZOS_RECAUDO" formats="xls, xlsx" 
+							contentSrc="#{consultarInconsistenciasRecaudoMB.procesarContenidoReporteRechazos()}" emailHandler="#{mailExportarMB}"/>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados" value="#{consultarInconsistenciasRecaudoHolderFL.recuadoRechazosDTOList}" var="registro" rowKey="#{registro.numeroRecaudo}" paginator="true"
+                    rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+                    paginatorTemplate="#{webPrm.param_paginator_template}"
+                    rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+                     
+                    <p:column headerText="Organismo de transito" rendered="true">
+						<p:outputLabel value="#{registro.organismoTransito}" />				
+					</p:column>     
+                    <p:column headerText="Número del recaudo" rendered="true">
+						<p:outputLabel value="#{registro.numeroRecaudo}" />				
+					</p:column>  
+					<p:column headerText="Fecha y hora de recibido" rendered="true">
+						<p:outputLabel value="#{registro.fecha}" />				
+					</p:column> 
+					<p:column headerText="Nombre de usuario" rendered="true">
+						<p:outputLabel value="#{registro.nombreUsuario}" />				
+					</p:column>                                 
+                	<p:column headerText="Estado de transacción" rendered="true">
+						<p:outputLabel value="#{registro.estadoLectura}" />				
+					</p:column> 
+					<p:column headerText="" rendered="true">
+						<p:outputLabel value="#{registro.rechazos}" />				
+					</p:column>
+            </p:dataTable>
+			</p:panel>
+    </h:form>
+	</ui:define>
+
+
+</ui:composition>

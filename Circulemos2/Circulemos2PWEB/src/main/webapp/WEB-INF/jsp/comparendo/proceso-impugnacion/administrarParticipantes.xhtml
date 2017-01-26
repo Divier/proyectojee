@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="resultado-consulta" styleClass="panel-res-consulta">
+
+		<p:fieldset legend="#{labelProcesoImpugnacion.titleAdParticipantes}"
+			styleClass="fieldset-formulario">
+
+			<h:panelGrid styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col,label-col,input-col"
+				columns="2">
+
+				<p:outputLabel styleClass="campo-obligatorio"
+					value="#{labelProcesoImpugnacion.label_tipo_participante}"></p:outputLabel>
+				<h:panelGroup id="pnlTipoPar">
+					<p:selectOneMenu id="selTipoPar"
+						value="#{impugnacionFL.participanteProcesoDTO.tipoParticipante.id}">
+						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+						<f:selectItems value="#{impugnacionMB.tipoParticipantes}"></f:selectItems>
+					</p:selectOneMenu>
+					<p:message for="selTipoPar"></p:message>
+				</h:panelGroup>
+			</h:panelGrid>
+
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<!--Boton Adicionar-->
+				<p:commandButton action="_op-ADICIONAR" icon="c2-icon-crear"
+					process="@this selTipoPar" update="pnlTipoPar" global="false"
+					value="#{labelProcesoImpugnacion.btnAdicParticipante}">
+				</p:commandButton>
+			</h:panelGrid>
+		</p:fieldset>
+
+		<p:fieldset legend="#{labelProcesoImpugnacion.label_participantes}"
+			styleClass="fieldset-formulario">
+			<p:outputLabel
+				value="#{labelProcesoImpugnacion.msg_info_eli_participantes}"></p:outputLabel>
+			<h:panelGrid id="acciones-top">
+				<f:facet name="footer">
+					<!--Boton Eliminar-->
+					<p:commandButton action="_op-ELIMINAR" icon="c2-icon-editar"
+						process="@this"
+						value="#{labelProcesoImpugnacion.btnEliminarParticipante}"
+						disabled="#{impugnacionFL.radicarExpedienteDTO.participantesSeleccionados.size() == 0 or impugnacionFL.radicarExpedienteDTO.participantesSeleccionados == null}">
+					</p:commandButton>
+				</f:facet>
+			</h:panelGrid>
+
+			<p:dataTable id="tabla-resultados_par" var="registro"
+				value="#{impugnacionFL.radicarExpedienteDTO.participanteProcesoDTOs}"
+				rowKey="#{registro.persona.id}" paginator="true"
+				selection="#{impugnacionFL.radicarExpedienteDTO.participantesSeleccionados}"
+				paginatorTemplate="#{webPrm.param_paginator_template}"
+				rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+				rows="#{webPrm.param_initial_rows}"
+				disabledSelection="#{registro.tipoParticipante.id == impugnacionFL.tipoParticipanteDefault}">
+
+				<p:ajax event="rowSelectCheckbox"
+					process=":form-radicar:tabs_par_mot:tabla-resultados_par"
+					update=":form-radicar:tabs_par_mot:acciones-top @this"
+					global="false" />
+
+				<p:ajax event="rowUnselectCheckbox"
+					process=":form-radicar:tabs_par_mot:tabla-resultados_par"
+					update=":form-radicar:tabs_par_mot:acciones-top @this"
+					global="false" />
+
+				<p:ajax event="toggleSelect"
+					process=":form-radicar:tabs_par_mot:tabla-resultados_par"
+					update=":form-radicar:tabs_par_mot:acciones-top @this"
+					global="false" />
+
+				<p:ajax event="rowSelect"
+					process=":form-radicar:tabs_par_mot:tabla-resultados_par"
+					update=":form-radicar:tabs_par_mot:acciones-top @this"
+					global="false" />
+
+				<p:ajax event="rowUnselect"
+					process=":form-radicar:tabs_par_mot:tabla-resultados_par"
+					update=":form-radicar:tabs_par_mot:acciones-top @this"
+					global="false" />
+
+				<p:column selectionMode="multiple"></p:column>
+
+				<p:column
+					headerText="#{labelProcesoImpugnacion.label_tipo_participante}">
+					<p:outputLabel value="#{registro.tipoParticipante.nombre}" />
+				</p:column>
+
+				<p:column headerText="#{labelProcesoImpugnacion.label_tipo_doc}">
+					<p:outputLabel
+						value="#{registro.persona.tipoIdentificacion.nombre}" />
+				</p:column>
+
+				<p:column headerText="#{labelProcesoImpugnacion.label_num_doc}">
+					<p:outputLabel value="#{registro.persona.numeroIdentificacion}" />
+				</p:column>
+
+				<p:column
+					headerText="#{labelProcesoImpugnacion.label_nom_participante}">
+					<p:outputLabel value="#{registro.persona.getNombreCompleto()}" />
+				</p:column>
+
+				<p:column headerText="#{labelProcesoImpugnacion.label_direccion}">
+					<p:outputLabel value="#{registro.persona.getDireccionVigente()}"></p:outputLabel>
+				</p:column>
+				<p:column
+					headerText="#{labelProcesoImpugnacion.label_correo_electronico}">
+					<p:outputLabel value="#{registro.persona.correoElectronico}" />
+				</p:column>  
+			</p:dataTable>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="notificarComparendoViaCorreoHolderFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.notificacion_correo.NotificarComparendoViaCorreoHolderFL" />
+	<var name="cargueAcuseReciboHolderFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.notificacion_correo.CargueAcuseReciboHolderFL" />
+
+	<view-state id="ingresar" view="/WEB-INF/jsp/comparendo/notificacion-correo/notificacionCorreoCertificado.xhtml">
+		<on-entry>
+			<evaluate expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('notificarComparendoViaCorreoMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR">
+			<evaluate result="cargueAcuseReciboHolderFL" expression="new co.com.datatools.c2.managed_bean.comparendo.notificacion_correo.CargueAcuseReciboHolderFL()" />
+		</transition>
+		<transition on="_op-CREAR" to="_op-CREAR">
+			<set name="notificarComparendoViaCorreoHolderFL.visible" value="false" />		
+		</transition>
+		<transition on="CARGAR_ARCHIVO" to="ingresar">
+			<evaluate result="cargueAcuseReciboHolderFL" expression="new co.com.datatools.c2.managed_bean.comparendo.notificacion_correo.CargueAcuseReciboHolderFL()" />
+			<set name="cargueAcuseReciboHolderFL.mostrarGenerarArchivo"	value="true" />
+		</transition>
+		<transition on="CONTINUAR" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.notificarComparendoViaCorreoMB.cargarAcuseRecibo()" />
+		</transition>
+		<transition on="VOLVER" to="ingresar">
+			<set name="notificarComparendoViaCorreoHolderFL.visible" value="false" />
+			<set name="notificarComparendoViaCorreoHolderFL.generaDocumento" value="false" />
+			<evaluate result="notificarComparendoViaCorreoHolderFL" expression="new co.com.datatools.c2.managed_bean.comparendo.notificacion_correo.NotificarComparendoViaCorreoHolderFL()" />
+		</transition>
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate expression="externalContext.sessionMap.notificarComparendoViaCorreoMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<action-state id="_op-CREAR">
+		<evaluate expression="externalContext.sessionMap.notificarComparendoViaCorreoMB.notificar()" />
+		<transition on="success" to="ingresar">
+			<evaluate result="notificarComparendoViaCorreoHolderFL" expression="new co.com.datatools.c2.managed_bean.comparendo.notificacion_correo.NotificarComparendoViaCorreoHolderFL()" />
+		</transition>
+	</action-state>
+
+	<end-state id="fin" />
+
+</flow>

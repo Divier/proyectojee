@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="consultaSeguimientoHolderFL"
+		class="co.com.datatools.c2.managed_bean.coactivo.administracion.seguimiento.ConsultaSeguimientoHolderFL" />
+	<var name="consultaTrazaSeguimientoHolderFL"
+		class="co.com.datatools.c2.managed_bean.coactivo.administracion.seguimiento.ConsultaTrazaSeguimientoHolderFL" />
+	<var name="radicarExcepcionFL"
+		class="co.com.datatools.c2.managed_bean.coactivo.radicarExcepciones.RadicarExcepcionFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/coactivo/administracion/seguimiento/consultarSeguimiento.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('consultaSeguimientoMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR">
+
+		</transition>
+		<transition on="VER_SEGUIMIENTO" to="VER_SEGUIMIENTO" />
+		<transition on="RADICAR_EXCEPCION" to="VALIDAR_RAD_EXCEPCIONES" />
+		<transition on="FALLO_EXCEPCION" to="VALIDAR_FALLO_EXCEPCIONES" />
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.consultaSeguimientoMB.consultarSeguimientoCoactivo()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<view-state id="VER_SEGUIMIENTO"
+		view="/WEB-INF/jsp/coactivo/administracion/seguimiento/detalleProcesoCoactivo.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.consultaSeguimientoMB.consultarTrazaSeguimiento()" />
+		</on-entry>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.coactivo.administracion.seguimiento.ConsultaTrazaSeguimientoHolderFL()"
+				result="flowScope.consultaTrazaSeguimientoHolderFL"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="VALIDAR_RAD_EXCEPCIONES">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('radicarExcepcionMB')" />
+		</on-entry>
+		<evaluate
+			expression="externalContext.sessionMap.radicarExcepcionMB.validarRadicacionExcepciones()"></evaluate>
+		<transition on="yes" to="RADICAR_EXCEPCION">
+			<evaluate
+				expression="externalContext.sessionMap.consultaSeguimientoMB.consultarDetalleCoactivo()" />
+		</transition>
+		<transition on="no" to="ingresar" />
+	</action-state>
+
+	<action-state id="VALIDAR_FALLO_EXCEPCIONES">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('radicarExcepcionMB')" />
+		</on-entry>
+		<evaluate
+			expression="externalContext.sessionMap.radicarExcepcionMB.validarFalloExcepciones()"></evaluate>
+		<transition on="yes" to="FALLO_EXCEPCION">
+			<evaluate
+				expression="externalContext.sessionMap.consultaSeguimientoMB.consultarDetalleCoactivo()" />
+			<evaluate
+				expression="externalContext.sessionMap.radicarExcepcionMB.consultarRadicarExcepcion()" />
+		</transition>
+		<transition on="no" to="ingresar" />
+	</action-state>
+
+	<view-state id="FALLO_EXCEPCION"
+		view="/WEB-INF/jsp/coactivo/radicarExcepcion/radicarFalloExcepcion.xhtml">
+		<transition on="CONTINUAR" to="REG_FALLO_EXCEPCION" />
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.coactivo.administracion.seguimiento.ConsultaTrazaSeguimientoHolderFL()"
+				result="flowScope.consultaTrazaSeguimientoHolderFL"></evaluate>
+		</transition>
+	</view-state>
+
+	<view-state id="RADICAR_EXCEPCION"
+		view="/WEB-INF/jsp/coactivo/radicarExcepcion/radicarExcepcion.xhtml">
+		<transition on="CONTINUAR" to="REG_RADICAR_EXCEPCION" />
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.coactivo.administracion.seguimiento.ConsultaTrazaSeguimientoHolderFL()"
+				result="flowScope.consultaTrazaSeguimientoHolderFL"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="REG_RADICAR_EXCEPCION">
+		<evaluate
+			expression="externalContext.sessionMap.radicarExcepcionMB.radicarExcepcion()" />
+		<transition on="yes" to="_op-CONSULTAR" />
+		<transition on="no" to="RADICAR_EXCEPCION" />
+	</action-state>
+
+	<action-state id="REG_FALLO_EXCEPCION">
+		<evaluate
+			expression="externalContext.sessionMap.radicarExcepcionMB.falloExcepcion()" />
+		<transition on="yes" to="_op-CONSULTAR" />
+		<transition on="no" to="FALLO_EXCEPCION" />
+	</action-state>
+</flow>

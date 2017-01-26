@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelAdministracionBien.tit_administracion_bien}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+						<!-- tipo identificación -->
+						<p:outputLabel
+							value="#{labelAdministracionBien.label_tipo_documento}" />
+						<h:panelGroup id="pnlTipoDocInf">
+							<p:selectOneMenu id="tipoDocumento"
+								value="#{administracionBienHolderFL.filtroCoactivoDTO.idtipoIdentificacion}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacion()}"></f:selectItems>
+
+							</p:selectOneMenu>
+							<p:message for="tipoDocumento" />
+						</h:panelGroup>
+
+						<!-- número identificación -->
+						<p:outputLabel
+							value="#{labelAdministracionBien.label_numero_documento}" />
+						<h:panelGroup id="pnlNumDocInf">
+							<p:inputText id="numeroDocumento" maxlength="20"
+								value="#{administracionBienHolderFL.filtroCoactivoDTO.numeroIdentificacion}" />
+							<p:message for="numeroDocumento" />
+						</h:panelGroup>
+
+						<!-- Número del proceso inicio -->
+						<p:outputLabel
+							value="#{labelAdministracionBien.label_numero_proceso_inicio}" />
+						<h:panelGroup id="pnlNumProcesoInicio">
+							<p:inputText id="numeroProcesoInicio" maxlength="49"
+								value="#{administracionBienHolderFL.filtroCoactivoDTO.numeroProcesoInicio}" />
+							<p:message for="numeroProcesoInicio" />
+						</h:panelGroup>
+
+						<!-- Número del proceso fin -->
+						<p:outputLabel
+							value="#{labelAdministracionBien.label_numero_proceso_fin}" />
+						<h:panelGroup>
+							<p:inputText id="numeroProcesoFin" maxlength="49"
+								value="#{administracionBienHolderFL.filtroCoactivoDTO.numeroProcesoFin}" />
+							<p:message for="numeroProcesoFin" />
+						</h:panelGroup>
+
+						<!-- Fecha inicial del proceso -->
+						<p:outputLabel
+							value="#{labelAdministracionBien.label_fecha_inicial_proceso}" />
+						<h:panelGroup>
+							<p:calendar id="fechaInicialProceso" navigator="true"
+								pattern="#{utilidadMB.formatoFecha}"
+								value="#{administracionBienHolderFL.filtroCoactivoDTO.fechaIncialProceso}">
+								<p:watermark for="fechaInicialProceso"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="fechaInicialProceso" />
+						</h:panelGroup>
+
+						<!-- Fecha final del proceso -->
+						<p:outputLabel
+							value="#{labelAdministracionBien.label_fecha_final_proceso}" />
+						<h:panelGroup>
+							<p:calendar id="fechaFinalProceso" navigator="true"
+								pattern="#{utilidadMB.formatoFecha}"
+								value="#{administracionBienHolderFL.filtroCoactivoDTO.fechaFinProceso}">
+								<p:watermark for="fechaFinalProceso"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="fechaFinalProceso" />
+						</h:panelGroup>
+
+						<!-- Tiene Bien? -->
+						<p:outputLabel value="#{labelAdministracionBien.label_tiene_bien}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="tieneBien"
+								value="#{administracionBienHolderFL.filtroCoactivoDTO.tieneBien}">
+								<f:selectItem itemLabel="#{labelAdmin.opt_adm_si}"
+									itemValue="true" />
+								<f:selectItem itemLabel="#{labelAdmin.opt_adm_no}"
+									itemValue="false" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultar" value="#{lbComun.btnConsultar}" />
+						</p:commandButton>
+						<!--Boton Nuevo-->
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{administracionBienHolderFL.respuestaCoactivoDTOs.size() > 0}">
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<!--Boton registrar bienes-->
+						<p:commandButton id="btnRegBienes" action="REG_BIENES"
+							icon="c2-icon-editar" process="@this" update=":frmSolCoac"
+							value="#{labelAdministracionBien.btn_reg_bien}"
+							disabled="#{administracionBienHolderFL.respuestaCoactivoDTOSel==null}">
+						</p:commandButton>
+						<!--Boton diponer embargo-->
+						<p:commandButton id="btnDisEmbargo" action="DIS_EMBARGO"
+							icon="c2-icon-detalle" process="@this"
+							value="#{labelAdministracionBien.btn_disponer_bien}"
+							disabled="#{administracionBienHolderFL.respuestaCoactivoDTOSel==null}">
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados"
+					value="#{administracionBienHolderFL.respuestaCoactivoDTOs}"
+					var="registro" rowKey="#{registro.idCoactivo}"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					paginator="true"
+					selection="#{administracionBienHolderFL.respuestaCoactivoDTOSel}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+
+					<p:ajax event="rowSelectRadio"
+						process=":form-resultado:tabla-resultados"
+						update=":form-resultado:acciones-top" global="false" />
+
+					<p:column selectionMode="single" />
+
+					<p:column
+						headerText="#{labelAdministracionBien.label_tipo_documento}">
+						<p:outputLabel value="#{registro.codigoTipoDocumento}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelAdministracionBien.label_numero_documento}">
+						<p:outputLabel value="#{registro.numeroDocumento}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelAdministracionBien.label_nombres_deudor}">
+						<p:outputLabel value="#{registro.nombreDeudor}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelAdministracionBien.label_numero_coactivo}">
+						<p:outputLabel value="#{registro.numeroProceso}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelAdministracionBien.label_fecha_generacion_coactivo}">
+						<p:outputLabel value="#{registro.fechaProceso}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelAdministracionBien.label_numero_tramite}">
+						<p:outputLabel value="#{0}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdministracionBien.label_tiene_bien}">
+						<p:outputLabel value="#{registro.tieneBien}" />
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+		<ui:include
+			src="/WEB-INF/jsp/coactivo/bien/popup/solicitudesCoactivo.xhtml" />
+	</ui:define>
+</ui:composition>

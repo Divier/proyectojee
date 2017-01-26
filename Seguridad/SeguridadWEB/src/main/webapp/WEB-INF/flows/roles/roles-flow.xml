@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+	parent="global">
+
+	<var name="rolesFL" class="co.com.datatools.seguridad.mb.roles.RolesFL" />
+	<var name="crearRolFL" class="co.com.datatools.seguridad.mb.roles.CrearRolFL" />
+	<var name="modificarRolFL" class="co.com.datatools.seguridad.mb.roles.ModificarRolFL" />
+
+	<decision-state id="decision">
+		<if test="requestParameters.stateId=='crear'" then="_op-CREAR"
+			else="ingresar" />
+	</decision-state>
+
+	<!-- INICIO- Estados del flujo de creacion -->
+	<view-state id="_op-CREAR" view="crear-rol.xhtml">
+	<on-entry>
+		<evaluate expression="externalContext.sessionMap.seguridadUtilMB.instanciarMB('rolesMB')" />
+		<evaluate expression="externalContext.sessionMap.rolesMB.inicializarComponentesCreacion()" />
+	</on-entry>
+		<transition on="_op-CREAR" to="CREAR-ROL" />
+		<transition on="CANCELAR" to="_op-CREAR">
+			<evaluate expression="new co.com.datatools.seguridad.mb.roles.CrearRolFL()"
+				result="flowScope.crearRolFL"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="CREAR-ROL">
+		<evaluate expression="externalContext.sessionMap.rolesMB.crearRol()" />
+		<transition on="yes" to="_op-CREAR">
+			<evaluate expression="new co.com.datatools.seguridad.mb.roles.CrearRolFL()"
+				result="flowScope.crearRolFL"></evaluate>
+		</transition>
+		<transition on="no" to="_op-CREAR" />
+	</action-state>
+	<!-- FIN- Estados del flujo de creacion -->
+
+	<!-- INICIO- Estados del flujo de consulta -->
+	<view-state id="ingresar" view="consultar-roles.xhtml">
+		<on-entry>
+			<evaluate expression="externalContext.sessionMap.seguridadUtilMB.instanciarMB('rolesMB')" />
+			<evaluate expression="externalContext.sessionMap.rolesMB.cargarListaRolPadre()" />
+			<evaluate expression="new co.com.datatools.seguridad.mb.roles.ModificarRolFL()"
+				result="flowScope.modificarRolFL" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+		<transition on="CANCELAR" to="fin" />
+		<transition on="_op-ELIMINAR" to="_op-ELIMINAR" />
+		<transition on="_op-EDITAR" to="_op-EDITAR" />
+		<transition on="VER-HISTORICO" to="VER-HISTORICO">
+			<evaluate
+				expression="externalContext.sessionMap.rolesMB.cargarParametrosHistorico()"></evaluate>
+			<set name="flashScope.idRol" value="rolesFL.rolSeleccionado.idRol" />
+			<set name="flashScope.fechaInicial" value="rolesFL.fechaInicioHistorico" />
+			<set name="flashScope.fechaFinal" value="rolesFL.fechaFinHistorico" />
+		</transition>
+	</view-state>
+
+	<subflow-state id="VER-HISTORICO" subflow="historico-roles">
+		<input name="idRol" value="idRol" />
+		<input name="fechaInicial" value="fechaInicial" />
+		<input name="fechaFinal" value="fechaFinal" />
+		<input name="deshabilitarFechas" value="false" />
+		<transition on="fin" to="_op-CONSULTAR"/>	
+	</subflow-state>
+
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate expression="externalContext.sessionMap.rolesMB.consultarRoles()" />
+		<transition on="success" to="ingresar"></transition>
+	</action-state>
+
+	<action-state id="_op-ELIMINAR">
+		<evaluate expression="externalContext.sessionMap.rolesMB.eliminarRol()" />
+		<transition on="success" to="ingresar"></transition>
+	</action-state>
+
+	<view-state id="_op-EDITAR" view="modificar-rol.xhtml">
+		<on-entry>
+			<evaluate expression="externalContext.sessionMap.rolesMB.cargarDetalleRol()"></evaluate>
+		</on-entry>
+		<transition on="MODIFICAR-ROL" to="_op-EDITAR">
+			<evaluate expression="externalContext.sessionMap.rolesMB.actualizarRol()" />
+		</transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.rolesMB.consultarRoles()" />
+		</transition>
+	</view-state>
+	<end-state id="fin" />
+</flow>
+	

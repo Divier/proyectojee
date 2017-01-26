@@ -1,0 +1,173 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template-principal.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido"
+			style="margin-left: 200px; margin-right: 200px;">
+			<p:panel styleClass="panel-formulario"
+				header="#{bundleImpugnacion['tit_con_impugnacion']}">
+				<p:fieldset styleClass="fieldset-formulario">
+					<h:panelGrid id="panel-formulario" columns="4"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<p:outputLabel value="#{bundleImpugnacion['lbl_tip_documento']}"
+							styleClass="campo-obligatorio"></p:outputLabel>
+						<h:panelGroup>
+							<p:selectOneMenu id="selOnTipDoc"
+								value="#{consultaImpugnacionMB.impugnacionConsultaDTO.tipoIdentificacion}"
+								requiredMessage="#{bundleGeneral['val_campo_requerido']}">
+								<f:selectItem itemLabel="#{bundleGeneral['lbl_seleccione']}" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacionPersona()}" />
+								<p:ajax
+									listener="#{consultaImpugnacionMB.verificarTipoDocumento()}"
+									process="@this selOnTipDoc" update="panel-formulario"></p:ajax>
+							</p:selectOneMenu>
+							<p:message for="selOnTipDoc"></p:message>
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{bundleImpugnacion['lbl_numero_documento']}"
+							styleClass="campo-obligatorio"></p:outputLabel>
+						<h:panelGroup rendered="#{!consultaImpugnacionMB.alfanumerico}">
+							<p:inputText id="txtNumDoc" maxlength="20"
+								value="#{consultaImpugnacionMB.impugnacionConsultaDTO.numeroIdentificacion}"
+								requiredMessage="#{bundleGeneral['val_campo_requerido']}"
+								validatorMessage="#{bundleGeneral['val_campo_numerico']}">
+								<f:validateRegex
+									pattern="#{consultaImpugnacionMB.expresionNumerica}" />
+							</p:inputText>
+							<p:message for="txtNumDoc"></p:message>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{consultaImpugnacionMB.alfanumerico}">
+							<p:inputText id="txtNumDocAlfn" maxlength="20"
+								value="#{consultaImpugnacionMB.impugnacionConsultaDTO.numeroIdentificacion}"
+								requiredMessage="#{bundleGeneral['val_campo_requerido']}"
+								validatorMessage="#{bundleGeneral['msg_error_alfanumerico']}">
+								<f:validateRegex
+									pattern="#{consultaImpugnacionMB.expresionAlfanumerica}" />
+							</p:inputText>
+							<p:message for="txtNumDocAlfn"></p:message>
+						</h:panelGroup>
+
+
+						<p:outputLabel
+							value="#{bundleImpugnacion['lbl_num_proc_impugnacio']}"></p:outputLabel>
+						<h:panelGroup>
+							<p:inputText id="txtNumImpug" maxlength="50"
+								value="#{consultaImpugnacionMB.impugnacionConsultaDTO.numeroProceso}"
+								validatorMessage="#{bundleGeneral['val_campo_numerico']}">
+								<f:validateRegex
+									pattern="#{consultaImpugnacionMB.expresionNumerica}" />
+							</p:inputText>
+							<p:message for="txtNumImpug"></p:message>
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{bundleImpugnacion['lbl_a__proc_impugnacio']}"></p:outputLabel>
+						<p:selectOneMenu id="calFiltroAnio"
+							value="#{consultaImpugnacionMB.impugnacionConsultaDTO.anioProceso}">
+							<f:selectItem itemLabel="#{bundleGeneral['lbl_seleccione']}" />
+							<f:selectItems value="#{calendarioMB.anios}" />
+						</p:selectOneMenu>
+
+					</h:panelGrid>
+					<h:panelGrid id="panel-formulario-captcha" columns="1"
+						styleClass="center-block">
+						<h:panelGroup>
+							<p:captcha id="captcha" label="Captcha" theme="white"
+								language="es"
+								validatorMessage="#{bundleGeneral['val_campo_captcha']}"
+								requiredMessage="#{bundleGeneral['val_campo_requerido']}"></p:captcha>
+							<p:message for="captcha"></p:message>
+						</h:panelGroup>
+					</h:panelGrid>
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton
+							action="#{consultaImpugnacionMB.consultarImpugnaciones()}"
+							icon="c2-icon-consultar" process="@form" ajax="false"
+							value="#{bundleGeneral['btn_consulta']}"
+							update=":form-resultado :form-contenido">
+						</p:commandButton>
+						<p:commandButton action="#{consultaCitacionesMB.menu()}"
+							icon="fa fa-home" process="@this"
+							value="#{bundleGeneral['btn_volver']}">
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{consultaImpugnacionMB.procesoImpugnacionReplicaDTOs.size() > 0}">
+				<p:fieldset styleClass="fieldset-formulario">
+					<p:toolbar id="acciones-top">
+						<f:facet name="left">
+							<!--Boton Ver detalle-->
+							<!--  <p:commandButton id="btnVerDet"
+								action="#{consultaImpugnacionMB.consultarDetalleImpugnacion()}"
+								oncomplete="PF('popUpDetImpug').show();" update=":frmDetImpug"
+								icon="c2-icon-detalle" process="@this"
+								value="#{bundleGeneral['btn_ver_detalle']}"
+								disabled="#{consultaImpugnacionMB.procesoImpugnacionReplicaSelDTO==null}">
+								<p:tooltip for="btnVerDet"
+									value="#{labelAdminComparendo.tooltip_btnVerDet}" />
+							</p:commandButton> -->
+						</f:facet>
+					</p:toolbar>
+
+					<p:dataTable id="tabla-resultados"
+						value="#{consultaImpugnacionMB.procesoImpugnacionReplicaDTOs}"
+						var="registro"
+						selection="#{consultaImpugnacionMB.procesoImpugnacionReplicaSelDTO}"
+						rowKey="#{registro.numeroFactura}" paginator="true"
+						sortMode="multiple"
+						paginatorTemplate="#{bundleGeneral['param_paginator_template']}"
+						rowsPerPageTemplate="#{bundleGeneral['param_rows_per_page']}"
+						rows="#{bundleGeneral['param_initial_rows']}">
+
+						<p:ajax event="rowSelectRadio"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this" global="false" />
+
+						<p:column selectionMode="single" />
+
+						<p:column headerText="#{bundleImpugnacion['lbl_num_proceso']}">
+							<p:outputLabel value="#{registro.numeroProceso}" />
+						</p:column>
+
+						<p:column headerText="#{bundleImpugnacion['lbl_fch_apertura']}">
+							<p:outputLabel value="#{registro.fechaInicioProceso}">
+								<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="#{bundleImpugnacion['lbl_est_proceso']}">
+							<p:outputLabel value="#{registro.estadoProceso}" />
+						</p:column>
+
+						<p:column headerText="#{bundleImpugnacion['lbl_numero_citacion']}">
+							<p:outputLabel value="#{registro.numeroCitacion}" />
+						</p:column>
+
+						<p:column
+							headerText="#{bundleImpugnacion['lbl_fch_ips_citacion']}">
+							<p:outputLabel value="#{registro.fechaInfraccion}">
+								<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+							</p:outputLabel>
+						</p:column>
+
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+		<ui:include src="/views/impugnacion/popup/detalleImpugnacion.xhtml" />
+	</ui:define>
+</ui:composition>

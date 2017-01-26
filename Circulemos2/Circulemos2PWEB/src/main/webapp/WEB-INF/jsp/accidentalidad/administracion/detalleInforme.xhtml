@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelAdminAccidentalidad.titulo_registrar_informe}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminAccidentalidad.titulo_encabezado}">
+					<h:panelGrid id="panel-cabecera1" styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4" width="750em">
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_nro_informe}" />
+						<p:outputLabel
+							value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.consecutivo}" />
+
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_tipo_accidente}" />
+						<p:outputLabel
+							value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.tipoAccidente.nombre}" />
+					</h:panelGrid>
+
+					<h:panelGrid id="panel-cabecera2" styleClass="center-block"
+						columnClasses="label-col,input-col,input-col" columns="3"
+						width="750em">
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_consecuencias}" />
+						<p:outputLabel
+							value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.consecuencias}" />
+
+						<h:panelGrid id="panel-cabecera2_int" styleClass="center-block"
+							columnClasses="label-col,input-col" columns="2">
+							<p:outputLabel
+								value="#{labelAdminAccidentalidad.label_ubicacion_gps}" />
+							<p:outputLabel
+								value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.ubicacionGps}" />
+
+							<p:outputLabel
+								value="#{labelAdminAccidentalidad.label_parte_finalizado}" />
+							<c2:outputDateLabel
+								labelValue="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.parteFinalizado}"
+								fullFormat="true" />
+						</h:panelGrid>
+					</h:panelGrid>
+
+					<h:panelGrid id="panel-cabecera3" styleClass="center-block"
+						columnClasses="label-col,input-col" columns="2" width="750em">
+						<p:outputLabel value="#{labelAdminAccidentalidad.label_lugar}" />
+						<p:outputLabel
+							value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.lugarAccidente}" />
+					</h:panelGrid>
+
+					<h:panelGrid id="panel-cabecera4" styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4" width="750em">
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_fecha_accidente}" />
+						<c2:outputDateLabel
+							labelValue="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.fechaAccidente}"
+							fullFormat="true" />
+
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_fecha_av_central}" />
+						<c2:outputDateLabel
+							labelValue="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.fechaAviso}"
+							fullFormat="true" />
+
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_prevencion}" />
+						<p:outputLabel
+							value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.prevencion.nombre}" />
+
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_delegacion}" />
+						<p:outputLabel
+							value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.delegacion.nombre}" />
+
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_referencia_hechos}" />
+						<p:outputLabel
+							value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.referenciaHechos}" />
+
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_agente_intervino}" />
+						<p:outputLabel
+							value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.agente}" />
+					</h:panelGrid>
+				</p:fieldset>
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminAccidentalidad.titulo_breve_relacion}">
+					<p:tabView scrollable="false" widgetVar="tabView" id="tabs"
+						onTabShow="true" value="#{adminAccidentalidadMB.tabs}" var="parte">
+						<p:ajax event="tabChange"
+							listener="#{adminAccidentalidadMB.onTabChange}" />
+						<p:tab title="#{parte.nombreTab}" disabled="false"
+							closable="false">
+							<h:panelGrid id="panel-detalle1" styleClass="center-block"
+								columnClasses="label-col,input-col" columns="2" width="1200em">
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.titulo_breve_relacion}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.breveRelacion}" />
+							</h:panelGrid>
+
+							<h:panelGrid id="panel-detalle2" styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col,label-col,input-col,label-col,input-col"
+								columns="8" width="1200em">
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_nombres_apellidos}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.nombrePersona}" />
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_tipo_persona}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.tipoPersonaIPAT.nombre}" />
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_licencia}"
+									rendered="#{parte.conductor}" />
+								<p:outputLabel value="#{labelAdminAccidentalidad.label_cedula}"
+									rendered="#{!parte.conductor}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.licencia}" />
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_tipo_licencia}"
+									rendered="#{parte.conductor}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.tipoLicencia.nombre}"
+									rendered="#{parte.conductor}" />
+							</h:panelGrid>
+
+							<h:panelGrid id="panel-detalle3" styleClass="center-block"
+								columnClasses="label-col,input-col" columns="2" width="1200em">
+								<p:outputLabel value="#{labelAdminAccidentalidad.label_origen}"
+									rendered="#{parte.conductor}" />
+								<p:outputLabel value="#{parte.detalleAccidentalidadDTO.origen}"
+									rendered="#{parte.conductor}" />
+							</h:panelGrid>
+
+							<h:panelGrid id="panel-detalle4" styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col,label-col,input-col,label-col,input-col"
+								columns="8" width="1200em">
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_estado_fisico}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.estadoFisico.nombre}" />
+
+								<p:outputLabel value="#{labelAdminAccidentalidad.label_edad}" />
+								<p:outputLabel value="#{parte.detalleAccidentalidadDTO.edad}" />
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_aliento_licor}" />
+								<c2:outputBoolText
+									value="#{parte.detalleAccidentalidadDTO.embriaguez}" />
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_aprehendido}" />
+								<c2:outputBoolText
+									value="#{parte.detalleAccidentalidadDTO.aprehendido}" />
+							</h:panelGrid>
+
+							<h:panelGrid id="panel-detalle5" styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col,label-col,input-col,label-col,input-col"
+								columns="8" width="1200em">
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_tipo_vehiculo}"
+									rendered="#{parte.conductor}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.claseVehiculo.nombre}"
+									rendered="#{parte.conductor}" />
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_marca_vehiculo}"
+									rendered="#{parte.conductor}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.tipoVehiculo}"
+									rendered="#{parte.conductor}" />
+
+								<p:outputLabel value="#{labelAdminAccidentalidad.label_placa}"
+									rendered="#{parte.conductor}" />
+								<p:outputLabel value="#{parte.detalleAccidentalidadDTO.placa}"
+									rendered="#{parte.conductor}" />
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_servicio}"
+									rendered="#{parte.conductor}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.tipoServicio.nombre}"
+									rendered="#{parte.conductor}" />
+							</h:panelGrid>
+
+							<h:panelGrid id="panel-detalle6" styleClass="center-block"
+								columnClasses="label-col,input-col" columns="2" width="1200em">
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_calle_carretera}"
+									rendered="#{parte.conductor}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.calleCarretera}"
+									rendered="#{parte.conductor}" />
+							</h:panelGrid>
+
+							<h:panelGrid id="panel-detalle7" styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col,label-col,input-col"
+								columns="6" width="1200em">
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_sentido_circulacion}"
+									rendered="#{parte.conductor}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.sentido.nombre}"
+									rendered="#{parte.conductor}" />
+
+								<p:outputLabel value="#{labelAdminAccidentalidad.label_carril}"
+									rendered="#{parte.conductor}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.carril.nombre}"
+									rendered="#{parte.conductor}" />
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_retenido}"
+									rendered="#{parte.conductor}" />
+								<c2:outputBoolText
+									value="#{parte.detalleAccidentalidadDTO.retenido}"
+									rendered="#{parte.conductor}" />
+							</h:panelGrid>
+
+							<h:panelGrid id="panel-detalle8" styleClass="center-block"
+								columnClasses="label-col,input-col" columns="2" width="1200em">
+								<p:outputLabel value="#{labelAdminAccidentalidad.label_version}" />
+								<p:outputLabel value="#{parte.detalleAccidentalidadDTO.version}" />
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_danos_vehiculo}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.danosVehiculo}" />
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_circunstancias}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.circustancias}" />
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_observaciones}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.observaciones}" />
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_zona_impacto}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.zona_impacto}" />
+
+								<p:outputLabel
+									value="#{labelAdminAccidentalidad.label_datos_adjuntos}" />
+								<p:outputLabel
+									value="#{parte.detalleAccidentalidadDTO.datos_adjuntos}" />
+							</h:panelGrid>
+						</p:tab>
+					</p:tabView>
+				</p:fieldset>
+				<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+					<p:commandButton id="btnVolver" action="VOLVER"
+						icon="c2-icon-volver" process="@this" immediate="true"
+						value="#{lbComun.btnVolver}">
+						<p:tooltip for="btnVolver" value="#{lbComun.btnVolver}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,137 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>co.com.datatools.c2</groupId>
+		<artifactId>Circulemos2Parent</artifactId>
+		<version>2.0.26</version>
+		<relativePath>../Circulemos2Parent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>TareasProgramadasC2EAR</artifactId>
+	<name>TareasProgramadasC2EAR</name>
+	<packaging>ear</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-ear-plugin</artifactId>
+				<configuration>
+					<version>6</version>
+					<defaultLibBundleDir>lib</defaultLibBundleDir>
+					<modules>
+						<!-- EJB + Client -->
+						<ejbModule>
+							<groupId>co.com.datatools.c2</groupId>
+							<artifactId>TareasProgramadasC2</artifactId>
+						</ejbModule>
+<!-- 						<ejbModule> -->
+<!-- 							<groupId>co.com.datatools.c2</groupId> -->
+<!-- 							<artifactId>AdministracionEJB</artifactId> -->
+<!-- 						</ejbModule> -->
+<!-- 						<ejbModule> -->
+<!-- 							<groupId>co.com.datatools.c2</groupId> -->
+<!-- 							<artifactId>FormulariosEJB</artifactId> -->
+<!-- 						</ejbModule> -->
+<!-- 						<ejbModule> -->
+<!-- 							<groupId>co.com.datatools.c2</groupId> -->
+<!-- 							<artifactId>ParametrizacionEJB</artifactId> -->
+<!-- 						</ejbModule> -->
+<!-- 						<ejbModule> -->
+<!-- 							<groupId>co.com.datatools.c2</groupId> -->
+<!-- 							<artifactId>ComparendoEJB</artifactId> -->
+<!-- 						</ejbModule> -->
+<!-- 						<ejbModule> -->
+<!-- 							<groupId>co.com.datatools.c2</groupId> -->
+<!-- 							<artifactId>RegistroVehicularEJB</artifactId> -->
+<!-- 						</ejbModule> -->
+<!-- 						<ejbModule> -->
+<!-- 							<groupId>co.com.datatools.c2</groupId> -->
+<!-- 							<artifactId>PatiosEJB</artifactId> -->
+<!-- 						</ejbModule> -->
+<!-- 						<ejbModule> -->
+<!-- 							<groupId>co.com.datatools.c2</groupId> -->
+<!-- 							<artifactId>CarteraEJB</artifactId> -->
+<!-- 						</ejbModule> -->
+					</modules>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<id>jb</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-ear-plugin</artifactId>
+						<configuration>
+							<version>6</version>
+							<defaultLibBundleDir>lib</defaultLibBundleDir>
+							<modules>
+								<!-- EJB + Client -->
+								<ejbModule>
+									<groupId>co.com.datatools.c2</groupId>
+									<artifactId>TareasProgramadasC2</artifactId>
+								</ejbModule>
+							</modules>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.jboss.as.plugins</groupId>
+						<artifactId>jboss-as-maven-plugin</artifactId>
+						<executions>
+							<!-- Undeploy the application on clean -->
+							<execution>
+								<id>undeploy</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>undeploy</goal>
+								</goals>
+								<configuration>
+									<ignoreMissingDeployment>true</ignoreMissingDeployment>
+								</configuration>
+							</execution>
+							<!-- Deploy the application on install -->
+							<execution>
+								<id>deploy</id>
+								<phase>package</phase>
+								<goals>
+									<goal>deploy</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>co.com.datatools.c2</groupId>
+			<artifactId>TareasProgramadasC2</artifactId>
+			<version>${TareasProgramadasC2.version}</version>
+			<type>ejb</type>
+			<scope>compile</scope>
+		</dependency>
+
+	</dependencies>
+
+	<distributionManagement>
+		<repository>
+			<id>archiva.internal</id>
+			<name>Internal Release Repository</name>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/internal/</url>
+		</repository>
+		<snapshotRepository>
+			<id>archiva.snapshots</id>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

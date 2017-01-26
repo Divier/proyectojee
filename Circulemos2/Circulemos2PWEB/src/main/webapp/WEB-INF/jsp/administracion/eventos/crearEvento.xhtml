@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelAdminEventos.tit_admin_eventos}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminEventos.tit_crea_evento}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel value="#{labelAdminEventos.lbl_tipo_proceso}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="tipoProceso" value="#{administracionEventosHolderFL.eventoCrea.tipoProcesoEvento.id}"
+									required="true" requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoProcesoEvento()}" />
+							</p:selectOneMenu>
+							<p:message for="tipoProceso" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelAdminEventos.lbl_tipo_evento}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="tipoEvento" value="#{administracionEventosHolderFL.eventoCrea.tipoEvento.id}"
+									required="true" requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoEvento()}" />
+							</p:selectOneMenu>
+							<p:message for="tipoEvento" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdminEventos.lbl_evento_nombre}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="nombreEvento" value="#{administracionEventosHolderFL.eventoCrea.nombreEvento}" maxlength="300" required="true">
+							</p:inputText>
+							<p:message for="nombreEvento" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelAdminEventos.lbl_evento_lugar}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="lugarEvento" value="#{administracionEventosHolderFL.eventoCrea.lugar}" maxlength="300" required="true">
+							</p:inputText>
+							<p:message for="lugarEvento" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelAdminEventos.lbl_evento_referencia}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="referenciaEvento" value="#{administracionEventosHolderFL.eventoCrea.numeroReferencia}" maxlength="300" required="true">
+							</p:inputText>
+							<p:message for="nombreEvento" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdminEventos.lbl_evento_fecha}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar
+								value="#{administracionEventosHolderFL.eventoCrea.fecha}"
+								id="fechaEvento" navigator="true"
+								pattern="#{utilidadMB.formatoFecha}"
+								mindate="#{administracionEventosMB.fechaActual()}"
+								requied="true">
+								<p:watermark for="fechaEvento"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="fechaEvento" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdminEventos.lbl_evento_hora_inicio}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar
+								value="#{administracionEventosHolderFL.eventoCrea.horaInicio}"
+								id="horaIniEvento" navigator="true"
+								pattern="HH:mm"
+								timeOnly="true"
+								requied="true">
+								<p:watermark for="horaIniEvento"
+									value="HH:mm" />
+							</p:calendar>
+							<p:message for="horaIniEvento" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdminEventos.lbl_evento_hora_fin}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar
+								value="#{administracionEventosHolderFL.eventoCrea.horaFin}"
+								id="horaFinEvento" navigator="true"
+								pattern="HH:mm"
+								timeOnly="true"
+								requied="true">
+								<p:watermark for="horaFinEvento"
+									value="HH:mm" />
+							</p:calendar>
+							<p:message for="horaFinEvento" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton id="btnGuardar" action="CONTINUAR" icon="c2-icon-guardar"
+								process="@form" value="#{lbComun.btnGuardar}" update=":messages :form-contenido">
+							<p:tooltip for="btnGuardar" value="#{lblComun.btnContinuar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+
+						<p:commandButton id="btnCancelar" action="VOLVER" icon="c2-icon-cancelar"
+								process="@this" immediate="true"
+								value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

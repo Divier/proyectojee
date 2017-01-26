@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<decision-state id="decisionMain">
+		<if test="requestParameters.stateId=='login'" then="login" else="evaluarLogout" />
+	</decision-state>
+
+	<decision-state id="evaluarLogout">
+		<if test="requestParameters.stateId=='logout'" then="logout"
+			else="evaluarCambioPw" />
+	</decision-state>
+	<decision-state id="evaluarCambioPw">
+		<if test="requestParameters.stateId=='cambioPw'" then="global-cambioPw"
+			else="evaluarCuenta" />
+	</decision-state>
+	<decision-state id="evaluarCuenta">
+		<if test="requestParameters.stateId=='miCuenta'" then="actualizarCuenta"
+			else="evaluarRecuperarPassword" />
+	</decision-state>
+
+	<view-state id="main"
+		view="externalRedirect:contextRelative:index.xhtml">
+		<transition on="autenticar" to="global-autenticar" />
+	</view-state>
+	<action-state id="global-autenticar">
+		<evaluate
+			expression="externalContext.sessionMap.autenticacionMB.autenticarUsuario()" />
+		<transition on="yes" to="main" />
+		<transition on="no" to="decision" />
+	</action-state>
+
+	<decision-state id="decision">
+		<if test="externalContext.sessionMap.autenticacionMB.cambioPw"
+			then="global-cambioPw" else="main" />
+	</decision-state>
+
+	<view-state id="global-cambioPw" view="/WEB-INF/jsp/main/actualizarPw.xhtml">
+		<transition on="cambiarPw" to="global-cambioPw">
+			<evaluate
+				expression="externalContext.sessionMap.adminCuentaUsuarioMB.modificarPassword()" />
+		</transition>
+		<transition on="continuar" to="logout">
+			<evaluate
+				expression="externalContext.sessionMap.adminCuentaUsuarioMB.logout()" />
+		</transition>
+	</view-state>
+
+	<view-state id="logout"
+		view="externalRedirect:contextRelative:logout.xhtml" />
+	<view-state id="login"
+		view="externalRedirect:contextRelative:index.xhtml" />
+
+	<view-state id="actualizarCuenta" view="/WEB-INF/jsp/main/actualizarCuenta.xhtml">
+		<transition on="cambiarPw" to="actualizarCuenta">
+			<evaluate
+				expression="externalContext.sessionMap.adminCuentaUsuarioMB.modificarPassword()" />
+		</transition>
+		<transition on="cambiarCorreo" to="actualizarCuenta">
+			<evaluate
+				expression="externalContext.sessionMap.adminCuentaUsuarioMB.modificarCorreo()" />
+		</transition>
+	</view-state>
+
+</flow>

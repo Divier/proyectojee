@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="impugnacionHolderFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.ImpugnacionHolderFL" />
+	<var name="impugnacionFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.ImpugnacionFL" />
+	<var name="evaluarExpedienteFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.EvaluarExpedienteFL" />
+	<var name="realizarFalloFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RealizarFalloFL" />
+	<var name="rechazarFalloFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RechazarFalloFL" />
+	<var name="evaluarExpedienteFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.EvaluarExpedienteFL" />
+	<var name="encabezadoImpugnacionHolderFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.EncabezadoImpugnacionHolderFL" />
+	<var name="registrarPruebaFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RegistrarPruebaFL" />
+	<var name="detalleProcesoFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.DetalleProcesoFL" />
+	<var name="gestionarPruebasFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.GestionarPruebasFL" />
+	<var name="registrarImpulsoPruebaFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RegistrarImpulsoPruebaFL" />
+	<var name="registrarAccionesFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RegistrarAccionesFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/comparendo/proceso-impugnacion/consultarImpugnaciones.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('impugnacionMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('ubicabilidadMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.impugnacionMB.cargarOrganismoTransito()" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="UBICABILIDAD_ROL">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.ImpugnacionFL()"
+				result="flowScope.impugnacionFL"></evaluate>
+		</transition>
+		<transition on="VER_DETALLE" to="CONSULTAR_DETALLE">
+			<set name="flowScope.detalleProcesoFL.volver" value="'VOLVER_INGRESAR'"
+				type="string" />
+		</transition>
+		<transition on="_op-EDITAR" to="VALIDAR_RECTIFICACION" />
+		<transition on="_op-SEGUIMIENTO" to="_op-SEGUIMIENTO" />
+		<transition on="HOJA_VIDA" to="HOJA_VIDA" />
+		<transition on="_op-RADICAR_EXPEDIENTE" to="_op-RADICAR_EXPEDIENTE">
+			<evaluate
+				expression="externalContext.sessionMap.impugnacionMB.cargarRadicacion()"></evaluate>
+		</transition>
+		<transition on="_op-RECHAZAR_FALLO" to="_op-RECHAZAR_FALLO">
+			<evaluate expression="flowScope.impugnacionHolderFL.comparendosSeleccionados"
+				result="flowScope.rechazarFalloFL.procesosImpugnacion"></evaluate>
+		</transition>
+		<transition on="_op-EVALUAR_EXPEDIENTE" to="INICIALIZAR_EVALUAR_EXPEDIENTE" />
+		<transition on="_op-REALIZAR_FALLO" to="INICIALIZAR_REALIZAR_FALLO" />
+		<transition on="_op-APROBAR_FALLO" to="APROBAR_FALLO">
+			<evaluate expression="flowScope.impugnacionHolderFL.comparendosSeleccionados"
+				result="flowScope.rechazarFalloFL.procesosImpugnacion"></evaluate>
+		</transition>
+		<transition on="_op-EVALUAR_EXPEDIENTE_CONTINUACION" to="INICIALIZAR_EVALUAR_EXPED_CON"></transition>
+		<transition on="_op-GESTION_PRUEBAS" to="INICIALIZAR_GESTION_PRUEBAS"></transition>
+		<transition on="REGISTRAR_ACCIONES" to="REGISTRAR_ACCIONES"></transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate expression="false"
+				result="flowScope.impugnacionFL.evaluarExpedienteEspecialista" />
+		</transition>
+		<transition on="CONTINUAR" to="ABOGADO_ESPECIALISTA">
+		</transition>
+		<transition on="_op-REGISTRAR_ACCIONES" to="INICIALIZAR_REGISTRO_ACCIONES" />
+		<transition on="ACEPTAR_C_P" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.gestionarPruebasMB.cierreDocumentoCerrarPruenas()" />
+		</transition>
+	</view-state>
+
+	<action-state id="ABOGADO_ESPECIALISTA">
+		<evaluate
+			expression="externalContext.sessionMap.impugnacionMB.evaluarExpediente()" />
+		<transition on="INICIALIZAR_REALIZAR_FALLO" to="INICIALIZAR_REALIZAR_FALLO" />
+		<transition on="ESTADO_NO_PERMITIDO" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+		<transition on="INICIO" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+	</action-state>
+
+	<action-state id="INICIALIZAR_EVALUAR_EXPED_CON">
+		<evaluate
+			expression="externalContext.sessionMap.impugnacionMB.inicializarDatos()" />
+		<transition on="yes" to="ingresar" />
+		<transition on="no" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+	</action-state>
+
+	<action-state id="INICIALIZAR_GESTION_PRUEBAS">
+		<evaluate
+			expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('gestionarPruebasMB')" />
+		<evaluate
+			expression="externalContext.sessionMap.gestionarPruebasMB.inicializarDatos()" />
+		<evaluate
+			expression="externalContext.sessionMap.gestionarPruebasMB.consultarSolicitudPruebas()"></evaluate>
+		<transition on="yes" to="_op-GESTION_PRUEBAS">
+			<evaluate
+				expression="externalContext.sessionMap.gestionarPruebasMB.consultarSolicitudPruebas()"></evaluate>
+		</transition>
+		<transition on="no" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+	</action-state>
+
+	<view-state id="_op-GESTION_PRUEBAS"
+		view="/WEB-INF/jsp/comparendo/proceso-impugnacion/gestionarPruebas.xhtml">
+		<transition on="AGREGAR_PRUEBA" to="_op-GESTION_PRUEBAS">
+			<evaluate
+				expression="externalContext.sessionMap.gestionarPruebasMB.adicionarPrueba()" />
+		</transition>
+		<transition on="VER_DETALLE" to="CONSULTAR_DETALLE">
+			<set name="flowScope.detalleProcesoFL.volver" value="'VOLVER_GESTIONAR_PRUEBAS'"
+				type="string" />
+		</transition>
+		<transition on="GENERAR_PRORROGA" to="_op-GESTION_PRUEBAS">
+			<evaluate
+				expression="externalContext.sessionMap.gestionarPruebasMB.generarProrroga()" />
+		</transition>
+		<transition on="REG_PRUEBAS" to="CARGAR_PRUEBAS">
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('registrarPruebaMB')" />
+			<evaluate
+				expression="flowScope.gestionarPruebasFL.soliciPruebBackSeleccVO.solicitudPruebasBackDTO"
+				result="flowScope.registrarPruebaFL.solicitud"></evaluate>
+			<set name="flowScope.registrarPruebaFL.modoConsulta" value="false"
+				type="boolean" />
+			<evaluate
+				expression="externalContext.sessionMap.registrarPruebaMB.inicializarDatos()" />
+		</transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+		<transition on="VOLVER_PRORROGA" to="_op-GESTION_PRUEBAS">
+			<evaluate
+				expression="externalContext.sessionMap.gestionarPruebasMB.cancelarProrroga()" />
+		</transition>
+		<transition on="CONTINUAR" to="_op-GESTION_PRUEBAS">
+			<evaluate
+				expression="externalContext.sessionMap.gestionarPruebasMB.actualizarProrroga()" />
+		</transition>
+
+		<transition on="VOLVER_POPUP" to="_op-GESTION_PRUEBAS">
+			<evaluate
+				expression="externalContext.sessionMap.gestionarPruebasMB.cancelarAdicionPruebas()" />
+		</transition>
+		<transition on="GUARDAR_PRUEBA" to="_op-GESTION_PRUEBAS">
+			<evaluate
+				expression="externalContext.sessionMap.gestionarPruebasMB.guardarAdicionPruebas()" />
+		</transition>
+		<transition on="ACEPTAR" to="_op-GESTION_PRUEBAS">
+			<evaluate
+				expression="externalContext.sessionMap.gestionarPruebasMB.confirmarAdicionPruebas()" />
+		</transition>
+	</view-state>
+
+	<!-- Decision ubicabilidad dependiendo el rol -->
+	<decision-state id="UBICABILIDAD_ROL">
+		<if test="externalContext.sessionMap.impugnacionMB.auxiliar" then="VERIFICAR_UBICABILIDAD"
+			else="_op-CONSULTAR" />
+	</decision-state>
+
+	<action-state id="VERIFICAR_UBICABILIDAD">
+		<evaluate
+			expression="externalContext.sessionMap.impugnacionMB.esPersonaActualizada()"></evaluate>
+		<transition on="yes" to="UBICABILIDAD">
+			<set name="flashScope.tipoDocumento"
+				value="flowScope.impugnacionHolderFL.consultaImpugnacionDTO.tipoDocumentoInfractor" />
+			<set name="flashScope.documento"
+				value="flowScope.impugnacionHolderFL.consultaImpugnacionDTO.numeroDocumentoInfractor" />
+			<set name="flashScope.soloGuardar" value="false" />
+			<set name="flashScope.ciudadanoPresente" value="true" />
+		</transition>
+		<transition on="no" to="_op-CONSULTAR" />
+	</action-state>
+	<!-- -->
+
+	<!-- SUB FLUJO ubicabilidad -->
+	<subflow-state id="UBICABILIDAD" subflow="administracion/ubicabilidad">
+		<input name="tipoDocumento" />
+		<input name="documento" />
+		<input name="soloGuardar" />
+
+		<output name="persona" />
+
+		<transition on="CANCELAR_UBI" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+		<transition on="ACEPTAR_UBI" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+	</subflow-state>
+	<!-- -->
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<view-state id="_op-RADICAR_EXPEDIENTE"
+		view="/WEB-INF/jsp/comparendo/proceso-impugnacion/radicarExpediente.xhtml">
+		<transition on="_op-CREAR" to="PARAMETRO_FIRMA_RAD">
+		</transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+			<evaluate expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.ImpugnacionFL()" 
+				result="flowScope.impugnacionFL" />
+		</transition>
+		<transition on="EVALUAR_EXPEDIENTE" to="INICIALIZAR_EVALUAR_EXPEDIENTE">
+			<evaluate
+				expression="externalContext.sessionMap.impugnacionMB.cargarProcesoEvaluar()"></evaluate>
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.ImpugnacionFL()"
+				result="flowScope.impugnacionFL"></evaluate>
+		</transition>
+		<transition on="ACEPTAR" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.ImpugnacionFL()"
+				result="flowScope.impugnacionFL"></evaluate>
+		</transition>
+		<transition on="_op-ADICIONAR" to="VALIDAR_TIPO_PARTICIPANTES" />
+		<transition on="_op-ELIMINAR" to="ELIMINA_PARTICIPANTE">
+		</transition>
+		<transition on="GUARDAR_FIRMA" to="GUARDAR_FIRMA_RAD"></transition>
+	</view-state>
+
+	<action-state id="VALIDAR_TIPO_PARTICIPANTES">
+		<evaluate
+			expression="externalContext.sessionMap.impugnacionMB.validarTipoParticipate()"></evaluate>
+		<transition on="yes" to="UBICABILIDAD_PARTICIPANTES">
+			<set name="flashScope.tipoDocumento" value="null" />
+			<set name="flashScope.documento" value="null" />
+			<set name="flashScope.soloGuardar" value="false" />
+			<set name="flashScope.ciudadanoPresente" value="null" />
+		</transition>
+		<transition on="no" to="_op-RADICAR_EXPEDIENTE" />
+	</action-state>
+
+	<!-- SUB FLUJO ubicabilidad -->
+	<subflow-state id="UBICABILIDAD_PARTICIPANTES" subflow="administracion/ubicabilidad">
+		<input name="tipoDocumento" />
+		<input name="documento" />
+		<input name="soloGuardar" />
+
+		<output name="persona" />
+
+		<transition on="CANCELAR_UBI" to="_op-RADICAR_EXPEDIENTE" />
+		<transition on="ACEPTAR_UBI" to="_op-RADICAR_EXPEDIENTE">
+			<evaluate
+				expression="externalContext.sessionMap.impugnacionMB.cargarParticipante(persona)" />
+		</transition>
+	</subflow-state>
+	<!-- -->
+
+	<action-state id="PARAMETRO_FIRMA_RAD">
+		<evaluate
+			expression="externalContext.sessionMap.capturaFirmaMB.consultarParametro()"></evaluate>
+		<transition on="yes" to="INTEGRIDAD_DATOS_RAD" />
+		<transition on="no" to="_op-CREAR" />
+	</action-state>
+
+	<action-state id="INTEGRIDAD_DATOS_RAD">
+		<evaluate
+			expression="externalContext.sessionMap.impugnacionMB.validarDatosRadicacion()"></evaluate>
+		<transition on="yes" to="_op-RADICAR_EXPEDIENTE"></transition>
+		<transition on="no" to="FIRMA"></transition>
+	</action-state>
+
+	<action-state id="FIRMA">
+		<evaluate
+			expression="externalContext.sessionMap.capturaFirmaMB.capturarFirmaDigital()"></evaluate>
+		<transition on="success" to="_op-RADICAR_EXPEDIENTE" />
+	</action-state>
+
+	<action-state id="GUARDAR_FIRMA_RAD">
+		<evaluate expression="externalContext.sessionMap.capturaFirmaMB.asociarFirma()"></evaluate>
+		<transition on="yes" to="_op-CREAR">
+			<set name="flowScope.impugnacionFL.radicarExpedienteDTO.numeroFirma"
+				value="externalContext.sessionMap.capturaFirmaMB.capturaFirmaFL.capturaFirmaDTO.firma"
+				type="string" />
+		</transition>
+		<transition on="no" to="_op-RADICAR_EXPEDIENTE" />
+	</action-state>
+
+	<action-state id="ADICIONAR_PARTICIPANTE">
+		<evaluate
+			expression="externalContext.sessionMap.impugnacionMB.cargarParticipante()" />
+		<transition on="success" to="_op-RADICAR_EXPEDIENTE"></transition>
+	</action-state>
+
+	<action-state id="ELIMINA_PARTICIPANTE">
+		<evaluate
+			expression="externalContext.sessionMap.impugnacionMB.retirarParticipante()" />
+		<transition on="success" to="_op-RADICAR_EXPEDIENTE"></transition>
+	</action-state>
+
+	<action-state id="_op-CREAR">
+		<evaluate
+			expression="externalContext.sessionMap.impugnacionMB.registraRadicarExpediente()"></evaluate>
+		<transition on="yes" to="_op-RADICAR_EXPEDIENTE">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+		<transition on="no" to="_op-RADICAR_EXPEDIENTE"></transition>
+	</action-state>
+
+	<!-- Inicio flujo de evaluar expediente -->
+	<action-state id="INICIALIZAR_EVALUAR_EXPEDIENTE">
+		<evaluate
+			expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('evaluarExpedienteMB')" />
+		<evaluate
+			expression="externalContext.sessionMap.evaluarExpedienteMB.inicializarDatos()" />
+		<transition on="yes" to="_op-EVALUAR_EXPEDIENTE" />
+		<transition on="no" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+	</action-state>
+
+	<view-state id="_op-EVALUAR_EXPEDIENTE"
+		view="/WEB-INF/jsp/comparendo/proceso-impugnacion/evaluarExpediente.xhtml">
+		<transition on="CONTINUAR" to="CONTINUAR_EVALUAR_EXPEDIENTE" />
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.EvaluarExpedienteFL()"
+				result="flowScope.evaluarExpedienteFL"></evaluate>
+		</transition>
+		<transition on="VER_DETALLE" to="CONSULTAR_DETALLE">
+			<set name="flowScope.detalleProcesoFL.volver" value="'VOLVER_EVAL_EXPEDIENTE'"
+				type="string" />
+		</transition>
+		<transition on="ACEPTAR" to="ACEPTAR_EVALUACION" />
+	</view-state>
+
+	<action-state id="CONTINUAR_EVALUAR_EXPEDIENTE">
+		<evaluate expression="externalContext.sessionMap.evaluarExpedienteMB.guardar()" />
+		<transition on="ENVIADO_BACK" to="_op-EVALUAR_EXPEDIENTE" />
+		<transition on="EVALUADO" to="ACEPTAR_EVALUACION" />
+		<transition on="ERROR_DATOS" to="_op-EVALUAR_EXPEDIENTE" />
+	</action-state>
+
+	<action-state id="ACEPTAR_EVALUACION">
+		<evaluate
+			expression="externalContext.sessionMap.evaluarExpedienteMB.validarGuardado()" />
+		<transition on="ENVIADO_BACK" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.EvaluarExpedienteFL()"
+				result="flowScope.evaluarExpedienteFL"></evaluate>
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+		<transition on="EVALUADO" to="INICIALIZAR_REALIZAR_FALLO">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.EvaluarExpedienteFL()"
+				result="flowScope.evaluarExpedienteFL"></evaluate>
+		</transition>
+		<transition on="ERROR_DATOS" to="_op-EVALUAR_EXPEDIENTE" />
+	</action-state>
+	<!-- Fin flujo de evaluar expediente -->
+
+	<view-state id="_op-RECHAZAR_FALLO"
+		view="/WEB-INF/jsp/comparendo/proceso-impugnacion/rechazarFallo.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('rechazarFalloMB')" />
+		</on-entry>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RechazarFalloFL()"
+				result="flowScope.rechazarFalloFL"></evaluate>
+		</transition>
+		<transition on="GUARDAR" to="RECHAZAR_FALLO" />
+	</view-state>
+
+	<action-state id="RECHAZAR_FALLO">
+		<evaluate expression="externalContext.sessionMap.rechazarFalloMB.rechazarFallo()" />
+		<transition on="success" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RechazarFalloFL()"
+				result="flowScope.rechazarFalloFL"></evaluate>
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+	</action-state>
+
+	<action-state id="APROBAR_FALLO">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('rechazarFalloMB')" />
+		</on-entry>
+		<evaluate expression="externalContext.sessionMap.rechazarFalloMB.aprobarFallo()" />
+		<transition on="success" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RechazarFalloFL()"
+				result="flowScope.rechazarFalloFL"></evaluate>
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+	</action-state>
+
+	<!-- Inicio flujo de realizar fallo -->
+	<action-state id="INICIALIZAR_REALIZAR_FALLO">
+		<evaluate
+			expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('realizarFalloMB')" />
+		<evaluate expression="externalContext.sessionMap.realizarFalloMB.inicializar()" />
+		<transition on="yes" to="_op-REALIZAR_FALLO" />
+		<transition on="no" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+	</action-state>
+
+	<view-state id="_op-REALIZAR_FALLO"
+		view="/WEB-INF/jsp/comparendo/proceso-impugnacion/realizarFallo.xhtml">
+		<transition on="ACEPTAR" to="REALIZAR_FALLO" />
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RealizarFalloFL()"
+				result="flowScope.realizarFalloFL"></evaluate>
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+		<transition on="LIMPIAR" to="INICIALIZAR_REALIZAR_FALLO">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RealizarFalloFL()"
+				result="flowScope.realizarFalloFL"></evaluate>
+		</transition>
+		<transition on="VER_DETALLE" to="CONSULTAR_DETALLE">
+			<set name="flowScope.detalleProcesoFL.volver" value="'VOLVER_REAL_FALLO'"
+				type="string" />
+		</transition>
+	</view-state>
+
+	<action-state id="REALIZAR_FALLO">
+		<evaluate expression="externalContext.sessionMap.realizarFalloMB.guardar()" />
+		<transition on="yes" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RealizarFalloFL()"
+				result="flowScope.realizarFalloFL"></evaluate>
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+		<transition on="no" to="_op-REALIZAR_FALLO" />
+	</action-state>
+	<!-- Fin flujo de realizar fallo -->
+
+	<!-- Inicio flujo de detalle de proceso -->
+	<action-state id="CONSULTAR_DETALLE">
+		<evaluate
+			expression="externalContext.sessionMap.impugnacionMB.consultarDetalleProceso()" />
+		<transition on="yes" to="DETALLE_PROCESO" />
+		<transition on="no" to="ingresar" />
+	</action-state>
+
+	<view-state id="DETALLE_PROCESO"
+		view="/WEB-INF/jsp/comparendo/proceso-impugnacion/detalleProceso.xhtml">
+		<transition on="VOLVER_REAL_FALLO" to="_op-REALIZAR_FALLO">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.DetalleProcesoFL()"
+				result="detalleProcesoFL" />
+		</transition>
+		<transition on="VOLVER_EVAL_EXPEDIENTE" to="_op-EVALUAR_EXPEDIENTE">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.DetalleProcesoFL()"
+				result="detalleProcesoFL" />
+		</transition>
+		<transition on="VOLVER_GESTIONAR_PRUEBAS" to="_op-GESTION_PRUEBAS">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.DetalleProcesoFL()"
+				result="detalleProcesoFL" />
+		</transition>
+		<transition on="VOLVER_INGRESAR" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.DetalleProcesoFL()"
+				result="detalleProcesoFL" />
+		</transition>
+		<transition on="VOLVER_CARGAR_PRUEBAS" to="CARGAR_PRUEBAS">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RegistrarPruebaFL()"
+				result="flowScope.registrarPruebaFL"></evaluate>
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.DetalleProcesoFL()"
+				result="detalleProcesoFL" />
+			<evaluate
+				expression="flowScope.gestionarPruebasFL.soliciPruebBackSeleccVO.solicitudPruebasBackDTO"
+				result="flowScope.registrarPruebaFL.solicitud"></evaluate>
+			<set name="flowScope.registrarPruebaFL.modoConsulta" value="false"
+				type="boolean" />
+			<evaluate
+				expression="externalContext.sessionMap.registrarPruebaMB.inicializarDatos()" />
+		</transition>
+		<transition on="VOLVER_REGISTRAR_ACCIONES" to="REGISTRAR_ACCIONES">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.DetalleProcesoFL()"
+				result="detalleProcesoFL" />
+		</transition>
+	</view-state>
+	<!-- Fin flujo de detalle de proceso -->
+
+	<!-- Inicio flujo registrar impulso -->
+	<action-state id="INICIALIZAR_REGISTRO_IMPULSO">
+		<evaluate
+			expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('registrarImpulsoPruebaMB')" />
+		<evaluate
+			expression="externalContext.sessionMap.registrarImpulsoPruebaMB.inicializarDatos()" />
+		<transition on="success" to="CARGAR_PRUEBAS">
+		</transition>
+	</action-state>
+	<action-state id="GENERAR_IMPULSO">
+		<evaluate
+			expression="externalContext.sessionMap.registrarImpulsoPruebaMB.generarImpulso()" />
+		<transition on="success" to="CARGAR_PRUEBAS">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RegistrarImpulsoPruebaFL()"
+				result="flowScope.registrarImpulsoPruebaFL" />
+		</transition>
+	</action-state>
+	<!-- Fin flujo registrar impulso -->
+
+
+	<!-- Inicio flujo registrar prueba -->
+	<view-state id="CARGAR_PRUEBAS"
+		view="/WEB-INF/jsp/comparendo/proceso-impugnacion/registrarPruebas.xhtml">
+		<!--<transition on="SOLICITUD_PRUEBA" to="CARGAR_PRUEBAS"></transition> -->
+		<transition on="CARGAR_IMPULSO" to="INICIALIZAR_REGISTRO_IMPULSO">
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('registrarPruebaMB')" />
+		</transition>
+		<transition on="ACEPTAR" to="_op-GESTION_PRUEBAS">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RegistrarPruebaFL()"
+				result="flowScope.registrarPruebaFL"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.gestionarPruebasMB.consultarSolicitudPruebas()"></evaluate>
+		</transition>
+		<transition on="VOLVER" to="_op-GESTION_PRUEBAS">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RegistrarPruebaFL()"
+				result="flowScope.registrarPruebaFL"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.gestionarPruebasMB.consultarSolicitudPruebas()"></evaluate>
+		</transition>
+		<transition on="GENERAR_IMPULSO" to="GENERAR_IMPULSO" />
+		<transition on="VOLVER_IMPULSO" to="CARGAR_PRUEBAS">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RegistrarImpulsoPruebaFL()"
+				result="flowScope.registrarImpulsoPruebaFL" />
+			<evaluate
+				expression="externalContext.sessionMap.registrarImpulsoPruebaMB.cancelar()" />
+		</transition>
+		<transition on="VER_DETALLE" to="CONSULTAR_DETALLE">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RegistrarPruebaFL()"
+				result="flowScope.registrarPruebaFL"></evaluate>
+			<set name="flowScope.detalleProcesoFL.volver" value="'VOLVER_CARGAR_PRUEBAS'"
+				type="string" />
+		</transition>
+	</view-state>
+	<!-- Fin flujo registrar prueba -->
+
+	<!-- Inicio flujo registrar acciones -->
+	<action-state id="INICIALIZAR_REGISTRO_ACCIONES">
+		<evaluate
+			expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('registrarAccionesMB')" />
+		<evaluate
+			expression="externalContext.sessionMap.registrarAccionesMB.inicializarDatos()" />
+		<transition on="yes" to="REGISTRAR_ACCIONES" />
+		<transition on="no" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+		</transition>
+	</action-state>
+
+	<view-state id="REGISTRAR_ACCIONES"
+		view="/WEB-INF/jsp/comparendo/proceso-impugnacion/registrarAcciones.xhtml">
+		<transition on="_op-CREAR" to="AGREGAR_ACCION">
+			<evaluate
+				expression="externalContext.sessionMap.registrarAccionesMB.inicializarRegistro()" />
+		</transition>
+		<transition on="_op-EDITAR" to="AGREGAR_ACCION">
+			<evaluate
+				expression="externalContext.sessionMap.registrarAccionesMB.inicializarEdicion()" />
+		</transition>
+		<transition on="_op-ELIMINAR" to="REGISTRAR_ACCIONES">
+			<evaluate expression="externalContext.sessionMap.registrarAccionesMB.eliminar()" />
+		</transition>
+		<transition on="CONTINUAR" to="GUARDAR_ACCIONES" />
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RegistrarAccionesFL()"
+				result="flowScope.registrarAccionesFL" />
+		</transition>
+		<transition on="VER_DETALLE" to="CONSULTAR_DETALLE">
+			<set name="flowScope.detalleProcesoFL.volver" value="'VOLVER_REGISTRAR_ACCIONES'"
+				type="string" />
+		</transition>
+	</view-state>
+
+	<action-state id="_op-NUEVA_ACCION">
+		<evaluate
+			expression="externalContext.sessionMap.registrarAccionesMB.inicializarRegistro()" />
+	</action-state>
+	<view-state id="AGREGAR_ACCION"
+		view="/WEB-INF/jsp/comparendo/proceso-impugnacion/agregarAccion.xhtml">
+		<transition on="CONTINUAR" to="REGISTRAR_ACCIONES">
+			<evaluate
+				expression="externalContext.sessionMap.registrarAccionesMB.registrar()" />
+		</transition>
+		<transition on="VOLVER" to="REGISTRAR_ACCIONES" />
+	</view-state>
+
+	<action-state id="GUARDAR_ACCIONES">
+		<evaluate
+			expression="externalContext.sessionMap.registrarAccionesMB.guardarAcciones()" />
+		<transition on="yes" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.impugnacionMB.consultar()" />
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.RegistrarAccionesFL()"
+				result="flowScope.registrarAccionesFL" />
+		</transition>
+		<transition on="no" to="REGISTRAR_ACCIONES" />
+	</action-state>
+
+	<!-- HOJA DE VIDA DEL COMPARENDO -->
+	<decision-state id="HOJA_VIDA">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('adminComparendoMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('adminComparendoEcuadorMB')" />
+		</on-entry>
+		<if
+			test="flowScope.impugnacionHolderFL.comparendoSeleccionadoDetalle==null"
+			then="HOJA_VIDA_UNICA" else="HOJA_VIDA_DETALLE" />
+	</decision-state>
+
+	<!--HOJA_VIDA_UNICA -->
+	<subflow-state id="HOJA_VIDA_UNICA" subflow="comparendo/administracion/ecuador">
+		<input name="numeroComparendo"
+			value="impugnacionHolderFL.comparendoSeleccionado.idComparendo" />
+		<transition on="fin" to="ingresar" />
+	</subflow-state>
+
+	<!-- HOJA_VIDA_DETALLE -->
+	<subflow-state id="HOJA_VIDA_DETALLE" subflow="comparendo/administracion/ecuador">
+		<input name="numeroComparendo"
+			value="flowScope.impugnacionHolderFL.comparendoSeleccionadoDetalle.idComparendo" />
+		<transition on="fin" to="ingresar" />
+	</subflow-state>
+
+	<!-- Fin flujo de registrar acciones -->
+	<end-state id="fin" />
+</flow>

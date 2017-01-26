@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:dialog widgetVar="popupAdicionarTelefono" id="idPopupAdicionarTelefono"
+		resizable="false" showHeader="false"
+		modal="true" appendTo="@(body)" closable="false" closeOnEscape="false"
+		dynamic="true">
+
+		<h:form id="form-telefono">
+			<p:messages id="messages-telefono" globalOnly="true" showDetail="true"
+				closable="true" />
+			<p:panel id="campos-registro-telefono" styleClass="panel-formulario"
+				header="#{actualizarDatosUbicabilidadFL.tituloPopUpTelefono}" >
+				<p:fieldset id="datos-principal-telefono"
+					styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_registro}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2"
+						columnClasses="label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel value="#{labelUbicabilidad.label_telefono}"
+							styleClass="campo-obligatorio"
+							rendered="#{!actualizarDatosUbicabilidadFL.actualizarTelefono}" />
+						<h:panelGroup
+							rendered="#{!actualizarDatosUbicabilidadFL.actualizarTelefono}">
+							<p:inputText id="idTelefonoNuevo" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								value="#{actualizarDatosUbicabilidadFL.telefonoGuardar.dto.numeroTelefono}"
+								maxlength="10">
+								<p:ajax process="@this" global="false" />
+							</p:inputText>
+							<p:message for="idTelefonoNuevo" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelUbicabilidad.label_telefono}"
+							rendered="#{actualizarDatosUbicabilidadFL.actualizarTelefono}" />
+						<p:outputLabel
+							value="#{actualizarDatosUbicabilidadFL.telefonoGuardar.dto.numeroTelefono}"
+							rendered="#{actualizarDatosUbicabilidadFL.actualizarTelefono}" />
+
+						<p:outputLabel styleClass="campo-obligatorio"
+							value="#{labelUbicabilidad.label_tipo_telefono}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="tipo-telefono"
+								value="#{actualizarDatosUbicabilidadFL.telefonoGuardar.dto.tipoTelefono.id}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoTelefono()}" />
+								<p:ajax process="@this" event="change" global="false" />
+							</p:selectOneMenu>
+							<p:message for="tipo-telefono" />
+						</h:panelGroup>
+
+<!-- 						<p:outputLabel styleClass="campo-obligatorio" -->
+<!-- 							value="#{labelUbicabilidad.label_valido}" /> -->
+<!-- 						<h:panelGroup> -->
+<!-- 							<p:selectOneMenu id="telefono-valido" -->
+<!-- 								value="#{actualizarDatosUbicabilidadFL.telefonoGuardar.dto.estado}" -->
+<!-- 								required="true" -->
+<!-- 								requiredMessage="#{labelGeneral.val_campo_requerido}"> -->
+<!-- 								<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}" -->
+<!-- 									itemValue="true" /> -->
+<!-- 								<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}" -->
+<!-- 									itemValue="false" /> -->
+<!-- 								<p:ajax process="@this" event="change" global="false" /> -->
+<!-- 							</p:selectOneMenu> -->
+<!-- 							<p:message for="telefono-valido" /> -->
+<!-- 						</h:panelGroup> -->
+
+<!-- 						<p:outputLabel value="#{labelUbicabilidad.label_calificacion}" -->
+<!-- 							styleClass="campo-obligatorio" /> -->
+<!-- 						<h:panelGroup> -->
+<!-- 							<p:inputText id="calificacion_telefono" required="true" -->
+<!-- 								requiredMessage="#{labelGeneral.val_campo_requerido}" -->
+<!-- 								value="#{actualizarDatosUbicabilidadFL.telefonoGuardar.dto.prioridad}" -->
+<!-- 								maxlength="50"> -->
+<!-- 								<p:ajax process="@this" global="false" /> -->
+<!-- 							</p:inputText> -->
+<!-- 							<p:message for="calificacion_telefono" /> -->
+<!-- 						</h:panelGroup> -->
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Guardar-->
+						<p:commandButton id="btnAgregarTelefono"
+							action="#{ubicabilidadMB.adicionarTelefono()}"
+							icon="c2-icon-guardar" update=":form-telefono :form-contenido:tabla-detalle-telefonos"
+							value="#{lbComun.btnAgregarDet}" process="@form">
+							<p:tooltip for="btnAgregarTelefono"
+								value="#{lbComun.btnAgregarDet}" />
+						</p:commandButton>
+
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelarTelefono" icon="c2-icon-cancelar"
+							process="@this" immediate="true"
+							oncomplete="PF('popupAdicionarTelefono').hide();"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelarTelefono" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</p:dialog>
+</ui:composition>

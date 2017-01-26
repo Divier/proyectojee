@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="2.6" jmeter="2.11 r1554548">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="PRUEBAS RECIBIR COMPARENDO C2" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Grupo de Hilos" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador Bucle" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1449848152000</longProp>
+        <longProp name="ThreadGroup.end_time">1449848152000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="Petición Soap/XML-RPC" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="SoapSampler.URL_DATA">http://dt2033:8080/Circulemos2WSCXF/ServicioRecibirComparendoService?wsdl</stringProp>
+          <stringProp name="HTTPSamper.xml_data">&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:rec=&quot;http://recepcion.comparendo.ws.c2.datatools.com.co/&quot;&gt;
+&lt;soapenv:Header&gt;&lt;wsse:Security soapenv:mustUnderstand=&quot;1&quot; xmlns:wsse=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot; xmlns:wsu=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd&quot;&gt;&lt;wsse:UsernameToken wsu:Id=&quot;UsernameToken-330B9D1C08E2F5CC6A14498517135111&quot;&gt;&lt;wsse:Username&gt;lwforero&lt;/wsse:Username&gt;&lt;wsse:Password Type=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText&quot;&gt;ASDF1234&lt;/wsse:Password&gt;&lt;wsse:Nonce EncodingType=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary&quot;&gt;jC/sQpETA2hABnqdyyGj/w==&lt;/wsse:Nonce&gt;&lt;wsu:Created&gt;2015-12-11T16:35:13.510Z&lt;/wsu:Created&gt;&lt;/wsse:UsernameToken&gt;&lt;/wsse:Security&gt;&lt;/soapenv:Header&gt;
+
+   &lt;soapenv:Body&gt;
+      &lt;rec:recibirComparendo&gt;
+         &lt;!--Optional:--&gt;
+         &lt;comparendo&gt;
+            &lt;codigoOrganismoTransito&gt;11001&lt;/codigoOrganismoTransito&gt;
+            &lt;codigoMedioImposicion&gt;1&lt;/codigoMedioImposicion&gt;
+            &lt;esPolca&gt;false&lt;/esPolca&gt;
+            &lt;numeroComparendo&gt;${numeroComparendo}&lt;/numeroComparendo&gt;
+            &lt;fechaImposicion&gt;2015-11-20&lt;/fechaImposicion&gt;
+            &lt;horaImposicion&gt;10:25:25&lt;/horaImposicion&gt;
+            &lt;existeFugaInfractor&gt;false&lt;/existeFugaInfractor&gt;
+            &lt;codigoInfraccion&gt;A1&lt;/codigoInfraccion&gt;
+            &lt;direccionInfraccion&gt;
+               &lt;!--Optional:--&gt;
+               &lt;direccionBasica&gt;CALLE 13 # 13-13&lt;/direccionBasica&gt;
+               &lt;!--Optional:--&gt;
+               &lt;codigoPais&gt;1&lt;/codigoPais&gt;
+               &lt;!--Optional:--&gt;
+               &lt;codigoDepartamento&gt;1&lt;/codigoDepartamento&gt;
+               &lt;!--Optional:--&gt;
+               &lt;codigoMunicipio&gt;1&lt;/codigoMunicipio&gt;
+               &lt;!--Optional:--&gt;
+               &lt;codigoLocalidad&gt;1&lt;/codigoLocalidad&gt;
+            &lt;/direccionInfraccion&gt;
+            &lt;codigoOrigenComparendo&gt;1&lt;/codigoOrigenComparendo&gt;
+            
+            &lt;codigoOrigenValidacion&gt;1&lt;/codigoOrigenValidacion&gt;
+           
+		  &lt;!--Optional:--&gt;
+            &lt;codigoTipoIdentificacionAgente&gt;1&lt;/codigoTipoIdentificacionAgente&gt;
+            &lt;!--Optional:--&gt;
+            &lt;numeroIdentificacionAgente&gt;80831378&lt;/numeroIdentificacionAgente&gt;
+            &lt;!--Optional:--&gt;
+            &lt;apellido1Agente&gt;Casas&lt;/apellido1Agente&gt;
+            &lt;!--Optional:--&gt;
+            &lt;nombre1Agente&gt;Divier&lt;/nombre1Agente&gt;
+
+            
+            &lt;inmoviliza&gt;false&lt;/inmoviliza&gt;
+            
+         &lt;/comparendo&gt;
+      &lt;/rec:recibirComparendo&gt;
+   &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;</stringProp>
+          <stringProp name="SoapSampler.xml_data_file"></stringProp>
+          <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
+          <stringProp name="SoapSampler.SEND_SOAP_ACTION">true</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">false</boolProp>
+        </SoapSampler>
+        <hashTree>
+          <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Configuración del CSV Data Set" enabled="true">
+            <stringProp name="delimiter">,</stringProp>
+            <stringProp name="fileEncoding"></stringProp>
+            <stringProp name="filename">D:\luis.forero\Documents\Datatools\8 Sprint C2\numerosComparendos.csv</stringProp>
+            <boolProp name="quotedData">false</boolProp>
+            <boolProp name="recycle">true</boolProp>
+            <stringProp name="shareMode">shareMode.group</stringProp>
+            <boolProp name="stopThread">false</boolProp>
+            <stringProp name="variableNames">numeroComparendo</stringProp>
+          </CSVDataSet>
+          <hashTree/>
+        </hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="Ver Árbol de Resultados" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>true</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>true</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

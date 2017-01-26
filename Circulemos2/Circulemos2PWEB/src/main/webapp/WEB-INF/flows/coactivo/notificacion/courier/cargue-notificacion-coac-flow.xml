@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="cargueNotificacionCoacHolderFL"
+		class="co.com.datatools.c2.managed_bean.coactivo.notificacion.courier.CargueNotificacionCoacHolderFL" />
+
+	<view-state id="ingresar" view="/WEB-INF/jsp/coactivo/notificacion/courier/cargueNotificacionCoactivos.xhtml">
+		<transition on="CARGAR_ARCHIVO" to="ingresar">
+			<evaluate result="cargueNotificacionCoacHolderFL" expression="new co.com.datatools.c2.managed_bean.coactivo.notificacion.CargueNotificacionCoacHolderFL()" />
+			<set name="cargueNotificacionCoacHolderFL.archivoCargado" value="true" />
+		</transition>
+		<transition on="VOLVER" to="ingresar" />
+	</view-state>
+</flow>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="cargueAnalisisCoactivoHolderFL"
+		class="co.com.datatools.c2.managed_bean.coactivo.cargue.CargueAnalisisCoactivoHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/coactivo/cargueAnalisisCoactivo/cargueAnalisisCoactivo.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('cargueAnalisisCoactivoMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.cargueAnalisisCoactivoMB.inicializar()" />
+		</on-entry>
+		<transition on="ACEPTAR" to="FINALIZAR_CARGUE" >		
+			<set name="flashScope.aceptar" value="true" />
+		</transition>
+		<transition on="CANCELAR" to="FINALIZAR_CARGUE" >	
+			<set name="flashScope.aceptar" value="false" />
+		</transition>
+	</view-state>	
+
+	<action-state id="FINALIZAR_CARGUE">
+		<evaluate
+			expression="externalContext.sessionMap.cargueAnalisisCoactivoMB.finalizarCargueCoactivos(aceptar)" />
+		<evaluate
+			expression="new co.com.datatools.c2.managed_bean.coactivo.cargue.CargueAnalisisCoactivoHolderFL()"
+			result="flowScope.cargueAnalisisCoactivoHolderFL"></evaluate>
+		<transition on="success" to="ingresar" />
+	</action-state>
+	
+</flow>

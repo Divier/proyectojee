@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+	parent="global">
+
+	<var name="recursosFL" class="co.com.datatools.seguridad.mb.recursos.RecursosFL" />
+	<var name="crearRecursoFL" class="co.com.datatools.seguridad.mb.recursos.CrearRecursoFL" />
+	<var name="modificarRecursoFL"
+		class="co.com.datatools.seguridad.mb.recursos.ModificarRecursoFL" />
+
+	<decision-state id="decision">
+		<if test="requestParameters.stateId=='crear'" then="_op-CREAR"
+			else="ingresar" />
+	</decision-state>
+
+	<!-- INICIO- Estados del flujo de creacion -->
+	<view-state id="_op-CREAR" view="crear-recurso.xhtml">
+		<transition on="_op-CREAR" to="CREAR-RECURSO" />
+		<transition on="CANCELAR" to="_op-CREAR">
+			<evaluate
+				expression="new co.com.datatools.seguridad.mb.recursos.CrearRecursoFL()"
+				result="flowScope.crearRecursoFL" />
+		</transition>
+	</view-state>
+
+	<action-state id="CREAR-RECURSO">
+		<evaluate expression="externalContext.sessionMap.recursosMB.crearRecurso()" />
+		<transition on="yes" to="_op-CREAR">
+			<evaluate
+				expression="new co.com.datatools.seguridad.mb.recursos.CrearRecursoFL()"
+				result="flowScope.crearRecursoFL" />
+		</transition>
+		<transition on="no" to="_op-CREAR"></transition>
+	</action-state>
+	<!-- FIN- Estados del flujo de creacion -->
+
+	<!-- INICIO- Estados del flujo de consulta -->
+	<view-state id="ingresar" view="consultar-recursos.xhtml">
+		<on-entry>
+			<evaluate
+				expression="new co.com.datatools.seguridad.mb.recursos.ModificarRecursoFL()"
+				result="flowScope.modificarRecursoFL" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+		<transition on="CANCELAR" to="fin" />
+		<transition on="_op-ELIMINAR" to="_op-ELIMINAR" />
+		<transition on="_op-EDITAR" to="_op-EDITAR" />
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate expression="externalContext.sessionMap.recursosMB.consultarRecursos()" />
+		<transition on="success" to="ingresar"></transition>
+	</action-state>
+
+	<action-state id="_op-ELIMINAR">
+		<evaluate expression="externalContext.sessionMap.recursosMB.eliminarRecurso()" />
+		<transition on="success" to="ingresar"></transition>
+	</action-state>
+
+	<view-state id="_op-EDITAR" view="modificar-recurso.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.recursosMB.cargarDetalleRecurso()"></evaluate>
+		</on-entry>
+		<transition on="MODIFICAR-RECURSO" to="MODIFICAR-RECURSO" />
+		<transition on="VOLVER" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.recursosMB.consultarRecursos()" />
+		</transition>
+	</view-state>
+
+	<action-state id="MODIFICAR-RECURSO">
+		<evaluate expression="externalContext.sessionMap.recursosMB.actualizarRecurso()" />
+		<transition on="success" to="_op-EDITAR"></transition>
+	</action-state>
+	<!-- FIN- Estados del flujo de consulta -->
+
+	<end-state id="fin" />
+</flow>

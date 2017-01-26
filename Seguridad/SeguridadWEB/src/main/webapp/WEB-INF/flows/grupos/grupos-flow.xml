@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+	parent="global">
+
+	<var name="gruposFL" class="co.com.datatools.seguridad.mb.grupos.GruposFL" />
+	<var name="creaGrupoFL" class="co.com.datatools.seguridad.mb.grupos.CrearGrupoFL" />
+	<var name="modificaGrupoFL" class="co.com.datatools.seguridad.mb.grupos.ModificarGrupoFL" />
+
+	<decision-state id="decision">
+		<if test="requestParameters.stateId=='crear'" then="_op-CREAR"
+			else="ingresar" />
+	</decision-state>
+
+	<view-state id="ingresar" view="consultar-grupos.xhtml">
+		<on-entry>
+			<evaluate
+				expression="new co.com.datatools.seguridad.mb.grupos.ModificarGrupoFL()"
+				result="flowScope.modificaGrupoFL" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+		<transition on="CANCELAR" to="fin" />
+		<transition on="_op-EDITAR" to="_op-EDITAR" />
+		<transition on="_op-ELIMINAR" to="_op-ELIMINAR" />
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate expression="externalContext.sessionMap.gruposMB.consultarGrupos()" />
+		<transition on="success" to="ingresar"></transition>
+	</action-state>
+
+	<view-state id="_op-CREAR" view="crear-grupo.xhtml">
+		<transition on="CREAR-GRUPO" to="CREAR-GRUPO" />
+		<transition on="CANCELAR" to="_op-CREAR">
+			<evaluate expression="new co.com.datatools.seguridad.mb.grupos.CrearGrupoFL()"
+				result="flowScope.creaGrupoFL"></evaluate>
+		</transition>
+	</view-state>
+	<action-state id="CREAR-GRUPO">
+		<evaluate expression="externalContext.sessionMap.gruposMB.crearGrupo()" />
+		<transition on="success" to="_op-CREAR"></transition>
+	</action-state>
+
+	<view-state id="_op-EDITAR" view="modificar-grupo.xhtml">
+		<transition on="MODIFICAR-GRUPO" to="MODIFICAR-GRUPO" />
+		<transition on="VOLVER" to="ingresar">
+			<evaluate expression="externalContext.sessionMap.gruposMB.consultarGrupos()" />
+		</transition>
+	</view-state>
+
+	<action-state id="MODIFICAR-GRUPO">
+		<evaluate expression="externalContext.sessionMap.gruposMB.modificarGrupo()" />
+		<transition on="success" to="_op-EDITAR"></transition>
+	</action-state>
+
+	<action-state id="_op-ELIMINAR">
+		<evaluate expression="externalContext.sessionMap.gruposMB.eliminarGrupo()" />
+		<transition on="success" to="ingresar"></transition>
+	</action-state>
+
+	<end-state id="fin" />
+
+</flow>

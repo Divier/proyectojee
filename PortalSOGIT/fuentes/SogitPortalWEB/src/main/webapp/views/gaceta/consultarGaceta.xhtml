@@ -1,0 +1,121 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/views/templates/template-principal.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="pnlForm" styleClass="panel-formulario"
+				header="#{bundleGaceta['tit_gaceta']}">
+				<p:fieldset styleClass="fieldset-formulario">
+					<p:panel id="pnlFiltros" styleClass="panel-formulario-filtros"
+						header="#{bundleGaceta['lbl_filtros']}">
+
+						<p:outputLabel styleClass="campo-opcional"
+							value="#{bundleCitaciones['msg_camp_opcionals']}"></p:outputLabel>
+
+						<h:panelGrid id="panel-formulario-f" columns="4"
+							styleClass="center-block"
+							columnClasses="label-col,input-col,label-col,input-col">
+
+							<p:outputLabel value="#{bundleGaceta['lbl_placa_vehiculo']}"
+								styleClass="campo-opcional"></p:outputLabel>
+							<h:panelGroup>
+								<p:inputText id="txtPlaca"
+									value="#{gacetaMB.filtrosGacetaDTO.placaVehiculo}"
+									validatorMessage="#{bundleGaceta['msg_error_placa']}"
+									maxlength="7">
+									<f:validateRegex pattern="#{gacetaMB.expresionAlfanumerica}" />
+								</p:inputText>
+								<p:message for="txtPlaca"></p:message>
+							</h:panelGroup>
+
+							<p:outputLabel value="#{bundleGaceta['lbl_propietario']}"
+								styleClass="campo-opcional"></p:outputLabel>
+							<h:panelGroup>
+								<p:inputText id="txtPropietario"
+									value="#{gacetaMB.filtrosGacetaDTO.propietario}"
+									validatorMessage="#{bundleGaceta['msg_error_propietario']}">
+									<f:validateRegex pattern="#{gacetaMB.expresionAlfabetico}" />
+								</p:inputText>
+								<p:message for="txtPropietario"></p:message>
+							</h:panelGroup>
+
+							<p:outputLabel value="#{bundleGaceta['lbl_public']}"
+								styleClass="campo-opcional"></p:outputLabel>
+							<p:selectOneMenu id="selPublic"
+								value="#{gacetaMB.fechaPublicacionSel}">
+								<f:selectItem itemValue="todos"
+									itemLabel="#{bundleGaceta['lbl_todas_public']}" />
+								<f:selectItems value="#{gacetaMB.fechasPublicacion}" />
+							</p:selectOneMenu>
+
+						</h:panelGrid>
+						<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+							<p:commandButton
+								action="#{gacetaMB.consultarPublicacionesFiltros()}"
+								icon="c2-icon-consultar" process="@this pnlFiltros"
+								value="#{bundleGeneral['btn_consulta']}"
+								paginatorTemplate="#{bundleGeneral['param_paginator_template']}"
+								rowsPerPageTemplate="#{bundleGeneral['param_rows_per_page']}"
+								rows="#{bundleGeneral['param_initial_rows']}"
+								update=":messages tabla-resultados pnlFiltros">
+							</p:commandButton>
+							<p:commandButton action="#{gacetaMB.gaceta()}" icon="fa fa-home"
+								process="@this" value="#{bundleGeneral['btn_volver']}">
+							</p:commandButton>
+						</h:panelGrid>
+					</p:panel>
+					<p:dataTable id="tabla-resultados"
+						value="#{gacetaMB.detalleGacetaDTOs}" var="registro"
+						paginator="true" emptyMessage="#{bundleGaceta['lbl_datos_tabla']}"
+						paginatorTemplate="#{bundleGeneral['param_paginator_template']}"
+						rowsPerPageTemplate="#{bundleGeneral['param_rows_per_page']}"
+						rows="#{bundleGeneral['param_initial_rows']}">
+
+						<p:column headerText="#{bundleGaceta['lbl_placa_vehiculo']}">
+							<p:outputLabel value="#{registro.placaVehiculo}" />
+						</p:column>
+
+						<p:column headerText="#{bundleGaceta['lbl_propietario']}">
+							<p:outputLabel value="#{registro.propietario}" />
+						</p:column>
+
+						<p:column headerText="#{bundleGaceta['lbl_des_infraccion']}">
+							<p:outputLabel value="#{registro.descripcionInfraccion}" />
+						</p:column>
+
+						<p:column headerText="#{bundleGaceta['lbl_lugar_infraccion']}">
+							<p:outputLabel value="#{registro.lugarInfraccion}" />
+						</p:column>
+
+						<p:column headerText="#{bundleGaceta['lbl_fecha_imposicion']}">
+							<p:outputLabel value="#{registro.fechaImposicion}">
+								<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="#{bundleGaceta['lbl_valor_us']}">
+							<p:outputLabel value="#{registro.valor}">
+								<f:convertNumber pattern="#{utilidadMB.formatoMonedaCompleta}"
+									type="currency" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="#{bundleGaceta['lbl_fecha_publicacion']}">
+							<p:outputLabel value="#{registro.gaceta.fechaPublicacion}">
+								<f:convertDateTime pattern="#{utilidadMB.formatoFecha}"></f:convertDateTime>
+							</p:outputLabel>
+						</p:column>
+
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+		<ui:include src="/views/impugnacion/popup/detalleImpugnacion.xhtml" />
+	</ui:define>
+</ui:composition>

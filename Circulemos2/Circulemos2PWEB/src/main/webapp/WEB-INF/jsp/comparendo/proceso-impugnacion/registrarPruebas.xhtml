@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/layouts/standard.xhtml">
+	<ui:define name="contenido">
+		<ui:include
+			src="/WEB-INF/jsp/comparendo/proceso-impugnacion/encabezadoImpugnacion.xhtml" />
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelProcesoImpugnacion.titulo_cargar_pruebas}">
+				<ui:include
+					src="/WEB-INF/jsp/comparendo/proceso-impugnacion/include/registrarPruebasForm.xhtml">
+					<ui:param name="idPrefix"
+						value=":form-ingreso" />
+				</ui:include>
+
+				<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+					<!--Boton Guardar-->
+
+					<p:commandButton id="btnGuardar"
+						action="#{registrarPruebaMB.guardar()}" icon="c2-icon-guardar"
+						process="@form" value="#{lbComun.btnGuardar}"
+						update="@form :messages :form-pdfviewer">
+						<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}"
+							message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+					</p:commandButton>
+					<!--Boton Cancelar-->
+					<p:commandButton id="btnCancelar" action="VOLVER"
+						icon="c2-icon-cancelar" process="@this"
+						value="#{lbComun.btnCancelar}" immediate="true">
+						<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}"
+							message="#{lbComun.msg_confirm_volver_cancelar}"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+		<ui:include
+			src="/WEB-INF/jsp/comparendo/proceso-impugnacion/popup/visualizarDocumentoPdf.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/comparendo/proceso-impugnacion/popup/registrarImpulsoPruebas.xhtml" />
+	</ui:define>
+</ui:composition>

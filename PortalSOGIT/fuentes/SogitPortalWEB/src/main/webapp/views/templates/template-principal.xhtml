@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Sogit</title>
+
+	<link rel="icon" type="image/x-icon" href="#{resource['img/atm.png']}" />
+
+
+	<h:outputStylesheet library="webjars"
+		name="bootstrap-btsp/3.0.1/css/btsp.css" />
+	<h:outputStylesheet library="webjars" name="yamm/3.0.0/yamm.css" />
+
+	<h:outputStylesheet library="css" name="c2.css" />
+
+	<h:outputStylesheet library="css" name="layout-c2.css" />
+	<h:outputStylesheet library="css" name="menu-c2.css" />
+	<h:outputStylesheet library="css" name="c2-general.css" />
+	<h:outputStylesheet library="css" name="sogit.css" />
+
+	<h:outputScript library="webjars"
+		name="bootstrap-btsp/3.0.1/js/bootstrap.js" />
+	<h:outputScript library="webjars" name="holder/2.4.0/holder.js" />
+
+	<h:outputScript library="js" name="jquery.elevateZoom-3.0.8.min.js" />
+</h:head>
+<h:body>
+	<p:layout id="lyMenuFull" fullPage="true">
+		<p:layoutUnit position="north" class="btsp" size="136" minSize="136"
+			maxSize="136">
+			<ui:include src="/views/templates/encabezado.xhtml" />
+			<ui:include src="/views/menu/menu.xhtml" />
+		</p:layoutUnit>
+		<p:layoutUnit id="lyContenido" position="center">
+			<div id="wrapper">
+				<section>
+				<div class="contenido">
+					<ui:insert name="contenido" />
+				</div>
+				</section>
+
+				<footer class="btsp"> <ui:include
+					src="/views/templates/pie-pagina.xhtml" /> </footer>
+			</div>
+		</p:layoutUnit>
+	</p:layout>
+	<!-- Componentes generales - INI -->
+	<p:growl id="messages" showDetail="true" life="15000" globalOnly="true" />
+	<p:ajaxStatus onstart="PF('statusDialog').show()"
+		onsuccess="PF('statusDialog').hide()" />
+
+	<p:dialog modal="true" widgetVar="statusDialog"
+		style="background-color: transparent !important;box-shadow: none !important; border: none;"
+		styleClass="status-dialog-c2" showHeader="false" draggable="false"
+		closable="false" resizable="false" appendTo="@(body)">
+		<p:graphicImage library="img" name="ajax-loader.png" />
+	</p:dialog>
+
+</h:body>
+</html>

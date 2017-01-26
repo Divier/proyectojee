@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+	<!-- <import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" /> -->
+
+	<!-- <bean id="loggerInterceptor" class="co.com.datatools.poc.cxf.util.interceptor.LoggerInterceptor" 
+		/> -->
+	<bean id="loggerInterceptorOut"
+		class="co.com.datatools.poc.cxf.util.interceptor.LoggerInterceptorOut" />
+
+	<jaxws:endpoint xmlns:tns="http://suma.ws.poc.c2.datatools.com.co/"
+		id="serviciopruebaws" implementor="co.com.datatools.poc.cxf.ServicioPruebaWS"
+		wsdlLocation="wsdl/serviciopruebaws.wsdl" endpointName="tns:ServicioPruebaWSPort"
+		serviceName="tns:ServicioPruebaWSService" address="/ServicioPruebaWSPort">
+		<jaxws:features>
+			<bean class="org.apache.cxf.feature.LoggingFeature" />
+		</jaxws:features>
+		<jaxws:inInterceptors>
+			<bean class="co.com.datatools.poc.cxf.util.interceptor.LoggerInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:inFaultInterceptors>
+			<bean class="co.com.datatools.poc.cxf.util.interceptor.LoggerInterceptor" />
+		</jaxws:inFaultInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="loggerInterceptorOut" />
+		</jaxws:outInterceptors>
+		<jaxws:outFaultInterceptors>
+			<ref bean="loggerInterceptorOut" />
+		</jaxws:outFaultInterceptors>
+		<!-- <jaxws:properties> <entry key="schema-validation-enabled" value="true" 
+			/> </jaxws:properties> -->
+	</jaxws:endpoint>
+</beans>

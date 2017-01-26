@@ -1,0 +1,93 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<div>
+			<h2>
+				<h:outputText value="#{mensajesUsuario.titulo_detalle_cambio}"></h:outputText>
+			</h2>
+			<hr />
+			<h:form id="form-content">
+				
+					<h:panelGrid columns="2" cellpadding="5" columnClasses="column1,column2,column1,column2">
+						<h:outputText value="#{mensajesUsuario.label_fecha_cambio}:" />
+						<c2:outputDateLabel labelValue="#{historicoUsuariosFL.historicoSeleccionado.fechaInicio}" fullFormat="true"/>					
+						<h:outputText value="#{mensajesUsuario.label_fecha_fin_cambio}:" />
+						<c2:outputDateLabel labelValue="#{historicoUsuariosFL.historicoSeleccionado.fechaFin}" fullFormat="true"/>					
+						<h:outputText value="#{mensajesUsuario.label_descripcion_cambio}:" />
+						<h:outputText value="#{historicoUsuariosFL.historicoSeleccionado.descripcionCambio}" />
+					</h:panelGrid>
+					
+					<h:panelGrid columns="2" styleClass="formulario-servicio">
+						<h:outputText value="#{mensajesUsuario.titulo_datos_usuario}:" />
+					</h:panelGrid>
+					
+					<h:panelGrid columns="4" cellpadding="5" columnClasses="column1,column2,column1,column2">					
+						<h:outputText value="#{mensajesUsuario.label_nombre_usuario}:" />
+						<h:outputText value="#{historicoUsuariosFL.historicoSeleccionado.usuarioDto.login}" />						
+						<h:outputText value="#{mensajesUsuario.label_nombre_completo_usuario}" />
+						<h:outputText value="#{historicoUsuariosFL.historicoSeleccionado.usuarioDto.nombres} #{historicoUsuariosFL.historicoSeleccionado.usuarioDto.apellidos}" />						
+						<h:outputText value="#{mensajesUsuario.label_correo}:" />
+						<h:outputText value="#{historicoUsuariosFL.historicoSeleccionado.usuarioDto.email}" />	
+						<h:outputText value="#{mensajesUsuario.label_estado_usuario}:" />
+						<h:outputText value="#{historicoUsuariosFL.historicoSeleccionado.usuarioDto.estadoUsuario}" />	
+						<h:outputText value="#{mensajesUsuario.label_estado_contrasena}:" />
+						<h:outputText value="#{historicoUsuariosFL.historicoSeleccionado.usuarioDto.estadoPassword}" />	
+						<f:facet name="footer">						
+							<p:commandButton action="VOLVER" value="#{lbComun.btnVolver}" icon="c2-icon-volver" />
+					</f:facet>								
+					</h:panelGrid>					
+					<br/>
+					<p:panel header="#{mensajesUsuario.label_roles_asignados}" toggleable="true"
+						rendered="#{historicoUsuariosFL.historicoSeleccionado.usuarioDto.roles.size()>0}">					
+						<h:panelGrid id="panelBotones" columns="1">
+							<f:facet name="footer">
+								<p:commandButton
+									action="VER-DETALLE-ROL"
+									value="#{mensajesUsuario.boton_ver_detalle_rol}"
+									icon="c2-icon-detalle"
+									disabled="#{historicoUsuariosFL.rolSeleccionado==null}"/>
+							</f:facet>
+						</h:panelGrid>						
+						<p:dataTable id="tablaRoles" value="#{historicoUsuariosFL.historicoSeleccionado.usuarioDto.roles}" var="rol" rowKey="#{rol.idRol}"
+							paginatorTemplate="#{webPrm.param_paginator_template}"
+							paginator="true"
+							rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+							rows="#{webPrm.param_initial_rows}" selection="#{historicoUsuariosFL.rolSeleccionado}">
+						
+							<p:ajax event="rowSelectRadio" update=":form-content:panelBotones,:form-content:tablaRoles"
+								process=":form-content:tablaRoles"></p:ajax>
+								
+							<p:column selectionMode="single"/>
+
+							<p:column headerText="#{mensajesUsuario.label_nombre_rol_usu}" sortBy="#{rol.nombre}">
+								<h:outputText value="#{rol.nombre}" />
+							</p:column>	
+							<p:column headerText="#{mensajesUsuario.label_descripcion_rol_usu}" sortBy="#{rol.descripcion}">
+								<h:outputText value="#{rol.descripcion}" />
+							</p:column>	
+						</p:dataTable>
+					</p:panel>
+					<br/>
+					<p:panel header="#{mensajesUsuario.label_grupos_asignados}" toggleable="true" rendered="#{historicoUsuariosFL.historicoSeleccionado.usuarioDto.grupos.size()>0}">	
+					<p:dataTable id="tablaGrupos" value="#{historicoUsuariosFL.historicoSeleccionado.usuarioDto.grupos}" var="grupo"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						paginator="true"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}">						
+						<p:column headerText="#{mensajesUsuario.label_nombre_grupo_usu}" sortBy="#{grupo.nombre}">
+							<h:outputText value="#{grupo.nombre}" />
+						</p:column>	
+					</p:dataTable>
+					</p:panel>					
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

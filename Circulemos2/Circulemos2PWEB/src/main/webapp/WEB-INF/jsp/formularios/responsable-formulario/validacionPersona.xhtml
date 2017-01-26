@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog widgetVar="popUpValidacion" id="popUpValidacion" header="#{labelResponsableFormulario.tit_validacion}" resizable="false"
+		modal="true" appendToBody="true" dynamic="true" rendered="#{responsableFormularioFL.personaNoExistente}">
+
+		<h:form id="frmValidacion">
+
+			<h:panelGrid styleClass="center-block" columns="4">
+				<p:outputLabel value="#{labelResponsableFormulario.lbl_validacion}" />
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" styleClass="center-block" cellspacing="5">
+				<p:commandButton value="Si" action="REGISTRAR_PERSONA" immediate="true" oncomplete="PF('popUpValidacion').hide();"
+					styleClass="ui-confirmdialog-yes" icon="c2-icon-si">
+				</p:commandButton>
+				<p:commandButton value="No" action="NO_REGISTRAR" immediate="true" oncomplete="PF('popUpValidacion').hide();" styleClass="ui-confirmdialog-no"
+					icon="c2-icon-no">
+				</p:commandButton>
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+</ui:composition>

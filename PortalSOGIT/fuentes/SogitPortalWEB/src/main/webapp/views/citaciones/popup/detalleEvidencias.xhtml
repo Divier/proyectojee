@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="frmDetEvin">
+		<p:dialog widgetVar="popUpDetEvin" id="popUpDetEvin"
+			header="#{bundleCitaciones['tit_det_evidencia']}" resizable="false"
+			modal="true" appendTo="@(body)" dynamic="true" closable="false"
+			width="700" height="450">
+
+			<h:panelGrid rendered="#{consultaCitacionesMB.evidencias==null}"
+				styleClass="center-block" columns="1" cellpadding="5">
+				<p:outputLabel value="#{bundleCitaciones['lbl_no_evidencias']}"
+					style="color:red;"></p:outputLabel>
+			</h:panelGrid>
+
+			<p:galleria rendered="#{consultaCitacionesMB.evidencias.size()>0}"
+				var="evd" value="#{consultaCitacionesMB.evidencias}"
+				panelWidth="676" panelHeight="350">
+				<p:graphicImage value="#{evd}" width="676"
+					height="350">
+				</p:graphicImage>
+			</p:galleria>
+
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<!--Boton Consultar-->
+				<p:commandButton oncomplete="PF('popUpDetEvin').hide();"
+					icon="c2-icon-cancelar" process="@this"
+					value="#{bundleGeneral['btn_volver']}">
+				</p:commandButton>
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+</ui:composition>

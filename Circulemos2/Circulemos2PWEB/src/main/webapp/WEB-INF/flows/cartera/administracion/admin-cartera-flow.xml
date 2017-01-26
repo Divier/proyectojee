@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="adminCarteraHolderFL"
+		class="co.com.datatools.c2.managed_bean.cartera.administracion.AdminCarteraHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/cartera/administracion/consultarCartera.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('adminCarteraMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.adminCarteraMB.consultarCartera()" />
+		</transition>
+		<transition on="VER_DETALLE" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.adminCarteraMB.consultarDetalleCartera()" />
+		</transition>
+	</view-state>
+
+	<view-state id="VER_DETALLE"
+		view="/WEB-INF/jsp/cartera/administracion/detalleCartera.xhtml">
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.adminCarteraMB.consultarCartera()" />
+		</transition>
+	</view-state>
+	
+</flow>

@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view contentType="text/html">
+
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>#{mensajesGeneral.titulo_modulo_seguridad}</title>
+
+		<h:outputStylesheet library="webjars"
+			name="bootstrap-btsp/3.0.1/css/btsp.css" />
+		<h:outputStylesheet library="webjars" name="yamm/3.0.0/yamm.css" />
+
+		<h:outputStylesheet library="webjars" name="c2/css/c2.css" />
+		<h:outputStylesheet name="css/seguridad.css" />
+
+
+		<h:outputScript library="webjars"
+			name="bootstrap-btsp/3.0.1/js/bootstrap.js" />
+		<h:outputScript library="webjars" name="holder/2.4.0/holder.js" />
+
+		<ui:insert name="headIncludes" />
+	</h:head>
+	<h:body>
+
+		<div id="wrapper">
+			<header class="btsp">
+			<div id="c2-header" role="navigation"
+				class="navbar navbar-default navbar-static-top">
+				<div class="container">
+					<div class="navbar-header">
+						<button data-target=".navbar-collapse" data-toggle="collapse"
+							class="navbar-toggle collapsed" type="button">
+							<span class="sr-only">Toggle navigation</span> <span
+								class="icon-bar" /> <span class="icon-bar" /> <span
+								class="icon-bar" />
+						</button>
+						<h1 style="color:white;">#{mensajesIngreso.titulo_modulo_seguridad}</h1>
+					</div>
+				</div>
+			</div>
+			<h:form id="form-menu">
+				<div id="menu"></div>
+			</h:form> <script>
+				$(document).ready(function() { var str = '#{menuSesionSegMB.htmlMenu()}'; $('#menu').html(str)});
+			</script> </header>
+
+			<section>
+			<div class="sg-content">
+				<h:panelGroup id="contenido-seguridad" style="border-style:none;">
+					<p:messages id="messages" showDetail="true" autoUpdate="true"
+						globalOnly="true" />
+					<ui:insert name="content" />
+				</h:panelGroup>
+			</div>
+			</section>
+
+			<footer class="btsp"> <ui:include
+				src="/WEB-INF/layouts/footer.xhtml" /> </footer>
+		</div>
+
+		<p:dialog id="mensajeError" widgetVar="dlgError" header="ERROR"
+			appendTo="@(body)" closable="true" resizable="false"
+			styleClass="dialog-top" closeOnEscape="true">
+			<div id="messages" class="ui-messages ui-widget">
+				<div class="ui-messages-error ui-corner-all">
+					<span class="ui-messages-error-icon"></span>
+					<ul>
+						<li><span class="ui-messages-error-summary"></span> <span
+							class="ui-messages-error-detail">Carácteres no validos
+								para el campo</span></li>
+					</ul>
+				</div>
+			</div>
+		</p:dialog>
+
+		<p:confirmDialog id="dialogConfirm" global="true" showEffect="fade"
+			appendTo="@(body)" closeOnEscape="true" styleClass="dialog-confirm">
+			<h:form id="formDialogConfirm">
+				<h:panelGrid columns="2" cellspacing="4">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="btnConfirmYes" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="btnConfirmNo" />
+				</h:panelGrid>
+			</h:form>
+		</p:confirmDialog>
+
+		<ui:include src="/WEB-INF/layouts/export.xhtml" />
+
+	</h:body>
+</f:view>
+</html>

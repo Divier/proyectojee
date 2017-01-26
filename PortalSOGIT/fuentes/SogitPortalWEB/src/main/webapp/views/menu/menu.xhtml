@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<div id="menu">
+	<h:form>
+		<p:menubar>
+			<p:menuitem icon="fa fa-home" action="#{menuMB.navegar(4)}"></p:menuitem>
+			<p:menuitem icon="citacion"
+				value="#{bundleMenu['lbl_consulta_citacion']}"
+				action="#{menuMB.navegar(1)}" rendered="false"></p:menuitem>
+			<p:menuitem icon="citacion"
+				value="#{bundleMenu['lbl_consulta_financiacion']}"
+				action="#{menuMB.navegar(2)}" rendered="false"></p:menuitem>
+			<p:menuitem icon="citacion"
+				value="#{bundleMenu['lbl_consulta_impugnacion']}"
+				action="#{menuMB.navegar(3)}" rendered="false"></p:menuitem>
+			<p:menuitem icon="citacion" value="#{bundleMenu['lbl_gaceta']}"
+				action="#{menuMB.navegar(5)}"></p:menuitem>
+		</p:menubar>
+	</h:form>
+</div>
+</html>

@@ -1,0 +1,13 @@
+SET FOREIGN_KEY_CHECKS = 0;
+DELETE FROM curso_pedagogico_obligacion;
+DELETE FROM curso_pedagogico;
+DELETE FROM inconsistencia_curso;
+DELETE FROM sedes_centro_integral_atencion;
+DELETE FROM centro_integral_atencion;
+DELETE FROM infraccion;
+DELETE FROM trazabilidad_comparendo;
+DELETE FROM cartera_obligacion;
+DELETE FROM obligacion;
+DELETE FROM orden_comparendo_nacional;
+DELETE FROM persona;
+DELETE FROM direccion;

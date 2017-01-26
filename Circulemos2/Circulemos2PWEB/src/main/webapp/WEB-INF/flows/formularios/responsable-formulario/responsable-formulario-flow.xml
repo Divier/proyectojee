@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="responsableFormularioFL"
+		class="co.com.datatools.c2.managed_bean.formularios.responsable.ResponsableFormularioFL" />
+	<var name="responsableFormularioHolderFL"
+		class="co.com.datatools.c2.managed_bean.formularios.responsable.ResponsableFormularioHolderFL" />
+
+	<var name="consultaResponsableFormularioFL"
+		class="co.com.datatools.c2.managed_bean.formularios.responsable.ConsultaResponsableFormularioFL" />
+
+	<input name="idTipoDoc" />
+	<input name="numeroDoc" />
+	<input name="placa" />
+
+	<decision-state id="decision">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('responsablesFormulariosMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.responsablesFormulariosMB.init()" />
+		</on-entry>
+		<if test="numeroDoc != null || placa != null" then="_op-CREAR"
+			else="ingresar" />
+	</decision-state>
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/formularios/responsable-formulario/consultarResponsableFormulario.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('responsablesFormulariosMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+		<transition on="_op-CREAR" to="_op-CREAR">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.formularios.responsable.ResponsableFormularioFL()"
+				result="flowScope.responsableFormularioFL" />
+			<evaluate
+				expression="externalContext.sessionMap.responsablesFormulariosMB.init()" />
+		</transition>
+		<transition on="_op-EDITAR" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.responsablesFormulariosMB.consultarDetalle()" />
+		</transition>
+		<transition on="_op-ELIMINAR" to="_op-ELIMINAR" />
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.responsablesFormulariosMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<view-state id="_op-CREAR"
+		view="/WEB-INF/jsp/formularios/responsable-formulario/registrarResponsableFormulario.xhtml">
+		<transition on="CONTINUAR" to="registrarResponsableFormulario" />
+		<transition on="BUSCAR" to="cargarConsultaPerResp">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.formularios.responsable.ConsultaResponsableFormularioFL()"
+				result="flowScope.consultaResponsableFormularioFL" />
+		</transition>
+		<transition on="VOLVER" to="fin"></transition>
+		<transition on="LIMPIAR">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.formularios.responsable.ResponsableFormularioFL()"
+				result="flowScope.responsableFormularioFL" />
+			<evaluate
+				expression="externalContext.sessionMap.responsablesFormulariosMB.init()" />
+		</transition>
+	</view-state>
+
+	<action-state id="registrarResponsableFormulario">
+		<evaluate
+			expression="externalContext.sessionMap.responsablesFormulariosMB.registrarResponsableFormulario()"></evaluate>
+		<transition on="yes" to="fin" />
+		<transition on="no" to="_op-CREAR" />
+	</action-state>
+
+	<view-state id="_op-EDITAR"
+		view="/WEB-INF/jsp/formularios/responsable-formulario/actualizarResponsableFormulario.xhtml">
+		<transition on="CONTINUAR" to="actualizarResponsableFormulario" />
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="flowScope.responsableFormularioHolderFL.setRespFormSeleccionado(null)" />
+		</transition>
+	</view-state>
+
+	<action-state id="actualizarResponsableFormulario">
+		<evaluate
+			expression="externalContext.sessionMap.responsablesFormulariosMB.actualizarResponsableFormulario()" />
+		<transition on="yes" to="_op-CONSULTAR">
+			<evaluate
+				expression="flowScope.responsableFormularioHolderFL.setRespFormSeleccionado(null)" />
+		</transition>
+		<transition on="no" to="_op-EDITAR" />
+	</action-state>
+
+	<action-state id="_op-ELIMINAR">
+		<evaluate
+			expression="externalContext.sessionMap.responsablesFormulariosMB.eliminarResponsableFormulario()" />
+		<transition on="yes" to="_op-CONSULTAR">
+			<evaluate
+				expression="flowScope.responsableFormularioHolderFL.setRespFormSeleccionado(null)" />
+		</transition>
+		<transition on="no" to="ingresar">
+		</transition>
+	</action-state>
+
+	<action-state id="cargarConsultaPerResp">
+		<evaluate
+			expression="externalContext.sessionMap.responsablesFormulariosMB.cargarConsultaPersonaResponsable()" />
+		<transition on="yes" to="BUSCAR" />
+		<transition on="no" to="_op-CREAR" />
+	</action-state>
+
+	<view-state id="BUSCAR"
+		view="/WEB-INF/jsp/formularios/responsable-formulario/consultarPersonaPorTipo.xhtml">
+		<transition on="CONSULTAR_PERSONA" to="consultarPersonaOrganismo" />
+		<transition on="SELECCIONAR" to="seleccionar" />
+		<transition on="VOLVER" to="_op-CREAR" />
+	</view-state>
+
+	<action-state id="seleccionar">
+		<evaluate
+			expression="externalContext.sessionMap.responsablesFormulariosMB.seleccionarUnificado()" />
+		<transition on="success" to="_op-CREAR" />
+	</action-state>
+
+	<action-state id="consultarPersonaOrganismo">
+		<evaluate
+			expression="externalContext.sessionMap.responsablesFormulariosMB.consultarPersonaOrganismo()" />
+		<transition on="success" to="BUSCAR" />
+	</action-state>
+
+	<end-state id="fin">
+		<output name="idResponsableCreado" value="flowScope.responsableFormularioFL.idResponsable" />
+	</end-state>
+</flow>

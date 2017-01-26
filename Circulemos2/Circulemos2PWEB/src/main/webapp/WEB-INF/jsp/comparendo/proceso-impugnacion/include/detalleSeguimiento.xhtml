@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<p:fieldset styleClass="fieldset-formulario"
+		legend="#{labelProcesoImpugnacion.label_seguimiento}">
+		<h:panelGrid id="acciones-top-seguimiento">
+			<f:facet name="footer">
+				<!--Boton Visualizar-->
+				<p:commandButton
+					action="#{impugnacionMB.consultarDocumentoDetalle()}"
+					icon="c2-icon-crear" process="@this" update=":form-pdfviewer"
+					disabled="#{detalleProcesoFL.trazaSeleccionada == null or detalleProcesoFL.trazaSeleccionada.documentos.isEmpty() }"
+					value="#{labelProcesoImpugnacion.btn_visualizar}">
+				</p:commandButton>
+			</f:facet>
+		</h:panelGrid>
+
+		<p:dataTable id="tabla-seguimiento"
+			value="#{detalleProcesoFL.proceso.trazabilidadProcesoList}"
+			var="registro" rowKey="#{registro.id}"
+			selection="#{detalleProcesoFL.trazaSeleccionada}" paginator="true"
+			paginatorTemplate="#{webPrm.param_paginator_template}"
+			rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+			rows="#{webPrm.param_initial_rows}">
+
+			<p:ajax event="rowSelectRadio" process="@this"
+				update=":form-detalle-proceso:secciones-detalle:acciones-top-seguimiento @this"
+				global="false" />
+
+			<p:column selectionMode="single" />
+
+			<p:column headerText="#{labelProcesoImpugnacion.label_fecha_accion}">
+				<c2:outputDateLabel labelValue="#{registro.fechaInicio}"
+					fullFormat="true" />
+			</p:column>
+
+			<p:column headerText="#{labelProcesoImpugnacion.label_actividad}">
+				<p:outputLabel value="#{registro.estadoProceso.nombre}" />
+			</p:column>
+
+			<p:column headerText="#{labelProcesoImpugnacion.label_acto}">
+				<p:outputLabel value="#{detalleProcesoFL.proceso.numeroProceso}" rendered="#{registro.documentos != null and registro.documentos.size() > 0 }" />
+			</p:column>
+
+			<p:column headerText="#{labelProcesoImpugnacion.label_usuario}">
+				<p:outputLabel value="#{registro.usuario.persona.nombreCompleto}" />
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+</ui:composition>

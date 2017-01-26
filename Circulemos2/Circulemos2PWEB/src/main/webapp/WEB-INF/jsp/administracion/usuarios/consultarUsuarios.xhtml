@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelUsuarios.titulo_consultar_usuarios}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<p:outputLabel value="#{labelUsuarios.label_tipo_documento}" />
+						<p:selectOneMenu id="selTipoId"
+							value="#{usuariosHolderFL.idTipoIdentificacionPersona}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+							<f:selectItems value="#{catalogoGeneralMB.opcTipoIdentPersona}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="#{labelUsuarios.label_numero_documento}" />
+						<p:inputText id="txtNumDocPer"
+							value="#{usuariosHolderFL.numeroIdentificacionPersona}"
+							maxlength="20" />
+						<p:outputLabel for="usuario"
+							value="#{labelUsuarios.label_nombre_usuario}" />
+						<p:inputText id="usuario"
+							label="#{labelUsuarios.label_nombre_usuario}"
+							value="#{usuariosHolderFL.login}" maxlength="60" />
+						<p:outputLabel for="estado"
+							value="#{labelUsuarios.label_estado_usuario}" />
+						<p:selectOneMenu id="estado"
+							value="#{usuariosHolderFL.estadoSeleccionado}">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+							<f:selectItems value="#{usuariosMB.lEstadosUsuario}" />
+						</p:selectOneMenu>
+						<p:outputLabel for="nombres"
+							value="#{labelUsuarios.label_nombres_usuario}" />
+						<p:inputText id="nombres"
+							label="#{labelUsuarios.label_nombres_usuario}"
+							value="#{usuariosHolderFL.nombres}" maxlength="60" />
+						<p:outputLabel for="apellidos"
+							value="#{labelUsuarios.label_apellidos_usuario}" />
+						<p:inputText id="apellidos"
+							label="#{labelUsuarios.label_apellidos_usuario}"
+							value="#{usuariosHolderFL.apellidos}" maxlength="60" />
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultar"
+								value="#{labelUsuarios.tooltip_btnConsultar}" />
+						</p:commandButton>
+						<!--Boton Nuevo-->
+						<p:commandButton id="btnCrear" styleClass="_op-CREAR"
+							action="_op-CREAR" icon="c2-icon-crear" process="@this"
+							value="#{lbComun.btnCrear}" immediate="true">
+							<p:tooltip for="btnCrear"
+								value="#{labelUsuarios.tooltip_btnCrear}" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{usuariosHolderFL.resultadoConsulta.size() > 0}">
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<!--Boton Editar-->
+						<p:commandButton id="btnEditar" styleClass="_op-EDITAR"
+							rendered="false" action="_op-EDITAR" icon="c2-icon-editar"
+							process="@this" update=":messages" value="#{lbComun.btnEditar}"
+							disabled="#{usuariosHolderFL.usuarioSeleccionado==null}">
+							<p:tooltip for="btnEditar"
+								value="#{labelUsuarios.tooltip_btnEditar}" />
+						</p:commandButton>
+						<!--Boton Eliminar-->
+						<p:commandButton id="btnEliminar" styleClass="_op-ELIMINAR"
+							rendered="false" action="_op-ELIMINAR" icon="c2-icon-eliminar"
+							process="@this" value="#{lbComun.btnEliminar}"
+							update=":messages :form-resultado :form-contenido"
+							disabled="#{usuariosHolderFL.usuarioSeleccionado==null}">
+							<p:tooltip for="btnEliminar"
+								value="#{labelUsuarios.tooltip_btnEliminar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<!--Boton Ver detalle-->
+						<p:commandButton id="btnVerDet" rendered="false"
+							action="#{usuariosMB.verDetalle()}" icon="c2-icon-detalle"
+							process="@this" value="#{lbComun.btnVerDet}"
+							oncomplete="PF('dlgDetalle').show()" update=":dlg-detalle"
+							disabled="#{usuariosHolderFL.usuarioSeleccionado==null}">
+							<p:tooltip for="btnVerDet"
+								value="#{labelUsuarios.tooltip_btnVerDet}" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados"
+					value="#{usuariosHolderFL.resultadoConsulta}" var="usuarioPersona"
+					rowKey="#{usuarioPersona.usuario.id}"
+					selection="#{usuariosHolderFL.usuarioSeleccionado}"
+					paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}">
+
+					<p:ajax event="rowSelectRadio"
+						process=":form-resultado:tabla-resultados"
+						update=":form-resultado:acciones-top,:form-resultado:tabla-resultados"
+						global="false" />
+
+					<p:column selectionMode="single" style="width:20px">
+					</p:column>
+					<p:column headerText="#{labelUsuarios.label_tipo_documento}">
+						<h:outputText
+							value="#{usuarioPersona.persona.tipoIdentificacion.nombre}" />
+					</p:column>
+					<p:column headerText="#{labelUsuarios.label_numero_documento}">
+						<h:outputText
+							value="#{usuarioPersona.persona.numeroIdentificacion}" />
+					</p:column>
+					<p:column
+						headerText="#{labelUsuarios.label_nombre_completo_usuario}">
+						<h:outputText
+							value="#{usuarioPersona.usuario.nombres} #{usuarioPersona.usuario.apellidos}" />
+					</p:column>
+					<p:column headerText="#{labelUsuarios.label_nombre_usuario}">
+						<h:outputText value="#{usuarioPersona.usuario.login}" />
+					</p:column>
+					<p:column headerText="#{labelUsuarios.label_estado_usuario}">
+						<h:outputText value="#{usuarioPersona.usuario.estadoUsuario}" />
+					</p:column>
+					<p:column headerText="#{labelUsuarios.label_correo}">
+						<h:outputText value="#{usuarioPersona.usuario.email}" />
+					</p:column>
+					<p:column
+						headerText="#{labelUsuarios.label_ultima_modificacion_usuario}">
+						<c2:outputDateLabel
+							labelValue="#{usuarioPersona.usuario.fechaModUsuario}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+		<ui:include
+			src="/WEB-INF/jsp/administracion/usuarios/verDetalleUsuario.xhtml" />
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelCoactivo.titulo_consultar_seguimiento}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{labelCoactivo.titulo_datos_basicos}">
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel value="#{labelCoactivo.label_numero_proceso_t}" />
+						<p:outputLabel
+							value="#{consultaSeguimientoHolderFL.segSeleccionado.numeroProceso}" />
+
+						<p:outputLabel value="#{labelCoactivo.label_fecha_proceso_t}" />
+						<c2:outputDateLabel
+							labelValue="#{consultaSeguimientoHolderFL.segSeleccionado.fechaProceso}"
+							fullFormat="false" />
+
+						<p:outputLabel value="#{labelCoactivo.label_tipo_documento_t}" />
+						<p:outputLabel
+							value="#{consultaSeguimientoHolderFL.segSeleccionado.tipoDocDeudor}" />
+
+						<p:outputLabel value="#{labelCoactivo.label_numero_documento_t}" />
+						<p:outputLabel
+							value="#{consultaSeguimientoHolderFL.segSeleccionado.numeroDocDeudor}" />
+
+						<p:outputLabel value="#{labelCoactivo.lbl_nombre_deudor_t}" />
+						<p:outputLabel
+							value="#{consultaSeguimientoHolderFL.segSeleccionado.nombreDeudor}" />
+
+						<p:outputLabel value="#{labelCoactivo.lbl_valor_coactivo_t}" />
+						<p:outputLabel
+							value="#{consultaSeguimientoHolderFL.segSeleccionado.valorCoactivo}" />
+
+						<p:outputLabel value="#{labelCoactivo.lbl_valor_costas_t}" />
+						<p:outputLabel
+							value="#{consultaSeguimientoHolderFL.segSeleccionado.valorCostas}" />
+
+					</h:panelGrid>
+					<h:panelGrid columns="1" cellpadding="5">
+						<!-- Ver obligaciones -->
+						<p:commandButton id="btnVerObligaciones"
+							styleClass="VER_OBLIGACIONES"
+							oncomplete="PF('popUpObligaciones').show();"
+							icon="c2-icon-detalle" process="@form"
+							value="#{labelCoactivo.btn_ver_obligacion}"
+							update=":form-obligacion">
+							<p:tooltip for="btnVerObligaciones"
+								value="#{labelCoactivo.btn_ver_obligacion}" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+				<p:fieldset id="datos-excep" styleClass="fieldset-formulario"
+					legend="#{labelCoactivo.tit_rad_excp}">
+					<h:panelGrid id="panel-formulario-excep" styleClass="center-block"
+						columns="2" columnClasses="label-col,input-col">
+						<p:outputLabel value="#{labelCoactivo.lbl_observaciones}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputTextarea id="txtAObs" maxlength="5000"
+								style="width: 400px; height: 100px;"
+								value="#{radicarExcepcionFL.registroRadicarExcepcionDTO.radicarExcepcionDTO.observaciones}"
+								required="true" />
+							<p:message for="txtAObs" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<p:fileUpload id="fupArchivo"
+						fileUploadListener="#{radicarExcepcionMB.cargaArchivo}"
+						label="#{lbComun.btnExaminar}" uploadLabel="#{lbComun.btnCargar}"
+						cancelLabel="#{lbComun.btnCancelar}" mode="advanced"
+						dragDropSupport="false" update="panel-archivos"
+						process="@this panel-archivos" multiple="true"
+						sizeLimit="#{radicarExcepcionMB.tamanioMaximoArch}"
+						allowTypes="#{radicarExcepcionMB.tiposArchivosPermitidos}"
+						invalidFileMessage="#{labelAdminAccidentalidad.msg_error_tipo_dato}"
+						invalidSizeMessage="#{radicarExcepcionMB.mesErrLimitSize}"></p:fileUpload>
+
+					<h:panelGrid id="panel-archivos" styleClass="center-block"
+						columns="1" columnClasses="label-colancha">
+
+						<h:panelGrid id="acciones-top">
+							<f:facet name="footer">
+								<!--Boton eliminar-->
+								<p:commandButton id="btnEliminar"
+									action="#{radicarExcepcionMB.eliminarDocumento()}"
+									icon="c2-icon-eliminar" update="tabla-resultados"
+									process="@this" style="width: 16px !important" global="false"
+									disabled="#{radicarExcepcionFL.registroArchivoExcepcionSelDTO==null}">
+									<p:tooltip for="btnEliminar"
+										value="#{labelAdminAccidentalidad.label_btn_eliminar_doc}" />
+								</p:commandButton>
+							</f:facet>
+						</h:panelGrid>
+
+						<p:dataTable id="tabla-resultados"
+							value="#{radicarExcepcionFL.registroRadicarExcepcionDTO.registroArchivoExcepcionDTOs}"
+							var="registro" paginator="true" rowKey="#{registro.consecutivo}"
+							selection="#{radicarExcepcionFL.registroArchivoExcepcionSelDTO}"
+							paginatorTemplate="#{webPrm.param_paginator_template}"
+							rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+							rows="#{webPrm.param_initial_rows}"
+							emptyMessage="#{labelAdminAccidentalidad.mensaje_vacio}"
+							sortMode="multiple">
+
+							<p:ajax event="rowSelectRadio"
+								process=":form-contenido:tabla-resultados"
+								update=":form-contenido:acciones-top @this" global="false" />
+
+							<p:column selectionMode="single" />
+
+							<p:column headerText="#{labelAdminAccidentalidad.lbl_anexo}">
+								<p:outputLabel
+									value="#{registro.archivoTransportableDTO.nombre}" />
+							</p:column>
+
+						</p:dataTable>
+					</h:panelGrid>
+
+				</p:fieldset>
+				<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+					<!--Boton Guardar-->
+					<p:commandButton id="btnGuardar" action="CONTINUAR"
+						icon="c2-icon-guardar" process="@form"
+						value="#{lbComun.btnGuardar}" update=":messages :form-contenido">
+						<p:tooltip for="btnGuardar"
+							value="#{labelCatalogoSimple.txt_tooltip_reg_guardar_itme_cat}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}"
+							message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+					</p:commandButton>
+					<!-- Volver -->
+					<p:commandButton id="btnVolver" action="VOLVER"
+						icon="c2-icon-volver" process="@this" immediate="true"
+						value="#{lbComun.btnVolver}">
+						<p:tooltip for="btnVolver" value="#{lbComun.btnVolver}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+		<ui:include
+			src="/WEB-INF/jsp/coactivo/administracion/seguimiento/popup/obligaciones.xhtml" />
+	</ui:define>
+</ui:composition>

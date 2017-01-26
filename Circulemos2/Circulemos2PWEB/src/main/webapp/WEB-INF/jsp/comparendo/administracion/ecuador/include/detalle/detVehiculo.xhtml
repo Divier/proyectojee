@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-vehiculo" styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_vehiculo}">
+		<p:growl id="messagesVehiculo" showDetail="true" life="15000"
+			globalOnly="true" />
+		<p:fieldset id="datos-vehiculo" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_vehiculo}">
+			<h:panelGrid id="panel-formulario-vehiculo" styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+
+				<p:outputLabel value="#{labelAdminComparendo.label_placa_vehiculo}" />
+				<p:outputLabel
+					value="#{detalleComparendoFL.empresaVehiculo.placaVehiculo}" />
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_identificacion_vehiculo}" />
+				<p:outputLabel
+					value="#{detalleComparendoFL.empresaVehiculo.identificacionVehiculo}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_matriculado_en}" />
+				<c2:outputNumberText
+					value="#{detalleComparendoFL.empresaVehiculo.organismoMatriVehic.codigoOrganismo}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_clase_servicio}" />
+				<p:outputLabel
+					value="#{detalleComparendoFL.empresaVehiculo.tipoServicio.nombre}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_vehiculo}" />
+				<p:outputLabel
+					value="#{detalleComparendoFL.empresaVehiculo.claseVehiculo.nombre}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_radio_operacion}" />
+				<p:outputLabel
+					value="#{detalleComparendoFL.empresaVehiculo.radioAccion.nombre}" />
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_modalidad_transporte}" />
+				<p:outputLabel
+					value="#{detalleComparendoFL.empresaVehiculo.modalidad.nombre}" />
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_transporte_pasajeros}" />
+				<p:outputLabel
+					value="#{detalleComparendoFL.empresaVehiculo.tipoTransPasajero.nombre}" />
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_tarjeta_operacion}" />
+				<p:outputLabel
+					value="#{detalleComparendoFL.empresaVehiculo.numeroTarjetaOperacion}" />
+
+			</h:panelGrid>
+		</p:fieldset>
+
+		<p:fieldset id="datos-vehiculo-empresa"
+			styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_empresa}">
+			<h:panelGrid id="panel-formulario-vehiculo-empresa"
+				styleClass="center-block"
+				columnClasses="label-col,input-col,label-col,input-col" columns="4">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+
+				<p:outputLabel value="#{labelAdminComparendo.label_tipo_documento}" />
+				<p:outputLabel
+					value="#{detalleComparendoFL.empresaPersonaVehiculo.tipoIdentificacion.nombre}" />
+
+				<p:outputLabel
+					value="#{labelAdminComparendo.label_numero_documento}" />
+				<p:outputLabel
+					value="#{detalleComparendoFL.empresaPersonaVehiculo.numeroIdentificacion}" />
+
+				<p:outputLabel value="#{labelAdminComparendo.label_nombre_empresa}" />
+				<p:outputLabel
+					value="#{detalleComparendoFL.empresaPersonaVehiculo.razonSocial}" />
+			</h:panelGrid>
+		</p:fieldset>
+
+	</p:panel>
+</ui:composition>

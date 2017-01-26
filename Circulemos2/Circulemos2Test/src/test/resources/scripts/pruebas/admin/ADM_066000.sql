@@ -1,0 +1,2 @@
+TRUNCATE valor_configuracion;
+TRUNCATE configuracion;

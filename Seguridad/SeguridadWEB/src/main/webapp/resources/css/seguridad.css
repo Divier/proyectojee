@@ -1,0 +1,316 @@
+/********* Estilos Layout - ini *********/
+html,body {
+	font-family: 'Open Sans', sans-serif, Verdana;
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	background-color: #fff;
+}
+
+.sg-content{
+	min-width: 970px;
+	padding: 0 5% 0 6%;
+}
+
+#wrapper {
+	min-height: 100%;
+	position: relative;
+}
+
+.btsp .navbar {
+	box-shadow: 0 0 5px #333333;
+	margin-bottom: 0px;
+}
+
+/********* Estilos Layout - fin *********/
+
+/********* Auxiliares Distribucion - ini *********/
+.panel_large {
+	padding: 0.2em;
+	width: 90% !important;
+}
+
+.panel_medium {
+	padding: 0.2em;
+	width: 45% !important;
+}
+
+.half {
+	width: 50%;
+}
+
+.float-left {
+	float: left;
+}
+
+.float-right {
+	float: right;
+}
+/********* Auxiliares Distribucion - fin *********/
+
+/********* Personalizacion formatos especiales - ini *********/
+
+.seleccion-padre {
+	color: #008AE6;
+	font-weight: bold;
+}
+/********* Personalizacion formatos especiales - fin *********/
+
+/********* Formulario de ingreso de datos - ini *********/
+.formulario-servicio {
+	
+}
+
+.formulario-servicio tbody tr td:first-child {
+	font-weight: bold;
+	min-width: 120px;
+}
+
+.formulario-servicio tbody tr td:nth-child(2) {
+	min-width: 250px;
+}
+
+.formulario-servicio tbody tr td:nth-child(2)>span:first-child {
+	width: 95% !important;
+}
+
+.formulario-servicio tbody tr td:nth-child(2)>div:first-child {
+	width: 95% !important;
+}
+
+.formulario-servicio tbody tr td:nth-child(2)>input:first-child {
+	width: 95% !important;
+}
+
+.formulario-servicio tbody tr td:nth-child(2)>textarea:first-child {
+	width: 95% !important;
+}
+/********* Formulario de ingreso de datos - fin *********/
+
+/********* Personalizar Primefaces - ini *********/
+.ui-widget {
+	font-family: 'Open Sans', sans-serif, Verdana; 
+	font-size: 12px !important;
+}
+
+.ui-panelmenu-header {
+	font-weight: bold !important;
+	font-size: 14px !important;
+}
+
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+	font-family: 'Open Sans', sans-serif, Verdana; 
+}
+
+.ui-datatable td {
+	font-size: 0.8em;
+}
+
+.ui-datatable thead th,.ui-datatable tfoot td {
+	text-align: center;
+	font-size: 0.92em;
+}
+
+.ui-picklist-item td {
+	font-size: 0.8em;
+}
+
+.ui-menuitem-text {
+	font-size: 1.1em !important;
+}
+
+.ui-dialog 
+.ui-dialog-titlebar {
+	background: none repeat scroll 0% 0% transparent !important;
+	padding: 0px 0px 8px !important;
+	margin: 15px 15px 0px !important;
+}
+
+.ui-dialog .ui-dialog-title {
+	float: left;
+	margin: 0.1em 16px 0.1em 0px;
+	color: #353536;
+	font-size: 17px !important;
+}
+
+.ui-picklist .ui-picklist-filter {
+	width: 100% !important;
+}
+.ui-selection-column {
+	width: 20px !important;
+}
+/********* Personalizar Primefaces - fin *********/
+
+/********* Admin Menu - ini *********/
+.ui-menuitem-highlighted .ui-menuitem-text .resaltado {
+	font-weight: bold;
+}
+/********* Admin Menu - fin *********/
+.dialog-top {
+	/*top: 15% !important;*/
+	width: 65% !important;
+	height: 250px !important;
+	left: 20% !important;
+	right: 20% !important;
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+	min-height: 400px !important;
+	min-width: 550px !important;
+}
+
+.dialog-top-medium {
+	/*top: 15% !important;*/
+	width: 50% !important;
+	height: 250px !important;
+	left: 25% !important;
+	right: 25% !important;
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+	min-height: 350px !important;
+	min-width: 550px !important;
+}
+
+.dialog-top-small {
+	/*top: 15% !important;*/
+	width: 30% !important;
+	height: 200px !important;
+	left: 25% !important;
+	right: 25% !important;
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+	min-height: 300px !important;
+	min-width: 400px !important;
+}
+
+.dialog-top-small-msg {
+	/*top: 15% !important;*/
+	width: 25% !important;
+	height: 200px !important;
+	left: 25% !important;
+	right: 25% !important;
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+	min-height: 200px !important;
+	min-width:100px !important;
+}
+
+.dialog-confirm {
+	width: auto !important;
+	height: auto !important;
+	left: 35% !important;
+	top: 25% !important;
+	min-width: 100px !important;
+}
+
+.ui-panel-titlebar {
+	font-size: 1.2em;
+}
+
+.ui-chkbox .ui-chkbox-label {
+	cursor: pointer;
+	margin: 3px 0 0 3px;
+	outline: medium none;
+	z-index: 1;
+	display: inline-block;
+	vertical-align: top;
+	font-size: 1.2em;
+}
+
+.input-fixed {
+	width: 175px !important;
+}
+
+.label-padding {
+	padding: 0 0 0 16px;
+}
+
+.column1 {
+	font-size: 13;
+	font-weight: bold;
+}
+
+.column2 {
+	font-size: 13;
+}
+
+/************************
+	Errores de http
+************************/
+#imagenWarning {
+	text-align: center;
+}
+
+#etiquetaUno {
+	font-weight: bold;
+	text-transform: uppercase;
+	text-shadow: 0 1px 0 #CCCCCC, 0 2px 0 #C9C9C9, 0 3px 0 #BBBBBB, 0 4px 0
+		#B9B9B9, 0 5px 0 #AAAAAA, 0 6px 1px rgba(0, 0, 0, 0.1), 0 0 5px
+		rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.3), 0 3px 5px
+		rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.25), 0 10px 10px
+		rgba(0, 0, 0, 0.2), 0 20px 20px rgba(0, 0, 0, 0.15);
+}
+
+#etiquetaDos {
+	padding: 20px;
+}
+
+/******************** ---- Contenido ---- ********************/
+section {
+	padding-bottom: 60px;
+	width: 100%;
+	min-width: 1000px;
+}
+
+section>.contenido {
+	padding: 10px;
+}
+
+/******************** ---- Footer ---- ********************/
+footer {
+ 	background: #f5f5f5;
+ 	box-shadow: inset 0 6px 14px -6px #a9a9a9;
+ 	width: 100%;
+ 	height: 60px;
+ 	position: absolute; 
+ 	bottom: 0;
+ 	font-size: 11px;
+	text-align: center;
+}
+
+.contenido-footer {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+    margin-left: 20px;
+}
+
+.contenido-footer a {
+	color: #0c91d0;
+	text-decoration: none;
+}
+
+.contenido-footer img {
+	height: 50px;
+	width: 129px;
+}
+
+.contenido-footer p {
+	margin: 14px 0px;
+}
+
+/******************** ---- Header ---- ********************/
+#c2-header {
+	background-image: linear-gradient(to left, #0c91d0 0%, #006c9e 100%);
+	border-color: #000000;
+	border-radius: 0;
+	border-style: none none solid;
+	border-width: medium medium 5px;
+	box-shadow: -3px 0 19px 4px #a9a9a9;
+	height: 80px;
+	margin-bottom: 0px;
+	z-index: 1002;
+}
+
+#c2-header .navbar-header{
+	width: 100% !important;
+}

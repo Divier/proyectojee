@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:panelGroup rendered="#{!autenticacionMB.usuarioAtenticado}" styleClass="center-box">
+			<h:form id="form-contenido">
+				<p:panel id="campos-ingreso" header="#{mensajesIngreso.label_ingresar_sistema}">
+					<p:focus context="campos-ingreso"/>
+					<h:panelGrid id="panel-formulario" styleClass="center-block"	columns="2"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel value="#{mensajesIngreso.label_usuario}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="txtLogin"
+								value="#{autenticacionMB.autenticador.login}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" />
+							<p:message for="txtLogin" />
+						</h:panelGroup>
+						<p:outputLabel value="#{mensajesIngreso.label_pw}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:password id="txtPassword"
+								value="#{autenticacionMB.autenticador.password}" required="true"
+								autocomplete="false"
+								requiredMessage="#{labelGeneral.val_campo_requerido}" />
+							<p:message for="txtPassword" />
+						</h:panelGroup>
+					</h:panelGrid>
+					
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton id="btnIngresar" action="autenticar"
+							icon="c2-icon-ingresar" process="@form"
+							value="#{mensajesIngreso.btnIngresar}"
+							update=":messages :form-contenido">
+							<p:tooltip for="btnIngresar" value="#{mensajesIngreso.tooltip_btnIngresar}" />
+						</p:commandButton>
+						<p:commandButton id="btnRecordarPw" action="solicitarPw"
+							icon="c2-icon-recordar-pw" process="@this" immediate="true"
+							value="#{mensajesIngreso.btnRecordarPw}">
+							<p:tooltip for="btnRecordarPw" value="#{mensajesIngreso.tooltip_btnRecordarPw}" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:panel>
+			</h:form>
+		</h:panelGroup>
+			
+		<h:panelGroup rendered="#{autenticacionMB.usuarioAtenticado}">
+			<p:graphicImage	style="display:block; margin-left:auto; margin-right:auto;padding-top:40px;" library="img" name="static/logo-dt.png" />
+		</h:panelGroup>
+			
+	</ui:define>
+</ui:composition>

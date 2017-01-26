@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="personaHolderFL"
+		class="co.com.datatools.c2.managed_bean.administracion.personas.PersonaHolderFL" />
+	<var name="personaFL"
+		class="co.com.datatools.c2.managed_bean.administracion.personas.PersonaFL" />
+	<var name="dirFL"
+		class="co.com.datatools.c2.managed_bean.administracion.direccion.DireccionFL" />
+	<var name="dirHolderFL"
+		class="co.com.datatools.c2.managed_bean.administracion.direccion.DireccionHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracion/persona/consultarPersona.xhtml">
+		<on-entry>
+			<evaluate expression="flowScope.personaHolderFL.setFuenteExterna(true)" />
+			<evaluate expression="flowScope.personaHolderFL.setMostrarNumDocObl(true)" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.personaMB.consultarPersonaFuenteInfExterna()" />
+		<transition on="yes" to="DETALLE" />
+		<transition on="no" to="ingresar" />
+	</action-state>
+
+	<view-state id="DETALLE"
+		view="/WEB-INF/jsp/administracion/persona/detallePersona.xhtml">
+		<transition on="VOLVER" to="ingresar" />
+		<transition on="VOLVER_DETALLE" to="ingresar" />
+	</view-state>
+
+</flow>

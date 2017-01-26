@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelCondicionesCoactivo.tit_actualizar_conf_coactivo}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_registro}">
+
+					<!--Cuando el formulario tiene multiples secciones de campos, repetir este fieldset-->
+					<p:fieldset id="datos-basicos-registro"
+						styleClass="fieldset-formulario"
+						legend="#{labelCondicionesCoactivo.tit_datos_basicos_registro}">
+						<p:messages id="msgs" showDetail="true" for="confCoactivo" />
+
+						<h:panelGrid styleClass="center-block" columns="2"
+							columnClasses="label-col,input-col">
+
+
+							<p:outputLabel
+								value="#{labelCondicionesCoactivo.lbl_nombre_conf_coactivo}:"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="txtRegNomconfCoactivo"
+									value="#{condicionesCoactivoHolderFL.configuracionCoactivoVO.configuracionCoactivoDTO.nombre}"
+									required="true" disabled="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<p:ajax update="@form" process="@this" global="false" />
+								</p:inputText>
+								<p:message for="txtRegNomconfCoactivo" />
+							</h:panelGroup>
+
+							<p:outputLabel
+								value="#{labelCondicionesCoactivo.lbl_fecha_inicial_vig_cond}:"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:calendar id="calActFecIni" value="#{condicionesCoactivoHolderFL.configuracionCoactivoVO.configuracionCoactivoDTO.fechaInicial}"
+									navigator="true" pattern="#{webPrm.lab_calendar_pattern}" required="true" requiredMessage="#{labelGeneral.val_campo_requerido}"
+									disabled="#{condicionesCoactivoHolderFL.configuracionCoactivoVO.fecIniMenorIgualActual or condicionesCoactivoHolderFL.configuracionCoactivoVO.camposNoEditables}"
+									mindate="#{condicionesCoactivoHolderFL.fechaActual}" readonlyInput="true">
+									<p:ajax event="dateSelect" update="@form" process="@this" global="false" />
+									<p:ajax event="change" update="@form" process="@this" global="false" />
+								</p:calendar>
+								<p:message for="calActFecIni" display="default" />
+								<p:watermark for="calActFecIni" value="#{webPrm.lab_calendar_mask_pattern}" />
+							</h:panelGroup>
+							
+							<p:outputLabel
+								value="#{labelCondicionesCoactivo.lbl_fecha_final_vig_cond}:" />
+							<h:panelGroup>
+								<p:calendar id="calRegFecFin"
+									value="#{condicionesCoactivoHolderFL.configuracionCoactivoVO.configuracionCoactivoDTO.fechaFinal}"
+									navigator="true" pattern="#{webPrm.lab_calendar_pattern}" readonlyInput="true"
+									mindate="#{condicionesCoactivoHolderFL.minDateFechaFinal}">
+									<p:ajax event="dateSelect" update="@form" process="@this" global="false" />
+									<p:ajax event="change" update="@form" process="@this" global="false" />
+									<p:watermark for="calRegFecFin"
+										value="#{webPrm.lab_calendar_mask_pattern}" />
+								</p:calendar>
+								<p:message for="calRegFecFin" display="default" />
+							</h:panelGroup>
+
+						</h:panelGrid>
+
+					</p:fieldset>
+
+					<ui:repeat var="condCoactivoVO"
+						value="#{condicionesCoactivoHolderFL.configuracionCoactivoVO.lstCondicionCoactivoVOs}">
+						<fieldset
+							class="ui-fieldset ui-widget ui-widget-content ui-corner-all ui-hidden-container fieForm">
+							<legend class="ui-fieldset-legend ui-corner-all ui-state-default">
+								<p:selectBooleanCheckbox
+									value="#{condCoactivoVO.estadoCondicionCoactivoDTO.activo}"
+									style="padding-right:10px;"
+									disabled="#{condicionesCoactivoHolderFL.configuracionCoactivoVO.camposNoEditables}">
+									<p:ajax update="@form" />
+								</p:selectBooleanCheckbox>
+
+								<h:outputText
+									value="#{condCoactivoVO.condicionCoactivoDTO.nombre}" />
+							</legend>
+							<p:dataGrid var="valCondVO"
+								value="#{condCoactivoVO.lstValorCondicionVOs}" columns="1"
+								style="border:0 important!;">
+								<h:panelGrid columns="2"
+									columnClasses="label-colancha,input-col">
+
+									<h:panelGroup>
+										<p:outputLabel
+											value="#{valCondVO.variableCondicionCoactivoDTO.nombre}:"
+											style="#{valCondVO.styleTextLabel}"
+											styleClass="campo-obligatorio" />
+									</h:panelGroup>
+
+									<h:panelGroup>
+
+										<!-- Campos de tipo entero -->
+										<p:inputText id="txtEntero" value="#{valCondVO.valInteger}"
+											required="#{condCoactivoVO.estadoCondicionCoactivoDTO.activo}"
+											requiredMessage="#{labelGeneral.val_campo_requerido}"
+											rendered="#{valCondVO.tipEntero}"
+											converterMessage="#{labelGeneral.val_campo_numerico}"
+											disabled="#{!condCoactivoVO.estadoCondicionCoactivoDTO.activo   or condicionesCoactivoHolderFL.configuracionCoactivoVO.camposNoEditables}">
+											<p:ajax update="@this" process="@this" global="false" />
+										</p:inputText>
+										<p:message for="txtEntero" rendered="#{valCondVO.tipEntero}" />
+
+										<!-- Campos de tipo real -->
+										<pe:inputNumber id="txtReal" value="#{valCondVO.valDouble}"
+											required="#{condCoactivoVO.estadoCondicionCoactivoDTO.activo}"
+											requiredMessage="#{labelGeneral.val_campo_requerido}"
+											rendered="#{valCondVO.tipReal}"
+											disabled="#{!condCoactivoVO.estadoCondicionCoactivoDTO.activo  or condicionesCoactivoHolderFL.configuracionCoactivoVO.camposNoEditables}">
+											<p:ajax update="@this" process="@this" global="false" />
+										</pe:inputNumber>
+										<p:message for="txtReal" rendered="#{valCondVO.tipReal}" />
+
+										<!-- Campos de tipo booleano -->
+										<p:selectOneRadio id="selTypBoolean"
+											value="#{valCondVO.valBooleano}"
+											requiredMessage="#{labelGeneral.val_campo_requerido}"
+											required="#{condCoactivoVO.estadoCondicionCoactivoDTO.activo}"
+											rendered="#{valCondVO.tipBooleano}"
+											disabled="#{!condCoactivoVO.estadoCondicionCoactivoDTO.activo  or condicionesCoactivoHolderFL.configuracionCoactivoVO.camposNoEditables}">
+											<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+												itemValue="true" />
+											<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+												itemValue="false" />
+											<p:ajax update="@this" process="@this" global="false" />
+										</p:selectOneRadio>
+										<p:message for="selTypBoolean"
+											rendered="#{valCondVO.tipBooleano}" />
+
+										<!-- Campos de tipo texto -->
+										<p:inputText id="txtTexto" value="#{valCondVO.valCadena}"
+											required="#{condCoactivoVO.estadoCondicionCoactivoDTO.activo}"
+											requiredMessage="#{labelGeneral.val_campo_requerido}"
+											rendered="#{valCondVO.tipCadena}"
+											disabled="#{!condCoactivoVO.estadoCondicionCoactivoDTO.activo  or condicionesCoactivoHolderFL.configuracionCoactivoVO.camposNoEditables}">
+											<p:ajax update="@this" process="@this" global="false" />
+										</p:inputText>
+										<p:message for="txtTexto" rendered="#{valCondVO.tipCadena}" />
+
+										<!-- Campos de tipo fecha -->
+										<p:calendar id="calFecha" value="#{valCondVO.valFecha}"
+											navigator="true"
+											required="#{condCoactivoVO.estadoCondicionCoactivoDTO.activo}"
+											requiredMessage="#{labelGeneral.val_campo_requerido}"
+											rendered="#{valCondVO.tipFecha}"
+											disabled="#{!condCoactivoVO.estadoCondicionCoactivoDTO.activo  or condicionesCoactivoHolderFL.configuracionCoactivoVO.camposNoEditables}"
+											pattern="#{webPrm.lab_calendar_pattern}">
+											<p:ajax update="@this" process="@this" global="false" />
+											<p:watermark for="calFecha"
+												value="#{webPrm.lab_calendar_mask_pattern}" />
+										</p:calendar>
+										<p:message for="calFecha" rendered="#{valCondVO.tipFecha}" />
+
+										<!-- Campos de tipo Combo box seleccion unica -->
+										<p:selectOneMenu id="selUni"
+											value="#{valCondVO.valorCondicionCoactivoDTO.valor}"
+											rendered="#{valCondVO.tipSeleccionUnica}"
+											required="#{condCoactivoVO.estadoCondicionCoactivoDTO.activo}"
+											requiredMessage="#{labelGeneral.val_campo_requerido}"
+											disabled="#{!condCoactivoVO.estadoCondicionCoactivoDTO.activo  or condicionesCoactivoHolderFL.configuracionCoactivoVO.camposNoEditables}">
+											<f:selectItem
+												itemLabel="#{labelGeneral.val_combo_primer_item}"
+												itemValue="" />
+											<f:selectItems value="#{valCondVO.catalogo}" />
+											<p:ajax update="@this" process="@this" global="false" />
+										</p:selectOneMenu>
+										<p:message for="selUni" rendered="#{valCondVO.tipFecha}" />
+
+										<!-- Campos de tipo Combo box selecion multiple -->
+										<p:selectCheckboxMenu id="selMul"
+											value="#{valCondVO.lstValoresEscogidos}"
+											label="#{labelGeneral.val_combo_primer_item}"
+											filterText="Filter" filterMatchMode="startsWith"
+											rendered="#{valCondVO.tipSeleccionMultiple}"
+											required="#{condCoactivoVO.estadoCondicionCoactivoDTO.activo}"
+											requiredMessage="#{labelGeneral.val_campo_requerido}"
+											disabled="#{!condCoactivoVO.estadoCondicionCoactivoDTO.activo  or condicionesCoactivoHolderFL.configuracionCoactivoVO.camposNoEditables}">
+											<f:selectItems value="#{valCondVO.catalogo}" />
+											<p:ajax update="@this" process="@this" global="false" />
+										</p:selectCheckboxMenu>
+										<p:message for="selMul" rendered="#{valCondVO.tipFecha}" />
+
+									</h:panelGroup>
+
+								</h:panelGrid>
+
+							</p:dataGrid>
+						</fieldset>
+
+					</ui:repeat>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+
+						<!--Boton Guardar-->
+						<p:commandButton id="btnGuardar" value="#{lbComun.btnGuardar}"
+							icon="c2-icon-guardar" action="CONTINUAR" process="@form"
+							update=":form-ingreso msgs">
+							<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" value="#{lbComun.btnCancelar}"
+							icon="c2-icon-cancelar" action="VOLVER" process="@this"
+							update=":messages">
+							<p:tooltip for="btnCancelar"
+								value="#{labelCondicionesCoactivo.cancelar_actualizar_configuracion}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

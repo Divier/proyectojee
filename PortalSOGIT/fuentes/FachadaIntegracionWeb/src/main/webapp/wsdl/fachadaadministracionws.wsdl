@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="FachadaAdministracionWS" targetNamespace="http://ws.fachadaintegracionweb.datatools.com.co/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://ws.fachadaintegracionweb.datatools.com.co/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://ws.fachadaintegracionweb.datatools.com.co/" schemaLocation="fachadaadministracionws_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="consultarCatalogos">
+    <wsdl:part name="parameters" element="tns:consultarCatalogos">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="consultarCatalogosResponse">
+    <wsdl:part name="parameters" element="tns:consultarCatalogosResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="FachadaAdministracionWSPortType">
+    <wsdl:operation name="consultarCatalogos">
+      <wsdl:input name="consultarCatalogos" message="tns:consultarCatalogos">
+    </wsdl:input>
+      <wsdl:output name="consultarCatalogosResponse" message="tns:consultarCatalogosResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="FachadaAdministracionWSSoapBinding" type="tns:FachadaAdministracionWSPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="consultarCatalogos">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="consultarCatalogos">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="consultarCatalogosResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FachadaAdministracionWS">
+    <wsdl:port name="FachadaAdministracionWSPort" binding="tns:FachadaAdministracionWSSoapBinding">
+      <soap:address location="http://localhost:9090/FachadaAdministracionWSPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

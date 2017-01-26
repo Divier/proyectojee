@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://recepcion.ecuador.ws.sogit.datatools.com.co/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified"
+	targetNamespace="http://recepcion.ecuador.ws.sogit.datatools.com.co/"
+	version="1.0">
+	<xs:element name="replicarPago" type="tns:replicarPago" />
+	<xs:element name="replicarPagoResponse" type="tns:replicarPagoResponse" />
+	<xs:complexType name="replicarPago">
+		<xs:sequence>
+			<xs:element minOccurs="1" name="pago" type="tns:pagoWSDTO" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="pagoWSDTO">
+		<xs:complexContent>
+			<xs:extension base="tns:abstractDTO">
+				<xs:sequence>
+					<xs:element name="bancoRecaudo" type="xs:string" />
+					<xs:element name="codigoOrganismoTransito" type="xs:int" />
+					<xs:element name="codigoTipoIdentificacion" type="xs:string" />
+					<xs:element name="cuenta">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="15" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element maxOccurs="unbounded" name="detalles"
+						nillable="false" type="tns:detallePagoWSDTO" />
+					<xs:element name="fechaTransaccion" type="xs:date" />
+					<xs:element name="horaTransaccion" type="xs:time" />
+					<xs:element name="numeroIdentificacion">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="15" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="numeroRecaudo">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="20" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="tipoCuenta" type="xs:string" />
+					<xs:element minOccurs="0" name="totalCheque">
+						<xs:simpleType>
+							<xs:restriction base="xs:decimal">
+								<xs:totalDigits value="10" />
+								<xs:fractionDigits value="2" />
+								<xs:minInclusive value="0.01" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element minOccurs="0" name="totalEfectivo">
+						<xs:simpleType>
+							<xs:restriction base="xs:decimal">
+								<xs:totalDigits value="10" />
+								<xs:fractionDigits value="2" />
+								<xs:minInclusive value="0.01" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="totalRecaudo">
+						<xs:simpleType>
+							<xs:restriction base="xs:decimal">
+								<xs:totalDigits value="10" />
+								<xs:fractionDigits value="2" />
+								<xs:minInclusive value="0.01" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="abstractDTO">
+		<xs:sequence />
+	</xs:complexType>
+	<xs:complexType name="detallePagoWSDTO">
+		<xs:complexContent>
+			<xs:extension base="tns:abstractDTO">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="numeroCuota">
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minInclusive value="1" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="obligacionPagada">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="20" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="tipoRecaudo" type="xs:string" />
+					<xs:element name="valorObligacion">
+						<xs:simpleType>
+							<xs:restriction base="xs:decimal">
+								<xs:totalDigits value="10" />
+								<xs:fractionDigits value="2" />
+								<xs:minInclusive value="0.01" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="replicarPagoResponse">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="return" type="tns:respuestaWSDTO" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="respuestaWSDTO">
+		<xs:complexContent>
+			<xs:extension base="tns:abstractDTO">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="codigoGeneral" type="xs:string" />
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="detalle"
+						nillable="true" type="tns:detalleRespuestaWSDTO" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="detalleRespuestaWSDTO">
+		<xs:complexContent>
+			<xs:extension base="tns:abstractDTO">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="codigo" type="xs:string" />
+					<xs:element minOccurs="0" name="descripcion" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="administracionBienHolderFL"
+		class="co.com.datatools.c2.managed_bean.coactivo.administracion.bien.AdministracionBienHolderFL" />
+	<var name="registrarRespuestaBienFL"
+		class="co.com.datatools.c2.managed_bean.coactivo.administracion.bien.RegistrarRespuestaBienFL" />
+	<var name="disponerEmbargoFL"
+		class="co.com.datatools.c2.managed_bean.coactivo.administracion.bien.DisponerEmbargoFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/coactivo/bien/administrarBien.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('administracionBienMB')" />
+		</on-entry>
+
+		<transition on="_op-CONSULTAR" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.administracionBienMB.consultar()" />
+		</transition>
+		<transition on="REG_BIENES" to="REG_BIENES" />
+		<transition on="DIS_EMBARGO" to="DIS_EMBARGO">
+
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.coactivo.administracion.bien.DisponerEmbargoFL()"
+				result="flowScope.disponerEmbargoFL" />
+				
+		</transition>
+	</view-state>
+
+	<action-state id="REG_BIENES">
+		<evaluate
+			expression="externalContext.sessionMap.administracionBienMB.consultarSolicitudesOficioCoactivo()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<view-state id="REG_BIENES-j"
+		view="/WEB-INF/jsp/coactivo/bien/registrarRespuetaBien.xhtml"></view-state>
+
+	<view-state id="DIS_EMBARGO"
+		view="/WEB-INF/jsp/coactivo/bien/disponerEmbargo.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('disponerEmbargoMB')" />
+
+			<evaluate expression="externalContext.sessionMap.disponerEmbargoMB.consultarCoactivo()" />
+
+		</on-entry>
+	</view-state>
+</flow>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+				legend="#{labelCatalogoCompuesto.lbl_tit_detalle_items}">
+				<h:panelGrid id="panel-formulario" styleClass="center-block"
+					columns="2" columnClasses="label-col,input-col">
+
+					<p:outputLabel value="#{labelCatalogoCompuesto.lbl_det_cod_item}"></p:outputLabel>
+					<p:outputLabel
+						value="#{catalogoCompuestoFL.seleccionItemCatalogoBDDTO.codigo}"></p:outputLabel>
+
+					<p:outputLabel value="#{labelCatalogoCompuesto.lbl_det_sigla_item}"></p:outputLabel>
+					<p:outputLabel
+						value="#{catalogoCompuestoFL.seleccionItemCatalogoBDDTO.sigla}"></p:outputLabel>
+
+					<p:outputLabel
+						value="#{labelCatalogoCompuesto.lbl_det_nombre_item}"></p:outputLabel>
+					<p:outputLabel
+						value="#{catalogoCompuestoFL.seleccionItemCatalogoBDDTO.nombre}"></p:outputLabel>
+
+					<p:outputLabel value="#{labelCatalogoCompuesto.lbl_det_des_item}"></p:outputLabel>
+					<p:outputLabel
+						value="#{catalogoCompuestoFL.seleccionItemCatalogoBDDTO.descripcion}"></p:outputLabel>
+
+					<p:outputLabel value="#{labelCatalogoCompuesto.lbl_det_est_item}"></p:outputLabel>
+					<p:outputLabel
+						value="#{labelCatalogoCompuesto.lbl_estado_item_true}"
+						rendered="#{catalogoCompuestoFL.seleccionItemCatalogoBDDTO.activo}"></p:outputLabel>
+					<p:outputLabel
+						value="#{labelCatalogoCompuesto.lbl_estado_item_false}"
+						rendered="#{!catalogoCompuestoFL.seleccionItemCatalogoBDDTO.activo}"></p:outputLabel>
+
+				</h:panelGrid>
+
+				<p:fieldset id="datos-depen" styleClass="fieldset-formulario"
+					legend="#{labelCatalogoCompuesto.lbl_add_dep_item}">
+					<ui:repeat var="itemCat"
+						value="#{catalogoCompuestoFL.itemCatalogoDepenDTOs}">
+						<h:panelGrid id="panel-formulario-depen" styleClass="center-block"
+							columns="2" columnClasses="label-col,input-col">
+							<p:outputLabel value="#{itemCat.catalogoDTO.nombre}"></p:outputLabel>
+							<p:outputLabel value="#{itemCat.nombre}"></p:outputLabel>
+						</h:panelGrid>
+					</ui:repeat>
+				</p:fieldset>
+			</p:fieldset>
+			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+				<p:commandButton id="btnVolver" action="VOLVER"
+					icon="c2-icon-volver" process="@this" immediate="true"
+					value="#{lbComun.btnVolver}">
+					<p:tooltip for="btnVolver" value="#{lbComun.tooltip_volver}" />
+				</p:commandButton>
+			</h:panelGrid>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

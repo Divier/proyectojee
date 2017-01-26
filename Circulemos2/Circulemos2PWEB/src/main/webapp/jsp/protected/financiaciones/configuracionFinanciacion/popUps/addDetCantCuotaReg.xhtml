@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog id="popUpAddDetCantCuoReg" header="#{labelConfFinanciaciones.tit_adicion_det_cant_cuota}" widgetVar="addDetCantCuoReg" resizable="false"
+		modal="true" appendToBody="true" dynamic="true">
+		<h:form id="formAddDetCantCuoReg" style="font-size: 15px !important;">
+
+			<h:panelGrid columns="4" columnClasses="label-col,input-col,label-col,input-col">
+
+				<h:panelGrid columns="2">
+					<div class="obligatorio" />
+					<p:outputLabel value="#{labelConfFinanciaciones.lbl_clm_dcc_val_min_financiar}" />
+				</h:panelGrid>
+				<h:panelGroup>
+					<p:inputText id="txtValMinFinanDCC" value="#{registrarConfiguracionFinanciacionMB.selDetCantidadCuotaDTO.valorMinimoFinanciar}" required="true"
+						requiredMessage="#{labelGeneral.val_campo_requerido}" />
+					<p:message for="txtValMinFinanDCC" display="default" />
+				</h:panelGroup>
+
+				<h:panelGrid columns="2">
+					<div class="obligatorio" />
+					<p:outputLabel value="#{labelConfFinanciaciones.lbl_clm_dcc_val_max_financiar}" />
+				</h:panelGrid>
+				<h:panelGroup>
+					<p:inputText id="txtValMaxFinanDCC" value="#{registrarConfiguracionFinanciacionMB.selDetCantidadCuotaDTO.valorMaximoFinanciar}" required="true"
+						requiredMessage="#{labelGeneral.val_campo_requerido}" />
+					<p:message for="txtValMaxFinanDCC" display="default" />
+				</h:panelGroup>
+
+				<h:panelGrid columns="2">
+					<div class="obligatorio" />
+					<p:outputLabel value="#{labelConfFinanciaciones.lbl_clm_dcc_cant_min_cuotas}" />
+				</h:panelGrid>
+				<h:panelGroup>
+					<p:inputText id="txtCantMinCuotDCC" value="#{registrarConfiguracionFinanciacionMB.selDetCantidadCuotaDTO.cantidadMinimaCoutas}" required="true"
+						requiredMessage="#{labelGeneral.val_campo_requerido}" />
+					<p:message for="txtCantMinCuotDCC" display="default" />
+				</h:panelGroup>
+
+				<h:panelGrid columns="2">
+					<div class="obligatorio" />
+					<p:outputLabel value="#{labelConfFinanciaciones.lbl_clm_dcc_cant_max_cuotas}" />
+				</h:panelGrid>
+				<h:panelGroup>
+					<p:inputText id="txtCantMaxCuotDCC" value="#{registrarConfiguracionFinanciacionMB.selDetCantidadCuotaDTO.cantidadMaximaCouta}" required="true"
+						requiredMessage="#{labelGeneral.val_campo_requerido}" />
+					<p:message for="txtCantMaxCuotDCC" display="default" />
+				</h:panelGroup>
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="1" styleClass="center-block" cellspacing="7">
+
+				<p:commandButton value="#{labelConfFinanciaciones.lbl_btn_adicionar}" styleClass="btnRegistrar" icon="c2-icon-agregar-det"
+					title="#{labelConfFinanciaciones.lbl_btn_adicionar}" action="#{registrarConfiguracionFinanciacionMB.adicionarDetCantidadCuota()}" process="@form"
+					update="formAddDetCantCuoReg,:form-ingreso,:messages">
+				</p:commandButton>
+
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+
+</ui:composition>

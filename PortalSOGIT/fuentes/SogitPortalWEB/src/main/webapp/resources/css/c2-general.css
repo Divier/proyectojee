@@ -1,0 +1,186 @@
+/************************
+	Personalizar Primefaces
+************************/
+.ui-widget {
+	font-family: 'Open Sans', sans-serif, Verdana;
+	font-size: 12px !important;
+}
+
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button
+	{
+	font-family: 'Open Sans', sans-serif, Verdana;
+}
+
+.ui-dialog-title {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.ui-selectonemenu {
+	max-width: 200px;
+	vertical-align: top;
+}
+
+.ui-selectonemenu-panel {
+	max-width: 400px;
+}
+
+.direcUbicabilidad .ui-selectonemenu-list-item {
+	border: 0px none;
+	margin: 1px 0;
+	padding: 3px 5px;
+	text-align: left;
+	white-space: normal !important;
+}
+
+.ui-message-info, .ui-message-error, .ui-message-warn, .ui-message-fatal
+	{
+	margin: 0px 0px !important;
+}
+
+.ui-spinner-input {
+	width: 80% !important;
+}
+
+.ui-selection-column {
+	width: 20px !important;
+}
+
+.ui-picklist-button-add {
+	min-width: 30px !important;
+}
+
+.ui-picklist-button-add-all {
+	min-width: 30px !important;
+}
+
+.ui-picklist-button-remove {
+	min-width: 30px !important;
+}
+
+.ui-picklist-button-remove-all {
+	min-width: 30px !important;
+}
+
+/************************
+	Generales
+************************/
+.contenido button {
+	min-width: 140px;
+}
+
+.inline-btn {
+	min-width: 0px !important;
+	margin-left: 3px;
+}
+
+.input-col .inline-block .ui-selectcheckboxmenu, .input-col .inline-block .ui-selectonemenu
+	{
+	width: 80% !important;
+}
+
+/************************
+	Errores de http
+************************/
+#imagenWarning {
+	text-align: center;
+}
+
+#etiquetaUno {
+	font-weight: bold;
+	text-transform: uppercase;
+	text-shadow: 0 1px 0 #CCCCCC, 0 2px 0 #C9C9C9, 0 3px 0 #BBBBBB, 0 4px 0
+		#B9B9B9, 0 5px 0 #AAAAAA, 0 6px 1px rgba(0, 0, 0, 0.1), 0 0 5px
+		rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.3), 0 3px 5px
+		rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.25), 0 10px 10px
+		rgba(0, 0, 0, 0.2), 0 20px 20px rgba(0, 0, 0, 0.15);
+}
+
+#etiquetaDos {
+	padding: 20px;
+}
+
+/************************
+	Especiales CU
+************************/
+.input-col-dir {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	min-width: 120px !important;
+	max-width: 120px !important;
+}
+
+.input-short {
+	width: 25px;
+}
+
+input::-ms-clear {
+	display: none;
+}
+
+input[type=password]::-ms-reveal, input[type=password]::-ms-clear {
+	display: none;
+}
+
+.ui-splitbutton-menubutton .ui-button {
+	max-width: 30px !important;
+}
+
+.inconsistenciaComparendoUno {
+	vertical-align: initial;
+	width: 20%;
+}
+
+.inconsistenciaComparendoDos {
+	vertical-align: initial;
+	width: 80%;
+}
+
+.textAreaGrande {
+	min-height: 100px !important;
+	min-width: 350px !important;
+}
+
+.input-col-grande {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	min-width: 120px !important;
+	max-width: 350px !important;
+}
+
+.label-col.gigante {
+	min-width: 350px !important;
+	max-width: 600px !important;
+}
+
+.textAreaGigante {
+	width: 600px !important;
+	min-height: 200px !important;
+	overflow-y: auto !important;
+	overflow-x: hidden !important;
+	max-height: 400px !important;
+	padding: 8px !important;
+}
+
+.ui-dialog.overflow {
+	max-height: 90% !important;;
+	overflow: auto !important;;
+}
+
+/************************
+Firma digital
+************************/
+#cnv {
+	border-style: groove;
+}
+
+
+.ui-growl-item-container {
+    background: #404040 none repeat scroll 0 0 !important;
+    border: 1px solid #404040  !important;
+    color: #FFFFFF  !important;
+}
+
+.ui-datatable-resizable tbody td, .ui-datatable-resizable tfoot td {
+	white-space: normal !important;
+}

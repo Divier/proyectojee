@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="consultarEstadosAsignacionHolderFL" 
+		 class="co.com.datatools.c2.managed_bean.formularios.consultas.cambio_estado.ConsultarEstadosAsignacionHolderFL"/>	
+
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/formularios/consultas/cambio-estado/consultarTipoFormulario.xhtml"><!-- Modificado diego original  /WEB-INF/jsp/formularios/responsable-formulario/consultarResponsableFormulario.xhtml-->
+		<on-entry>
+
+			<evaluate	
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('consultarEstadosAsignacionMB')" />
+			<evaluate	
+				expression="externalContext.sessionMap.consultarEstadosAsignacionMB.init()" />	
+				
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.consultarEstadosAsignacionMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+</flow>

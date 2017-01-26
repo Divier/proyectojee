@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="configuracionHorarioHolderFL"
+		class="co.com.datatools.c2.managed_bean.administracion.horario_funcionario.ConfiguracionHorarioHolderFL" />
+	<var name="configuracionHorarioFL"
+		class="co.com.datatools.c2.managed_bean.administracion.horario_funcionario.ConfiguracionHorarioFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracion/horario-funcionario/consultarHorariosFuncionarios.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('configuracionHorarioMB')"></evaluate>
+		</on-entry>
+		<transition on="_op-CREAR" to="_op-CREAR">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.administracion.horario_funcionario.ConfiguracionHorarioFL()"
+				result="flowScope.configuracionHorarioFL"></evaluate>
+		</transition>
+		<transition on="_op-CONSULTAR" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.configuracionHorarioMB.consultar()"></evaluate>
+		</transition>
+	</view-state>
+
+	<view-state id="_op-CREAR"
+		view="/WEB-INF/jsp/administracion/horario-funcionario/registrarHorarioFuncionario.xhtml">
+		<transition on="CONTINUAR" to="CONTINUAR" />
+		<transition on="VOLVER" to="ingresar" />
+	</view-state>
+
+	<action-state id="CONTINUAR">
+		<evaluate
+			expression="externalContext.sessionMap.configuracionHorarioMB.registrarConfiguracionHorario()"></evaluate>
+		<transition on="yes" to="ingresar" />
+		<transition on="no" to="_op-CREAR" />
+	</action-state>
+
+</flow>

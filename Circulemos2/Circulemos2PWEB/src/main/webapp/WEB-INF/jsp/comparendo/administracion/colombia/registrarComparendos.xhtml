@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+	<ui:define name="contenido">
+		<p:panel id="campos-registro" styleClass="panel-formulario"
+			header="#{labelAdminComparendo.titulo_ingresar_comparendo}">
+			<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+				legend="#{lbComun.msg_fieldset_registro}">
+				<h:form id="form-ingreso" enctype="multipart/form-data">
+    				<p:defaultCommand target="btnGuardar" />
+					<p:fieldset id="datos-comparendo" styleClass="fieldset-formulario"
+						legend="#{labelAdminComparendo.label_datos_comparendo}">
+						<h:panelGrid id="panel-formulario" styleClass="center-block"
+							columnClasses="label-col,input-col,label-col,input-col"
+							columns="4">
+							<!-- Componentes del formulario 2 o 4 columnas-->
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_organismo_transito}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selOrganismoTransito"
+									value="#{adminComparendoFL.procesaComparendo.organismoTransito.codigoOrganismo}"
+									required="true" disabled="#{adminComparendoFL.mostrarWizard}"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+									<f:selectItems
+										value="#{fachadaCatalogosMB.catOrganismoTransito()}" />
+									<f:selectItem
+										itemLabel="#{labelAdminComparendo.label_option_otros}"
+										itemValue="0" />
+									<p:ajax listener="#{adminComparendoMB.onCodigoOrganismoChange(adminComparendoFL)}"
+										update="codigoOrganismoNumero :messages" process="@this"
+										global="false" />
+								</p:selectOneMenu>
+								<p:message for="selOrganismoTransito" />
+							</h:panelGroup>
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_fecha_registro}"
+								styleClass="campo-obligatorio" />
+							<c2:outputDateLabel
+								labelValue="#{adminComparendoFL.procesaComparendo.fechaRecepcion}" />
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_tipo_comparendo}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selTipoComparendo"
+									disabled="#{adminComparendoFL.mostrarWizard}"
+									value="#{adminComparendoFL.procesaComparendo.codigoMedioImposicion}"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+									<f:selectItems
+										value="#{fachadaCatalogosMB.catMedioImposicionComparendo()}" />
+									<p:ajax process="@this" global="false" />
+								</p:selectOneMenu>
+								<p:message for="selTipoComparendo" />
+							</h:panelGroup>
+
+
+							<p:outputLabel value="#{labelAdminComparendo.label_polca}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selPolca"
+									disabled="#{adminComparendoFL.mostrarWizard}"
+									value="#{adminComparendoFL.polca}" required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+										itemValue="true" />
+									<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+										itemValue="false" />
+									<p:ajax listener="#{adminComparendoMB.onPolcaChange(adminComparendoFL)}"
+										update="codigoOrganismoNumero" process="@this" global="false" />
+								</p:selectOneMenu>
+								<p:message for="selExisteFugaInfractor" />
+							</h:panelGroup>
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_numero_comparendo}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<h:panelGrid columns="2">
+									<p:inputText id="codigoOrganismoNumero" style="width:70px"
+										readonly="true" maxlength="8"
+										value="#{adminComparendoFL.codOrganismoNumeroComparendo}"
+										disabled="#{adminComparendoFL.mostrarWizard}"></p:inputText>
+									<p:inputText id="numeroComparendo" style="width:100px"
+										value="#{adminComparendoFL.numeroComparendo}" maxlength="12"
+										required="true" disabled="#{adminComparendoFL.mostrarWizard}"
+										requiredMessage="#{labelGeneral.val_campo_requerido}"
+										validatorMessage="#{labelGeneral.val_campo_numerico}">
+										<f:validateRegex pattern="#{adminComparendoMB.expresionNumerica}" />
+										<p:ajax
+											listener="#{adminComparendoMB.onNumeroComparendoChange(adminComparendoFL)}"
+											update="numeroComparendo, numeroComparendoMessage"
+											global="false" process="@this" event="change" />
+									</p:inputText>
+								</h:panelGrid>
+								<p:message id="numeroComparendoMessage" for="numeroComparendo" />
+							</h:panelGroup>
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_fecha_imposicion}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:calendar id="fechaImposicion"
+									value="#{adminComparendoFL.procesaComparendo.fechaInfraccion}"
+									pattern="#{webPrm.lab_calendar_pattern_full}" required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									disabled="#{adminComparendoFL.mostrarWizard}"
+									maxdate="#{adminComparendoFL.procesaComparendo.fechaRecepcion}">
+
+									<p:ajax event="dateSelect"
+										listener="#{adminComparendoMB.onFechaImposicionChange(adminComparendoFL)}"
+										update="descripcionInfraccion :messages" global="false"
+										process="@this" />
+									<p:ajax event="change"
+										listener="#{adminComparendoMB.onFechaImposicionChange(adminComparendoFL)}"
+										update="descripcionInfraccion :messages" global="false"
+										process="@this" />
+									<p:watermark for="fechaImposicion"
+										value="#{webPrm.lab_calendar_pattern_full}" />
+								</p:calendar>
+								<p:message for="fechaImposicion" />
+							</h:panelGroup>
+
+							<p:outputLabel
+								value="#{labelAdminComparendo.label_existe_fuga_infractor}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selExisteFugaInfractor"
+									value="#{adminComparendoFL.procesaComparendo.existeFugaInfractor}"
+									required="true" disabled="#{adminComparendoFL.mostrarWizard}"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+										itemValue="true" />
+									<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+										itemValue="false" />
+									<p:ajax process="@this" global="false" />
+								</p:selectOneMenu>
+								<p:message for="selExisteFugaInfractor" />
+							</h:panelGroup>
+						</h:panelGrid>
+					</p:fieldset>
+
+					<p:fieldset id="datos-infraccion" styleClass="fieldset-formulario"
+						legend="#{labelAdminComparendo.label_datos_infraccion}">
+						<p:fieldset id="datos-codigo-infraccion"
+							styleClass="fieldset-formulario"
+							legend="#{labelAdminComparendo.label_infraccion}">
+							<h:panelGrid id="panel-formulario-infraccion"
+								styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col"
+								columns="2">
+								<!-- Componentes del formulario 2 o 4 columnas-->
+
+								<p:outputLabel
+									value="#{labelAdminComparendo.label_codigo_infraccion}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputText id="codigoInfraccion" required="true"
+										disabled="#{adminComparendoFL.mostrarWizard}"
+										requiredMessage="#{labelGeneral.val_campo_requerido}"
+										value="#{adminComparendoFL.procesaComparendo.codigoInfraccion}"
+										maxlength="35" onblur="value=value.toUpperCase()">
+										<p:ajax
+											listener="#{adminComparendoMB.onCodigoInfraccionChange(adminComparendoFL)}"
+											update=":messages panel-formulario-infraccion"
+											process="@this" event="change" />
+									</p:inputText>
+									<p:message for="codigoInfraccion" />
+								</h:panelGroup>
+
+								<p:outputLabel
+									value="#{labelAdminComparendo.label_descripcion_infraccion}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputTextarea id="descripcionInfraccion"
+										value="#{adminComparendoFL.descripcionInfraccion}"
+										required="true" disabled="#{adminComparendoFL.mostrarWizard}"
+										requiredMessage="#{labelGeneral.val_campo_requerido}"
+										maxlength="200" rows="3" readonly="true"></p:inputTextarea>
+									<p:message for="descripcionInfraccion" />
+								</h:panelGroup>
+							</h:panelGrid>
+						</p:fieldset>
+						<p:fieldset id="datos-lugar-infraccion"
+							styleClass="fieldset-formulario"
+							legend="#{labelAdminComparendo.label_lugar_infraccion}">
+							<h:panelGrid id="panel-formulario-lugar-infraccion"
+								styleClass="center-block"
+								columnClasses="label-col,input-col,label-col,input-col"
+								columns="3">
+								<!-- Modulo de direcciones-->
+								<p:outputLabel
+									value="#{labelAdminComparendo.label_direccion_infraccion}"
+									styleClass="campo-obligatorio" />
+								<h:panelGroup>
+									<p:inputTextarea id="direccionInfraccion" rows="3"
+										required="true" readonly="true" maxlength="150"
+										value="#{adminComparendoFL.direccionInfraccionTexto}"></p:inputTextarea>
+									<p:message for="direccionInfraccion" />
+								</h:panelGroup>
+								<!--Boton Direccion-->
+								<p:commandButton id="btnDireccion" action="DIRECCION_INFRACCION"
+									process="@this" update="direccionInfraccion" immediate="true"
+									value="#{labelAdminComparendo.tooltip_btnDireccion}"
+									disabled="#{adminComparendoFL.mostrarWizard}">
+									<p:tooltip for="btnDireccion"
+										value="#{labelAdminComparendo.tooltip_btnDireccion}" />
+								</p:commandButton>
+							</h:panelGrid>
+						</p:fieldset>
+					</p:fieldset>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<!--Boton Continuar diligenciamiento-->
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="@form "
+							value="#{labelAdminComparendo.tooltip_btnGuardar}"
+							update=":messages campos-registro"
+							disabled="#{adminComparendoFL.mostrarWizard}">
+							<p:tooltip for="btnGuardar"
+								value="#{labelAdminComparendo.tooltip_btnGuardar}" />
+						</p:commandButton>
+						<!--Boton Limpiar-->
+						<p:commandButton id="btnLimpiar" action="LIMPIAR"
+							icon="c2-icon-limpiar" process="@this"
+							update=":form-ingreso, :form-ingreso-detalle-comparendo"
+							immediate="true" value="#{lbComun.btnLimpiar}">
+							<p:tooltip for="btnLimpiar" value="#{lbComun.tooltip_limpiar}" />
+						</p:commandButton>
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</h:form>
+
+				<h:form id="form-ingreso-detalle-comparendo"
+					enctype="multipart/form-data">
+					<p:fieldset id="datos-especificos" styleClass="fieldset-formulario"
+						legend="#{labelAdminComparendo.label_datos_comparendo_detalle}"
+						rendered="#{adminComparendoFL.mostrarWizard}">
+						<h:panelGrid columns="1" id="panelDatosEspecificos"
+							styleClass="center-block">
+							<!-- WIZARD-->
+							<p:wizard flowListener="#{adminComparendoMB.onFlowProcess}"
+								backLabel="#{labelAdminComparendo.label_atras}"
+								nextLabel="#{labelAdminComparendo.label_siguiente}"
+								step="#{adminComparendoFL.pasoActual}" widgetVar="wizComparendo">
+								<p:tab id="vehiculo"
+									title="#{labelAdminComparendo.label_vehiculo}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/colombia/include/vehiculo.xhtml" />
+								</p:tab>
+								<p:tab id="infractor"
+									title="#{labelAdminComparendo.label_infractor}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/colombia/include/infractor.xhtml" />
+								</p:tab>
+								<p:tab id="propietario"
+									title="#{labelAdminComparendo.label_propietario}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/colombia/include/propietario.xhtml" />
+								</p:tab>
+								<p:tab id="agente_transito"
+									title="#{labelAdminComparendo.label_agente_transito}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/colombia/include/agente_transito.xhtml" />
+								</p:tab>
+								<p:tab id="observaciones"
+									title="#{labelAdminComparendo.label_observaciones}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/colombia/include/observaciones.xhtml" />
+								</p:tab>
+								<p:tab id="inmovilizacion"
+									title="#{labelAdminComparendo.label_inmovilizacion}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/colombia/include/inmovilizacion.xhtml" />
+								</p:tab>
+								<p:tab id="testigo"
+									title="#{labelAdminComparendo.label_testigo}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/colombia/include/testigo.xhtml" />
+								</p:tab>
+								<p:tab id="embriaguez"
+									title="#{labelAdminComparendo.label_embriaguez}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/colombia/include/embriaguez.xhtml" />
+								</p:tab>
+								<p:tab id="evidencias_fisicas"
+									title="#{labelAdminComparendo.label_evidencias_fisicas}">
+									<ui:include
+										src="/WEB-INF/jsp/comparendo/administracion/colombia/include/evidencias_fisicas.xhtml" />
+								</p:tab>
+							</p:wizard>
+						</h:panelGrid>
+					</p:fieldset>
+				</h:form>
+			</p:fieldset>
+
+		</p:panel>
+
+		<ui:include
+			src="/WEB-INF/jsp/administracion/direccion/registrarDireccion.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/comparendo/administracion/colombia/popup/errores_procesamiento.xhtml" />
+		<script>
+		//Script utilizado para que cuando presionen el enter se vaya al siguiente paso del wizard
+	 	$(document).ready(function() {
+			$(document).on("keypress", "#form-ingreso-detalle-comparendo input", function(e){ 
+    			var code = e.which; // recommended to use e.which, it's normalized across browsers
+    			if(code==13) {
+					PF('wizComparendo').next();
+					return false;
+				}
+				return true;
+			});
+		});
+		</script>
+	</ui:define>
+</ui:composition>

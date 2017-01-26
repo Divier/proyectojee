@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-radicar">
+			<p:panel id="campos-radicar" styleClass="panel-formulario"
+				header="#{labelProcesoImpugnacion.titulo_readicar_expediente}">
+				<p:fieldset styleClass="fieldset-formulario">
+					<h:panelGrid id="panel-info-cabecera" styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">
+						<p:outputLabel
+							value="#{labelProcesoImpugnacion.label_numero_comparendo}"></p:outputLabel>
+						<p:outputLabel
+							value="#{impugnacionHolderFL.comparendoSeleccionado.numeroComparendo}"></p:outputLabel>
+						<p:outputLabel value="#{labelProcesoImpugnacion.label_cod_infrac}"></p:outputLabel>
+						<p:outputLabel
+							value="#{impugnacionHolderFL.comparendoSeleccionado.detalleInfraccion}"></p:outputLabel>
+						<p:outputLabel
+							value="#{labelProcesoImpugnacion.label_num_citacion}"></p:outputLabel>
+						<p:outputLabel
+							value="#{impugnacionHolderFL.comparendoSeleccionado.numeroCitacion}"></p:outputLabel>
+						<p:outputLabel value="#{labelProcesoImpugnacion.label_placa}"></p:outputLabel>
+						<p:outputLabel
+							value="#{impugnacionHolderFL.comparendoSeleccionado.placa}"></p:outputLabel>
+					</h:panelGrid>
+				</p:fieldset>
+				<p:tabView id="tabs_par_mot">
+					<p:tab title="#{labelProcesoImpugnacion.titleParticipantes}">
+						<ui:include
+							src="/WEB-INF/jsp/comparendo/proceso-impugnacion/administrarParticipantes.xhtml" />
+					</p:tab>
+					<p:tab title="#{labelProcesoImpugnacion.titleMOtivacion}">
+						<ui:include
+							src="/WEB-INF/jsp/comparendo/proceso-impugnacion/administrarMotivacion.xhtml" />
+					</p:tab>
+				</p:tabView>
+				<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+					<!--Boton Radicar-->
+					<p:commandButton action="_op-CREAR" icon="c2-icon-editar"
+						value="#{labelProcesoImpugnacion.btnRadicarExp}"
+						update=":messages :frmConfirRadiExpd @form">
+					</p:commandButton>
+					<!--Boton Cancelar-->
+					<p:commandButton id="btnCancelar" action="VOLVER"
+						icon="c2-icon-cancelar" process="@this" immediate="true"
+						value="#{lbComun.btnCancelar}">
+						<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+						<p:confirm header="#{lbComun.msg_tit_confirmar}"
+							message="#{lbComun.msg_confirm_volver_cancelar}"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+		<ui:include
+			src="/WEB-INF/jsp/comparendo/proceso-impugnacion/popup/confir_radicacion_exp.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/administracion/captura-firma/capturaFirma.xhtml" />
+	</ui:define>
+</ui:composition>

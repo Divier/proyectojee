@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelNotificacionAviso.notificacion_aviso}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<p:outputLabel
+							value="#{labelNotificacionAviso.label_organismo_transito}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="id1"
+								value="#{notificarComparendoPorEdictoHolderFL.codigoOrganismo}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems
+									value="#{notificarComparendoPorEdictoMB.consultaOrganismosAsociados()}" />
+							</p:selectOneMenu>
+							<p:message for="id1" />
+						</h:panelGroup>
+					</h:panelGrid>
+					<p:fieldset styleClass="fieldset-formulario"
+						id="fieldset-fecha-imposicion"
+						legend="#{labelNotificacionAviso.label_fecha_generacion_edicto}">
+						<h:panelGrid id="panel1" styleClass="center-block" columns="4"
+							columnClasses="label-col,input-col,label-col,input-col">
+							<p:outputLabel
+								value="#{labelNotificacionAviso.label_fecha_inicial}"
+								styleClass="campo-obligatorio"
+								rendered="#{notificarComparendoPorEdictoHolderFL.requiereFecha}" />
+							<p:outputLabel
+								value="#{labelNotificacionAviso.label_fecha_inicial}"
+								rendered="#{!notificarComparendoPorEdictoHolderFL.requiereFecha}" />
+							<h:panelGroup>
+								<p:calendar id="id3" navigator="true"
+									pattern="#{webPrm.lab_calendar_pattern}"
+									value="#{notificarComparendoPorEdictoHolderFL.fechaInicialGeneracion}"
+									maxdate="#{notificarComparendoPorEdictoHolderFL.fechaActual}">
+									<p:watermark for="id3"
+										value="#{webPrm.lab_calendar_mask_pattern}" />
+									<p:ajax event="dateSelect"
+										listener="#{notificarComparendoPorEdictoMB.onFechaChange}"
+										update="fieldset-fecha-imposicion" global="false"
+										process="@this" />
+									<p:ajax event="change"
+										listener="#{notificarComparendoPorEdictoMB.onFechaChange}"
+										update="fieldset-fecha-imposicion" global="false"
+										process="@this" />
+								</p:calendar>
+								<p:message for="id3" />
+							</h:panelGroup>
+							<p:outputLabel
+								value="#{labelNotificacionAviso.label_fecha_final}"
+								styleClass="campo-obligatorio"
+								rendered="#{notificarComparendoPorEdictoHolderFL.requiereFecha}" />
+							<p:outputLabel
+								value="#{labelNotificacionAviso.label_fecha_final}"
+								rendered="#{!notificarComparendoPorEdictoHolderFL.requiereFecha}" />
+							<h:panelGroup>
+								<p:calendar id="id4" navigator="true"
+									pattern="#{webPrm.lab_calendar_pattern}"
+									value="#{notificarComparendoPorEdictoHolderFL.fechaFinalGeneracion}"
+									mindate="#{notificarComparendoPorEdictoHolderFL.fechaInicialGeneracion}">
+									<p:watermark for="id4"
+										value="#{webPrm.lab_calendar_mask_pattern}" />
+									<p:ajax event="dateSelect"
+										listener="#{notificarComparendoPorEdictoMB.onFechaChange}"
+										update="fieldset-fecha-imposicion" global="false"
+										process="@this" />
+									<p:ajax event="change"
+										listener="#{notificarComparendoPorEdictoMB.onFechaChange}"
+										update="fieldset-fecha-imposicion" global="false"
+										process="@this" />
+								</p:calendar>
+								<p:message for="id4" />
+							</h:panelGroup>
+						</h:panelGrid>
+					</p:fieldset>
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido :dlgPdfviewer">
+							<p:tooltip for="btnConsultar" />
+						</p:commandButton>
+						<p:commandButton id="btnCrear" styleClass="_op-CREAR"
+							action="_op-CREAR" icon="c2-icon-crear" process="@form"
+							value="#{labelNotificacionAviso.label_genera_edicto}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnCrear" />
+						</p:commandButton>
+						<p:commandButton id="btnNotificar" styleClass="_op-CREAR"
+							action="_op-NOTIFICAR" icon="c2-icon-crear" process="@form"
+							value="#{labelNotificacionAviso.label_notificar_comparendos}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnCrear" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado"
+			rendered="#{notificarComparendoPorEdictoHolderFL.notificacionAvisoList.size()>0}">
+			<h:panelGrid id="acciones-top">
+				<f:facet name="footer">
+					<!-- Ver archivo plano generado -->
+					<!--disabled="#{archivoSimitHolderFL.eventoArchivoSimitSel == null or archivoSimitHolderFL.eventoArchivoSimitSel.idDocumento == null}" onclick="PrimeFaces.monitorDownload(start, stop);"  							<p:fileDownload
+								value="#{archivoSimitMB.descargarDocumento(archivoSimitHolderFL.eventoArchivoSimitSel.idDocumento)}" />-->
+					<p:commandButton id="btnVerDoc" process="@this" ajax="false"
+						icon="ui-icon-arrowthick-1-s"
+						value="#{labelNotificacionAviso.label_btn_visualizar}"
+						title="#{labelSimit.tt_detalle}" styleClass="contenido"
+						action="#{notificarComparendoPorEdictoMB.visualizarDocumento(notificarComparendoPorEdictoHolderFL.notificacionAvisoSel.idArchivoGenerado)}"
+						disabled="#{notificarComparendoPorEdictoHolderFL.notificacionAvisoSel==null}">
+						<p:tooltip value="#{labelNotificacionAviso.label_btn_visualizar}" />
+					</p:commandButton>
+				</f:facet>
+			</h:panelGrid>
+			<p:dataTable id="tabla-resultados"
+				value="#{notificarComparendoPorEdictoHolderFL.notificacionAvisoList}"
+				var="registro" rowKey="#{registro.id}" paginator="true"
+				paginatorTemplate="#{webPrm.param_paginator_template}"
+				rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+				rows="#{webPrm.param_initial_rows}" sortMode="multiple"
+				selection="#{notificarComparendoPorEdictoHolderFL.notificacionAvisoSel}">
+
+				<p:ajax event="rowSelectRadio"
+					process=":form-resultado:tabla-resultados"
+					update=":form-resultado:tabla-resultados :form-resultado:acciones-top"
+					global="false" />
+
+				<p:column selectionMode="single" />
+				<p:column
+					headerText="#{labelNotificacionAviso.label_organismo_transito}">
+					<p:outputLabel
+						value="#{registro.organismoTransito.codigoOrganismo}-#{registro.organismoTransito.nombreOrganismo}"
+						escape="false" />
+				</p:column>
+				<p:column
+					headerText="#{labelNotificacionAviso.label_fecha_generacion}">
+					<c2:outputDateLabel labelValue="#{registro.fechaGeneracion}" />
+				</p:column>
+				<p:column
+					headerText="#{labelNotificacionAviso.label_cantidad_comparendos}">
+					<p:outputLabel value="#{registro.cantidadComparendos}"
+						escape="false" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<p:dialog widgetVar="dlgPdfviewer" id="dlgPdfviewer" resizable="false"
+			modal="true" appendToBody="@(body)" dynamic="true" width="50%">
+			<h:form id="form-pdfviewer">
+				<pe:documentViewer height="500"
+					value="#{notificarComparendoPorEdictoMB.streamedContent}" />
+			</h:form>
+		</p:dialog>
+		<script>
+	 	$(document).ready(function() {
+		 		if(#{notificarComparendoPorEdictoHolderFL.visible})
+				PF('dlgPdfviewer').show();	
+	 	});
+	 	</script>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<f:metadata>
+			<f:event type="preRenderView"
+				listener="#{configuracionFinanciacionMB.toString}" />
+		</f:metadata>
+
+		<h:form id="form-contenido">
+
+			<p:panel id="campos-consulta"
+				header="#{labelConfFinanciaciones.tit_consulta_conf_financiaciones}"
+				styleClass="panel-formulario">
+				<p:fieldset legend="#{lbComun.msg_fieldset_consultar}"
+					styleClass="fieldset-formulario">
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel
+							value="#{labelConfFinanciaciones.lbl_nombre_conf_financiacion}: " />
+						<h:panelGroup>
+							<p:inputText id="txtConNom"
+								value="#{configuracionFinanciacionHolderFL.filConfFinanDTO.nombre}" />
+							<p:message for="txtConNom" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelConfFinanciaciones.lbl_fecha_inicial_vig_cond}: " />
+						<h:panelGroup>
+							<p:calendar id="calConFecIni"
+								value="#{configuracionFinanciacionHolderFL.filConfFinanDTO.fechaInicial}"
+								navigator="true" pattern="#{utilidadMB.formatoFecha}">
+								<p:watermark for="calConFecIni"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="calConFecIni" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelConfFinanciaciones.lbl_fecha_final_vig_cond}: " />
+						<h:panelGroup>
+							<p:calendar id="calConFecFin"
+								value="#{configuracionFinanciacionHolderFL.filConfFinanDTO.fechaFinal}"
+								navigator="true" pattern="#{utilidadMB.formatoFecha}">
+								<p:watermark for="calConFecFin"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="calConFecFin" />
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							value="#{lbComun.btnConsultar}" icon="c2-icon-consultar"
+							action="_op-CONSULTAR" process="@form"
+							update=":form-contenido :messages :form-resultado">
+							<p:tooltip for="btnConsultar"
+								value="#{labelConfFinanciaciones.lbl_btn_consulta_conf_finan}" />
+						</p:commandButton>
+
+						<!--Boton Nuevo-->
+						<p:commandButton id="btnCrear" styleClass="_op-CREAR"
+							value="#{lbComun.btnCrear}" icon="c2-icon-crear"
+							action="_op-CREAR" process="@this" update=":messages">
+							<p:tooltip for="btnCrear"
+								value="#{labelConfFinanciaciones.lbl_btn_nueva_conf_finan}" />
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{configuracionFinanciacionHolderFL.configuracionFinanciacionDataModel.size() > 0}">
+
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+
+						<!--Boton Editar-->
+						<p:commandButton id="btnEditar" value="#{lbComun.btnEditar}"
+							icon="c2-icon-editar" styleClass="_op-EDITAR"
+							disabled="#{configuracionFinanciacionHolderFL.selConfFinanDTO==null}"
+							action="_op-EDITAR" process="@form" update=":messages">
+							<p:tooltip for="btnEditar"
+								value="#{labelConfFinanciaciones.lbl_btn_actualizar_conf_finan}" />
+						</p:commandButton>
+
+						<!--Boton Eliminar-->
+						<p:commandButton id="btnEliminar" styleClass="_op-ELIMINAR"
+							value="#{lbComun.btnEliminar}" icon="c2-icon-eliminar"
+							disabled="#{configuracionFinanciacionHolderFL.selConfFinanDTO==null}"
+							action="_op-ELIMINAR" process="@form"
+							update=":messages :form-resultado">
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_eliminar}"
+								icon="ui-icon-alert" />
+							<p:tooltip for="btnEliminar"
+								value="#{labelConfFinanciaciones.lbl_btn_eliminar_conf_finan}" />
+						</p:commandButton>
+
+						<!--Boton Ver detalle-->
+						<p:commandButton id="btnVerDet" value="#{lbComun.btnVerDet}"
+							icon="c2-icon-detalle" oncomplete="PF('detConfFinan').show();"
+							disabled="#{configuracionFinanciacionHolderFL.selConfFinanDTO==null}"
+							action="#{configuracionFinanciacionMB.visualizarDetalle()}"
+							process="@form" update=":formDetConfFinan :messages">
+							<p:tooltip for="btnVerDet"
+								value="#{labelConfFinanciaciones.lbl_btn_detalle_conf_finan}" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados"
+					value="#{configuracionFinanciacionHolderFL.configuracionFinanciacionDataModel}"
+					var="confFinan" rowKey="#{confFinan.id}"
+					paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}"
+					selection="#{configuracionFinanciacionHolderFL.selConfFinanDTO}">
+
+					<p:ajax event="rowSelectRadio"
+						process=":form-resultado:tabla-resultados"
+						update=":form-resultado:acciones-top" global="false" />
+
+					<p:column selectionMode="single" />
+
+					<p:column
+						headerText="#{labelConfFinanciaciones.lbl_clm_nombre_conf_finan}">
+						<p:outputLabel value="#{confFinan.nombre}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelConfFinanciaciones.lbl_clm_fec_ini_vig_con}">
+						<c2:outputDateLabel labelValue="#{confFinan.fechaInicial}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelConfFinanciaciones.lbl_clm_fec_fin_vig_con}">
+						<c2:outputDateLabel labelValue="#{confFinan.fechaFinal}" />
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+		<ui:include
+			src="/WEB-INF/jsp/financiacion/administracion/configuracionFinanciacion/popUps/detalleConfiguracionFinanciacion.xhtml" />
+	</ui:define>
+</ui:composition>

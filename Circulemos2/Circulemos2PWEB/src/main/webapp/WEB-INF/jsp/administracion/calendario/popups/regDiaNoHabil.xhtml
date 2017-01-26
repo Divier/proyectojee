@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:c2="http://java.sun.com/jsf/composite/c2" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:dialog widgetVar="popUpRegDNH" id="popUpRegDiaNoHabil" header="#{labelCalendario.titulo_registro_DNH}" resizable="false" modal="true"
+		appendToBody="true" dynamic="true" onShow="onShowPopUpDetDiaNoHabil()" closable="false">
+		<h:form id="idFrmRegDNH">
+			<p:focus context="txtObsReg" />
+			<h:panelGrid id="pnlGrdForRegDNH" columns="2" styleClass="center-block" columnClasses="label-col,input-col">
+
+				<p:outputLabel value="#{labelCalendario.lbl_fec_desde}: " />
+				<c2:outputDateLabel labelValue="#{diaNoHabilFL.selDiaNoHabil.fecha}" />
+
+				<p:outputLabel value="#{labelCalendario.lbl_fec_hasta}: " styleClass="campo-obligatorio" />
+				<h:panelGroup id="groupTxtFechaHasta">
+					<p:calendar id="txtFechaHasta" value="#{diaNoHabilFL.fechaHasta}" pattern="#{webPrm.lab_calendar_pattern}" navigator="true" required="true"
+						requiredMessage="#{labelGeneral.val_campo_requerido}" mindate="#{diaNoHabilFL.selDiaNoHabil.fecha}" showOn="button" yearRange="c-50:c+50">
+						<p:watermark for="txtFechaHasta" value="#{webPrm.lab_calendar_mask_pattern}" />
+					</p:calendar>
+					<p:message for="txtFechaHasta" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelCalendario.lbl_observacion_DNH}: " />
+				<h:panelGroup>
+					<p:inputTextarea id="txtObsReg" value="#{diaNoHabilFL.selDiaNoHabil.observacion}" validatorMessage="#{labelCalendario.err_length_observacion}"
+						maxlength="300" rows="3" style="overflow:auto;" autoResize="false">
+						<f:validateLength maximum="300" for="txtObsReg" />
+					</p:inputTextarea>
+					<p:message for="txtObsReg" display="default" />
+				</h:panelGroup>
+
+			</h:panelGrid>
+
+			<h:panelGrid styleClass="center-block" columns="2" cellspacing="5">
+
+				<p:commandButton id="btnGuardar" styleClass="_op-CREAR" action="_op-CREAR" icon="c2-icon-guardar" process="@form" value="#{lbComun.btnGuardar}"
+					update=":messages :form-resultado" rendered="#{calendarioMB.esMayorIgualDiaActualSel()}">
+					<p:tooltip for="btnGuardar" value="#{labelCalendario.tooltip_guardar}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+				</p:commandButton>
+
+				<p:commandButton id="btnCancelar" action="VOLVER" icon="c2-icon-cancelar" update=":messages :form-resultado" process="@this" immediate="true"
+					value="#{lbComun.btnCancelar}" oncomplete="PF('popUpRegDNH').hide();">
+					<p:tooltip for="btnCancelar" value="#{labelCalendario.tooltip_cancelar}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+				</p:commandButton>
+
+			</h:panelGrid>
+
+		</h:form>
+	</p:dialog>
+	<script>
+		function onShowPopUpDetDiaNoHabil(){
+			$("#idFrmRegDNH\\:groupTxtFechaHasta").parent().removeClass('input-col');
+		}
+	</script>
+
+</ui:composition>

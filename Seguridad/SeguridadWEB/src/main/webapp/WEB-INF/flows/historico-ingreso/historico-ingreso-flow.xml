@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+	parent="global">
+
+	<var name="historicoIngresosFL"
+		class="co.com.datatools.seguridad.mb.historico_ingreso.HistoricoIngresoFL" />
+	<!-- INICIO- Estados del flujo de consulta -->
+	<view-state id="ingresar" view="consultar-ingresos.xhtml">
+		<transition on="CONSULTAR" to="CONSULTAR" />
+		<transition on="CANCELAR" to="fin" />
+		<transition on="VER-DETALLE-INGRESO" to="VER-DETALLE-INGRESO">
+			<evaluate expression="externalContext.sessionMap.historicoIngresosMB.consultarDetalleIngreso()" />
+		</transition>
+	</view-state>
+
+	<action-state id="CONSULTAR">
+		<evaluate expression="externalContext.sessionMap.historicoIngresosMB.consultarIngresos()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<view-state id="VER-DETALLE-INGRESO" view="detalle-actividad-ingreso.xhtml">
+		<transition on="VOLVER" to="ingresar" />
+	</view-state>
+
+	<end-state id="fin" />
+</flow>
+	

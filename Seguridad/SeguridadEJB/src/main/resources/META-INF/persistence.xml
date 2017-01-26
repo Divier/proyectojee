@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="Seguridad-PU">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<!--  <jta-data-source>java:jboss/datasources/SeguridadDS</jta-data-source> -->
+		<jta-data-source>java:jboss/datasources/SeguridadSqlDS</jta-data-source>
+		<class>co.com.datatools.seguridad.entidades.Aplicacion</class> 
+		<class>co.com.datatools.seguridad.entidades.ConfiguracionRol</class>
+		<class>co.com.datatools.seguridad.entidades.EstadoIngreso</class>
+		<class>co.com.datatools.seguridad.entidades.EstadoPassword</class>
+		<class>co.com.datatools.seguridad.entidades.EstadoUsuario</class>
+		<class>co.com.datatools.seguridad.entidades.Grupo</class>
+		<class>co.com.datatools.seguridad.entidades.HistoricoRol</class>
+		<class>co.com.datatools.seguridad.entidades.HistoricoUsuario</class>
+		<class>co.com.datatools.seguridad.entidades.IngresoUsuario</class>
+		<class>co.com.datatools.seguridad.entidades.Operacion</class>
+		<class>co.com.datatools.seguridad.entidades.ParametroSeguridad</class>
+		<class>co.com.datatools.seguridad.entidades.PermisoRecursoOperacion</class>
+		<class>co.com.datatools.seguridad.entidades.Recurso</class>
+		<class>co.com.datatools.seguridad.entidades.RecursoMenu</class>
+		<class>co.com.datatools.seguridad.entidades.RecursoOperacion</class>
+		<class>co.com.datatools.seguridad.entidades.Rol</class>
+		<class>co.com.datatools.seguridad.entidades.RolRecursoOperacion</class>
+		<class>co.com.datatools.seguridad.entidades.SolicitudCambioPassword</class>
+		<class>co.com.datatools.seguridad.entidades.TipoDato</class>
+		<class>co.com.datatools.seguridad.entidades.TipoRecurso</class>
+		<class>co.com.datatools.seguridad.entidades.TipoRestriccionRol</class>
+		<class>co.com.datatools.seguridad.entidades.Usuario</class>
+		<class>co.com.datatools.seguridad.entidades.XsdHistorico</class>
+		<properties>
+			<!--<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" /> -->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
+			<!--<property name="hibernate.hbm2ddl.auto" value="update" /> -->
+			<!-- Configuracion Envers
+			<property name="hibernate.listeners.envers.autoRegister" value="false" />
+			<property name="org.hibernate.envers.revision_field_name" value="id_revision" />
+			<property name="org.hibernate.envers.revision_type_field_name" value="id_tipo_revision" />
+			<property name="org.hibernate.envers.audit_table_suffix" value="_aud"/>
+			<property name="org.hibernate.envers.default_schema" value="seguridad_aud" />
+			-->
+		</properties>
+	</persistence-unit>
+</persistence>

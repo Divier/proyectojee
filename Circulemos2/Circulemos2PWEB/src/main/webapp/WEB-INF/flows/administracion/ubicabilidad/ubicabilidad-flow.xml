@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="actualizarDatosUbicabilidadFL"
+		class="co.com.datatools.c2.managed_bean.administracion.ubicabilidad.ActualizarDatosUbicabilidadFL" />
+	<var name="persona" class="co.com.datatools.c2.dto.personas.PersonaDTO" />
+
+	<input name="tipoDocumento" />
+	<input name="documento" />
+	<input name="soloGuardar" />
+	<input name="ciudadanoPresente" />
+
+	<action-state id="CARGAR_UBICABILIDAD">
+		<evaluate
+			expression="externalContext.sessionMap.ubicabilidadMB.inicializarUbicabilidad(tipoDocumento,documento,soloGuardar,ciudadanoPresente)" />
+		<transition on="success" to="UBICABILIDAD" />
+	</action-state>
+
+	<view-state id="UBICABILIDAD"
+		view="/WEB-INF/jsp/administracion/ubicabilidad/ubicabilidad.xhtml">
+		<transition on="DIRECCION_INFRACTOR" to="UBICABILIDAD">
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.inicializarDireccion(null)" />
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.validarTipoDireccion()" />
+		</transition>
+		<transition on="AGREGAR_DIRECCION" to="UBICABILIDAD">
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.dirHolderFL.setPopup(false)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.dirHolderFL.setValidaTipoDireccion(false)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.ubicabilidadMB.adicionarDireccion(externalContext.sessionMap.direccionMB.dirFL.direccionDTO)"></evaluate>
+		</transition>
+		<transition on="CONTINUAR" to="INTEGRIDAD_DATOS" />
+		<transition on="VOLVER" to="CANCELAR_UBI">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.administracion.ubicabilidad.ActualizarDatosUbicabilidadFL()"
+				result="flowScope.actualizarDatosUbicabilidadFL"></evaluate>
+		</transition>
+		<transition on="ACEPTAR_UBI" to="ACEPTAR_UBI">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.administracion.ubicabilidad.ActualizarDatosUbicabilidadFL()"
+				result="flowScope.actualizarDatosUbicabilidadFL"></evaluate>
+		</transition>
+		<transition on="GUARDAR_FIRMA" to="GUARDAR_FIRMA" />
+		<transition on="PERSONA_PRESENTE" to="UBICABILIDAD" >
+			<evaluate expression="externalContext.sessionMap.ubicabilidadMB.ciudadanoPresente(true)" />
+		</transition>
+		<transition on="PERSONA_NO_PRESENTE" to="UBICABILIDAD" >
+			<evaluate expression="externalContext.sessionMap.ubicabilidadMB.ciudadanoPresente(false)" />
+		</transition>
+	</view-state>
+
+	<action-state id="INTEGRIDAD_DATOS">
+		<evaluate
+			expression="externalContext.sessionMap.ubicabilidadMB.validarUbicabilidad()"></evaluate>
+		<transition on="yes" to="VALIDAR_SOLO_GUARDAR"></transition>
+		<transition on="no" to="UBICABILIDAD"></transition>
+	</action-state>
+
+	<decision-state id="VALIDAR_SOLO_GUARDAR">
+		<if test="actualizarDatosUbicabilidadFL.soloGuardar" then="SOLO_GUARDAR_UBICABILIDAD"
+			else="PARAMETRO_FIRMA" />
+	</decision-state>
+
+	<action-state id="PARAMETRO_FIRMA">
+		<evaluate
+			expression="externalContext.sessionMap.capturaFirmaMB.consultarParametro()"></evaluate>
+		<transition on="yes" to="UBICABILIDAD_FIRMA" />
+		<transition on="no" to="GUARDAR_UBICABILIDAD" />
+	</action-state>
+
+	<action-state id="UBICABILIDAD_FIRMA">
+		<evaluate
+			expression="externalContext.sessionMap.capturaFirmaMB.capturarFirmaDigital()"></evaluate>
+		<transition on="success" to="UBICABILIDAD" />
+	</action-state>
+
+	<action-state id="GUARDAR_FIRMA">
+		<evaluate expression="externalContext.sessionMap.capturaFirmaMB.asociarFirma()"></evaluate>
+		<transition on="yes" to="GUARDAR_UBICABILIDAD">
+			<set
+				name="flowScope.actualizarDatosUbicabilidadFL.personaUbicabilidadDTO.numeroFirma"
+				value="externalContext.sessionMap.capturaFirmaMB.capturaFirmaFL.capturaFirmaDTO.firma"
+				type="string" />
+		</transition>
+		<transition on="no" to="UBICABILIDAD" />
+	</action-state>
+
+	<action-state id="GUARDAR_UBICABILIDAD">
+		<evaluate
+			expression="externalContext.sessionMap.ubicabilidadMB.guardarUbicabilidad()"
+			result="persona" />
+		<transition on="success" to="UBICABILIDAD" />
+	</action-state>	
+	
+	<action-state id="SOLO_GUARDAR_UBICABILIDAD">
+		<evaluate
+			expression="externalContext.sessionMap.ubicabilidadMB.guardarUbicabilidad()"
+			result="persona" />
+		<transition on="success" to="ACEPTAR_UBI" />
+	</action-state>
+
+	<!-- Fin flujo de registrar acciones -->
+	<end-state id="ACEPTAR_UBI">
+		<output name="persona" value="persona" />
+	</end-state>
+
+	<end-state id="CANCELAR_UBI" />
+</flow>

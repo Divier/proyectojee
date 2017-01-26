@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ServicioGestionCobroService" targetNamespace="http://reportegestion.sac.ws.c2.datatools.com.co/" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://reportegestion.sac.ws.c2.datatools.com.co/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://reportegestion.sac.ws.c2.datatools.com.co/" schemaLocation="serviciogestioncobro_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="procesarGestionCobroResponse">
+    <wsdl:part name="parameters" element="tns:procesarGestionCobroResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="procesarGestionCobro">
+    <wsdl:part name="parameters" element="tns:procesarGestionCobro">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ServicioGestionCobroPortType">
+    <wsdl:operation name="procesarGestionCobro">
+      <wsdl:input name="procesarGestionCobro" message="tns:procesarGestionCobro">
+    </wsdl:input>
+      <wsdl:output name="procesarGestionCobroResponse" message="tns:procesarGestionCobroResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServicioGestionCobroSoapBinding" type="tns:ServicioGestionCobroPortType">
+	<wsp:PolicyReference URI="#SecurityServiceBindingPolicy" />
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="procesarGestionCobro">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="procesarGestionCobro">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="procesarGestionCobroResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ServicioGestionCobroService">
+    <wsdl:port name="ServicioGestionCobroPort" binding="tns:ServicioGestionCobroSoapBinding">
+      <soap:address location="http://localhost:9090/ServicioGestionCobroPort"/>
+    </wsdl:port>
+  </wsdl:service>
+  
+  
+	<!-- Token en texto plano -->
+	<wsp:Policy wsu:Id="SecurityServiceBindingPolicy">
+		<wsp:ExactlyOne>
+			<wsp:All>
+				<sp:SupportingTokens
+					xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
+					<wsp:Policy>
+						<sp:UsernameToken
+							sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
+							<wsp:Policy>
+								<sp:WssUsernameToken10 />
+							</wsp:Policy>
+						</sp:UsernameToken>
+					</wsp:Policy>
+				</sp:SupportingTokens>
+			</wsp:All>
+		</wsp:ExactlyOne>
+	</wsp:Policy>
+</wsdl:definitions>

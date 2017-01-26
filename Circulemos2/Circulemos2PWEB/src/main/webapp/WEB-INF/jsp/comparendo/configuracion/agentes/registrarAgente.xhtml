@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelAdminAgentes.titulo_administrar_agentes}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminAgentes.titulo_consultar_persona}">
+					<h:panelGrid id="panel-info"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">					
+						<p:outputLabel value="#{labelAdminAgentes.label_tipo_documento}" styleClass="campo-obligatorio"/>
+						<h:panelGroup>
+							<p:selectOneMenu id="selTipoDocumento" required="true"
+								value="#{adminAgentesFL.agente.persona.tipoIdentificacion.id}"
+								disabled="#{adminAgentesFL.traePersona}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />
+							</p:selectOneMenu>
+							<p:message for="selTipoDocumento" />
+						</h:panelGroup>
+						
+						<p:outputLabel value="#{labelAdminAgentes.label_numero_documento}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="numeroDocumento"
+								value="#{adminAgentesFL.agente.persona.numeroIdentificacion}"
+								maxlength="20" required="true" 
+								disabled="#{adminAgentesFL.traePersona}">
+							</p:inputText>
+							<p:message for="numeroDocumento" />
+						</h:panelGroup>	
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{labelAdminAgentes.btnConsultar}"
+							update=":messages :form-contenido"
+							disabled="#{adminAgentesFL.traePersona}">
+							<p:tooltip for="btnConsultar" value="#{labelAdminAgentes.btnConsultar}" />
+						</p:commandButton>
+						
+						<p:commandButton id="btnRegresar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}" rendered="#{!adminAgentesFL.traePersona}">
+							<p:tooltip for="btnRegresar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+				
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminAgentes.titulo_administrar_agentes_reg}" rendered="#{adminAgentesFL.traePersona}">
+					<h:panelGrid id="panel-info-filros"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4" >
+						<p:outputLabel value="#{labelAdminAgentes.label_primer_nombre}" />
+						<h:panelGroup>
+							<p:inputText id="primerNombre"
+								value="#{adminAgentesFL.agente.persona.nombre1}"
+								maxlength="30"
+								validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}"
+								readonly="true">
+								<f:validateRegex pattern="#{adminAgentesMB.expresionTextos}" />
+								<p:ajax process="@this" event="change" global="false" />
+							</p:inputText>
+							<p:message for="primerNombre" />
+						</h:panelGroup>
+	
+						<p:outputLabel value="#{labelAdminAgentes.label_segundo_nombre}" />
+						<h:panelGroup>
+							<p:inputText id="segundoNombre"
+								value="#{adminAgentesFL.agente.persona.nombre2}"
+								maxlength="30" required="false"
+								validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}"
+								readonly="true">
+								<f:validateRegex pattern="#{adminAgentesMB.expresionTextos}" />
+								<p:ajax process="@this" event="change" global="false" />
+							</p:inputText>
+							<p:message for="segundoNombre" />
+						</h:panelGroup>
+	
+						<p:outputLabel value="#{labelAdminAgentes.label_primer_apellido}" />
+						<h:panelGroup>
+							<p:inputText id="primerApellido"
+								value="#{adminAgentesFL.agente.persona.apellido1}"
+								maxlength="30"
+								validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}"
+								readonly="true">
+								<f:validateRegex pattern="#{adminAgentesMB.expresionTextos}" />
+								<p:ajax process="@this" event="change" global="false" />
+							</p:inputText>
+							<p:message for="primerApellido" />
+						</h:panelGroup>
+	
+						<p:outputLabel
+							value="#{labelAdminAgentes.label_segundo_apellido}" />
+						<h:panelGroup>
+							<p:inputText id="segundoApellido"
+								value="#{adminAgentesFL.agente.persona.apellido2}"
+								maxlength="30" required="false"
+								validatorMessage="#{labelAdminComparendo.msg_error_valida_texto}"
+								readonly="true">
+								<f:validateRegex pattern="#{adminAgentesMB.expresionTextos}" />
+								<p:ajax process="@this" event="change" global="false" />
+							</p:inputText>
+							<p:message for="segundoApellido" />
+						</h:panelGroup>
+					
+						<p:outputLabel value="#{labelAdminAgentes.label_placa_agente}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="placaAgente"
+								value="#{adminAgentesFL.agente.placa}"
+								maxlength="20"
+								validatorMessage="#{labelGeneral.val_campo_numerico}"
+								required="true">
+								<f:validateRegex pattern="#{adminAgentesMB.expresionNumerica}" />
+								<p:ajax listener="#{adminAgentesMB.onPlacaAgenteChange(adminAgentesFL)}"
+								global="false" update="campos-consulta" process="@this"
+								event="change" />
+							</p:inputText>
+							<p:message for="placaAgente" />
+						</h:panelGroup>
+					
+						<p:outputLabel value="#{labelAdminAgentes.label_fecha_inicial}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar
+								value="#{adminAgentesFL.agente.fechaInicioVigencia}"
+								id="fechaIni" navigator="true"
+								pattern="#{utilidadMB.formatoFecha}"
+								mindate="#{adminAgentesMB.fechaActual}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<p:watermark for="fechaIni"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="fechaIni" />
+						</h:panelGroup>	
+					</h:panelGrid>
+					
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5" rendered="#{adminAgentesFL.traePersona}">
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}"
+							update=":messages :form-contenido">
+							<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+	
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>						
+			</p:panel>
+		</h:form>
+		<ui:include	src="/WEB-INF/jsp/administracion/captura-firma/capturaFirma.xhtml" />
+	</ui:define>
+</ui:composition>

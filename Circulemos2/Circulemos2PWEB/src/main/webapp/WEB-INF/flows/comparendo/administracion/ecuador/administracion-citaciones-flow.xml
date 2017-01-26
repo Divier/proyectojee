@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="adminComparendoEcuadorHolderFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.administracion.ecuador.AdminComparendoEcuadorHolderFL" />
+	<var name="adminComparendoEcuadorFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.administracion.ecuador.AdminComparendoEcuadorFL" />
+	<var name="rectificaComparendoEcuadorFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.rectificacion.ecuador.RectificaComparendoEcuadorFL" />
+	<var name="diaNoHabilFL"
+		class="co.com.datatools.c2.managed_bean.administracion.calendario.DiaNoHabilFL" />
+	<var name="resolucionesComparendoFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.administracion.colombia.ResolucionesComparendoFL" />
+	<var name="detalleComparendoFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.administracion.colombia.DetalleComparendoFL" />
+	<var name="adminComparendoHolderFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.administracion.colombia.AdminComparendoHolderFL" />
+	<var name="comparendoProcesoFL"
+		class="co.com.datatools.c2.managed_bean.comparendo.compraendo_proceso.ComparendoProcesoFL" />
+
+	<input name="numeroComparendo" />
+
+	<decision-state id="ingresar">
+		<if test="numeroComparendo==null" then="inicio" else="_op-SEGUIMIENTO" />
+	</decision-state>
+ 
+	<view-state id="inicio"
+		view="/WEB-INF/jsp/comparendo/administracion/ecuador/consultarCitaciones.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('adminComparendoMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('adminComparendoEcuadorMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('calendarioMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+		<transition on="_op-EDITAR" to="VALIDAR_RECTIFICACION" />
+		<transition on="_op-SEGUIMIENTO" to="_op-SEGUIMIENTO" />
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.adminComparendoEcuadorMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<!-- ************************************************************************************************************************************************ -->
+	<!-- ******************************************************* RECTIFICACION 
+		DE COMPARENDO ************************************************************ -->
+	<!-- ************************************************************************************************************************************************ -->
+
+	<action-state id="VALIDAR_RECTIFICACION">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('rectificarComparendoEcuadorMB')" />
+		</on-entry>
+		<evaluate
+			expression="externalContext.sessionMap.rectificarComparendoEcuadorMB.validaRectificaComparendo(adminComparendoEcuadorHolderFL.comparendoSeleccionado.cicomparendo)" />
+		<transition on="yes" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.rectificarComparendoEcuadorMB.consultarDetalleComparendo(adminComparendoEcuadorHolderFL.comparendoSeleccionado.cicomparendo)" />
+		</transition>
+		<transition on="no" to="ingresar" />
+	</action-state>
+
+	<view-state id="_op-EDITAR"
+		view="/WEB-INF/jsp/comparendo/rectificacion-comparendo/ecuador/rectificarComparendo.xhtml">
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.rectificacion.ecuador.RectificaComparendoEcuadorFL()"
+				result="flowScope.rectificaComparendoEcuadorFL"></evaluate>
+		</transition>
+		<transition on="GUARDAR" to="RECTIFICAR-COMPARENDO" />
+		<transition on="FINALIZA_GUARDAR" to="_op-EDITAR">
+			<evaluate expression="false"
+				result="flowScope.rectificaComparendoEcuadorFL.existeError" />
+		</transition>
+		<transition on="DIRECCION_INFRACCION" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.inicializarDireccion(flowScope.rectificaComparendoEcuadorFL.direccionInfraccion)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.validarTipoDireccion()"></evaluate>
+			<evaluate expression="true"
+				result="flowScope.rectificaComparendoEcuadorFL.editaDireccionInfraccion"></evaluate>
+		</transition>
+		<transition on="DIRECCION_INFRACTOR" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.inicializarDireccion(flowScope.rectificaComparendoEcuadorFL.direccionInfractor)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.validarTipoDireccion()"></evaluate>
+			<evaluate expression="true"
+				result="flowScope.rectificaComparendoEcuadorFL.editaDireccionInfractor"></evaluate>
+		</transition>
+		<transition on="DIRECCION_INMOVILIZACION" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.inicializarDireccion(flowScope.rectificaComparendoEcuadorFL.direccionInmovilizacion)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.validarTipoDireccion()"></evaluate>
+			<evaluate expression="true"
+				result="flowScope.rectificaComparendoEcuadorFL.editaDireccionInmovilizacion"></evaluate>
+		</transition>
+		<transition on="DIRECCION_TESTIGO" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.inicializarDireccion(flowScope.rectificaComparendoEcuadorFL.direccionTestigo)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.validarTipoDireccion()"></evaluate>
+			<evaluate expression="true"
+				result="flowScope.rectificaComparendoEcuadorFL.editaDireccionTestigo"></evaluate>
+		</transition>
+		<transition on="AGREGAR_DIRECCION" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.dirHolderFL.setPopup(false)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.direccionMB.dirHolderFL.setValidaTipoDireccion(false)"></evaluate>
+			<evaluate
+				expression="externalContext.sessionMap.adminComparendoEcuadorMB.recargarDireccion(externalContext.sessionMap.direccionMB.dirFL.direccionDTO,rectificaComparendoEcuadorFL)"></evaluate>
+		</transition>
+	</view-state>
+
+	<action-state id="RECTIFICAR-COMPARENDO">
+		<evaluate
+			expression="externalContext.sessionMap.rectificarComparendoEcuadorMB.guardarRectificacionComparendo()" />
+		<transition on="yes" to="_op-CONSULTAR">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.rectificacion.ecuador.RectificaComparendoEcuadorFL()"
+				result="flowScope.rectificaComparendoEcuadorFL"></evaluate>
+		</transition>
+		<transition on="no" to="_op-EDITAR" />
+	</action-state>
+	<!-- *********************************************************************************************************** -->
+	<!-- **************************************** FIN RECTIFICACION COMPARENDO 
+		************************************* -->
+
+	<!-- *********************************************************************************************************** -->
+	<!-- ***************************************** SEGUIMIENTO COMPARENDO ****************************************** -->
+	<view-state id="_op-SEGUIMIENTO"
+		view="/WEB-INF/jsp/comparendo/seguimiento/ecuador/seguimientoComparendo.xhtml">
+		<on-entry>
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.administracion.colombia.ResolucionesComparendoFL()" />
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.comparendo.administracion.colombia.DetalleComparendoFL()" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('comparendoProcesoMB')" />
+			<set name="flowScope.comparendoProcesoFL.cicomparendo"
+				value="adminComparendoEcuadorHolderFL.comparendoSeleccionado.cicomparendo"
+				type="long" />
+			<set name="flowScope.adminComparendoEcuadorHolderFL.numComparendo"
+				value="numeroComparendo" type="long" />
+			<evaluate
+				expression="externalContext.sessionMap.adminComparendoMB.seguimientoComparendo()" />
+			<evaluate
+				expression="externalContext.sessionMap.comparendoProcesoMB.consultarTrazabilidadProcesos()"></evaluate>
+		</on-entry>
+		<transition on="yes" to="COMPARENDO_PROCESO"></transition>
+		<transition on="VOLVER" to="IMPUGNACION_HOJA_VIDA" />
+	</view-state>
+
+	<decision-state id="IMPUGNACION_HOJA_VIDA">
+		<if test="numeroComparendo==null" then="ingresar" else="fin" />
+	</decision-state>
+
+	<end-state id="fin" />
+</flow>

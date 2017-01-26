@@ -1,0 +1,48 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layouts/standardSinMenu.xhtml">
+
+	<ui:define name="content">
+		<h:panelGroup styleClass="center-box">
+			<h:form id="formLogin" prependId="false">
+				<p:panel id="campos-ingreso"
+					header="#{mensajesIngreso.titulo_login}">
+					<p:focus context="campos-ingreso" />
+					<h:panelGrid columns="2" cellpadding="5" styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<h:outputLabel for="user"
+							value="#{mensajesIngreso.label_usuario}:"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="user" label="#{mensajesIngreso.label_usuario}"
+								required="true" value="#{autenticacionWebMB.usuario}" />
+							<p:message for="user" />
+						</h:panelGroup>
+						<h:outputLabel for="j_password"
+							value="#{mensajesIngreso.label_pw}:"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:password id="j_password" label="#{mensajesIngreso.label_pw}"
+								value="#{autenticacionWebMB.password}" required="true" />
+							<p:message for="j_password" />
+						</h:panelGroup>
+					</h:panelGrid>
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton icon="c2-icon-ingresar"
+							value="#{mensajesIngreso.boton_ingresar}"
+							action="#{autenticacionWebMB.login()}"
+							update=":messages :formLogin" />
+						<p:commandButton value="#{mensajesIngreso.label_olvido_pw}"
+							action="#{autenticacionWebMB.recuperarContraseña()}"
+							icon="c2-icon-recordar-pw" immediate="true" rendered="true" />
+					</h:panelGrid>
+				</p:panel>
+			</h:form>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelAdminAccidentalidad.tit_anexos}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdminAccidentalidad.tit_anexar_doc}">
+
+					<h:panelGrid id="panel-cabecera1" styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4" width="750em">
+						<p:outputLabel
+							value="#{labelAdminAccidentalidad.label_nro_informe}" />
+						<p:outputLabel
+							value="#{adminAccidentalidadFL.datosAccidentalidadDTO.accidentalidad.consecutivo}" />
+					</h:panelGrid>
+
+					<h:panelGrid id="panel-archivos" styleClass="center-block"
+						columns="1" columnClasses="label-colancha">
+						<p:dataTable id="tabla-resultados"
+							value="#{adminAccidentalidadFL.datosAccidentalidadDTO.adjuntos}"
+							var="registro" paginator="true"
+							paginatorTemplate="#{webPrm.param_paginator_template}"
+							rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+							rows="#{webPrm.param_initial_rows}"
+							emptyMessage="#{labelAdminAccidentalidad.mensaje_vacio}">
+
+							<p:column headerText="#{labelAdminAccidentalidad.lbl_anexo}">
+								<p:outputLabel value="#{registro.adjuntos.nombreArchivo}" />
+							</p:column>
+
+							<p:column
+								headerText="#{labelAdminAccidentalidad.lbl_fch_reg_anexo}">
+								<c2:outputDateLabel
+									labelValue="#{registro.adjuntos.fechaRegistro}"
+									fullFormat="false" />
+							</p:column>
+
+							<p:column headerText="#{labelAdminAccidentalidad.lbl_usuario}">
+								<p:outputLabel value="#{registro.adjuntos.usuario.login}" />
+							</p:column>
+
+						</p:dataTable>
+					</h:panelGrid>
+				</p:fieldset>
+				<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+					<p:commandButton id="btnVolver" action="VOLVER"
+						icon="c2-icon-volver" process="@this" immediate="true"
+						value="#{lbComun.btnVolver}">
+						<p:tooltip for="btnVolver" value="#{lbComun.btnVolver}" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

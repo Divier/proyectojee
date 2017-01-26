@@ -1,0 +1,126 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>co.com.datatools.c2.util</groupId>
+	<artifactId>GeneradorReportesC2</artifactId>
+	<name>Generador de Reportes Circulemos 2</name>
+	<version>1.1.0-SNAPSHOT</version>
+
+	<properties>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<UtilidadesJSE.version>1.1.0-SNAPSHOT</UtilidadesJSE.version>
+		<EnvioCorreoEJB.version>1.0.2-SNAPSHOT</EnvioCorreoEJB.version>
+		<jboss-javaee-6.0.version>3.0.2.Final</jboss-javaee-6.0.version>
+		<poi.version>3.10.1</poi.version>
+		<itext.version>4.2.1</itext.version>
+		<ooxml-schemas.version>1.1</ooxml-schemas.version>
+		<jsf-impl.version>2.1.16</jsf-impl.version>
+		<primefaces.version>5.0</primefaces.version>
+		<junit.version>4.8.1</junit.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-6.0</artifactId>
+			<version>${jboss-javaee-6.0.version}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+		<!-- XLS, XLSX -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-excelant</artifactId>
+			<version>${poi.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-scratchpad</artifactId>
+			<version>${poi.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>ooxml-schemas</artifactId>
+			<version>${ooxml-schemas.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>${itext.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>co.com.datatools.util</groupId>
+			<artifactId>UtilidadesJSE</artifactId>
+			<version>${UtilidadesJSE.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>co.com.datatools.c2.util</groupId>
+			<artifactId>EnvioCorreoEJB</artifactId>
+			<version>${EnvioCorreoEJB.version}</version>
+			<optional>true</optional>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<version>${jsf-impl.version}</version>
+			<optional>true</optional>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>${primefaces.version}</version>
+			<optional>true</optional>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<distributionManagement>
+		<repository>
+			<id>archiva.internal</id>
+			<name>Internal Release Repository</name>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/internal/</url>
+		</repository>
+		<snapshotRepository>
+			<id>archiva.snapshots</id>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12</version>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

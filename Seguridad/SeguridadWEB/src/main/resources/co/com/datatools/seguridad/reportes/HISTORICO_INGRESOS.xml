@@ -1,0 +1,51 @@
+<reporte>
+	<codigo>REPORTE_INGRESOS</codigo>
+	<nombre>HISTÓRICO DE INGRESOS</nombre>
+	<codigo_encabezado>HISTORICO_INGRESOS</codigo_encabezado>
+	<cabeceras>
+		<atributo>			
+			<contenido>Usuario</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>		
+			<contenido>Aplicación</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>			
+			<contenido>Fecha del ingreso</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>		
+			<contenido>Fecha de cierre del ingreso</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>		
+			<contenido>IP del equipo</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>		
+			<contenido>Estado del ingreso</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>		
+			<contenido>Descripción del recurso</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>			
+			<contenido>Nombre del recurso</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>			
+			<contenido>Operación solicitada</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>			
+			<contenido>¿Operación permitida?</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>			
+			<contenido>Hora de la solicitud</contenido>
+			<formato></formato>
+		</atributo>		
+	</cabeceras>
+</reporte>

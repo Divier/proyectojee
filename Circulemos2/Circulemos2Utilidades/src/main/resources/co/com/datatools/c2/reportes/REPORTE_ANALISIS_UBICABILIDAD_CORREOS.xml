@@ -1,0 +1,55 @@
+<reporte>
+	<codigo>REPORTE_24</codigo>
+	<nombre>REPORTE DE ANALISIS DE UBICABILIDAD</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>TIPO DE DOCUMENTO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>NÚMERO DE IDENTIFICACIÓN</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>PRIMER NOMBRE</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>SEGUNDO NOMBRE</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>PRIMER APELLIDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>SEGUNDO APELLIDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>RAZÓN SOCIAL</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CORREO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FECHA DE ULTIMA ACTUALIZACIÓN</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>FUENTE DE INFORMACIÓN</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>VALIDO</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>CALIFICACIÓN</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

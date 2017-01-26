@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<p:dialog widgetVar="popUpEditar" id="popUpEditDiaNoHabil" header="#{labelCalendario.titulo_editar_DNH}" resizable="false" modal="true"
+		appendToBody="true" dynamic="true">
+
+		<h:form id="idFrmEditModDNH">
+			<h:panelGrid id="pnlGrdForDet" columns="2" styleClass="center-block" columnClasses="label-col,input-col">
+
+				<p:outputLabel value="#{labelCalendario.lbl_fecha_DNH}: " />
+				<c2:outputDateLabel labelValue="#{diaNoHabilFL.selDiaNoHabil.fecha}" />
+
+				<p:outputLabel value="#{labelCalendario.lbl_observacion_DNH}: " />
+				<h:panelGroup>
+					<p:inputTextarea id="txtObsAct" value="#{diaNoHabilFL.selDiaNoHabil.observacion}" readonly="#{!calendarioMB.esMayorIgualDiaActualSel()}" rows="3"
+						validatorMessage="#{labelCalendario.err_length_observacion}" maxlength="300" style="overflow:auto;" autoResize="false">
+						<f:validateLength maximum="300" for="txtObsAct" />
+					</p:inputTextarea>
+					<p:message for="txtObsAct" display="default" />
+				</h:panelGroup>
+
+			</h:panelGrid>
+
+			<h:panelGrid styleClass="center-block" cellspacing="5" columns="2">
+
+				<p:commandButton id="btnGuardar" action="_op-EDITAR" icon="c2-icon-guardar" process="@form" value="#{lbComun.btnGuardar}"
+					update=":messages :form-resultado">
+					<p:tooltip for="btnGuardar" value="#{labelCalendario.tooltip_modificar}" />
+					<p:confirm header="#{labelCalendario.tit_confirmacion}" message="#{labelCalendario.conf_modificacion}" icon="ui-icon-alert" />
+				</p:commandButton>
+
+				<p:commandButton id="btnVolver" action="VOLVER" icon="c2-icon-volver" process="@this" immediate="true" value="#{lbComun.btnVolver}"
+					oncomplete="PF('popUpEditar').hide();">
+					<p:tooltip for="btnVolver" value="#{lbComun.tooltip_volver}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+				</p:commandButton>
+
+			</h:panelGrid>
+
+		</h:form>
+	</p:dialog>
+
+</ui:composition>

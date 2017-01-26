@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog widgetVar="popUpDeteriorados" id="idPopUpDeteriorados" header="#{labelCambioEstadoMasivo.tit_marcar_deteriorados}" resizable="false"
+		modal="true" appendToBody="true" dynamic="true">
+
+		<h:form id="form-deteriorados">
+
+			<h:panelGrid id="panel-formulario" styleClass="center-block" columns="2" columnClasses="label-col">
+				<!--Componentes del formulario 2 o 4 columnas-->
+
+				<p:outputLabel value="#{labelCambioEstadoMasivo.lbl_numero_doc_soporte}" styleClass="campo-obligatorio" />
+				<h:panelGroup>
+					<p:inputText id="txtNumDocSop" value="#{cambioEstadoMasivoFormulariosFL.numeroDocumento}" required="true"
+						requiredMessage="#{labelGeneral.val_campo_requerido}" maxlength="20" />
+					<p:message for="txtNumDocSop" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelCambioEstadoMasivo.lbl_fecha_deterioro}" styleClass="campo-obligatorio" />
+				<h:panelGroup>
+					<p:calendar id="calFecDet" value="#{cambioEstadoMasivoFormulariosFL.fecExtrDeter}" navigator="true" pattern="#{webPrm.lab_calendar_pattern}"
+						required="true" requiredMessage="#{labelGeneral.val_campo_requerido}" maxdate="#{cambioEstadoMasivoFormHolderFL.fechaActual}">
+						<p:watermark for="calFecDet" value="#{webPrm.lab_calendar_mask_pattern}" />
+					</p:calendar>
+					<p:message for="calFecDet" />
+				</h:panelGroup>
+
+				<p:outputLabel value="#{labelCambioEstadoMasivo.lbl_doc_soporte}" />
+				<h:panelGrid id="panel-archivos" columns="1">
+					<p:fileUpload id="fupArchivo" fileUploadListener="#{cambioEstadoFormulariosMasivoMB.cargaArchivo}" mode="advanced" label="#{lbComun.btnExaminar}"
+						uploadLabel="#{lbComun.btnCargar}" cancelLabel="#{lbComun.btnCancelar}" dragDropSupport="false" update=":messages :form-deteriorados:idDLArch"
+						multiple="false" allowTypes="#{cambioEstadoFormulariosMasivoMB.tiposArchivosPermitidos}" />
+					<p:message for="fupArchivo" display="text" />
+					<h:panelGrid id="idDLArch" columns="2" cellspacing="5" styleClass="center-block">
+						<p:outputLabel value=" #{cambioEstadoMasivoFormulariosFL.archivoTransportableDTO.nombre} "
+							rendered="#{cambioEstadoMasivoFormulariosFL.archivoTransportableDTO != null}" />
+						<p:commandButton title="#{labelCambioEstadoMasivo.btn_eliminar_doc}" action="#{cambioEstadoFormulariosMasivoMB.eliminarDocucmento()}"
+							icon="c2-icon-eliminar" update=":form-deteriorados:idDLArch :messages" process="@this"
+							rendered="#{cambioEstadoMasivoFormulariosFL.archivoTransportableDTO != null}">
+						</p:commandButton>
+					</h:panelGrid>
+				</h:panelGrid>
+
+
+				<p:outputLabel value="#{labelCambioEstadoMasivo.lbl_observaciones}" />
+				<p:inputTextarea id="txaObsCamb" value="#{cambioEstadoMasivoFormulariosFL.observaciones}"
+					validatorMessage="#{labelCambioEstadoMasivo.err_length_observacion}" maxlength="100" rows="3" style="overflow:auto;" autoResize="false">
+					<f:validateLength maximum="100" for="txaObsCamb" />
+				</p:inputTextarea>
+
+			</h:panelGrid>
+
+			<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+
+				<!--Boton Guardar-->
+				<p:commandButton id="btnGuardar" action="_op-MARCAR_DETERIORADO" icon="c2-icon-guardar" process="@form" value="#{lbComun.btnGuardar}"
+					update=":messages :form-deteriorados">
+					<p:tooltip for="btnGuardar" value="#{labelCambioEstadoMasivo.tooltip_btn_mrcr_deteriorados}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+				</p:commandButton>
+
+				<!--Boton Cancelar-->
+				<p:commandButton id="btnCancelar" action="VOLVER" icon="c2-icon-cancelar" process="@this" immediate="true" value="#{lbComun.btnCancelar}"
+					oncomplete="PF('popUpDeteriorados').hide();">
+					<p:tooltip for="btnCancelar" value="#{labelCambioEstadoMasivo.tooltip_btn_canc_deteriorados}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_volver_cancelar}" icon="ui-icon-alert" />
+				</p:commandButton>
+
+			</h:panelGrid>
+		</h:form>
+
+	</p:dialog>
+</ui:composition>

@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelAdmin.label_panel_ubicabilidad}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdmin.label_fieldset_datos_basicos}">
+					<h:panelGrid id="panel-principal" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<p:outputLabel value="#{labelAdmin.label_tipo_documento}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="tipoDocumento"
+								disabled="#{actualizarDatosUbicabilidadFL.editar}"
+								value="#{actualizarDatosUbicabilidadFL.idTipoIdentificacion}"
+								required="true">
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catTipoIdentificacion()}" />
+								<p:ajax listener="#{ubicabilidadMB.consultarPersona()}"
+									update="campos-registro" process="@this" global="false"
+									event="valueChange" />
+							</p:selectOneMenu>
+							<p:message for="tipoDocumento" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelAdmin.label_numero_documento}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="idNumeroDocumento"
+								disabled="#{actualizarDatosUbicabilidadFL.editar}"
+								value="#{actualizarDatosUbicabilidadFL.numeroDocumento}"
+								required="true" maxlength="20"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<p:ajax listener="#{ubicabilidadMB.consultarPersona()}"
+									update="campos-registro"
+									process="idNumeroDocumento,tipoDocumento" global="false"
+									event="change" />
+							</p:inputText>
+							<p:message for="idNumeroDocumento" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelAdmin.label_primer_nombre}"
+							styleClass="campo-obligatorio"
+							rendered="#{!actualizarDatosUbicabilidadFL.esPersonaJuridica}" />
+						<h:panelGroup id="idGroupNombre1"
+							rendered="#{!actualizarDatosUbicabilidadFL.esPersonaJuridica}">
+							<p:inputText id="idNombre1"
+								value="#{actualizarDatosUbicabilidadFL.persona.nombre1}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								maxlength="30" validatorMessage="#{labelUbicabilidad.msg_formato_invalido_persona_natural}">
+								<p:ajax process="@this" global="false" />
+								<f:validateRegex pattern="#{ubicabilidadMB.patternNombre}" for="idNombre1" />
+							</p:inputText>
+							<p:message for="idNombre1" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelAdmin.label_segundo_nombre}"
+							rendered="#{!actualizarDatosUbicabilidadFL.esPersonaJuridica}" />
+						<h:panelGroup
+							rendered="#{!actualizarDatosUbicabilidadFL.esPersonaJuridica}">
+							<p:inputText id="idNombre2"
+								value="#{actualizarDatosUbicabilidadFL.persona.nombre2}"
+								maxlength="30" validatorMessage="#{labelUbicabilidad.msg_formato_invalido_persona_natural}">
+								<p:ajax process="@this" global="false" />
+								<f:validateRegex pattern="#{ubicabilidadMB.patternNombre}" for="idNombre2" />
+							</p:inputText>
+							<p:message for="idNombre2" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelAdmin.label_primer_apellido}"
+							styleClass="campo-obligatorio"
+							rendered="#{!actualizarDatosUbicabilidadFL.esPersonaJuridica}" />
+						<h:panelGroup
+							rendered="#{!actualizarDatosUbicabilidadFL.esPersonaJuridica}">
+							<p:inputText id="idapellido1"
+								value="#{actualizarDatosUbicabilidadFL.persona.apellido1}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								maxlength="30" validatorMessage="#{labelUbicabilidad.msg_formato_invalido_persona_natural}">
+								<p:ajax process="@this" global="false" />
+								<f:validateRegex pattern="#{ubicabilidadMB.patternNombre}" for="idapellido1"/>
+							</p:inputText>
+							<p:message for="idapellido1" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelAdmin.label_segundo_apellido}"
+							rendered="#{!actualizarDatosUbicabilidadFL.esPersonaJuridica}" />
+						<h:panelGroup
+							rendered="#{!actualizarDatosUbicabilidadFL.esPersonaJuridica}">
+							<p:inputText id="idApellido2"
+								value="#{actualizarDatosUbicabilidadFL.persona.apellido2}"
+								maxlength="30" validatorMessage="#{labelUbicabilidad.msg_formato_invalido_persona_natural}">
+								<p:ajax process="@this" global="false" />
+								<f:validateRegex pattern="#{ubicabilidadMB.patternNombre}" for="idApellido2" />
+							</p:inputText>
+							<p:message for="idApellido2" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelUbicabilidad.label_razon_social}"
+							styleClass="campo-obligatorio"
+							rendered="#{actualizarDatosUbicabilidadFL.esPersonaJuridica}" />
+						<h:panelGroup
+							rendered="#{actualizarDatosUbicabilidadFL.esPersonaJuridica}">
+							<p:inputText id="idNombreComercial"
+								value="#{actualizarDatosUbicabilidadFL.personaJuridicaDTO.nombreComercial}"
+								required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								maxlength="60" validatorMessage="#{labelUbicabilidad.msg_formato_invalido_persona_juridica}">
+								<p:ajax process="@this" global="false" />
+								<f:validateRegex pattern="#{ubicabilidadMB.patternNombreComercial}" for="idNombreComercial"/>
+							</p:inputText>
+							<p:message for="idNombreComercial" />
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:fieldset>
+				
+				<!-- Datos del representante -->
+				<p:fieldset styleClass="fieldset-formulario"
+						legend="#{labelUbicabilidad.tit_datos_representante}"
+						rendered="#{actualizarDatosUbicabilidadFL.esPersonaJuridica}" >
+						<h:panelGrid id="panel-datos-representante" styleClass="center-block"
+							columns="4" columnClasses="label-col,input-col,label-col,input-col">
+							
+							<p:outputLabel value="#{labelAdmin.label_tipo_documento}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="tipoDocumentoRepresentante"
+									value="#{actualizarDatosUbicabilidadFL.representante.tipoIdentificacion.id}"
+									required="#{actualizarDatosUbicabilidadFL.esPersonaJuridica}"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									disabled="#{actualizarDatosUbicabilidadFL.esPersonaJuridica and actualizarDatosUbicabilidadFL.existeRepresentante}" >
+									<f:selectItems
+										value="#{actualizarDatosUbicabilidadFL.tiposDocumentoRepresentante}" />
+									<p:ajax process="@this" global="false"
+										event="change" />
+								</p:selectOneMenu>
+								<p:message for="tipoDocumentoRepresentante" />
+							</h:panelGroup>
+							
+							<p:outputLabel value="#{labelAdmin.label_numero_documento}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="idNumeroDocumentoRepresentante"
+									value="#{actualizarDatosUbicabilidadFL.representante.numeroIdentificacion}"
+									required="#{actualizarDatosUbicabilidadFL.esPersonaJuridica}"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									disabled="#{actualizarDatosUbicabilidadFL.esPersonaJuridica and actualizarDatosUbicabilidadFL.existeRepresentante}" >
+									<p:ajax process="@this" global="false"
+										event="change" />
+								</p:inputText>
+								<p:message for="idNumeroDocumentoRepresentante" />
+							</h:panelGroup>
+							
+						</h:panelGrid>
+						
+						<h:panelGrid styleClass="center-block" columns="1" cellpadding="5"
+							rendered="#{actualizarDatosUbicabilidadFL.esPersonaJuridica and !actualizarDatosUbicabilidadFL.existeRepresentante}" >
+							<!--Boton Consultar representante-->
+							<p:commandButton id="btnConsultarRepresentante" action="#{ubicabilidadMB.consultarRepresentante()}" icon="c2-icon-consultar"
+									process="@form" value="#{labelUbicabilidad.btn_consultar_representante}"
+									update=":messages :form-contenido" >
+								<p:tooltip for="btnConsultarRepresentante" value="#{labelUbicabilidad.tooltip_btn_consultar_representante}" />
+							</p:commandButton>
+						</h:panelGrid>
+						
+						<h:panelGrid styleClass="center-block" columns="4" columnClasses="label-col,input-col,label-col,input-col"
+							rendered="#{actualizarDatosUbicabilidadFL.esPersonaJuridica and actualizarDatosUbicabilidadFL.existeRepresentante}">	
+							<p:outputLabel value="#{labelAdmin.label_primer_nombre}" />
+							<p:outputLabel value="#{actualizarDatosUbicabilidadFL.representante.nombre1}" />
+							
+							<p:outputLabel value="#{labelAdmin.label_segundo_nombre}" />
+							<p:outputLabel value="#{actualizarDatosUbicabilidadFL.representante.nombre2}" />
+							
+							<p:outputLabel value="#{labelAdmin.label_primer_apellido}" />
+							<p:outputLabel value="#{actualizarDatosUbicabilidadFL.representante.apellido1}" />
+							
+							<p:outputLabel value="#{labelAdmin.label_segundo_apellido}"/>
+							<p:outputLabel value="#{actualizarDatosUbicabilidadFL.representante.apellido2}" />
+							
+							<p:outputLabel styleClass="campo-obligatorio"
+								value="#{labelUbicabilidad.label_fecha_inicio_vigencia}" />
+							<h:panelGroup>
+								<p:calendar
+									value="#{actualizarDatosUbicabilidadFL.representante.fechaInicio}"
+									id="fechaInicial" navigator="true"
+									pattern="#{utilidadMB.formatoFecha}" 
+									required="#{actualizarDatosUbicabilidadFL.esPersonaJuridica}"
+									requiredMessage="#{labelGeneral.val_campo_requerido}" >
+									<p:watermark for="fechaInicial"
+										value="#{utilidadMB.formatoFecha}" />
+									<p:ajax event="change" process="@this" update="fechaFinal" />
+									<p:ajax event="dateSelect" process="@this" update="fechaFinal" />
+								</p:calendar>
+								<p:message for="fechaInicial" />
+							</h:panelGroup>
+	
+							<p:outputLabel
+								value="#{labelUbicabilidad.label_fecha_final_vigencia}" />
+							<h:panelGroup>
+								<p:calendar
+									value="#{actualizarDatosUbicabilidadFL.representante.fechaFin}"
+									id="fechaFinal" navigator="true" 
+									mindate="#{actualizarDatosUbicabilidadFL.representante.fechaInicio}"
+									pattern="#{utilidadMB.formatoFecha}" >
+									<p:watermark for="fechaFinal" value="#{utilidadMB.formatoFecha}" />
+									<p:ajax event="change" process="@this" update="fechaInicial" />
+									<p:ajax event="dateSelect" process="@this" update="fechaInicial" />
+								</p:calendar>
+								<p:message for="fechaFinal" />
+							</h:panelGroup>
+							
+						</h:panelGrid>
+					</p:fieldset>
+				
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelAdmin.label_fieldset_datos_contacto}">
+					
+					<!-- Direccion -->
+					<p:fieldset id="datos-direccion" styleClass="fieldset-formulario" legend="#{labelUbicabilidad.label_direccion}" >
+	                    <h:panelGrid id="acciones-top-direccion">
+	                        <f:facet name="footer">
+	                            <!--Boton Adicionar Detalle-->
+	                            <p:commandButton id="btnAdicionarDireccion" icon="c2-icon-agregar-det" 
+										value="#{labelUbicabilidad.btn_adicionar_direccion}" process="@this" 
+										action="DIRECCION_INFRACTOR" immediate="true" >
+									<p:tooltip for="btnAdicionarDireccion" value="#{labelUbicabilidad.tooltip_btn_adicionar_direccion}" />
+								</p:commandButton>
+	                            <!--Boton Modificar Detalle-->
+	                            <p:commandButton id="btnEditarDireccion" action="#{ubicabilidadMB.irValidarCalificar(1)}" icon="c2-icon-editar-det" 
+										disabled="#{actualizarDatosUbicabilidadFL.direccionSeleccionado == null}"
+										value="#{labelUbicabilidad.btn_validar_calificar}" update=":form-validacion" process="@this" >
+									<p:tooltip for="btnEditarDireccion" value="#{labelUbicabilidad.tooltip_validar_calificar}" />
+								</p:commandButton>
+	                            <!--Boton Eliminar Detalle-->
+	                            <p:commandButton id="btnRemoverDireccion" action="#{ubicabilidadMB.eliminarDireccion()}" icon="c2-icon-remover-det"
+										disabled="#{actualizarDatosUbicabilidadFL.direccionSeleccionado == null}" process="@this"
+										value="#{labelUbicabilidad.btn_eliminar_direccion}" update=":form-contenido :messages" >
+									<p:tooltip for="btnRemoverDireccion" value="#{lbComun.btnRemoverDet}" />
+									<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+								</p:commandButton>
+	                        </f:facet>
+	                    </h:panelGrid>
+	                    
+	                    <p:dataTable id="tabla-detalle-direccions" value="#{actualizarDatosUbicabilidadFL.direccionesPersona}"
+	                        var="direccion" rowKey="#{direccion.rowKey}"
+	                        selection="#{actualizarDatosUbicabilidadFL.direccionSeleccionado}" paginator="true" 
+	                        paginatorTemplate="#{webPrm.param_paginator_template}"
+	                        rowsPerPageTemplate="#{webPrm.param_rows_per_page}" 
+	                        rows="#{webPrm.param_initial_rows}"
+	                        emptyMessage="#{labelGeneral.msj_consulta_ko}">
+	    
+	                        <p:ajax event="rowSelectRadio" process=":form-contenido:tabla-detalle-direccions"
+	                                update=":form-contenido:acciones-top-direccion" global="false" />
+	                        
+	                        <p:column selectionMode="single" style="width:2%" />
+	                        
+	                        <p:column headerText="#{labelUbicabilidad.label_direccion}">
+								<h:outputText value="#{ubicabilidadMB.concatenarFecha(direccion.dto.direccion.complemento, direccion.dto.fechaActualizacion)}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_tipo_direccion}">
+								<h:outputText value="#{direccion.dto.direccion.tipoUbicabilidad.nombre}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_provincia}">
+								<h:outputText value="#{direccion.dto.direccion.departamento.nombre}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_canton}">
+								<h:outputText value="#{direccion.dto.direccion.municipio.nombre}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_parroquia}">
+								<h:outputText value="#{direccion.dto.direccion.localidad.nombre}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_valido}">
+								<h:outputText value="#{ubicabilidadMB.validacion(direccion.dto)}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_calificacion}">
+								<h:outputText value="#{direccion.dto.prioridad}" />
+							</p:column>
+	                        
+	                    </p:dataTable>
+	                </p:fieldset>
+					
+					<!-- Telefono -->
+					<p:fieldset id="datos-telefono" styleClass="fieldset-formulario" legend="#{labelUbicabilidad.label_telefono}" >
+	                    <h:panelGrid id="acciones-top-telefono">
+	                        <f:facet name="footer">
+	                            <!--Boton Adicionar Detalle-->
+	                            <p:commandButton id="btnAdicionarTelefono" icon="c2-icon-agregar-det" 
+										oncomplete="PF('popupAdicionarTelefono').show();" process="@this"
+										value="#{labelUbicabilidad.btn_adicionar_telefono}" update=":form-telefono"
+										action="#{ubicabilidadMB.irAdicionarTelefono()}" >
+									<p:tooltip for="btnAdicionarTelefono" value="#{labelUbicabilidad.tooltip_btn_adicionar_telefono}" />
+								</p:commandButton>
+	                            <!--Boton Modificar Detalle-->
+	                            <p:commandButton id="btnEditarTelefono" action="#{ubicabilidadMB.irValidarCalificar(2)}" icon="c2-icon-editar-det" 
+										disabled="#{actualizarDatosUbicabilidadFL.telefonoSeleccionado == null}" process="@this"
+										value="#{labelUbicabilidad.btn_validar_calificar}" update=":form-validacion" >
+									<p:tooltip for="btnEditarTelefono" value="#{labelUbicabilidad.tooltip_validar_calificar}" />
+								</p:commandButton>
+	                            <!--Boton Eliminar Detalle-->
+	                            <p:commandButton id="btnRemoverTelefono" action="#{ubicabilidadMB.eliminarTelefono()}" icon="c2-icon-remover-det"
+										disabled="#{actualizarDatosUbicabilidadFL.telefonoSeleccionado == null}" process="@this"
+										value="#{labelUbicabilidad.btn_eliminar_telefono}" update=":form-contenido :messages" >
+									<p:tooltip for="btnRemoverTelefono" value="#{lbComun.btnRemoverDet}" />
+									<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+								</p:commandButton>
+	                        </f:facet>
+	                    </h:panelGrid>
+	                    
+	                    <p:dataTable id="tabla-detalle-telefonos" value="#{actualizarDatosUbicabilidadFL.telefonosPersona}"
+	                        var="telefono" rowKey="#{telefono.rowKey}"
+	                        selection="#{actualizarDatosUbicabilidadFL.telefonoSeleccionado}" paginator="true" 
+	                        paginatorTemplate="#{webPrm.param_paginator_template}"
+	                        rowsPerPageTemplate="#{webPrm.param_rows_per_page}" 
+	                        rows="#{webPrm.param_initial_rows}"
+	                        emptyMessage="#{labelGeneral.msj_consulta_ko}">
+	    
+	                        <p:ajax event="rowSelectRadio" process=":form-contenido:tabla-detalle-telefonos"
+	                                update=":form-contenido:acciones-top-telefono" global="false" />
+	                        
+	                        <p:column selectionMode="single" style="width:2%" />
+	                        
+	                        <p:column headerText="#{labelUbicabilidad.label_telefono}">
+								<h:outputText value="#{ubicabilidadMB.concatenarFecha(telefono.dto.numeroTelefono, telefono.dto.fechaActualizacion)}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_tipo_telefono}">
+								<h:outputText value="#{telefono.dto.tipoTelefono.nombre}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_valido}">
+								<h:outputText value="#{ubicabilidadMB.validacion(telefono.dto)}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_calificacion}">
+								<h:outputText value="#{telefono.dto.prioridad}" />
+							</p:column>
+	                        
+	                    </p:dataTable>
+	                </p:fieldset>
+					
+					<!-- Correo electronico -->
+					<p:fieldset id="datos-correo" styleClass="fieldset-formulario" legend="#{labelUbicabilidad.label_correo}" >
+	                    <h:panelGrid id="acciones-top-correo">
+	                        <f:facet name="footer">
+	                            <!--Boton Adicionar Detalle-->
+	                            <p:commandButton id="btnAdicionarCorreo" icon="c2-icon-agregar-det" 
+										oncomplete="PF('popupAdicionarCorreo').show();" process="@this"
+										value="#{labelUbicabilidad.btn_adicionar_correo}" update=":form-correo"
+										action="#{ubicabilidadMB.irAdicionarCorreo()}" >
+									<p:tooltip for="btnAdicionarCorreo" value="#{labelUbicabilidad.tooltip_btn_adicionar_correo}" />
+								</p:commandButton>
+	                            <!--Boton Modificar Detalle-->
+	                            <p:commandButton id="btnEditarCorreo" action="#{ubicabilidadMB.irValidarCalificar(3)}" icon="c2-icon-editar-det" 
+										disabled="#{actualizarDatosUbicabilidadFL.correoSeleccionado == null}" process="@this"
+										value="#{labelUbicabilidad.btn_validar_calificar}" update=":form-validacion" >
+									<p:tooltip for="btnEditarCorreo" value="#{labelUbicabilidad.tooltip_validar_calificar}" />
+								</p:commandButton>
+	                            <!--Boton Eliminar Detalle-->
+	                            <p:commandButton id="btnRemoverCorreo" action="#{ubicabilidadMB.eliminarCorreo()}" icon="c2-icon-remover-det"
+										disabled="#{actualizarDatosUbicabilidadFL.correoSeleccionado == null}" process="@this"
+										value="#{labelUbicabilidad.btn_eliminar_correo}" update=":form-contenido :messages" >
+									<p:tooltip for="btnRemoverCorreo" value="#{lbComun.btnRemoverDet}" />
+									<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+								</p:commandButton>
+	                        </f:facet>
+	                    </h:panelGrid>
+	                    
+	                    <p:dataTable id="tabla-detalle-correos" value="#{actualizarDatosUbicabilidadFL.correosPersona}"
+	                        var="correo" rowKey="#{correo.rowKey}"
+	                        selection="#{actualizarDatosUbicabilidadFL.correoSeleccionado}" paginator="true" 
+	                        paginatorTemplate="#{webPrm.param_paginator_template}"
+	                        rowsPerPageTemplate="#{webPrm.param_rows_per_page}" 
+	                        rows="#{webPrm.param_initial_rows}"
+	                        emptyMessage="#{labelGeneral.msj_consulta_ko}">
+	    
+	                        <p:ajax event="rowSelectRadio" process=":form-contenido:tabla-detalle-correos"
+	                                update=":form-contenido:acciones-top-correo" global="false" />
+	                        
+	                        <p:column selectionMode="single" style="width:2%" />
+	                        
+	                        <p:column headerText="#{labelUbicabilidad.label_correo}">
+								<h:outputText value="#{ubicabilidadMB.concatenarFecha(correo.dto.correoElectronico, correo.dto.fechaActualizacion)}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_valido}">
+								<h:outputText value="#{ubicabilidadMB.validacion(correo.dto)}" />
+							</p:column>
+							
+							<p:column headerText="#{labelUbicabilidad.label_calificacion}">
+								<h:outputText value="#{correo.dto.prioridad}" />
+							</p:column>
+	                        
+	                    </p:dataTable>
+	                </p:fieldset>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}"
+							update=":messages :form-contenido :frmConfirUbicabilidad">
+							<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+			<p:defaultCommand target="btnGuardar" />
+		</h:form>
+
+		<h:form id="form-resultado">
+
+		</h:form>
+		<ui:include
+			src="/WEB-INF/jsp/administracion/direccion/registrarDireccion.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/administracion/ubicabilidad/popup/confir_ubicabilidad.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/administracion/captura-firma/capturaFirma.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/administracion/ubicabilidad/popup/popupConfirmaPersonaPresente.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/administracion/ubicabilidad/popup/adicionarCorreo.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/administracion/ubicabilidad/popup/adicionarTelefono.xhtml" />
+		<ui:include
+			src="/WEB-INF/jsp/administracion/ubicabilidad/popup/popupValidarCalificar.xhtml" />
+	</ui:define>
+
+</ui:composition>

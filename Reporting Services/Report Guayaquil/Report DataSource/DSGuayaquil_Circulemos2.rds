@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="DSGuayaquil_Circulemos2">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=192.168.44.39;Initial Catalog=circulemos2</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>40e2f7c0-3eec-4d53-bc02-495af309d9fc</DataSourceID>
+</RptDataSource>

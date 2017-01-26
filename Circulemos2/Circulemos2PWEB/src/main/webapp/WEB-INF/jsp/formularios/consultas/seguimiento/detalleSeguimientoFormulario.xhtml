@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario" header="#{labelConsultasFormularios.tit_detalle_estado}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario" legend="#{labelConsultasFormularios.tit_form}">
+
+					<!--Agregar Secciones o Panel Grid de campos-->
+
+					<!--Cuando el formulario tiene multiples secciones de campos, repetir este fieldset-->
+					<p:fieldset id="datos-responsable" styleClass="fieldset-formulario" legend="#{labelConsultasFormularios.tit_datos_respon}"
+						rendered="#{seguimientoFormularioFL.seguimientoFormulario.responsableFormulario!=null}">
+						<h:panelGrid styleClass="center-block" columns="4" columnClasses="label-col,input-col,label-col,input-col">
+							<!--Componentes del formulario 2 o 4 columnas-->
+
+							<p:outputLabel value="#{labelConsultasFormularios.lbl_tipo_responsable}" />
+							<p:outputLabel value="#{seguimientoFormularioFL.seguimientoFormulario.responsableFormulario.tipoResponsable.nombre}" />
+
+							<p:outputLabel value="#{labelConsultasFormularios.lbl_nombre_responsable}" />
+							<p:outputLabel value="#{seguimientoFormularioFL.nombreResponsable}" />
+
+						</h:panelGrid>
+					</p:fieldset>
+
+					<h:panelGrid styleClass="center-block" columns="4" columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+
+						<p:outputLabel value="#{labelConsultasFormularios.lbl_tipo_formulario}" />
+						<p:outputLabel value="#{seguimientoFormularioFL.formularioDTO.tipoFormulario.nombre}" />
+
+						<p:outputLabel value="#{labelConsultasFormularios.lbl_num_formulario}" />
+						<p:outputLabel value="#{seguimientoFormularioFL.formularioDTO.numeroFormulario}" />
+
+						<p:outputLabel value="#{labelConsultasFormularios.lbl_estado_formulario}" />
+						<p:outputLabel value="#{seguimientoFormularioFL.seguimientoFormulario.estadoFormulario.nombre}" />
+
+						<p:outputLabel value="#{labelConsultasFormularios.lbl_fecha_hora_aplica_estado}"
+							rendered="#{seguimientoFormularioFL.seguimientoFormulario.fechaAplicacionEstado!=null}" />
+						<c2:outputDateLabel labelValue="#{seguimientoFormularioFL.seguimientoFormulario.fechaAplicacionEstado}" fullFormat="true"
+							rendered="#{seguimientoFormularioFL.seguimientoFormulario.fechaAplicacionEstado!=null}" />
+
+						<p:outputLabel value="#{labelConsultasFormularios.lbl_folios}"
+							rendered="#{seguimientoFormularioFL.seguimientoFormulario.fechaAplicacionEstado!=null}" />
+						<p:outputLabel value="#{seguimientoFormularioFL.seguimientoFormulario.folio}"
+							rendered="#{seguimientoFormularioFL.seguimientoFormulario.fechaAplicacionEstado!=null}" />
+
+						<p:outputLabel value="#{labelConsultasFormularios.lbl_observaciones}"
+							rendered="#{seguimientoFormularioFL.seguimientoFormulario.fechaAplicacionEstado!=null}" />
+						<p:inputTextarea value="#{seguimientoFormularioFL.seguimientoFormulario.observaciones}" readonly="true" rows="3" maxlength="300"
+							style="overflow:auto;" autoResize="false" rendered="#{seguimientoFormularioFL.seguimientoFormulario.fechaAplicacionEstado!=null}" />
+
+						<p:outputLabel value="#{labelConsultasFormularios.lbl_causal}"
+							rendered="#{seguimientoFormularioFL.seguimientoFormulario.fechaAplicacionEstado!=null}" />
+						<p:outputLabel value="#{seguimientoFormularioFL.seguimientoFormulario.causalCambioEstado.nombre}"
+							rendered="#{seguimientoFormularioFL.seguimientoFormulario.fechaAplicacionEstado!=null}" />
+
+						<p:outputLabel value="#{labelConsultasFormularios.lbl_numero_documento_soporte}"
+							rendered="#{seguimientoFormularioFL.seguimientoFormulario.fechaAplicacionEstado!=null}" />
+						<h:panelGroup layout="block" styleClass="inline-block" rendered="#{seguimientoFormularioFL.seguimientoFormulario.fechaAplicacionEstado!=null}">
+							<!--Input requerido-->
+							<p:outputLabel value="#{seguimientoFormularioFL.seguimientoFormulario.documentoFormulario.numeroDocumento}" />
+							<!--Boton-->
+							<p:commandButton rendered="#{seguimientoFormularioFL.seguimientoFormulario.documentoFormulario != null}"
+								action="#{consultarSeguimientoFormularioMB.descargarDocumento(seguimientoFormularioFL.seguimientoFormulario)}" ajax="false"
+								icon="ui-icon-arrowthick-1-s" onclick="PrimeFaces.monitorDownload(start, stop);" title="#{labelConsultasFormularios.btn_descargar}"
+								styleClass="inline-btn">
+								<p:tooltip value="#{labelConsultasFormularios.tooltip_ver_documento}" />
+								<p:fileDownload value="#{consultarSeguimientoFormularioMB.streamedContent}" />
+							</p:commandButton>
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<!--Boton Volver-->
+						<p:commandButton id="btnVolver" action="VOLVER" icon="c2-icon-volver" process="@this" immediate="true" value="#{lbComun.btnVolver}">
+							<p:tooltip for="btnVolver" value="#{lbComun.btnVolver}" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

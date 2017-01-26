@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>.:: Autenticación Circulemos 2.0 ::.</title>
+	<script language="javascript">
+	
+		function combinar() {			
+			var usuario = document.getElementById("user").value;
+			var form = document.getElementById("formLogin");
+			document.getElementById("j_username").value = document.getElementById("j_username").value + "#" + usuario;
+			form.submit();
+		}
+		
+	</script>
+</h:head>
+<h:body>
+	<h:form id="formLogin" prependId="false"
+		onsubmit="document.getElementById('formLogin').action = 'j_security_check';">
+		<h:panelGrid columns="2" style="margin-left:auto; margin-right:auto;">
+			<h:outputLabel value="Usuario: " />
+			<p:inputText id="user" required="true" />
+			<h:outputLabel value="Contraseña: " />
+			<p:password id="j_password" required="true"></p:password>
+		</h:panelGrid>
+		<h:panelGrid columns="1" style="margin-left:auto; margin-right:auto;">
+			<h:commandButton onclick="combinar();" type="submit" action="j_security_check"></h:commandButton>
+		</h:panelGrid>
+		<h:inputHidden value="#{autenticacionMB.ip}" id="j_username" />
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+	parent="global">
+
+	<var name="historicoUsuariosFL"
+		class="co.com.datatools.seguridad.mb.historico_usuarios.HistoricoUsuariosFL" />
+
+	<input name="idUsuario" />
+	<input name="loginUsuario" />
+	<input name="fechaInicial" />
+	<input name="fechaFinal" />
+
+	<decision-state id="decision">
+		<if test="externalContext.sessionMap.historicoUsuariosMB != null"
+			then="inicio" else="INICIALIZAR-FILTROS" />
+	</decision-state>
+
+	<view-state id="inicio" view="consultar-historico-usuarios.xhtml">
+		<on-entry>
+			<evaluate expression="historicoUsuariosFL.inicializarFiltrosBusqueda(idUsuario,loginUsuario,fechaInicial,fechaFinal)" />
+			<evaluate expression="externalContext.sessionMap.historicoUsuariosMB.consultarHistorico()" />
+		</on-entry>
+		<transition on="CONSULTAR" to="CONSULTAR"/>		
+		<transition on="DETALLE-HISTORICO" to="DETALLE-HISTORICO" />
+		<transition on="VOLVER" to="fin">
+		</transition>
+	</view-state>
+
+	<action-state id="INICIALIZAR-FILTROS">
+		<evaluate
+			expression="historicoUsuariosFL.inicializarFiltrosBusqueda(idUsuario,loginUsuario,fechaInicial,fechaFinal)" />
+		<transition on="success" to="VISTA-DEFECTO">
+		</transition>
+	</action-state>
+
+	<view-state id="VISTA-DEFECTO" view="consultar-historico-usuarios.xhtml">
+		<transition on="CONSULTAR" to="CONSULTAR"/>		
+		<transition on="DETALLE-HISTORICO" to="DETALLE-HISTORICO" />
+		<transition on="VOLVER" to="fin">
+		</transition>
+	</view-state>
+	
+	<view-state id="DETALLE-HISTORICO" view="detalle-historico.xhtml">
+		<transition on="VOLVER" to="VISTA-DEFECTO"/>
+		<transition on="VER-DETALLE-ROL" to="VER-DETALLE-ROL">			
+			<set name="flashScope.idRol" value="historicoUsuariosFL.rolSeleccionado.idRol" />
+			<set name="flashScope.fechaInicial" value="historicoUsuariosFL.historicoSeleccionado.fechaInicio" />
+			<set name="flashScope.fechaFinal" value="historicoUsuariosFL.historicoSeleccionado.fechaFin == null ? new java.util.Date():historicoUsuariosFL.historicoSeleccionado.fechaFin" />
+		</transition>		
+	</view-state>
+	
+	<subflow-state id="VER-DETALLE-ROL" subflow="historico-roles">
+		<input name="idRol" value="idRol" />
+		<input name="fechaInicial" value="fechaInicial" />
+		<input name="fechaFinal" value="fechaFinal" />
+		<input name="deshabilitarFechas" value="true" />
+		<transition on="fin" to="DETALLE-HISTORICO"/>	
+	</subflow-state>
+
+	<action-state id="CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.historicoUsuariosMB.consultarHistorico()" />
+		<transition on="success" to="VISTA-DEFECTO">
+		</transition>
+	</action-state>
+
+	<end-state id="fin" />
+</flow>

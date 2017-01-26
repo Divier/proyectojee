@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="stockTipoFormularioHolderFL"
+		class="co.com.datatools.c2.managed_bean.formularios.stock_tipo_formulario.StockTipoFormularioHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/formularios/stock-tipo-formulario/consultarStockTipoFormulario.xhtml">
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+		<transition on="_op-CREAR" to="_op-CREAR">
+			<evaluate
+				expression="flowScope.stockTipoFormularioHolderFL.initStockTipoFormularioDTO()" />
+		</transition>
+		<transition on="_op-EDITAR" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.stockTipoFormularioMB.cargarStockTipoFormulario()" />
+		</transition>
+		<transition on="_op-ELIMINAR" to="_op-ELIMINAR" />
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.stockTipoFormularioMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<view-state id="_op-CREAR"
+		view="/WEB-INF/jsp/formularios/stock-tipo-formulario/registrarStockTipoFormulario.xhtml">
+		<transition on="CONTINUAR" to="registrarStockTipoFormulario" />
+		<transition on="LIMPIAR" to="_op-CREAR">
+			<evaluate
+				expression="flowScope.stockTipoFormularioHolderFL.initStockTipoFormularioDTO()" />
+		</transition>
+		<transition on="VOLVER" to="ingresar" />
+	</view-state>
+
+	<action-state id="registrarStockTipoFormulario">
+		<evaluate
+			expression="externalContext.sessionMap.stockTipoFormularioMB.registrarStockTipoFormulario()" />
+		<transition on="yes" to="_op-CONSULTAR" />
+		<transition on="no" to="_op-CREAR" />
+	</action-state>
+
+	<view-state id="_op-EDITAR"
+		view="/WEB-INF/jsp/formularios/stock-tipo-formulario/actualizarStockTipoFormulario.xhtml">
+		<transition on="CONTINUAR" to="actualizarStockTipoFormulario" />
+		<transition on="VOLVER" to="ingresar" />
+	</view-state>
+
+	<action-state id="actualizarStockTipoFormulario">
+		<evaluate
+			expression="externalContext.sessionMap.stockTipoFormularioMB.actualizarStockTipoFormulario()" />	
+		<transition on="success" to="_op-EDITAR" />
+	</action-state>
+
+	<action-state id="_op-ELIMINAR">
+		<evaluate
+			expression="externalContext.sessionMap.stockTipoFormularioMB.eliminarStockTipoFormulario()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+</flow>

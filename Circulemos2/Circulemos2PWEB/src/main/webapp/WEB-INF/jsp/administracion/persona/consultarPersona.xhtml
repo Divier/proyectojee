@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{personaMB.toString()}" />
+		</f:metadata>
+		<h:form id="form-contenido">
+
+			<p:panel id="campos-consulta" styleClass="panel-formulario" header="#{labelAdmin.titulo_consultar_persona}">
+				<p:fieldset id="pnlDesc" legend="#{lbComun.msg_fieldset_consultar}" styleClass="fieldset-formulario">
+
+					<h:panelGrid id="panel-filtro" styleClass="center-block" columns="4" columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel value="#{labelAdmin.label_tipo_documento}" styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenTipIde" value="#{personaHolderFL.idTipoIdentificacionPersona}" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" itemValue="" noSelectionOption="true" />
+								<f:selectItems value="#{catalogoGeneralMB.opcTipoIdentPersona}" />
+								<p:ajax event="valueChange" update="panel-filtro" global="false" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenTipIde" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_numero_documento}" rendered="#{!personaHolderFL.mostrarNumDocObl}" />
+						<h:panelGroup rendered="#{!personaHolderFL.mostrarNumDocObl}">
+							<p:inputText id="txtNumDocPer" value="#{personaHolderFL.numeroIdentificacionPersona}" maxlength="20">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+							<p:message for="txtNumDocPer" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_numero_documento}" styleClass="campo-obligatorio" rendered="#{personaHolderFL.mostrarNumDocObl}" />
+						<h:panelGroup rendered="#{personaHolderFL.mostrarNumDocObl}">
+							<p:inputText id="txtNumDocPerExt" value="#{personaHolderFL.numeroIdentificacionPersona}" maxlength="20"
+								required="#{personaHolderFL.mostrarNumDocObl}" requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+							<p:message for="txtNumDocPerExt" display="default" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_primer_apellido}" rendered="#{personaMB.mostrarFiltroNatural()}" />
+						<h:panelGroup rendered="#{personaMB.mostrarFiltroNatural()}">
+							<p:inputText id="txtFiltroApellido1" value="#{personaHolderFL.apellido1}" maxlength="30">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_segundo_apellido}" rendered="#{personaMB.mostrarFiltroNatural()}" />
+						<h:panelGroup rendered="#{personaMB.mostrarFiltroNatural()}">
+							<p:inputText id="txtFiltroApellido2" value="#{personaHolderFL.apellido2}" maxlength="30">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_primer_nombre}" rendered="#{personaMB.mostrarFiltroNatural()}" />
+						<h:panelGroup rendered="#{personaMB.mostrarFiltroNatural()}">
+							<p:inputText id="txtFiltroNombre1" value="#{personaHolderFL.nombre1}" maxlength="30">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_segundo_nombre}" rendered="#{personaMB.mostrarFiltroNatural()}" />
+						<h:panelGroup rendered="#{personaMB.mostrarFiltroNatural()}">
+							<p:inputText id="txtFiltroNombre2" value="#{personaHolderFL.nombre2}" maxlength="30">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_digito_verificacion}" rendered="#{personaMB.mostrarFiltroJuridico()}" />
+						<h:panelGroup rendered="#{personaMB.mostrarFiltroJuridico()}">
+							<p:spinner id="spinFiltroDigitoverificacion" value="#{personaHolderFL.digitoVerificacion}" min="0" max="9">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:spinner>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_nombre_comercial}" rendered="#{personaMB.mostrarFiltroJuridico()}" />
+						<h:panelGroup rendered="#{personaMB.mostrarFiltroJuridico()}">
+							<p:inputText id="txtFiltroNombrecomercial" value="#{personaHolderFL.nombreComercial}" maxlength="60">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdmin.label_sigla}" rendered="#{personaMB.mostrarFiltroJuridico()}" />
+						<h:panelGroup rendered="#{personaMB.mostrarFiltroJuridico()}">
+							<p:inputText id="txtFiltroSigla" value="#{personaHolderFL.sigla}" maxlength="10">
+								<p:ajax process="@this" update="@this" global="false" />
+							</p:inputText>
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid columns="1" styleClass="center-block" cellspacing="7">
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR" action="_op-CONSULTAR" icon="c2-icon-consultar"
+							process="@this,selOneMenTipIde,txtNumDocPer" value="#{lbComun.btnConsultar}"
+							update=":messages,:form-resultado:resultado-consulta-natural,:form-resultado:resultado-consulta-juridica,pnlDesc">
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:fieldset>
+
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta-natural" styleClass="panel-res-consulta" rendered="#{personaMB.mostrarResultadoNatural()}">
+				<h:panelGrid id="acciones-top-natural" columns="2" cellspacing="7">
+					<f:facet name="footer">
+						<p:commandButton id="btnEditarNatural" styleClass="_op-EDITAR" action="_op-EDITAR_NATURAL" icon="c2-icon-editar" process="@this"
+							value="#{lbComun.btnEditar}" update=":messages,form-resultado" disabled="#{personaHolderFL.personaSeleccionada==null}">
+							<p:tooltip for="btnEditarNatural" value="#{labelAdmin.label_editar_persona}" />
+						</p:commandButton>
+
+						<p:commandButton id="btnVerDetNatural" action="DETALLE_NATURAL" icon="c2-icon-detalle" process="@form" value="#{lbComun.btnVerDet}"
+							disabled="#{personaHolderFL.personaSeleccionada==null}">
+							<p:tooltip for="btnVerDetNatural" value="#{labelAdmin.label_ver_detalle}" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados-natural" value="#{personaHolderFL.resultadoNatural}" var="varPersona" rowKey="#{varPersona.id}"
+					selection="#{personaHolderFL.personaSeleccionada}" paginator="true" paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}" rows="#{webPrm.param_initial_rows}">
+
+					<p:ajax event="rowSelectRadio" process=":form-resultado:tabla-resultados-natural" update=":form-resultado:acciones-top-natural" global="false" />
+
+					<p:column selectionMode="single" />
+
+					<p:column headerText="#{labelAdmin.label_tipo_documento}">
+						<h:outputText value="#{varPersona.tipoIdentificacion.nombre}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_numero_documento}">
+						<c2:outputNumberText value="#{varPersona.numeroIdentificacion}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_primer_apellido}">
+						<h:outputText value="#{varPersona.apellido1}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_segundo_apellido}">
+						<h:outputText value="#{varPersona.apellido2}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_primer_nombre}">
+						<h:outputText value="#{varPersona.nombre1}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_segundo_nombre}">
+						<h:outputText value="#{varPersona.nombre2}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_direccion_residencia}" style="width:15%">
+						<h:outputText value="#{personaMB.direccionResidencia(varPersona.direccionPersonaList)}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_numero_telefonico}">
+						<c2:outputNumberText value="#{varPersona.numeroTelefonico}" format="false" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_numero_celular}">
+						<c2:outputNumberText value="#{varPersona.numeroCelular}" format="false" />
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panel>
+
+			<p:panel id="resultado-consulta-juridica" rendered="#{personaMB.mostrarResultadoJuridica()}">
+				<h:panelGrid id="acciones-top-juridica" columns="2" cellspacing="7">
+					<f:facet name="footer">
+						<p:commandButton id="btnEditarJuridica" styleClass="_op-EDITAR" action="_op-EDITAR_JURIDICA" icon="c2-icon-editar" process="@this"
+							value="#{lbComun.btnEditar}" update=":messages,form-resultado" disabled="#{personaHolderFL.personaJuridicaSeleccionada==null}">
+							<p:tooltip for="btnEditarJuridica" value="#{labelAdmin.label_editar_persona}" />
+						</p:commandButton>
+
+						<p:commandButton id="btnVerDetJuridica" action="DETALLE_JURIDICA" icon="c2-icon-detalle" process="@form" value="#{lbComun.btnVerDet}"
+							update=":messages,form-resultado" disabled="#{personaHolderFL.personaJuridicaSeleccionada==null}">
+							<p:tooltip for="btnVerDetJuridica" value="#{labelAdmin.label_ver_detalle}" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados-juridica" value="#{personaHolderFL.resultadoJuridico}" var="varPersona" rowKey="#{varPersona.hashCode()}"
+					selection="#{personaHolderFL.personaJuridicaSeleccionada}" paginator="true" paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}" rows="#{webPrm.param_initial_rows}">
+
+					<p:ajax event="rowSelectRadio" process=":form-resultado:tabla-resultados-juridica" update=":form-resultado:acciones-top-juridica" global="false" />
+
+					<p:column selectionMode="single" />
+
+					<p:column headerText="#{labelAdmin.label_tipo_documento}">
+						<h:outputText value="#{varPersona.tipoIdentificacion.nombre}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_numero_documento}">
+						<c2:outputNumberText value="#{varPersona.numeroIdentificacion}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_digito_verificacion}">
+						<c2:outputNumberText value="#{varPersona.digitoVerificacion}" format="false" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_nombre_comercial}">
+						<h:outputText value="#{varPersona.nombreComercial}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_sigla}">
+						<h:outputText value="#{varPersona.sigla}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_direccion_persona}" style="width:15%">
+						<h:outputText value="#{personaMB.direccionResidencia(varPersona.direccionPersonaList)}" />
+					</p:column>
+
+					<p:column headerText="#{labelAdmin.label_numero_telefonico}">
+						<c2:outputNumberText value="#{varPersona.numeroTelefonico}" format="false" />
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panel>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

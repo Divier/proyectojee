@@ -1,0 +1,330 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:event type="preRenderView"
+				listener="#{instaladorMB.validarIngresoInstalador()}" />
+		</f:metadata>
+		<div>
+			<h2>
+				<h:outputText value="#{mensajesInstalador.titulo_instalador}" />
+			</h2>
+			<hr />
+			<h:form id="form-content">
+				<p:panel header="#{mensajesInstalador.titulo_seccion_administrador}"
+					toggleable="true">
+					<h:panelGrid columns="3" cellpadding="5"
+						styleClass="formulario-servicio">
+						<h:outputLabel for="nombres"
+							value="#{mensajesUsuario.label_nombres_usuario}:"
+							styleClass="campo-obligatorio" />
+						<p:inputText id="nombres"
+							label="#{mensajesUsuario.label_nombres_usuario}"
+							value="#{instaladorMB.nombres}" required="true" maxlength="50" />
+						<p:message id="msgNombres" for="nombres" />
+						<h:outputLabel for="apellidos"
+							value="#{mensajesUsuario.label_apellidos_usuario}:"
+							styleClass="campo-obligatorio" />
+						<p:inputText id="apellidos"
+							label="#{mensajesUsuario.label_apellidos_usuario}"
+							value="#{instaladorMB.apellidos}" required="true" maxlength="50" />
+						<p:message for="apellidos" />
+						<h:outputLabel for="email"
+							value="#{mensajesUsuario.label_correo}:"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="email" label="#{mensajesUsuario.label_correo}"
+								required="true" value="#{instaladorMB.email}"
+								validatorMessage="#{mensajesGeneral.mensaje_email_invalido}"
+								maxlength="256">
+								<f:validator
+									validatorId="co.com.datatools.util.jsf.EmailValidator" />
+								<p:ajax event="change" process="@this" />
+							</p:inputText>
+							<pe:keyFilter for="email" mask="email"></pe:keyFilter>
+						</h:panelGroup>
+						<p:message for="email" />
+
+						<h:outputLabel for="pwdNuevo"
+							value="#{mensajesInstalador.label_password}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:password id="pwdNuevo"
+								label="#{mensajesInstalador.label_password}"
+								value="#{instaladorMB.password}" required="true" />
+							<p:tooltip id="toolTip" for="pwdNuevo">
+								<p:dataTable value="#{cambioContrasenaMB.politicas}"
+									var="politica"
+									style="border: 0 !important; bgcolor: #dcdcdc;cellspacing:0;width:300px !important;">
+									<p:column headerText="#{mensajesGeneral.label_politicas_pw}">
+										<h:outputText value="#{politica}"></h:outputText>
+									</p:column>
+								</p:dataTable>
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message for="pwdNuevo" />
+
+						<h:outputLabel for="pwdNuevoConfirma"
+							value="#{mensajesInstalador.label_confirma_password}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:password id="pwdNuevoConfirma"
+								label="#{mensajesInstalador.label_confirma_password}"
+								value="#{instaladorMB.confirmacionPassword}" required="true" />
+							<pe:keyFilter for="pwdNuevoConfirma"></pe:keyFilter>
+						</h:panelGroup>
+						<p:message for="pwdNuevoConfirma" />
+					</h:panelGrid>
+				</p:panel>
+				<br />
+				<p:panel header="#{mensajesInstalador.titulo_seccion_parametros}"
+					toggleable="true">
+					<h:panelGrid columns="4" cellpadding="5"
+						styleClass="formulario-servicio">
+						<h:outputLabel for="niveles"
+							value="#{parametrosBase.label_herencia_roles}"
+							styleClass="campo-obligatorio" />
+						<p:inputText id="niveles" value="#{instaladorMB.nivelHerencia}"
+							required="true" label="#{parametrosBase.label_herencia_roles}" />
+						<p:tooltip id="toolTipNiveles" for="niveles">
+							<h:outputText value="#{parametrosBase.tooltip_herencia_roles}"></h:outputText>
+						</p:tooltip>
+						<p:message id="msgNiveles" for="niveles" />
+					</h:panelGrid>
+					<br />
+					<h:panelGrid styleClass="formulario-servicio">
+						<h:outputText
+							value="#{mensajesInstalador.titulo_seccion_url_aplicaciones}"></h:outputText>
+					</h:panelGrid>
+					<ui:repeat value="#{instaladorMB.aplicaciones}" var="aplicacion">
+						<h:panelGrid columns="4" cellpadding="5"
+							styleClass="formulario-servicio">
+							<h:outputLabel for="app" value="#{aplicacion.id}"
+								styleClass="campo-obligatorio" />
+							<p:inputText id="app" value="#{aplicacion.valor}" required="true"
+								label="#{parametrosBase.label_url_aplicacion}" />
+							<p:tooltip for="app">
+								<h:outputText value="#{parametrosBase.tooltip_url_app}"></h:outputText>
+							</p:tooltip>
+							<p:message for="app" />
+						</h:panelGrid>
+					</ui:repeat>
+				</p:panel>
+				<br />
+				<p:panel
+					header="#{mensajesInstalador.titulo_seccion_parametros_autenticacion}"
+					toggleable="true">
+					<h:panelGrid id="panel-datos-ldap">
+						<h:panelGrid columns="4" cellpadding="5"
+							styleClass="formulario-servicio">
+							<h:outputLabel for="ldap"
+								value="#{parametrosBase.label_permite_ldap}"
+								styleClass="campo-obligatorio" />
+							<p:selectOneMenu id="ldap" value="#{instaladorMB.permiteLdap}">
+								<f:selectItems value="#{instaladorMB.lSiNo}" />
+								<p:ajax event="valueChange" process="@this"
+									update=":form-content:panel-datos-ldap"></p:ajax>
+							</p:selectOneMenu>
+							<p:tooltip id="toolTipPermiteLdap" for="ldap">
+								<h:outputText value="#{parametrosBase.toolTipPermiteLdap}"></h:outputText>
+							</p:tooltip>
+							<p:message for="ldap" />
+						</h:panelGrid>
+						<p:fieldset
+							legend="#{mensajesInstalador.titulo_seccion_conexion_ldap}"
+							rendered="#{instaladorMB.permiteLdap}">
+							<h:panelGrid id="panelConexionLdap" columns="4" cellpadding="5"
+								styleClass="formulario-servicio">
+								<h:outputLabel for="url"
+									value="#{parametrosBase.label_url_provider}"
+									styleClass="campo-obligatorio" />
+								<p:inputText id="url"
+									label="#{parametrosBase.label_url_provider}"
+									value="#{instaladorMB.urlProvider}" required="true"
+									maxlength="1024" />
+								<p:tooltip id="tooltip_url_provider" for="url">
+									<h:outputText value="#{parametrosBase.tooltip_url_provider}"></h:outputText>
+								</p:tooltip>
+								<p:message id="msgUrl" for="url" />
+
+								<h:outputLabel for="usuarioLdap"
+									value="#{parametrosBase.label_security_principal}"
+									styleClass="campo-obligatorio" />
+								<p:inputText id="usuarioLdap"
+									label="#{parametrosBase.label_security_principal}"
+									value="#{instaladorMB.usuarioConexion}" required="true"
+									maxlength="1024" />
+								<p:tooltip id="tooltip_security_principal" for="usuarioLdap">
+									<h:outputText
+										value="#{parametrosBase.tooltip_security_principal}"></h:outputText>
+								</p:tooltip>
+								<p:message id="msgUsuarioLdap" for="usuarioLdap" />
+
+								<h:outputLabel for="pwUsuarioLdap"
+									value="#{parametrosBase.label_security_credentials}"
+									styleClass="campo-obligatorio" />
+								<p:password id="pwUsuarioLdap"
+									label="#{parametrosBase.label_security_credentials}"
+									value="#{instaladorMB.pwConexionLdap}" required="true"
+									maxlength="1024" />
+								<p:tooltip id="tooltip_security_credentials" for="pwUsuarioLdap">
+									<h:outputText
+										value="#{parametrosBase.tooltip_security_credentials}"></h:outputText>
+								</p:tooltip>
+								<p:message id="msgPwUsuarioLdap" for="pwUsuarioLdap" />
+							</h:panelGrid>
+							<h:panelGrid>
+								<f:facet name="footer">
+									<p:commandButton
+										actionListener="#{instaladorMB.probarConexionLDAP()}"
+										process="@this,form-content:panelConexionLdap"
+										update="msgUrl,msgUsuarioLdap,msgPwUsuarioLdap,dialog-mensaje"
+										value="#{mensajesInstalador.boton_probar_conexion}" />
+								</f:facet>
+							</h:panelGrid>
+						</p:fieldset>
+
+
+						<p:fieldset
+							legend="#{mensajesInstalador.titulo_seccion_atrConsulta_ldap}"
+							rendered="#{instaladorMB.permiteLdap}">
+							<h:panelGrid columns="4" cellpadding="5"
+								styleClass="formulario-servicio">
+								<h:outputLabel for="rutaUsuarios"
+									value="#{parametrosBase.label_users_path}"
+									styleClass="campo-obligatorio" />
+								<p:inputText id="rutaUsuarios"
+									label="#{parametrosBase.label_users_path}"
+									value="#{instaladorMB.rutaUsuarios}" required="true"
+									maxlength="1024" />
+								<p:tooltip id="tooltip_users_path" for="rutaUsuarios">
+									<h:outputText value="#{parametrosBase.tooltip_users_path}"></h:outputText>
+								</p:tooltip>
+								<p:message for="rutaUsuarios" />
+
+								<h:outputLabel for="atrIdUsuarioLdap"
+									value="#{parametrosBase.label_atributo_idusuario}"
+									styleClass="campo-obligatorio" />
+								<p:inputText id="atrIdUsuarioLdap"
+									label="#{parametrosBase.label_atributo_idusuario}"
+									value="#{instaladorMB.atrIdUsuarioLdap}" required="true"
+									maxlength="1024" />
+								<p:tooltip id="tooltip_atributo_idusuario"
+									for="atrIdUsuarioLdap">
+									<h:outputText
+										value="#{parametrosBase.tooltip_atributo_idusuario}"></h:outputText>
+								</p:tooltip>
+								<p:message for="atrIdUsuarioLdap" />
+
+								<h:outputLabel for="rutaGrupos"
+									value="#{parametrosBase.label_authorized_group_path}" />
+								<p:inputText id="rutaGrupos"
+									label="#{parametrosBase.label_authorized_group_path}"
+									value="#{instaladorMB.rutaGrupos}" maxlength="1024" />
+								<p:tooltip id="tooltip_authorized_group_path" for="rutaGrupos">
+									<h:outputText
+										value="#{parametrosBase.tooltip_authorized_group_path}"></h:outputText>
+								</p:tooltip>
+								<p:message for="rutaGrupos" />
+
+								<h:outputLabel for="atrGrupoUsuario"
+									value="#{parametrosBase.label_atributo_grupo}" />
+								<p:inputText id="atrGrupoUsuario"
+									label="#{parametrosBase.label_atributo_grupo}"
+									value="#{instaladorMB.atrGrupoUsuario}" maxlength="1024" />
+								<p:tooltip id="tooltip_atributo_grupo" for="atrGrupoUsuario">
+									<h:outputText value="#{parametrosBase.tooltip_atributo_grupo}"></h:outputText>
+								</p:tooltip>
+								<p:message for="atrGrupoUsuario" />
+							</h:panelGrid>
+						</p:fieldset>
+
+						<p:fieldset
+							legend="#{mensajesInstalador.titulo_seccion_atrRetorno_ldap}"
+							rendered="#{instaladorMB.permiteLdap}">
+							<h:panelGrid columns="4" cellpadding="5"
+								styleClass="formulario-servicio">
+								<h:outputLabel for="atrLoginUsuario"
+									value="#{parametrosBase.label_atributo_login}"
+									styleClass="campo-obligatorio" />
+								<p:inputText id="atrLoginUsuario"
+									label="#{parametrosBase.label_atributo_login}"
+									value="#{instaladorMB.atrLoginUsuario}" required="true"
+									maxlength="1024" />
+								<p:tooltip id="tooltip_atributo_login" for="atrLoginUsuario">
+									<h:outputText value="#{parametrosBase.tooltip_atributo_login}"></h:outputText>
+								</p:tooltip>
+								<p:message for="atrLoginUsuario" />
+
+								<h:outputLabel for="atrApellidos"
+									value="#{parametrosBase.label_atributo_apellidos_ldap}" />
+								<p:inputText id="atrApellidos"
+									label="#{parametrosBase.label_atributo_apellidos_ldap}"
+									value="#{instaladorMB.atrApellidos}" maxlength="1024" />
+								<p:tooltip id="tooltip_atributo_apellidos_ldap"
+									for="atrApellidos">
+									<h:outputText
+										value="#{parametrosBase.tooltip_atributo_apellidos_ldap}"></h:outputText>
+								</p:tooltip>
+								<p:message for="atrApellidos" />
+
+								<h:outputLabel for="atrNombres"
+									value="#{parametrosBase.label_atributo_nombres_ldap}" />
+								<p:inputText id="atrNombres"
+									label="#{parametrosBase.label_atributo_nombres_ldap}"
+									value="#{instaladorMB.atrNombres}" maxlength="1024" />
+								<p:tooltip id="tooltip_atributo_nombres_ldap" for="atrNombres">
+									<h:outputText
+										value="#{parametrosBase.tooltip_atributo_nombres_ldap}"></h:outputText>
+								</p:tooltip>
+								<p:message for="atrNombres" />
+
+								<h:outputLabel for="atrCorreoLdap"
+									value="#{parametrosBase.label_atributo_correo_ldap}" />
+								<p:inputText id="atrCorreoLdap"
+									label="#{parametrosBase.label_atributo_correo_ldap}"
+									value="#{instaladorMB.atrCorreoLdap}" maxlength="1024" />
+								<p:tooltip id="tooltip_atributo_correo_ldap" for="atrCorreoLdap">
+									<h:outputText
+										value="#{parametrosBase.tooltip_atributo_correo_ldap}"></h:outputText>
+								</p:tooltip>
+								<p:message for="atrCorreoLdap" />
+
+							</h:panelGrid>
+						</p:fieldset>
+					</h:panelGrid>
+				</p:panel>
+
+				<h:panelGrid>
+					<f:facet name="footer">
+						<p:commandButton actionListener="#{instaladorMB.guardar()}"
+							update="form-content,msgNiveles" process="form-content"
+							value="#{lbComun.btnGuardar}" icon="c2-icon-guardar" />
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dialog id="dialog-mensaje"
+					header="#{mensajesInstalador.titulo_resultado_conexion}"
+					widgetVar="dlgMensaje" resizable="false" appendTo="@(body)"
+					closeOnEscape="true" styleClass="dialog-top-small-msg">
+					<h:outputText value="#{instaladorMB.mensajePruebaConexion}"></h:outputText>
+					<br />
+					<h:panelGrid>
+						<f:facet name="footer">
+							<p:commandButton value="#{mensajesGeneral.boton_aceptar}"
+								onclick="PF('dlgMensaje').hide()" process="dialog-mensaje" />
+						</f:facet>
+					</h:panelGrid>
+				</p:dialog>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

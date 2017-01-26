@@ -1,0 +1,15 @@
+<reporte>
+	<codigo>REPORTE_19</codigo>
+	<nombre>REPORTE DE MULTAS NO VALIDAS PARA COACTIVO</nombre>
+	<codigo_encabezado>ENCABEZADO_GENERAL_SIN_FILTROS</codigo_encabezado>
+	<cabeceras>
+		<atributo>
+			<contenido>NÚMERO DE FACTURA</contenido>
+			<formato></formato>
+		</atributo>
+		<atributo>
+			<contenido>MOTIVO DE INCONSISTENCIA</contenido>
+			<formato></formato>
+		</atributo>
+	</cabeceras>
+</reporte>

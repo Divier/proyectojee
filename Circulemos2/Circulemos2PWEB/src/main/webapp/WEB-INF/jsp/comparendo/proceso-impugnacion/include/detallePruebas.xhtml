@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<!-- TODO -->
+
+	<p:fieldset styleClass="fieldset-formulario"
+		legend="#{labelProcesoImpugnacion.msg_fieldset_pruebas}">
+
+		<h:panelGrid id="acciones-top-solicitudes">
+			<f:facet name="footer">
+				<!-- Boton ver solicitud-->
+				<p:commandButton id="btnVerSolicitud"
+					action="#{registrarPruebaMB.inicializarDatos()}"
+					oncomplete="PF('dlgVerSolicitud').show();" icon="c2-icon-crear"
+					update="dlg-VerSolicitud" process="@this"
+					value="#{labelProcesoImpugnacion.btnVerSolicitud}"
+					disabled="#{detalleProcesoFL.solicitudSeleccionada == null }">
+					<p:tooltip for="btnVerSolicitud"
+						value="#{labelProcesoImpugnacion.btnVerSolicitud}" />
+					<f:setPropertyActionListener
+						target="#{registrarPruebaFL.solicitud}"
+						value="#{detalleProcesoFL.solicitudSeleccionada.solicitudPruebasBackDTO}" />
+					<f:setPropertyActionListener
+						target="#{registrarPruebaFL.modoConsulta}" value="true" />
+				</p:commandButton>
+				<!--Boton Visualizar-->
+				<p:commandButton
+					action="#{impugnacionMB.consultarDocumentoSolicitud()}"
+					icon="c2-icon-crear" process="@this" update=":form-pdfviewer"
+					disabled="#{detalleProcesoFL.solicitudSeleccionada == null }"
+					value="#{labelProcesoImpugnacion.btn_visualizar}">
+				</p:commandButton>
+			</f:facet>
+		</h:panelGrid>
+
+		<p:dataTable id="tabla-solicitudes" var="registro"
+			value="#{detalleProcesoFL.solicitudes}"
+			rowKey="#{registro.solicitudPruebasBackDTO.id}" paginator="true"
+			selection="#{detalleProcesoFL.solicitudSeleccionada}"
+			paginatorTemplate="#{webPrm.param_paginator_template}"
+			rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+			emptyMessage="#{labelGeneral.msj_tabla_vacia}"
+			rows="#{webPrm.param_initial_rows}">
+
+			<p:ajax event="rowSelectRadio"
+				process=":form-detalle-proceso:secciones-detalle:tabla-solicitudes"
+				update="form-detalle-proceso:secciones-detalle:acciones-top-solicitudes @this"
+				global="false" />
+
+			<p:column selectionMode="single"></p:column>
+
+			<p:column
+				headerText="#{labelProcesoImpugnacion.label_caracteristica_prueba}">
+				<p:outputLabel
+					value="#{registro.solicitudPruebasBackDTO.caracteristicaPrueba.nombre}" />
+			</p:column>
+
+			<p:column headerText="#{labelProcesoImpugnacion.label_tip_prueba}">
+				<p:outputLabel
+					value="#{registro.solicitudPruebasBackDTO.tipoPrueba.nombre}" />
+			</p:column>
+
+			<p:column headerText="#{labelProcesoImpugnacion.label_origen_prueba}">
+				<p:outputLabel
+					value="#{registro.solicitudPruebasBackDTO.origenPrueba.nombre}" />
+			</p:column>
+
+			<p:column
+				headerText="#{labelProcesoImpugnacion.label_fch_soli_prueba}">
+				<c2:outputDateLabel
+					labelValue="#{registro.solicitudPruebasBackDTO.fechaSolicitud}"
+					fullFormat="true" />
+			</p:column>
+
+			<p:column
+				headerText="#{labelProcesoImpugnacion.label_fch_limt_rcb_prueba}">
+				<c2:outputDateLabel
+					labelValue="#{registro.solicitudPruebasBackDTO.fechaLimite}"
+					fullFormat="true" />
+			</p:column>
+
+			<p:column headerText="#{labelProcesoImpugnacion.lable_imlp_deft}">
+				<c2:outputBoolText value="#{registro.impulsoDefinitivo}" />
+			</p:column>
+		</p:dataTable>
+	</p:fieldset>
+</ui:composition>

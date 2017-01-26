@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="detalleFinanciacionFL"
+		class="co.com.datatools.c2.managed_bean.financiacion.administracion.proceso_financiacion.DetalleFinanciacionFL" />
+	<var name="consultaFinanciacionHolderFL"
+		class="co.com.datatools.c2.managed_bean.financiacion.administracion.proceso_financiacion.ConsultaFinanciacionHolderFL" />
+	<var name="diaNoHabilFL"
+		class="co.com.datatools.c2.managed_bean.administracion.calendario.DiaNoHabilFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/financiacion/administracion/proceso-financiacion/consultarFinanciaciones.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('consultarFinanciacionMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('calendarioMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.consultarFinanciacionMB.consultarFinanciaciones()" />
+		</transition>
+		<transition on="VER_DETALLE" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('detalleFinanciacionMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.detalleFinanciacionMB.consultarDetalleFinanciacion()" />
+		</transition>
+	</view-state>
+
+	<view-state id="VER_DETALLE"
+		view="/WEB-INF/jsp/financiacion/administracion/proceso-financiacion/detalleFinanciacion.xhtml">
+		<transition on="VER_OBLIGACIONES" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.detalleFinanciacionMB.verObligaciones()"></evaluate>
+		</transition>
+		<transition on="IMP_RECIBO_PAGO" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.detalleFinanciacionMB.imprimirReciboPago()"></evaluate>
+		</transition>
+		<transition on="CUADRO_AMORTIZACION" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.detalleFinanciacionMB.imprimirCuadroAmortizacion()"></evaluate>
+		</transition>
+		<transition on="SEGUIMIENTO" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.detalleFinanciacionMB.verSeguimiento()"></evaluate>
+		</transition>
+		<transition on="DEJAR_FIRME" to="VALIDAR_FIRME_FINANCIACION" />
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.consultarFinanciacionMB.consultarFinanciaciones()" />
+		</transition>
+		<transition on="VOLVER_OBL" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.detalleFinanciacionMB.cerrarObligaciones()"></evaluate>
+		</transition>
+		<transition on="VOLVER_SEG" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.detalleFinanciacionMB.cerrarSeguimiento()"></evaluate>
+		</transition>
+		<transition on="VOLVER_RP" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.detalleFinanciacionMB.cerrarImprimirReciboPago()"></evaluate>
+		</transition>
+		<transition on="VOLVER_CA" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.detalleFinanciacionMB.cerrarImprimirCuadroAmortizacion()"></evaluate>
+		</transition>
+		<transition on="GUARDAR_FIRMA" to="GUARDAR_FIRMA"></transition>
+	</view-state>
+	
+	<action-state id="VALIDAR_FIRME_FINANCIACION">
+		<evaluate 
+			expression="externalContext.sessionMap.detalleFinanciacionMB.validarFirmeFinanciacion()"></evaluate>
+		<transition on="yes" to="PARAMETRO_FIRMA"></transition>
+		<transition on="no" to="VER_DETALLE"></transition>
+	</action-state>
+
+	<action-state id="PARAMETRO_FIRMA">
+		<evaluate
+			expression="externalContext.sessionMap.capturaFirmaMB.consultarParametro()"></evaluate>
+		<transition on="yes" to="FIRMA" />
+		<transition on="no" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.detalleFinanciacionMB.dejarFirmeFinanciacion()"></evaluate>
+		</transition>
+	</action-state>
+
+	<action-state id="FIRMA">
+		<evaluate
+			expression="externalContext.sessionMap.capturaFirmaMB.capturarFirmaDigital()"></evaluate>
+		<transition on="success" to="VER_DETALLE" />
+	</action-state>
+
+	<action-state id="GUARDAR_FIRMA">
+		<evaluate expression="externalContext.sessionMap.capturaFirmaMB.asociarFirma()"></evaluate>
+		<transition on="yes" to="VER_DETALLE">
+			<set name="flowScope.detalleFinanciacionFL.dejarFirmeDTO.numeroFirma"
+				value="externalContext.sessionMap.capturaFirmaMB.capturaFirmaFL.capturaFirmaDTO.firma"
+				type="string" />
+			<evaluate
+				expression="externalContext.sessionMap.detalleFinanciacionMB.dejarFirmeFinanciacion()"></evaluate>
+		</transition>
+		<transition on="no" to="VER_DETALLE" />
+	</action-state>
+</flow>

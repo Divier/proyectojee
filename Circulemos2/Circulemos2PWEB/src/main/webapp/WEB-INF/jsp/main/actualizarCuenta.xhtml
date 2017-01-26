@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<f:metadata>
+			<f:event listener="#{adminCuentaUsuarioMB.cargarDatosUsuario()}"
+				type="preRenderView"></f:event>
+		</f:metadata>
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{mensajesIngreso.titulo_modificar_cuenta}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_edicion}">
+					<p:fieldset id="password" styleClass="fieldset-formulario"
+						legend="#{mensajesIngreso.titulo_password_usuario}"
+						rendered="#{!adminCuentaUsuarioMB.ldap}">
+						<h:panelGrid id="panelCambioPw" styleClass="center-block"
+							columns="4"
+							columnClasses="label-col,input-col,label-col,input-col">
+							<p:outputLabel value="#{mensajesIngreso.label_usuario}" />
+							<h:outputText value="#{adminCuentaUsuarioMB.login}" />
+
+							<p:outputLabel value="#{mensajesIngreso.label_pw_actual}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:password id="pwdActual"
+									label="#{mensajesIngreso.label_pw_actual}"
+									value="#{adminCuentaUsuarioMB.pwActual}" required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									autocomplete="false" />
+								<p:message for="pwdActual" />
+							</h:panelGroup>
+							<p:outputLabel value="#{mensajesIngreso.label_pw_nuevo}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:password id="pwdNuevo"
+									label="#{mensajesIngreso.label_pw_nuevo}"
+									value="#{adminCuentaUsuarioMB.pwNuevo}" required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}" />
+								<p:tooltip id="toolTip" for="pwdNuevo" showEvent="focus"
+									hideEvent="blur">
+									<p:dataTable value="#{adminCuentaUsuarioMB.politicas}"
+										var="politica"
+										style="border: 0 !important; bgcolor: #dcdcdc;cellspacing:0;width:340px !important;">
+										<p:column headerText="#{mensajesIngreso.label_politicas_pw}">
+											<h:outputText value="#{politica}"></h:outputText>
+										</p:column>
+									</p:dataTable>
+								</p:tooltip>
+								<p:message for="pwdNuevo" />
+							</h:panelGroup>
+							<p:outputLabel
+								value="#{mensajesIngreso.label_pw_nuevo_confirmacion}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:password id="pwdNuevoConfirma"
+									label="#{mensajesIngreso.label_pw_nuevo_confirmacion}"
+									value="#{adminCuentaUsuarioMB.confirmacionPwNuevo}"
+									required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}" />
+								<pe:keyFilter for="pwdNuevoConfirma"></pe:keyFilter>
+								<p:message for="pwdNuevoConfirma" />
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:panelGrid styleClass="center-block">
+							<p:commandButton id="btnCambiarPw" action="cambiarPw"
+								icon="c2-icon-guardar" value="#{mensajesIngreso.btnCambiarPw}"
+								process="@this,panelCambioPw" update=":messages,panelCambioPw">
+								<p:tooltip for="btnCambiarPw"
+									value="#{mensajesIngreso.tooltip_btnCambiarPw}" />
+								<p:confirm header="#{lbComun.msg_tit_confirmar}"
+									message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+							</p:commandButton>
+						</h:panelGrid>
+					</p:fieldset>
+
+					<p:fieldset id="correo" styleClass="fieldset-formulario"
+						legend="#{mensajesIngreso.titulo_correo_usuario}">
+						<h:panelGrid id="panelCambioCorreo" styleClass="center-block"
+							columns="4"
+							columnClasses="label-col,input-col,label-col,input-col">
+							<p:outputLabel value="#{mensajesIngreso.label_correo_usuario}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="txtCorreoElectronico"
+									value="#{adminCuentaUsuarioMB.email}" required="true"
+									validatorMessage="#{labelGeneral.val_campo_email}"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									maxlength="256">
+									<f:validator
+										validatorId="co.com.datatools.util.jsf.EmailValidator" />
+									<p:ajax event="change" process="@this"></p:ajax>
+								</p:inputText>
+								<pe:keyFilter for="txtCorreoElectronico"></pe:keyFilter>
+								<p:message for="txtCorreoElectronico" />
+							</h:panelGroup>
+
+							<p:outputLabel
+								value="#{mensajesIngreso.label_correo_confirmacion}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:inputText id="txtCorreoConfirma"
+									value="#{adminCuentaUsuarioMB.confirmacionEmail}"
+									required="true"
+									validatorMessage="#{labelGeneral.val_campo_email}"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									maxlength="256">
+									<f:validator
+										validatorId="co.com.datatools.util.jsf.EmailValidator" />
+									<p:ajax event="change" process="@this"></p:ajax>
+								</p:inputText>
+								<pe:keyFilter for="txtCorreoConfirma"></pe:keyFilter>
+								<p:message for="txtCorreoConfirma" />
+							</h:panelGroup>
+						</h:panelGrid>
+						<h:panelGrid styleClass="center-block">
+							<p:commandButton id="btnCambiarCorreo" action="cambiarCorreo"
+								icon="c2-icon-guardar"
+								value="#{mensajesIngreso.btnCambiarCorreo}"
+								process="@this,panelCambioCorreo"
+								update=":messages,panelCambioCorreo">
+								<p:tooltip for="btnCambiarCorreo"
+									value="#{mensajesIngreso.tooltip_btnCambiarCorreo}" />
+								<p:confirm header="#{lbComun.msg_tit_confirmar}"
+									message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+							</p:commandButton>
+						</h:panelGrid>
+					</p:fieldset>
+				</p:fieldset>
+			</p:panel>
+			<script>
+		</script>
+		</h:form>
+	</ui:define>
+</ui:composition>

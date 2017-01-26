@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<h:form id="frmDetalleNoUbicabilidad">
+		<p:dialog modal="true"
+			closable="false" widgetVar="popupDetalleNoUbicabilidad"
+			id="idPopupDetalleNoUbicabilidad" resizable="false"
+			closeOnEscape="false" appendToBody="true" dynamic="true">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelAdminPersona.tit_detalle_no_ubicabilidad}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario" >
+					<!--Fieldset para seccion de detalles-->
+					<p:fieldset id="datos-detalle" styleClass="fieldset-formulario" >
+						<h:panelGrid id="acciones-top">
+							<f:facet name="footer">
+								<!--Boton adicionar no ubicabilidad-->
+								<p:commandButton id="btnAgregarNoUbi" icon="c2-icon-agregar-det" 
+										immediate="true" action="#{datosDemograficosMB.irAdicionarNoUbicabilidad()}"
+										value="#{labelAdminPersona.btn_adicionar_no_ubicabilidad}"
+										update=":frmAdicionarNoUbicabilidad" >
+									<p:tooltip for="btnAgregarNoUbi" value="#{labelAdminPersona.btn_adicionar_no_ubicabilidad}" />
+								</p:commandButton>
+								<!--Boton descargar documentos no ubicabilidad-->
+								<p:commandButton id="btnDescargarNoUbi" value="#{labelAdminPersona.btn_descargar}" ajax="false" 
+	                            	onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s"
+	                            	process="@this" disabled="#{datosDemograficosHolderFL.archivoNoUbiSeleccionado == null}" >
+							        <p:fileDownload value="#{datosDemograficosMB.archivoNoUbicabilidad}" />
+							        <p:tooltip for="btnDescargarNoUbi" value="#{labelAdminPersona.tooltip_descargar_documento_no_ubicabilidad}" />
+							    </p:commandButton>
+							</f:facet>
+						</h:panelGrid>
+
+						<p:dataTable id="tabla-detalle-no-ubicabilidad" value="#{datosDemograficosHolderFL.archivosNoUbicabilidad}"
+							var="archivo" rowKey="#{archivo.id}"
+							selection="#{datosDemograficosHolderFL.archivoNoUbiSeleccionado}" paginator="true"
+							paginatorTemplate="#{webPrm.param_paginator_template}"
+							rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+							rows="#{webPrm.param_initial_rows}"
+							emptyMessage="#{labelGeneral.msj_consulta_ko}" >
+
+							<p:ajax event="rowSelectRadio"
+								process=":frmDetalleNoUbicabilidad:tabla-detalle-no-ubicabilidad"
+								update=":frmDetalleNoUbicabilidad:acciones-top" global="false" />
+
+							<p:column selectionMode="single" style="width:2%" />
+
+							<!--Columnas Resultado Consulta-->
+							<p:column headerText="#{labelAdminPersona.lbl_fuente_ubicabilidad}">
+								<h:outputText value="#{archivo.tipoFuenteInformacion.nombre}" />
+							</p:column>
+							
+							<p:column headerText="#{labelAdminPersona.lbl_pagina_consultada}">
+								<h:outputText value="#{archivo.pagina}" />
+							</p:column>
+							
+							<p:column headerText="#{labelAdminPersona.lbl_usuario}">
+								<h:outputText value="#{archivo.usuarioRegistro.login}" />
+							</p:column>
+							
+							<p:column headerText="#{labelAdminPersona.lbl_fecha_actualizacion}">
+								<c2:outputDateLabel labelValue="#{archivo.fechaRegistro}" fullFormat="true" />
+							</p:column>
+
+						</p:dataTable>
+					</p:fieldset>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<!--Boton cerrar-->
+						<p:commandButton id="btnCerrar"
+								process="@this" value="#{labelAdminPersona.btn_cerrar}"
+								immediate="true" onclick="PF('popupDetalleNoUbicabilidad').hide();">
+							<p:tooltip for="btnCerrar" value="#{labelAdminPersona.btn_cerrar}" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</p:dialog>
+	</h:form>
+	
+	<script type="text/javascript">
+		function start() {
+		    PF('statusDialog').show();
+		}
+		 
+		function stop() {
+		    PF('statusDialog').hide();
+		}
+	</script>
+</ui:composition>

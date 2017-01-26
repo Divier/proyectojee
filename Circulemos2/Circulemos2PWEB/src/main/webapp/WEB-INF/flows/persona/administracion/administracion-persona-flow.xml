@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="administracionPersonaHolderFL"
+		class="co.com.datatools.c2.maganed_bean.persona.administracion.AdministracionPersonaHolderFL" />
+	
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/persona/administracion/consultarAdministracionPersona.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('administracionPersonaMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('ubicabilidadMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('datosDemograficosMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="CONSULTAR_PERSONA" />
+		<transition on="_op-CREAR" to="IR_REGISTRAR_PERSONA" />
+		<transition on="_op-EDITAR" to="IR_EDITAR_PERSONA" />
+		<transition on="VER_UBICABILIDAD" to="VER_UBICABILIDAD" />
+		<transition on="PERSONA_PRESENTE" to="PERSONA_PRESENTE" />
+		<transition on="PERSONA_NO_PRESENTE" to="PERSONA_NO_PRESENTE" />
+	</view-state>
+
+	<action-state id="CONSULTAR_PERSONA">
+		<evaluate
+			expression="externalContext.sessionMap.administracionPersonaMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<action-state id="VER_UBICABILIDAD">
+		<evaluate expression="externalContext.sessionMap.administracionPersonaMB.verUbicabilidad()" />
+		<transition on="yes" to="DATOS_DEMOGRAFICOS">
+			<set name="flashScope.tipoDocumento"
+				value="flowScope.administracionPersonaHolderFL.personaSeleccionada.tipoIdentificacion.id" />
+			<set name="flashScope.documento"
+				value="flowScope.administracionPersonaHolderFL.personaSeleccionada.numeroIdentificacion" />
+			<set name="flashScope.subflujo" value="true" />
+		</transition>
+		<transition on="no" to="ingresar" />
+	</action-state>
+
+	<action-state id="IR_REGISTRAR_PERSONA">
+		<evaluate
+			expression="externalContext.sessionMap.administracionPersonaMB.irRegistrarPersona()" />
+		<transition on="success" to="ingresar">
+
+		</transition>
+	</action-state>
+
+	<action-state id="IR_EDITAR_PERSONA">
+		<evaluate
+			expression="externalContext.sessionMap.administracionPersonaMB.irEditarPersona()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+	<action-state id="UBICABILIDAD_GUARDADA">
+		<evaluate expression="administracionPersonaHolderFL.actualizar" />
+		<transition on="yes" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.administracionPersonaMB.consultar()" />
+		</transition>
+		<transition on="no" to="ingresar" />
+	</action-state>
+
+	<!-- se accede al modulo de ubicabilidad para crear una persona -->
+	<action-state id="PERSONA_PRESENTE">
+		<evaluate
+			expression="externalContext.sessionMap.administracionPersonaMB.confirmacionPersonaPresente()" />
+		<evaluate expression="administracionPersonaHolderFL.actualizar" />
+		<transition on="yes" to="UBICABILIDAD">
+			<set name="flashScope.tipoDocumento"
+				value="flowScope.administracionPersonaHolderFL.personaSeleccionada.tipoIdentificacion.id" />
+			<set name="flashScope.documento"
+				value="flowScope.administracionPersonaHolderFL.personaSeleccionada.numeroIdentificacion" />
+			<set name="flashScope.soloGuardar" value="false" />
+			<set name="flashScope.ciudadanoPresente" value="true" />
+		</transition>
+		<transition on="no" to="UBICABILIDAD">
+			<set name="flashScope.tipoDocumento" value="null" />
+			<set name="flashScope.documento" value="null" />
+			<set name="flashScope.soloGuardar" value="false" />
+			<set name="flashScope.ciudadanoPresente" value="true" />
+		</transition>
+	</action-state>
+
+	<action-state id="PERSONA_NO_PRESENTE">
+		<evaluate
+			expression="externalContext.sessionMap.administracionPersonaMB.confirmacionPersonaPresente()" />
+		<evaluate expression="administracionPersonaHolderFL.actualizar" />
+		<transition on="yes" to="UBICABILIDAD">
+			<set name="flashScope.tipoDocumento"
+				value="flowScope.administracionPersonaHolderFL.personaSeleccionada.tipoIdentificacion.id" />
+			<set name="flashScope.documento"
+				value="flowScope.administracionPersonaHolderFL.personaSeleccionada.numeroIdentificacion" />
+			<set name="flashScope.soloGuardar" value="true" />
+			<set name="flashScope.ciudadanoPresente" value="false" />
+		</transition>
+		<transition on="no" to="UBICABILIDAD">
+			<set name="flashScope.tipoDocumento" value="null" />
+			<set name="flashScope.documento" value="null" />
+			<set name="flashScope.soloGuardar" value="true" />
+			<set name="flashScope.ciudadanoPresente" value="false" />
+		</transition>
+	</action-state>
+
+	<!-- SUB FLUJO ubicabilidad -->
+	<subflow-state id="UBICABILIDAD" subflow="administracion/ubicabilidad">
+		<input name="tipoDocumento" />
+		<input name="documento" />
+		<input name="soloGuardar" />
+		<input name="ciudadanoPresente" />
+
+		<output name="persona" />
+
+		<transition on="CANCELAR_UBI" to="ingresar" />
+		<transition on="ACEPTAR_UBI" to="UBICABILIDAD_GUARDADA" />
+	</subflow-state>
+	<!-- -->
+	
+	<!-- SUB FLUJO datos demograficos -->
+	<subflow-state id="DATOS_DEMOGRAFICOS" subflow="persona/datosDemograficos">
+		<input name="tipoDocumento" />
+		<input name="documento" />
+		<input name="subflujo" />
+
+		<transition on="SALIR_DATOS_DEMOGRAFICOS" to="ingresar" />
+	</subflow-state>
+	<!-- -->
+</flow>

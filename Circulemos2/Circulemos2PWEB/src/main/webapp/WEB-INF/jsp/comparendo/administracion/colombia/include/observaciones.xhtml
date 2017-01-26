@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+	<p:panel id="campos-registro-observaciones"
+		styleClass="panel-formulario"
+		header="#{labelAdminComparendo.titulo_observaciones}">
+		<p:fieldset id="datos-observaciones" styleClass="fieldset-formulario"
+			legend="#{labelAdminComparendo.label_datos_observaciones}">
+			<h:panelGrid id="panel-formulario-observaciones"
+				styleClass="center-block"
+				columnClasses="label-col,input-col-grande,label-col,input-col-grande" columns="2">
+				<!-- Componentes del formulario 2 o 4 columnas-->
+				<p:outputLabel value="#{labelAdminComparendo.label_observaciones_agente}" />
+				<h:panelGroup>
+					<p:inputTextarea id="observacionesAgente" styleClass="textAreaGrande"
+						value="#{adminComparendoFL.procesaComparendo.observacionesAgente}" maxlength="500"
+						rows="5"></p:inputTextarea>
+					<p:message for="observacionesAgente" />
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:fieldset>
+	</p:panel>
+</ui:composition>

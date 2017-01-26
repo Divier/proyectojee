@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="adminJobHolderFL"
+		class="co.com.datatools.c2.managed_bean.administracion.jobs.AdminJobHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracion/jobs/administrarJobs.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('adminJobMB')" />	
+			<evaluate
+				expression="externalContext.sessionMap.adminJobMB.consultarJobs()" />
+		</on-entry>
+		<transition on="DETENER_EJECUCION" to="DETENER_EJECUCION" />
+		<transition on="CAMBIAR_EJECUCION_SIG" to="CAMBIAR_EJECUCION_SIG" />
+		<transition on="EJECUTAR_INMEDIATAMENTE" to="EJECUTAR_INMEDIATAMENTE" />
+	</view-state>
+	
+	<action-state id="CAMBIAR_EJECUCION_SIG">
+		<evaluate
+				expression="externalContext.sessionMap.adminJobMB.cambiarEjecucion()" />	
+		<transition on="success" to="ingresar" />
+	</action-state>
+	
+	<action-state id="DETENER_EJECUCION">
+		<evaluate
+				expression="externalContext.sessionMap.adminJobMB.detenerSiguienteEjecucion()" />	
+		<transition on="success" to="ingresar" />
+	</action-state>
+	
+	<action-state id="EJECUTAR_INMEDIATAMENTE">
+		<evaluate
+				expression="externalContext.sessionMap.adminJobMB.ejecutarInmediatamente()" />	
+		<transition on="success" to="ingresar" />
+	</action-state>
+</flow>

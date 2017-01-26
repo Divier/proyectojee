@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="administracionEventosHolderFL"
+		class="co.com.datatools.c2.managed_bean.administracion.eventos.AdministracionEventosHolderFL" />	
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracion/eventos/administracionEventos.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('administracionEventosMB')" />
+			
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR"></transition>
+		<transition on="_op-CREAR" to="_op-CREAR"></transition>
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+				expression="externalContext.sessionMap.administracionEventosMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+	
+	<view-state id="_op-CREAR"
+		view="/WEB-INF/jsp/administracion/eventos/crearEvento.xhtml">
+		<transition on="VOLVER" to="ingresar">
+		</transition>
+		<transition on="CONTINUAR" to="GUARDAR">
+		</transition>
+	</view-state>
+	
+	<action-state id="GUARDAR">
+		<evaluate
+				expression="externalContext.sessionMap.administracionEventosMB.guardar()" />
+		<transition on="yes" to="ingresar" />
+		<transition on="no" to="_op-CREAR" />
+	</action-state>
+</flow>

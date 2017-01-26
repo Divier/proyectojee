@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<ui:define name="contenido">
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelNumeracion.titulo_ingresar_numeracion}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_registro}">
+					<p:fieldset id="datos-numeracion" styleClass="fieldset-formulario"
+						legend="#{labelNumeracion.label_datos_numeracion}">
+						<h:panelGrid id="panel-formulario" styleClass="center-block"
+							columnClasses="label-col,input-col,label-col,input-col"
+							columns="4">
+							<!--Componentes del formulario 2 o 4 columnas-->
+							<p:outputLabel value="#{labelNumeracion.label_tipo_formulario}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:selectOneMenu id="selTipoFormulario"
+									value="#{numeracionFL.idTipoFormulario}" required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+									<f:selectItems
+										value="#{fachadaCatalogosMB.catTipoFormulario()}" />
+								</p:selectOneMenu>
+								<p:message for="selTipoFormulario" />
+							</h:panelGroup>
+							<p:outputLabel
+								value="#{labelNumeracion.label_fecha_inicial_vigencia}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:calendar id="fechaVigenciaIni"
+									value="#{numeracionFL.fechaInicioVigencia}" navigator="true"
+									pattern="#{webPrm.lab_calendar_pattern}" required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<p:watermark for="fechaVigenciaIni"
+										value="#{webPrm.lab_calendar_mask_pattern}" />
+								</p:calendar>
+								<p:message for="fechaVigenciaIni" />
+							</h:panelGroup>
+							<p:outputLabel
+								value="#{labelNumeracion.label_fecha_final_vigencia}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<p:calendar id="fechaVigenciaFin"
+									value="#{numeracionFL.fechaFinVigencia}" navigator="true"
+									pattern="#{webPrm.lab_calendar_pattern}" required="true"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+									<p:watermark for="fechaVigenciaFin"
+										value="#{webPrm.lab_calendar_mask_pattern}" />
+								</p:calendar>
+								<p:message for="fechaVigenciaFin" />
+							</h:panelGroup>
+							<p:outputLabel value="#{labelNumeracion.label_cantidad_digitos}"
+								styleClass="campo-obligatorio" />
+							<h:panelGroup>
+								<pe:inputNumber id="digitos" value="#{numeracionFL.digitos}"
+									required="true" decimalPlaces="0"
+									requiredMessage="#{labelGeneral.val_campo_requerido}"
+									validatorMessage="#{labelNumeracion.val_campo_mayor_cero}"
+									maxValue="50">
+									<p:ajax event="blur"
+										update="@this,form-ingreso:tabla-detalle,form-ingreso:msgDigitos"
+										process="@this"
+										listener="#{numeracionesMB.asignarDigitosNumeracion()}"></p:ajax>
+									<f:validateLongRange minimum="1" />
+								</pe:inputNumber>
+								<p:message id="msgDigitos" for="digitos" />
+							</h:panelGroup>
+
+						</h:panelGrid>
+					</p:fieldset>
+					<p:fieldset id="casillas" styleClass="fieldset-formulario"
+						legend="#{labelNumeracion.label_configuracion_casillas}">
+						<p:dataTable id="tabla-detalle"
+							value="#{numeracionFL.detalleNumeracion}" var="casilla"
+							rowIndexVar="rowId" styleClass="center-block" style="width:60%;"
+							emptyMessage="#{labelNumeracion.msg_casillas_vacio}">
+							<p:column headerText="#{labelNumeracion.label_numero_casilla}">
+								<h:panelGroup>
+									<h:outputText id="idTextDigito" value="#{casilla.digito}" />
+									<p:message id="msgIdTextDigito" for="idTextDigito" />
+								</h:panelGroup>
+							</p:column>
+
+							<p:column headerText="#{labelNumeracion.label_caracter_inicial}">
+								<h:panelGroup>
+									<p:inputText id="caracterInicial"
+										value="#{casilla.caracterInicio}" required="true"
+										requiredMessage="#{labelGeneral.val_campo_requerido}"
+										maxlength="1" styleClass="input-short" />
+									<p:message for="caracterInicial" />
+								</h:panelGroup>
+							</p:column>
+
+							<p:column headerText="#{labelNumeracion.label_caracter_final}">
+								<h:panelGroup>
+									<p:inputText id="caracterFinal" value="#{casilla.caracterFin}"
+										required="true"
+										requiredMessage="#{labelGeneral.val_campo_requerido}"
+										maxlength="1" styleClass="input-short" />
+									<p:message for="caracterFinal" />
+								</h:panelGroup>
+							</p:column>
+
+							<p:column headerText="#{labelNumeracion.label_estado_casilla}">
+								<p:selectOneMenu id="selEstadoCasilla"
+									value="#{casilla.incremental}">
+									<f:selectItem itemLabel="#{labelNumeracion.label_incremental}"
+										itemValue="true" />
+									<f:selectItem
+										itemLabel="#{labelNumeracion.label_no_incremental}"
+										itemValue="false" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:dataTable>
+					</p:fieldset>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<!--Boton Guardar-->
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}" update=":messages :form-ingreso">
+							<p:tooltip for="btnGuardar"
+								value="#{labelNumeracion.tooltip_btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+						<!--Boton Limpiar-->
+						<p:commandButton id="btnLimpiar" action="LIMPIAR"
+							icon="c2-icon-limpiar" process="@this" update=":form-ingreso"
+							immediate="true" value="#{lbComun.btnLimpiar}">
+							<p:tooltip for="btnLimpiar" value="#{lbComun.tooltip_limpiar}" />
+						</p:commandButton>
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar"
+								value="#{labelNumeracion.tooltip_btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,69 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "Report Comparendos", "Report Comparendos\Report Comparendos.rptproj", "{B9F3D1CA-FF6B-4A37-BB73-1450B5E8740C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F0F02B90-18BD-4635-B3A4-F25D6FA1F03B} = {F0F02B90-18BD-4635-B3A4-F25D6FA1F03B}
+	EndProjectSection
+EndProject
+Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "Report DataSource", "Report DataSource\Report DataSource.rptproj", "{F0F02B90-18BD-4635-B3A4-F25D6FA1F03B}"
+EndProject
+Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "Report Recaudo", "Report Project1\Report Recaudo.rptproj", "{0C94AEBB-727E-4CA0-9867-12B72EC33138}"
+EndProject
+Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "Report Juridica", "Report Juridica\Report Juridica.rptproj", "{6A16464B-18A9-445B-8844-176B47C089F8}"
+EndProject
+Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "Report Financiaciones", "Report Financiaciones\Report Financiaciones.rptproj", "{E1057497-FB44-4CAF-AE4B-703675BF2CC7}"
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Default = Debug|Default
+		DebugLocal|Default = DebugLocal|Default
+		Release|Default = Release|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9F3D1CA-FF6B-4A37-BB73-1450B5E8740C}.Debug|Default.ActiveCfg = DebugLocal
+		{B9F3D1CA-FF6B-4A37-BB73-1450B5E8740C}.Debug|Default.Build.0 = DebugLocal
+		{B9F3D1CA-FF6B-4A37-BB73-1450B5E8740C}.DebugLocal|Default.ActiveCfg = DebugLocal
+		{B9F3D1CA-FF6B-4A37-BB73-1450B5E8740C}.DebugLocal|Default.Build.0 = DebugLocal
+		{B9F3D1CA-FF6B-4A37-BB73-1450B5E8740C}.Release|Default.ActiveCfg = Release
+		{B9F3D1CA-FF6B-4A37-BB73-1450B5E8740C}.Release|Default.Build.0 = Release
+		{B9F3D1CA-FF6B-4A37-BB73-1450B5E8740C}.Release|Default.Deploy.0 = Release
+		{F0F02B90-18BD-4635-B3A4-F25D6FA1F03B}.Debug|Default.ActiveCfg = DebugLocal
+		{F0F02B90-18BD-4635-B3A4-F25D6FA1F03B}.Debug|Default.Build.0 = DebugLocal
+		{F0F02B90-18BD-4635-B3A4-F25D6FA1F03B}.DebugLocal|Default.ActiveCfg = DebugLocal
+		{F0F02B90-18BD-4635-B3A4-F25D6FA1F03B}.DebugLocal|Default.Build.0 = DebugLocal
+		{F0F02B90-18BD-4635-B3A4-F25D6FA1F03B}.Release|Default.ActiveCfg = Release
+		{F0F02B90-18BD-4635-B3A4-F25D6FA1F03B}.Release|Default.Build.0 = Release
+		{F0F02B90-18BD-4635-B3A4-F25D6FA1F03B}.Release|Default.Deploy.0 = Release
+		{0C94AEBB-727E-4CA0-9867-12B72EC33138}.Debug|Default.ActiveCfg = DebugLocal
+		{0C94AEBB-727E-4CA0-9867-12B72EC33138}.Debug|Default.Build.0 = DebugLocal
+		{0C94AEBB-727E-4CA0-9867-12B72EC33138}.DebugLocal|Default.ActiveCfg = DebugLocal
+		{0C94AEBB-727E-4CA0-9867-12B72EC33138}.DebugLocal|Default.Build.0 = DebugLocal
+		{0C94AEBB-727E-4CA0-9867-12B72EC33138}.Release|Default.ActiveCfg = Release
+		{0C94AEBB-727E-4CA0-9867-12B72EC33138}.Release|Default.Build.0 = Release
+		{0C94AEBB-727E-4CA0-9867-12B72EC33138}.Release|Default.Deploy.0 = Release
+		{6A16464B-18A9-445B-8844-176B47C089F8}.Debug|Default.ActiveCfg = DebugLocal
+		{6A16464B-18A9-445B-8844-176B47C089F8}.Debug|Default.Build.0 = DebugLocal
+		{6A16464B-18A9-445B-8844-176B47C089F8}.DebugLocal|Default.ActiveCfg = DebugLocal
+		{6A16464B-18A9-445B-8844-176B47C089F8}.DebugLocal|Default.Build.0 = DebugLocal
+		{6A16464B-18A9-445B-8844-176B47C089F8}.Release|Default.ActiveCfg = Release
+		{6A16464B-18A9-445B-8844-176B47C089F8}.Release|Default.Build.0 = Release
+		{6A16464B-18A9-445B-8844-176B47C089F8}.Release|Default.Deploy.0 = Release
+		{E1057497-FB44-4CAF-AE4B-703675BF2CC7}.Debug|Default.ActiveCfg = DebugLocal
+		{E1057497-FB44-4CAF-AE4B-703675BF2CC7}.Debug|Default.Build.0 = DebugLocal
+		{E1057497-FB44-4CAF-AE4B-703675BF2CC7}.DebugLocal|Default.ActiveCfg = DebugLocal
+		{E1057497-FB44-4CAF-AE4B-703675BF2CC7}.DebugLocal|Default.Build.0 = DebugLocal
+		{E1057497-FB44-4CAF-AE4B-703675BF2CC7}.Release|Default.ActiveCfg = Release
+		{E1057497-FB44-4CAF-AE4B-703675BF2CC7}.Release|Default.Build.0 = Release
+		{E1057497-FB44-4CAF-AE4B-703675BF2CC7}.Release|Default.Deploy.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

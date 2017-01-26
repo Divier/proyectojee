@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelCartera.titulo_consultar_financiacion}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelCartera.titulo_datos_persona}">
+					<h:panelGrid id="panel-info-cabecera-infr"
+						styleClass="center-block"
+						columnClasses="label-col,input-col,label-col,input-col"
+						columns="4">
+
+						<p:outputLabel value="#{labelCartera.label_tipo_obligacion}" />
+						<h:panelGroup id="pnlTipoObl">
+							<p:selectOneMenu id="tipObl" required="false"
+								value="#{adminCarteraHolderFL.carteraDTO.tipoObligacion.id}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoObligacion()}"></f:selectItems>
+							</p:selectOneMenu>
+							<p:message for="tipObl" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelCartera.label_num_factura}"
+							styleClass="campo-opcional" />
+						<h:panelGroup id="pnlNumFac">
+							<p:inputText id="numFactura" required="false"
+								value="#{adminCarteraHolderFL.carteraDTO.nombre}"
+								maxlength="20">
+							</p:inputText>
+							<p:message for="numFactura" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelCartera.label_estado_obligacion}" />
+						<h:panelGroup id="pnlEstObl">
+							<p:selectOneMenu id="estadoObl" required="false"
+								value="#{adminCarteraHolderFL.carteraDTO.estadoObligacion.id}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catEstadoObligacion()}"></f:selectItems>
+							</p:selectOneMenu>
+							<p:message for="estadoObl" />
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelCartera.label_id_interno}"
+							styleClass="campo-opcional" />
+						<h:panelGroup>
+							<p:inputText id="idCartera"
+								value="#{adminCarteraHolderFL.carteraDTO.id}"
+								validatorMessage="#{labelGeneral.val_campo_numerico}">
+								<f:validateRegex
+									pattern="#{consultarFinanciacionMB.expresionNumerica}" />
+							</p:inputText>
+							<p:message for="idCartera"></p:message>
+						</h:panelGroup>
+					</h:panelGrid>
+					<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
+						<!--Boton Consultar-->
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultar" value="#{lbComun.btnConsultar}" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{adminCarteraHolderFL.carteraList.size() > 0}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{labelCartera.msg_fieldset_financiacion}">
+					<h:panelGrid id="acciones-top">
+						<f:facet name="footer">
+							<!-- Ver detalle -->
+							<p:commandButton id="btnVerDet" icon="c2-icon-detalle"
+								action="VER_DETALLE" process="@this"
+								value="#{lbComun.btnVerDet}"
+								disabled="#{adminCarteraHolderFL.carteraSeleccionada != null}">
+								<p:tooltip for="btnVerDet"
+									value="#{labelCartera.tooltip_ver_detalle}" />
+							</p:commandButton>
+						</f:facet>
+					</h:panelGrid>
+					<p:dataTable id="tabla-resultados" var="registro"
+						value="#{adminCarteraHolderFL.carteraList}"
+						selection="#{adminCarteraHolderFL.carteraSeleccionada}"
+						rowKey="#{registro.id}" paginator="true"
+						paginatorTemplate="#{webPrm.param_paginator_template}"
+						rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+						rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+
+						<p:ajax event="rowSelectRadio"
+							process=":form-resultado:tabla-resultados"
+							update=":form-resultado:acciones-top @this" global="false" />
+						<p:column selectionMode="single" />
+
+						<p:column headerText="#{labelCartera.label_nombre}">
+							<p:outputLabel value="#{registro.nombre}" />
+						</p:column>
+
+						<p:column headerText="#{labelCartera.label_tipo_obligacion}">
+							<p:outputLabel value="#{registro.tipoObligacion.nombre}" />
+						</p:column>
+
+						<p:column headerText="#{labelCartera.label_estado_obligacion}">
+							<p:outputLabel value="#{registro.estadoObligacion.nombre}" />
+						</p:column>
+
+						<p:column headerText="#{labelCartera.label_saldo_capital}">
+							<c2:outputCurrencyText value="#{registro.saldoCapital}" />
+						</p:column>
+
+						<p:column headerText="#{labelCartera.label_saldo_recargo}">
+							<c2:outputCurrencyText value="#{registro.saldoInteres}" />
+						</p:column>
+
+						<p:column headerText="#{labelCartera.label_fecha_inicio}">
+							<c2:outputDateLabel labelValue="#{registro.fechaInicio}"
+								fullFormat="true" />
+						</p:column>
+
+						<p:column headerText="#{labelCartera.label_fecha_creacion}">
+							<c2:outputDateLabel labelValue="#{registro.fechaCreacion}"
+								fullFormat="true" />
+						</p:column>
+
+						<p:column headerText="#{labelCartera.label_fecha_registro}">
+							<c2:outputDateLabel labelValue="#{registro.fechaRegistro}"
+								fullFormat="true" />
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</ui:define>

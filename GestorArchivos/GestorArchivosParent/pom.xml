@@ -1,0 +1,161 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>co.com.datatools.documentos.cm</groupId>
+	<artifactId>GestorArchivosParent</artifactId>
+	<version>2.0.4</version>
+	<packaging>pom</packaging>
+
+	<name>Gestor Archivos Parent POM</name>
+	<description>POM Maestro para el proyecto Gestor Archivos</description>
+
+	<organization>
+		<name>Data Tools</name>
+		<url>http://www.datatools.com.co</url>
+	</organization>
+
+	<profiles>
+
+		<profile>
+			<id>full</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<!-- Listado de modulos -->
+				<module>../GestorArchivosSqlEJB</module>
+				<module>../GestorArchivosClient</module>
+				<module>../GestorArchivosEAR</module>
+				
+			</modules>
+		</profile>
+	</profiles>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jboss.spec</groupId>
+				<artifactId>jboss-javaee-6.0</artifactId>
+				<version>${jboss-javaee-6.0.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<properties>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<maven.test.skip>true</maven.test.skip>
+		<java.version>1.7</java.version>
+
+		<!-- Utilidades internas -->
+		<UtilidadesWEB.version>1.2.2-SNAPSHOT</UtilidadesWEB.version>
+		<UtilidadesEJB.version>1.1.0-SNAPSHOT</UtilidadesEJB.version>
+		<UtilidadesJSE.version>1.2.3-SNAPSHOT</UtilidadesJSE.version>
+
+		<!-- Dependencias Hibernate -->
+		<hibernate-jpa-2.0-api.version>1.0.1.Final</hibernate-jpa-2.0-api.version>
+		<persistence-api.version>1.0</persistence-api.version>
+		<hibernate-entitymanager.version>4.1.4.Final</hibernate-entitymanager.version>
+
+
+		<!-- API Java EE 6.0 -->
+		<jboss-javaee-6.0.version>3.0.2.Final</jboss-javaee-6.0.version>
+
+		<!-- Generales -->
+		<jboss-logging.version>3.1.0.GA</jboss-logging.version>
+		<reflections.version>0.9.9</reflections.version>
+		<cxf.version>2.7.13</cxf.version>
+		<guava.version>17.0</guava.version>
+		<gson.version>2.2.4</gson.version>
+		<jai-codec.version>1.1.3</jai-codec.version>
+
+		<!-- Drools -->
+		<drools.version>5.5.0.Final</drools.version>
+
+		<!-- junit -->
+		<junit.version>4.11</junit.version>
+
+
+		<!-- Componentes -->
+		<GestorArchivosClient.version>2.0.4</GestorArchivosClient.version>
+		<GestorArchivosSqlEJB.version>2.0.4</GestorArchivosSqlEJB.version>
+		<GestorArchivosEAR.version>2.0.4</GestorArchivosEAR.version>
+
+	</properties>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-ejb-plugin</artifactId>
+					<version>2.3</version>
+					<configuration>
+						<ejbVersion>3.1</ejbVersion>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-ear-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jboss.as.plugins</groupId>
+					<artifactId>jboss-as-maven-plugin</artifactId>
+					<version>7.4.Final</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+					<configuration>
+						<target>1.7</target>
+						<source>1.7</source>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.12</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<target>1.7</target>
+					<source>1.7</source>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>archiva.internal</id>
+			<name>Internal Release Repository</name>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/internal/</url>
+		</repository>
+		<snapshotRepository>
+			<id>archiva.snapshots</id>
+			<url>https://c2-srv3.datatools.com.co:8443/archiva/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2">
+
+	<pe:dynaForm id="dynaForm" value="#{configuracionesFL.model}" var="campo">
+		
+		<!-- etiqueta campo -->
+		<pe:dynaFormControl type="label" for="label">
+			<p:outputLabel id="label" value="#{campo.nombre}" styleClass="#{campo.estiloLabel}" />  
+	    </pe:dynaFormControl>
+	
+		<pe:dynaFormControl type="BOOLEANO">
+			<h:panelGroup rendered="#{!campo.campo.obligatorio}">
+				<p:selectOneMenu id="BOOLEANO" value="#{campo.valor}">
+					<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"/>
+					<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}" itemValue="true" />
+					<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}" itemValue="false" />
+				</p:selectOneMenu>
+				<p:message for="BOOLEANO"/>
+			</h:panelGroup>
+			
+			<h:panelGroup rendered="#{campo.campo.obligatorio}">
+				<p:selectOneRadio id="BOOLEANO-rq" value="#{campo.valor}" required="#{campo.campo.obligatorio}"
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+					<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}" itemValue="true" />
+					<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}" itemValue="false" />
+				</p:selectOneRadio>
+				<p:message for="BOOLEANO-rq"/>
+			</h:panelGroup>
+	    </pe:dynaFormControl>
+			
+		<pe:dynaFormControl type="NUMERO">
+			<h:panelGroup>
+				<pe:inputNumber id="NUMERO" value="#{campo.valorNumerico}" decimalPlaces="0"
+						minValue="#{campo.min}"	maxValue="#{campo.max}"
+						required="#{campo.campo.obligatorio}" requiredMessage="#{labelGeneral.val_campo_requerido}"/>
+				<p:message for="NUMERO"/>
+			</h:panelGroup>
+		</pe:dynaFormControl>
+
+
+		<pe:dynaFormControl type="DECIMAL">
+			<h:panelGroup>
+				<pe:inputNumber id="DECIMAL" value="#{campo.valorNumerico}" decimalPlaces="#{campo.precision}"
+						minValue="#{campo.min}"	maxValue="#{campo.max}"
+						required="#{campo.campo.obligatorio}" requiredMessage="#{labelGeneral.val_campo_requerido}" />
+				<p:message for="DECIMAL"/>
+			</h:panelGroup>
+		</pe:dynaFormControl>
+
+
+		<pe:dynaFormControl type="CADENA">
+			<h:panelGroup>
+				<p:inputTextarea id="CADENA" value="#{campo.valor}" maxlength="#{campo.max}"
+						required="#{campo.campo.obligatorio}" requiredMessage="#{labelGeneral.val_campo_requerido}" />
+				<p:message for="CADENA"/>
+			</h:panelGroup>
+		</pe:dynaFormControl>
+
+
+		<pe:dynaFormControl type="CORREO">
+			<h:panelGroup>
+				<p:inputText id="CORREO" value="#{campo.valor}" 
+					required="#{campo.campo.obligatorio}" requiredMessage="#{labelGeneral.val_campo_requerido}"
+					validatorMessage="#{labelGeneral.val_campo_email}" maxlength="#{campo.max}">
+					<f:validator validatorId="co.com.datatools.util.jsf.EmailValidator" />
+				</p:inputText>
+				<p:message for="CORREO" />
+			</h:panelGroup>
+		</pe:dynaFormControl>
+
+
+		<pe:dynaFormControl type="URL">
+			<h:panelGroup>
+				<p:inputTextarea id="URL" value="#{campo.valor}" maxlength="#{campo.max}"
+						required="#{campo.campo.obligatorio}" requiredMessage="#{labelGeneral.val_campo_requerido}" />
+				<p:message for="URL"/>
+			</h:panelGroup>
+		</pe:dynaFormControl>
+		
+		
+		<pe:dynaFormControl type="FECHA">
+			<h:panelGroup>
+				<p:calendar id="FECHA" value="#{campo.valor}" navigator="true" pattern="#{webPrm.lab_calendar_pattern}"
+						required="#{campo.campo.obligatorio}" requiredMessage="#{labelGeneral.val_campo_requerido}">
+					<p:watermark for="FECHA" value="#{webPrm.lab_calendar_mask_pattern}" />
+				</p:calendar>
+				<p:message for="FECHA" />
+			</h:panelGroup>
+		</pe:dynaFormControl>
+
+
+		<pe:dynaFormControl type="HORA">
+			<h:panelGroup>
+				<p:calendar id="HORA" value="#{campo.valor}" navigator="true" pattern="#{webPrm.lab_calendar_hour_pattern}:ss" 
+						timeOnly="true" required="#{campo.campo.obligatorio}" requiredMessage="#{labelGeneral.val_campo_requerido}">
+					<p:watermark for="HORA" value="#{webPrm.lab_calendar_mask_hour_pattern}:ss" />
+				</p:calendar>
+				<p:message for="HORA" />
+			</h:panelGroup>
+		</pe:dynaFormControl>
+
+
+		<pe:dynaFormControl type="FECHAHORA">
+			<h:panelGroup>
+				<p:calendar id="FECHAHORA" value="#{campo.valor}" navigator="true" pattern="#{webPrm.lab_calendar_pattern_full}:ss"
+						required="#{campo.campo.obligatorio}" requiredMessage="#{labelGeneral.val_campo_requerido}">
+					<p:watermark for="FECHAHORA" value="#{webPrm.lab_calendar_mask_pattern} #{webPrm.lab_calendar_mask_hour_pattern}:ss" />
+				</p:calendar>
+				<p:message for="FECHAHORA" />
+			</h:panelGroup>
+		</pe:dynaFormControl>
+
+
+		<pe:dynaFormControl type="SELECCIONUNICA">
+			<h:panelGroup>
+				<p:selectOneMenu id="SELECCIONUNICA" value="#{campo.valor}"
+						required="#{campo.campo.obligatorio}" requiredMessage="#{labelGeneral.val_campo_requerido}">
+					<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" noSelectionOption="true"/>
+					<f:selectItems value="#{campo.seleccionables}" />
+					<p:ajax listener="#{formularioConfiguracionesMB.procesarAjaxCatalogo(campo)}" update=":dynaForm" process="@this"
+							disabled="#{!campo.ajaxActivo}"/>
+				</p:selectOneMenu>
+				<p:message for="SELECCIONUNICA" />
+			</h:panelGroup>
+		</pe:dynaFormControl>
+			
+		<pe:dynaFormControl type="SELECCIONMULTIPLE">
+			<h:panelGroup>
+				<p:selectCheckboxMenu id="SELECCIONMULTIPLE" value="#{campo.valor}" label="#{labelGeneral.val_combo_primer_item}"
+	                             filter="true" filterMatchMode="startsWith" 
+	                             required="#{campo.campo.obligatorio}" requiredMessage="#{labelGeneral.val_campo_requerido}" >
+					<f:selectItems value="#{campo.seleccionables}" />
+		        </p:selectCheckboxMenu>
+				<p:message for="SELECCIONMULTIPLE" />
+			</h:panelGroup>
+		</pe:dynaFormControl>
+
+		<pe:dynaFormControl type="CATALOGOCOMPUESTO">
+		
+		</pe:dynaFormControl>
+
+		<pe:dynaFormControl type="separador">
+			<h:outputText value="#{campo}" escape="false"/>
+			<p:separator />
+		</pe:dynaFormControl>
+
+	</pe:dynaForm>
+	
+	<h:outputStylesheet id="dynaFormCSS">
+	.ui-selectcheckboxmenu-header .ui-chkbox-box {
+		display: none;
+	}
+	.pe-dynaform-grid{
+		margin: 0 auto;
+		margin-bottom:15px;
+	}
+
+	.pe-dynaform-cell {
+	    text-align: left;
+	    white-space: normal;
+	}
+
+	.pe-dynaform-cell-first {
+		padding: 5px 10px;
+		background-color: rgba(239, 249, 255, 1);
+		max-width: 220px;
+		min-height: 30px;
+		color: #006c9e;
+	    font-weight: bold;
+	}
+
+	.pe-dynaform-cell-last {
+		padding: 5px 5px 5px 1px;
+		min-width: 190px;
+		max-width: 190px;
+	}
+	
+	.pe-dynaform-cell-last > span:first-child  {
+ 		width:99%; 
+	}
+	
+	.pe-dynaform-cell-last > div:first-child,
+	.pe-dynaform-cell-last .ui-selectcheckboxmenu,
+	.pe-dynaform-cell-last .ui-selectonemenu  {
+	 	width:98% !important; 
+	}
+	
+	.pe-dynaform-cell-last > span:first-child > input:first-child,
+	.pe-dynaform-cell-last > div:first-child > span:first-child > input:first-child  {
+	 	width:94%;
+	}
+	
+	.pe-dynaform-cell-last > input {
+	 	width:94%; 
+	}
+	
+	.pe-dynaform-cell-last > textarea {
+	 	width: 94%; 
+	}  
+	</h:outputStylesheet>
+</ui:composition>

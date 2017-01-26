@@ -1,0 +1,16 @@
+.ui-widget-content {
+	border: gray;
+	background: rgba(255, 255, 255, 0.00);
+}
+
+.ui-selectonemenu-items {
+	background-color: #ffffff !important;
+}
+
+.ui-datatable-data {
+	background-color: #ffffff !important;
+}
+
+.ui-dialog {
+	background-color: #ffffff !important;
+}

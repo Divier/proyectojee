@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2" template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<h:form id="form-contenido">
+			<p:panel header="#{labelConfiguraciones.lab_tit_consultar_configuraciones}" styleClass="panel-formulario">
+				<p:fieldset legend="#{lbComun.msg_fieldset_consultar}" styleClass="fieldset-formulario">
+					<h:panelGrid id="panel-formulario" columns="4" styleClass="center-block" columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel styleClass="campo-obligatorio" value="#{labelConfiguraciones.lab_nombre_configuracion}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOneMenNombreConf" value="#{configuracionesHolderFL.filtroConfiguracion}" required="true" 
+									requiredMessage="#{labelGeneral.val_campo_requerido}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoConfiguraciones()}" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenNombreConf" />
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+					<h:panelGrid columns="2" styleClass="center-block" cellspacing="5">
+						<p:commandButton id="btnConsultar" value="#{lbComun.btnConsultar}" icon="c2-icon-consultar" action="_op-CONSULTAR" styleClass="_op-CONSULTAR"
+							process="@form" update=":form-resultado :messages :form-contenido"/>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+	    <h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta" rendered="#{configuracionesHolderFL.registrosConfiguracion!=null}">
+
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<p:commandButton id="btnAgregarDet" action="_op-CREAR" icon="c2-icon-agregar-det" 
+								immediate="true" value="#{lbComun.btnAgregarDet}">
+						</p:commandButton>
+						
+						<p:commandButton id="btnEditarDet" action="_op-EDITAR" icon="c2-icon-editar-det" 
+								immediate="true" value="#{lbComun.btnEditarDet}" disabled="#{configuracionesHolderFL.seleccion==null}">
+						</p:commandButton>
+						
+						<p:commandButton id="btnRemoverDet" action="_op-ELIMINAR" icon="c2-icon-remover-det"
+								immediate="true" disabled="#{configuracionesHolderFL.seleccion==null}"
+								value="#{lbComun.btnRemoverDet}">
+							<p:confirm header="#{lbComun.msg_tit_confirmar}" message="#{lbComun.msg_confirm_eliminar}" icon="ui-icon-alert" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados" value="#{configuracionesHolderFL.registrosConfiguracion}"
+			    				var="registro" rowKey="#{registro.id}"
+			                    selection="#{configuracionesHolderFL.seleccion}" paginator="true"
+			                    paginatorTemplate="#{webPrm.param_paginator_template}"
+			                    rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+			                    rows="#{webPrm.param_initial_rows}" 
+			                    emptyMessage="#{labelConfiguraciones.msj_consulta_configuracion_vacia}">
+			        
+			        <p:columnGroup type="header">
+			            <p:row>
+			            	<p:column rowspan="2" styleClass="ui-selection-column"/>
+			                <p:column colspan="#{configuracionesHolderFL.numeroEntradas}"
+			                		 headerText="#{labelConfiguraciones.lab_encab_entradas}" style="font-weight: bold;" />
+			                <p:column colspan="#{configuracionesHolderFL.numeroSalidas}"
+			                		 headerText="#{labelConfiguraciones.lab_encab_salidas}" style="font-weight: bold;" />
+			            </p:row>
+ 						<p:row>
+			                <ui:repeat value="#{configuracionesHolderFL.listaCampos}" var="campo">
+			                    <p:column headerText="#{campo.nombre}" />
+			                </ui:repeat>
+			            </p:row>
+			        </p:columnGroup>
+			        
+			        
+			        <p:ajax event="rowSelectRadio" process=":form-resultado:tabla-resultados"
+                    	update=":form-resultado:acciones-top" global="false" />
+			        <p:column selectionMode="single"/> 
+			        
+			        <p:columns value="#{configuracionesHolderFL.listaCampos}" var="campo" columnIndexVar="colIndex">
+			            <!-- CampoConfiguracionDTO campo -->
+						<h:outputText value="#{configuracionesMB.valorCampoConsulta(campo, registro)}"
+							rendered="#{configuracionesMB.esTipoComponente(campo,'CADENA')}" />
+							
+						<h:panelGroup 
+							rendered="#{configuracionesMB.esTipoComponente(campo,'BOOLEANO') and not empty configuracionesMB.valorCampoConsulta(campo, registro)}">
+							<c2:outputBoolText value="#{configuracionesMB.valorCampoConsulta(campo, registro)}"/>
+						</h:panelGroup>
+						
+						<h:panelGroup rendered="#{configuracionesMB.esTipoComponente(campo,'NUMERO')}">
+							<c2:outputNumberText value="#{configuracionesMB.valorCampoConsulta(campo, registro)}"/>
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{configuracionesMB.esTipoComponente(campo,'FECHAHORA')}">
+							<c2:outputDateLabel	labelValue="#{configuracionesMB.valorCampoConsulta(campo, registro)}" fullFormat="true"/>
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{configuracionesMB.esTipoComponente(campo,'FECHA')}">
+							<c2:outputDateLabel	labelValue="#{configuracionesMB.valorCampoConsulta(campo, registro)}"/>
+						</h:panelGroup>
+						
+						<p:dataList value="#{configuracionesMB.valorCampoConsulta(campo, registro)}" var="value"
+								rendered="#{configuracionesMB.esTipoComponente(campo,'LISTA') and not empty configuracionesMB.valorCampoConsulta(campo, registro)}"
+								type="ordered">
+							<h:outputText value="#{configuracionesMB.formatearCatalogo(campo,value)}" />
+						</p:dataList>
+					</p:columns>
+			        
+			    </p:dataTable>
+    
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+
+</ui:composition>

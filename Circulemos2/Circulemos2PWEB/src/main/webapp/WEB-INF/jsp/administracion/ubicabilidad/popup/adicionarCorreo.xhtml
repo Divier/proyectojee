@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:dialog widgetVar="popupAdicionarCorreo" id="idPopupAdicionarCorreo"
+		resizable="false" showHeader="false"
+		modal="true" appendTo="@(body)" closable="false" closeOnEscape="false"
+		dynamic="true">
+
+		<h:form id="form-correo">
+			<p:messages id="messages-correo" globalOnly="true" showDetail="true"
+				closable="true" />
+			<p:panel id="campos-registro-correo" styleClass="panel-formulario"
+				header="#{actualizarDatosUbicabilidadFL.tituloPopUpCorreo}" >
+				<p:fieldset id="datos-principal-correo"
+					styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_registro}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="2"
+						columnClasses="label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<p:outputLabel value="#{labelUbicabilidad.label_correo}"
+							styleClass="campo-obligatorio"
+							rendered="#{!actualizarDatosUbicabilidadFL.actualizarCorreo}" />
+						<h:panelGroup
+							rendered="#{!actualizarDatosUbicabilidadFL.actualizarCorreo}">
+							<p:inputText id="idCorreoNuevo" required="true"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								value="#{actualizarDatosUbicabilidadFL.correoGuardar.dto.correoElectronico}"
+								maxlength="50">
+								<p:ajax process="@this" global="false" />
+							</p:inputText>
+							<p:message for="idCorreoNuevo" />
+						</h:panelGroup>
+						<p:outputLabel value="#{labelUbicabilidad.label_correo}"
+							rendered="#{actualizarDatosUbicabilidadFL.actualizarCorreo}" />
+						<p:outputLabel
+							value="#{actualizarDatosUbicabilidadFL.correoGuardar.dto.correoElectronico}"
+							rendered="#{actualizarDatosUbicabilidadFL.actualizarCorreo}" />
+
+<!-- 						<p:outputLabel styleClass="campo-obligatorio" -->
+<!-- 							value="#{labelUbicabilidad.label_valido}" /> -->
+<!-- 						<h:panelGroup> -->
+<!-- 							<p:selectOneMenu id="correo-valido" -->
+<!-- 								value="#{actualizarDatosUbicabilidadFL.correoGuardar.dto.estado}" -->
+<!-- 								required="true" -->
+<!-- 								requiredMessage="#{labelGeneral.val_campo_requerido}"> -->
+<!-- 								<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}" -->
+<!-- 									itemValue="true" /> -->
+<!-- 								<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}" -->
+<!-- 									itemValue="false" /> -->
+<!-- 								<p:ajax process="@this" event="change" global="false" /> -->
+<!-- 							</p:selectOneMenu> -->
+<!-- 							<p:message for="correo-valido" /> -->
+<!-- 						</h:panelGroup> -->
+
+<!-- 						<p:outputLabel value="#{labelUbicabilidad.label_calificacion}" -->
+<!-- 							styleClass="campo-obligatorio" /> -->
+<!-- 						<h:panelGroup> -->
+<!-- 							<p:inputText id="calificacion_correo" required="true" -->
+<!-- 								requiredMessage="#{labelGeneral.val_campo_requerido}" -->
+<!-- 								value="#{actualizarDatosUbicabilidadFL.correoGuardar.dto.prioridad}" -->
+<!-- 								maxlength="50"> -->
+<!-- 								<p:ajax process="@this" global="false" /> -->
+<!-- 							</p:inputText> -->
+<!-- 							<p:message for="calificacion_correo" /> -->
+<!-- 						</h:panelGroup> -->
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<!--Boton Guardar-->
+						<p:commandButton id="btnAgregarCorreo"
+							action="#{ubicabilidadMB.adicionarCorreo()}"
+							icon="c2-icon-guardar" update=":form-correo :form-contenido:tabla-detalle-correos"
+							value="#{lbComun.btnAgregarDet}" process="@form">
+							<p:tooltip for="btnAgregarCorreo"
+								value="#{lbComun.btnAgregarDet}" />
+						</p:commandButton>
+
+						<!--Boton Cancelar-->
+						<p:commandButton id="btnCancelarCorreo" icon="c2-icon-cancelar"
+							process="@this" immediate="true"
+							oncomplete="PF('popupAdicionarCorreo').hide();"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelarCorreo" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+	</p:dialog>
+
+
+</ui:composition>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelCatalogoSimple.lbl_tit_consult_cat_simple}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel value="#{labelCatalogoSimple.lbl_nom_catalogo}" />
+						<p:inputText id="txtNomCat"
+							value="#{catalogoSimpleHolderFL.filtroCatalogoDTO.nombre}" />
+
+						<p:outputLabel value="#{labelCatalogoSimple.lbl_cod_catalogo}" />
+						<p:inputText id="txtCodCat"
+							value="#{catalogoSimpleHolderFL.filtroCatalogoDTO.codigo}" />
+
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+							<p:tooltip for="btnConsultar"
+								value="#{labelCatalogoSimple.txt_tooltip_consultar_catologos}" />
+						</p:commandButton>
+
+					</h:panelGrid>
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{catalogoSimpleHolderFL.catalogoDTOs.size() > 0}">
+				<h:panelGrid id="acciones-top">
+					<f:facet name="footer">
+						<!--Boton Editar-->
+						<p:commandButton id="btnEditar" styleClass="_op-EDITAR"
+							action="_op-EDITAR" icon="c2-icon-editar" process="@this"
+							value="#{lbComun.btnEditar}"
+							disabled="#{catalogoSimpleHolderFL.seleccionCatalogoDTO==null}">
+							<p:tooltip for="btnEditar"
+								value="#{labelCatalogoSimple.txt_tooltip_editar_catalogo}" />
+						</p:commandButton>
+						<!--Boton Ver detalle-->
+						<p:commandButton id="btnVerDet" action="VER_DETALLE"
+							icon="c2-icon-detalle" process="@this"
+							value="#{lbComun.btnVerDet}"
+							disabled="#{catalogoSimpleHolderFL.seleccionCatalogoDTO==null}">
+							<p:tooltip for="btnVerDet"
+								value="#{labelCatalogoSimple.txt_tooltip_ver_detalle}" />
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+
+				<p:dataTable id="tabla-resultados" var="registro"
+					rowKey="#{registro.id}" paginator="true"
+					value="#{catalogoSimpleHolderFL.catalogoDTOs}"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}" sortMode="multiple"
+					selection="#{catalogoSimpleHolderFL.seleccionCatalogoDTO}">
+
+					<p:ajax event="rowSelectRadio"
+						process=":form-resultado:tabla-resultados"
+						update=":form-resultado:acciones-top" global="false" />
+
+					<p:column selectionMode="single" />
+
+					<!--Columnas Resultado Consulta-->
+					<p:column
+						headerText="#{labelCatalogoSimple.lbl_col_consult_cod_catalogo}">
+						<h:outputText value="#{registro.codigo}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelCatalogoSimple.lbl_col_consult_sig_catalogo}">
+						<h:outputText value="#{registro.sigla}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelCatalogoSimple.lbl_col_consult_nom_catalogo}">
+						<h:outputText value="#{registro.nombre}" />
+					</p:column>
+
+					<p:column
+						headerText="#{labelCatalogoSimple.lbl_col_consult_edit_catalogo}">
+						<h:outputText value="#{labelCatalogoSimple.lbl_estado_true}"
+							rendered="#{registro.editable}" />
+						<h:outputText value="#{labelCatalogoSimple.lbl_estado_false}"
+							rendered="#{!registro.editable}" />
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

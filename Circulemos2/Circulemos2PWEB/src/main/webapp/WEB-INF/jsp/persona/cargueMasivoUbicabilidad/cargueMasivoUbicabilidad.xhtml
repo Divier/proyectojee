@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<script type="text/javascript">
+		function start() {
+		    PF('statusDialog').show();
+		}
+		 
+		function stop() {
+		    PF('statusDialog').hide();
+		}
+		</script>
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				rendered="#{cargueMasivoUbicabilidadHolderFL.sinCargueActivo}"
+				header="#{labelCargueMasivoUbicabilidad.titulo_cargue}">
+
+				<p:outputLabel escape="false"
+					value="#{labelCargueMasivoUbicabilidad.msg_info_archivo_1}" />
+
+				<h:panelGrid columns="4" styleClass="center-block" cellpadding="2">
+					<p:commandButton id="btnVerFormatoDireccion"
+						icon="ui-icon-arrowthick-1-s" ajax="false"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						value="#{labelCargueMasivoUbicabilidad.label_ver_formato_direccion}">
+						<p:tooltip for="btnVerFormatoDireccion"
+							value="#{labelCargueMasivoUbicabilidad.label_ver_formato_direccion}" />
+						<p:fileDownload
+							value="#{cargueMasivoUbicabilidadMB.formatoDireccion}" />
+					</p:commandButton>
+					<p:commandButton id="btnVerFormatoTelefono"
+						icon="ui-icon-arrowthick-1-s" ajax="false"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						value="#{labelCargueMasivoUbicabilidad.label_ver_formato_telefono}">
+						<p:tooltip for="btnVerFormatoTelefono"
+							value="#{labelCargueMasivoUbicabilidad.label_ver_formato_telefono}" />
+						<p:fileDownload
+							value="#{cargueMasivoUbicabilidadMB.formatoTelefono}" />
+					</p:commandButton>
+					<p:commandButton id="btnVerFormatoCorreo"
+						icon="ui-icon-arrowthick-1-s" ajax="false"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						value="#{labelCargueMasivoUbicabilidad.label_ver_formato_correo}">
+						<p:tooltip for="btnVerFormatoCorreo"
+							value="#{labelCargueMasivoUbicabilidad.label_ver_formato_correo}" />
+						<p:fileDownload
+							value="#{cargueMasivoUbicabilidadMB.formatoCorreo}" />
+					</p:commandButton>
+					<p:commandButton id="btnInstructivo" icon="ui-icon-arrowthick-1-s"
+						ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"
+						value="#{labelCargueMasivoUbicabilidad.label_ver_intructivo}">
+						<p:fileDownload value="#{cargueMasivoUbicabilidadMB.instructivo}" />
+						<p:tooltip for="btnInstructivo"
+							value="#{labelCargueMasivoUbicabilidad.label_ver_intructivo}" />
+					</p:commandButton>
+				</h:panelGrid>
+
+				<p:outputLabel escape="false"
+					value="#{cargueMasivoUbicabilidadMB.mensajeInfoArchivo}" />
+
+				<h:panelGrid id="panel-formulario" columns="2"
+					columnClasses="label-col,input-col,label-col,input-col">
+					<p:outputLabel
+						value="#{labelCargueMasivoUbicabilidad.label_fuente_ubicabilidad}"
+						styleClass="campo-obligatorio" />
+					<h:panelGroup>
+						<p:selectOneMenu id="tipoUbic" required="true"
+							value="#{cargueMasivoUbicabilidadHolderFL.idTipoFuenteInformacion}">
+							<f:selectItems
+								value="#{cargueMasivoUbicabilidadMB.catTipoFuenteInformacion}" />
+							<p:ajax event="change" process="@this" global="false" />
+						</p:selectOneMenu>
+						<p:message for="fuenteUbica" />
+					</h:panelGroup>
+					<p:outputLabel
+						value="#{labelCargueMasivoUbicabilidad.label_tipo_informacion}"
+						styleClass="campo-obligatorio" />
+					<h:panelGroup>
+						<p:selectOneMenu id="fuenteUbica" required="true"
+							value="#{cargueMasivoUbicabilidadHolderFL.idTipoCargueArchivo}">
+							<f:selectItems
+								value="#{cargueMasivoUbicabilidadMB.catTipoCargueArchivo}" />
+							<p:ajax event="change" process="@this" global="false" />
+						</p:selectOneMenu>
+					<p:message for="fuenteUbica" />
+					</h:panelGroup>
+				</h:panelGrid>
+
+				<h:panelGrid id="panel-formulario-file" columns="2"
+					columnClasses="label-col">
+					<p:outputLabel
+						value="#{labelCargueMasivoUbicabilidad.label_archivo}" />
+					<p:fileUpload id="fupArchivo"
+						fileUploadListener="#{cargueMasivoUbicabilidadMB.cargarArchivo}"
+						label="#{lbComun.btnExaminar}" mode="advanced" update=":form-contenido :messages :form-progreso"
+						process="@form"
+						allowTypes="#{cargueMasivoUbicabilidadMB.tiposArchivosPermitidos}"
+						fileLimit="1" style="min-width: 400px;"
+						fileLimitMessage="#{labelCargueMasivoUbicabilidad.mesErrLimitSize}"
+						invalidFileMessage="#{labelCargueMasivoUbicabilidad.msj_formato_archivo}"
+						dragDropSupport="true" uploadLabel="#{lbComun.btnCargar}"
+						cancelLabel="#{lbComun.btnCancelar}"
+						sizeLimit="#{cargueMasivoUbicabilidadMB.tamanioMaximoArch}"
+						invalidSizeMessage="#{labelCargueMasivoUbicabilidad.mesErrLimitSize}" />
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-progreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelCargueMasivoUbicabilidad.titulo_cargue}"
+				visible="#{cargueMasivoUbicabilidadHolderFL.archivoEnProceso or cargueMasivoUbicabilidadHolderFL.archivoEnProcesoOtroUsuario}">
+				<h:panelGrid columns="1">
+					<p:outputLabel
+						value="#{labelCargueMasivoUbicabilidad.msg_progreso_cargue_masivo}" escape="false" />
+
+					<p:outputLabel
+						value="#{cargueMasivoUbicabilidadMB.mensajeCargueActivo}"
+						escape="false"
+						rendered="#{cargueMasivoUbicabilidadHolderFL.archivoEnProcesoOtroUsuario}" />
+				</h:panelGrid>
+				<p:progressBar widgetVar="pbAjax" ajax="true"
+					value="#{cargueMasivoUbicabilidadMB.progresoCargue}"
+					labelTemplate="{value}%" styleClass="animated" global="false">
+					<p:ajax event="complete"
+						listener="#{cargueMasivoUbicabilidadMB.cargueCompleto}"
+						update=":form-contenido :messages :form-progreso :frmResultadoCargue"  />
+				</p:progressBar>
+			</p:panel>
+		</h:form>
+		<ui:include
+			src="/WEB-INF/jsp/persona/cargueMasivoUbicabilidad/popups/popupCargueMasivoUbicabilidad.xhtml" />
+	</ui:define>
+
+</ui:composition>

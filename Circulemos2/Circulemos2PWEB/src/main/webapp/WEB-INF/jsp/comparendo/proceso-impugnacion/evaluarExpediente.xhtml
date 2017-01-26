@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+		<ui:include
+			src="/WEB-INF/jsp/comparendo/proceso-impugnacion/encabezadoImpugnacion.xhtml" />
+
+		<h:form id="form-ingreso">
+			<p:panel id="campos-registro" styleClass="panel-formulario"
+				header="#{labelProcesoImpugnacion.label_evaluar_expediente}">
+				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_registro}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel
+							value="#{labelProcesoImpugnacion.label_solucion_inmediata}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="solucionInmedaita"
+								value="#{evaluarExpedienteFL.solucionInmediata}">
+								<f:selectItem itemLabel="#{labelAdmin.opt_adm_si}"
+									itemValue="true" />
+								<f:selectItem itemLabel="#{labelAdmin.opt_adm_no}"
+									itemValue="false" />
+								<p:ajax event="change" update="campos-registro"
+									listener="#{evaluarExpedienteMB.justificacionObligatoria()}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+
+						<p:outputLabel styleClass="campo-obligatorio"
+							value="#{labelProcesoImpugnacion.label_observacion_abogado}"
+							rendered="#{evaluarExpedienteFL.justificacionObligatoria}" />
+						<h:panelGroup
+							rendered="#{evaluarExpedienteFL.justificacionObligatoria}">
+							<p:selectOneMenu id="observacion"
+								value="#{evaluarExpedienteFL.idJustificacion}"
+								required="#{evaluarExpedienteFL.justificacionObligatoria}"
+								requiredMessage="#{labelGeneral.val_campo_requerido}"
+								rendered="#{evaluarExpedienteFL.justificacionObligatoria}">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems
+									value="#{fachadaCatalogosMB.catJustificacionImpugnacion()}" />
+								<p:ajax process="@this" />
+							</p:selectOneMenu>
+							<p:message for="observacion"
+								rendered="#{evaluarExpedienteFL.justificacionObligatoria}" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelProcesoImpugnacion.label_tipo_plantilla}"
+							rendered="#{evaluarExpedienteFL.justificacionObligatoria}" />
+						<h:panelGroup
+							rendered="#{evaluarExpedienteFL.justificacionObligatoria}">
+							<p:selectOneMenu id="selOneMenTipoPlantilla"
+								value="#{evaluarExpedienteFL.codigoPlantilla}">
+								<f:selectItems value="#{evaluarExpedienteFL.lstPlantillas}" />
+								<p:ajax process="@this" />
+							</p:selectOneMenu>
+							<p:message for="selOneMenTipoPlantilla" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid id="panel-consideracion" styleClass="center-block"
+						columns="1"
+						columnClasses="label-col,input-col,label-col,input-col"
+						rendered="#{evaluarExpedienteFL.justificacionObligatoria}">
+						<p:outputLabel
+							value="#{labelProcesoImpugnacion.label_consi_juridico}"
+							styleClass="campo-obligatorio"></p:outputLabel>
+						<h:panelGroup>
+							<p:inputTextarea id="textAreaJurid" required="true"
+								value="#{evaluarExpedienteFL.consideracionJuridica}"
+								style="width: 400px; height: 100px;"></p:inputTextarea>
+							<p:message for="textAreaJurid" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+						<p:commandButton id="btnPreliminar"
+							action="#{evaluarExpedienteMB.generarVistaPreliminar()}"
+							icon="ui-icon-document" process="@form"
+							value="#{labelProcesoImpugnacion.label_vista_preliminar}"
+							update=":messages @form :form-pdfviewer"
+							rendered="#{evaluarExpedienteFL.justificacionObligatoria}">
+							<p:tooltip for="btnPreliminar"
+								value="#{labelProcesoImpugnacion.label_vista_preliminar}" />
+						</p:commandButton>
+						<p:commandButton id="btnGuardar" action="CONTINUAR"
+							icon="c2-icon-guardar" process="@form"
+							value="#{lbComun.btnGuardar}" update=":messages :form-ingreso">
+							<p:tooltip for="btnGuardar" value="#{lbComun.btnGuardar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_guardar}" icon="ui-icon-alert" />
+						</p:commandButton>
+
+						<p:commandButton id="btnCancelar" action="VOLVER"
+							icon="c2-icon-cancelar" process="@this" immediate="true"
+							value="#{lbComun.btnCancelar}">
+							<p:tooltip for="btnCancelar" value="#{lbComun.btnCancelar}" />
+							<p:confirm header="#{lbComun.msg_tit_confirmar}"
+								message="#{lbComun.msg_confirm_volver_cancelar}"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+
+					</h:panelGrid>
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+		<ui:include
+			src="/WEB-INF/jsp/comparendo/proceso-impugnacion/popup/visualizarDocumentoPdf.xhtml" />
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="adminFormularioHolderFL"
+		class="co.com.datatools.c2.managed_bean.formularios.administracion.AdminFormularioHolderFL" />
+	<var name="cambioEstadosFL"
+		class="co.com.datatools.c2.managed_bean.formularios.cambio_estados.CambioEstadosFL" />
+
+	<var name="asignacionFL"
+		class="co.com.datatools.c2.managed_bean.formularios.asignacion.AsignacionFL" />
+	<var name="asignacionHolderFL"
+		class="co.com.datatools.c2.managed_bean.formularios.asignacion.AsignacionHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/formularios/administracion/adminFormulario.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('adminFormularioMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('cambioEstadosMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+
+		<transition on="_op-EDITAR" to="_op-EDITAR">
+			<evaluate
+				expression="externalContext.sessionMap.adminFormularioMB.verDetalleCambioEstado()" />
+		</transition>
+
+		<transition on="VER_DETALLE" to="VER_DETALLE">
+			<evaluate
+				expression="externalContext.sessionMap.adminFormularioMB.verDetalleCambioEstado()"></evaluate>
+		</transition>
+		<transition on="_op-ANULAR_FORMULARIO" to="detalleCambioEstado">
+			<evaluate
+				expression="externalContext.sessionMap.adminFormularioMB.anularFormulario()"></evaluate>
+		</transition>
+		<transition on="_op-DEVOLVER_FORMULARIO" to="detalleCambioEstado">
+			<evaluate
+				expression="externalContext.sessionMap.adminFormularioMB.devolverFormulario()"></evaluate>
+		</transition>
+		<transition on="_op-ASIGNAR_FORMULARIO" to="_op-ASIGNAR_FORMULARIO">
+		</transition>
+	</view-state>
+
+	<view-state id="_op-EDITAR"
+		view="/WEB-INF/jsp/formularios/administracion/editarEstado.xhtml">
+		<transition on="CONTINUAR" to="actualizarAsignacion" />
+		<transition on="VOLVER" to="_op-CONSULTAR">
+			<evaluate
+				expression="flowScope.adminFormularioHolderFL.setCambioEstadoSeleccionado(null)" />
+		</transition>
+	</view-state>
+
+	<action-state id="actualizarAsignacion">
+		<evaluate
+			expression="externalContext.sessionMap.adminFormularioMB.actualizarInformacionEstado()" />
+		<transition on="success" to="_op-CONSULTAR">
+			<evaluate
+				expression="flowScope.adminFormularioHolderFL.setCambioEstadoSeleccionado(null)" />
+		</transition>
+	</action-state>
+
+	<view-state id="VER_DETALLE"
+		view="/WEB-INF/jsp/formularios/administracion/detalleAsignacion.xhtml">
+		<transition on="VOLVER" to="ingresar" />
+	</view-state>
+
+	<view-state id="detalleCambioEstado"
+		view="/WEB-INF/jsp/formularios/cambio-estados/cambioEstado.xhtml">
+		<transition on="CONTINUAR" to="CONTINUAR" />
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.cambioEstadosMB.limpiarCampos()" />
+		</transition>
+	</view-state>
+
+	<action-state id="CONTINUAR">
+		<evaluate
+			expression="externalContext.sessionMap.cambioEstadosMB.cambiarEstadoFormularios()"></evaluate>
+		<transition on="yes" to="VALIDAR">
+			<evaluate
+				expression="externalContext.sessionMap.cambioEstadosMB.limpiarCampos()"></evaluate>
+		</transition>
+		<transition on="no" to="detalleCambioEstado"></transition>
+	</action-state>
+
+	<decision-state id="VALIDAR">
+		<if test="adminFormularioHolderFL.esConsultar" then="_op-CONSULTAR"
+			else="ingresar" />
+	</decision-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate expression="externalContext.sessionMap.adminFormularioMB.consultar()" />
+		<transition on="success" to="ingresar"></transition>
+	</action-state>
+
+	<action-state id="_op-ASIGNAR_FORMULARIO">
+		<evaluate
+			expression="externalContext.sessionMap.adminFormularioMB.registrarAsignacion()" />
+		<transition on="yes" to="ASIGNAR_FORMULARIO">
+			<set name="adminFormularioHolderFL.idEstadoFormulario" value="adminFormularioHolderFL.idEstadoFormulario" />
+		</transition>
+		<transition on="no" to="ingresar" />
+	</action-state>
+
+	<!-- ASIGNAR -->
+
+	<view-state id="ASIGNAR_FORMULARIO"
+		view="/WEB-INF/jsp/formularios/asignacion/registrarAsignacion.xhtml">
+		<on-entry>
+			<evaluate
+				expression="asignacionHolderFL.setIdEstadoFormulario(adminFormularioHolderFL.idEstadoFormulario)" />
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('asignacionesMB')" />
+			<evaluate
+				expression="externalContext.sessionMap.asignacionesMB.ingresoDiaAsignacio()"></evaluate>
+		</on-entry>
+		<transition on="VALIDAR-CANTIDAD-FORMULARIOS" to="VALIDAR-CANTIDAD-FORMULARIOS" />
+		<transition on="CONTINUAR" to="CREAR-ASIGNACION" />
+		<transition on="CANCELA-ASIGNACION" to="ASIGNAR_FORMULARIO">
+			<evaluate expression="asignacionFL.setCantidadInferiorMinimo(false)" />
+		</transition>
+		<transition on="LIMPIAR" to="ASIGNAR_FORMULARIO">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.formularios.asignacion.AsignacionFL()"
+				result="flowScope.asignacionFL"></evaluate>
+		</transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.formularios.asignacion.AsignacionFL()"
+				result="flowScope.asignacionFL" />
+		</transition>
+	</view-state>
+
+	<action-state id="VALIDAR-CANTIDAD-FORMULARIOS">
+		<evaluate
+			expression="externalContext.sessionMap.asignacionesMB.validarCantidad()" />
+		<transition on="ASIGNAR_FORMULARIO" to="ASIGNAR_FORMULARIO" />
+		<transition on="CREAR-ASIGNACION" to="CREAR-ASIGNACION" />
+	</action-state>
+
+	<action-state id="CREAR-ASIGNACION">
+		<evaluate expression="externalContext.sessionMap.asignacionesMB.registrar()" />
+		<transition on="yes" to="ingresar">
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.formularios.asignacion.AsignacionFL()"
+				result="flowScope.asignacionFL"></evaluate>
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.formularios.asignacion.AsignacionHolderFL()"
+				result="flowScope.asignacionHolderFL"></evaluate>
+			<evaluate
+				expression="new co.com.datatools.c2.managed_bean.formularios.administracion.AdminFormularioHolderFL()"
+				result="flowScope.adminFormularioHolderFL"></evaluate>
+		</transition>
+		<transition on="no" to="ASIGNAR_FORMULARIO" />
+	</action-state>
+
+	<!-- ASIGNAR -->
+
+	<end-state id="fin" />
+</flow>

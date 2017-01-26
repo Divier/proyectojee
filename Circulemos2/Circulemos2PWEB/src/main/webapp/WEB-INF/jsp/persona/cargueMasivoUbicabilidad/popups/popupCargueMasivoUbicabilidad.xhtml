@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="frmResultadoCargue">
+		<p:dialog widgetVar="popUpResultadoCargue" id="idPopUpResultadoCargue"
+			header="#{labelCargueMasivoUbicabilidad.encabezado_popup_resultado}"
+			resizable="false" modal="true" appendToBody="true" dynamic="true"
+			closable="false" closeOnEscape="false"
+			visible="#{cargueMasivoUbicabilidadHolderFL.archivoProcesado}">
+
+			<h:panelGrid id="panel-formulario-msg" columns="1">
+				<p:outputLabel
+					value="#{labelCargueMasivoUbicabilidad.msg_cargue_exitoso}" />
+			</h:panelGrid>
+			<h:panelGrid id="panel-formulario" styleClass="center-block"
+				columns="2" columnClasses="label-col">
+				<p:outputLabel
+					value="#{labelCargueMasivoUbicabilidad.label_total_recibidos}" />
+				<p:outputLabel
+					value="#{cargueMasivoUbicabilidadHolderFL.cargue.totalRegistros}" />
+				<p:outputLabel
+					value="#{labelCargueMasivoUbicabilidad.label_total_actualizados}" />
+				<p:outputLabel
+					value="#{cargueMasivoUbicabilidadHolderFL.cargue.totalActualizados}" />
+				<p:outputLabel
+					value="#{labelCargueMasivoUbicabilidad.label_total_agregados}" />
+				<p:outputLabel
+					value="#{cargueMasivoUbicabilidadHolderFL.cargue.totalAgregados}" />
+				<p:outputLabel
+					value="#{labelCargueMasivoUbicabilidad.label_total_inconsistentes}" />
+				<p:outputLabel
+					value="#{cargueMasivoUbicabilidadHolderFL.cargue.totalInconsistencias}" />
+			</h:panelGrid>
+			<h:panelGrid styleClass="center-block" columns="3" cellpadding="5">
+				<p:commandButton id="btnInconsistencias"
+					icon="ui-icon-arrowthick-1-s"
+					disabled="#{cargueMasivoUbicabilidadHolderFL.cargue.totalInconsistencias == 0}"
+					ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"
+					value="#{labelCargueMasivoUbicabilidad.label_ver_inconsistencias}">
+					<p:tooltip for="btnInconsistencias"
+						value="#{labelCargueMasivoUbicabilidad.label_ver_inconsistencias}" />
+					<p:fileDownload
+						value="#{cargueMasivoUbicabilidadMB.descargarArchivoIncosistencias()}" />
+				</p:commandButton>
+				<p:commandButton id="btnDescargaCargue"
+					icon="ui-icon-arrowthick-1-s" ajax="false"
+					onclick="PrimeFaces.monitorDownload(start, stop);"
+					value="#{labelCargueMasivoUbicabilidad.label_ver_archivo_original}">
+					<p:tooltip for="btnDescargaCargue"
+						value="#{labelCargueMasivoUbicabilidad.label_ver_archivo_original}" />
+					<p:fileDownload
+						value="#{cargueMasivoUbicabilidadMB.descargarArchivoUbicabilidad()}" />
+				</p:commandButton>
+				<p:commandButton id="btnVolver"
+					action="CANCELAR" icon="c2-icon-volver" update="@all"
+					process="@this" immediate="true" value="#{labelUbicabilidad.btn_aceptar}"
+					onclick="PF('popUpResultadoCargue').hide();">
+					<p:tooltip for="btnVolver" value="#{labelUbicabilidad.btn_aceptar}" />
+				</p:commandButton>
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+</ui:composition>

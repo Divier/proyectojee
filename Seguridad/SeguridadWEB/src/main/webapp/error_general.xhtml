@@ -1,0 +1,25 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="WEB-INF/layouts/error.xhtml">
+
+	<ui:define name="content">
+		<div>
+			<h2>#{mensajesGeneral.mensaje_peticion_no_atendida}</h2>
+			<hr />
+			<h:form>
+				<p:commandButton value="#{mensajesGeneral.boton_ir_atras}" onclick="history.back()"></p:commandButton>
+			</h:form>		
+			<p:panel header="Detalle del error" toggleable="true"
+				toggleOrientation="vertical" collapsed="true">
+				<pre class="language-java" style="overflow-x: auto; font-size: 90%">
+				<h:outputText value="#{stackTrace}" escape="false" />
+			</pre>
+			</p:panel>
+		</div>
+	</ui:define>
+</ui:composition>

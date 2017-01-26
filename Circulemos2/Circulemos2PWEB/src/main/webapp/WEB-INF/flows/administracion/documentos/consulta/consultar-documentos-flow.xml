@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+		http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="consultaMasivaHolderFL"
+		class="co.com.datatools.c2.maganed_bean.administracion.documentos.consulta.ConsultaMasivaHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracion/documentos/consulta/consultarDocumentos.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('consultaMasivaDocumentosMB')" />	
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.consultaMasivaDocumentosMB.consultarDocumentosGenerados()" />
+		</transition>		
+	</view-state>
+</flow>
