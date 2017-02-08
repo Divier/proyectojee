@@ -1,6 +1,7 @@
 package co.com.datatools.c2.clientes.ws.simit.historialconductor;
 
 import java.io.IOException;
+import java.net.Socket;
 
 /**
  * @author luis.forero
@@ -37,6 +38,10 @@ public class WSHistorialClienteMain {
 
         int a = hacerAlgo(5);
         System.out.println(a);
+
+        Socket s = new Socket("https://www.e-notifica.co/cOfficeWebServices/CircuitIntegrationService.asmx", 80);
+        System.out.println(s.isConnected());
+
     }
 
     public static int hacerAlgo(int a) {

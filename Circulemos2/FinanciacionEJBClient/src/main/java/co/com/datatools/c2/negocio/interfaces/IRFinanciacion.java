@@ -7,6 +7,8 @@ import javax.ejb.Remote;
 import co.com.datatools.c2.dto.CondicionFinanciacionDTO;
 import co.com.datatools.c2.dto.ConsultaFinanciacionDTO;
 import co.com.datatools.c2.dto.DejarFirmeDTO;
+import co.com.datatools.c2.dto.DejarFirmeMetaDataDTO;
+import co.com.datatools.c2.dto.DetalleFinanciacionDTO;
 import co.com.datatools.c2.dto.FiltroConsultaFinanciacionDTO;
 import co.com.datatools.c2.dto.FinanciacionDTO;
 import co.com.datatools.c2.dto.RespuestaFinanciacionDTO;
@@ -107,7 +109,7 @@ public interface IRFinanciacion {
      *            número de financiación a dejar en firme
      * @author diego.fonseca
      */
-    public Long dejarFirmeFinanciacion(DejarFirmeDTO dejarFirmeDTO) throws CirculemosNegocioException;
+    public DejarFirmeMetaDataDTO dejarFirmeFinanciacion(DejarFirmeDTO dejarFirmeDTO) throws CirculemosNegocioException;
 
     /**
      * Registra y activa la cartera para una financiacion
@@ -168,4 +170,14 @@ public interface IRFinanciacion {
      * @throws CirculemosNegocioException
      */
     public boolean validarDejarEnFirme(DejarFirmeDTO dejarFirmeDTO) throws CirculemosNegocioException;
+
+    public void validarDejarFirmePago(DetalleFinanciacionDTO detalleFinanciacionDTO) throws CirculemosNegocioException;
+
+    /**
+     * Permite llamar al servicio de envios de correo
+     * 
+     * @param dejarFirmeMetaData
+     * @throws CirculemosNegocioException
+     */
+    public void enviarCorreoDejarFirme(DejarFirmeMetaDataDTO dejarFirmeMetaData) throws CirculemosNegocioException;
 }

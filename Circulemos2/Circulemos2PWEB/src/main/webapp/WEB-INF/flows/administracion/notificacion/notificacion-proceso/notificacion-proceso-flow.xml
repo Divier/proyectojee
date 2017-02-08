@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="notificacionProcesoHolderFL"
+		class="co.com.datatools.c2.managed_bean.administracion.notificacion.notificacion_proceso.NotificacionProcesoHolderFL" />
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracion/notificacion/notificacion-proceso/notificacionProceso.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('notificacionProcesoMB')" />
+		</on-entry>
+		<transition on="_op-CONSULTAR" to="_op-CONSULTAR" />
+		
+		<transition on="_op-CREAR" to="_op-CREAR" />
+	</view-state>
+
+	<action-state id="_op-CONSULTAR">
+		<evaluate
+			expression="externalContext.sessionMap.notificacionProcesoMB.consultar()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+	
+	<action-state id="_op-CREAR">
+		<evaluate
+			expression="externalContext.sessionMap.notificacionProcesoMB.enviarCorreo()" />
+		<transition on="success" to="ingresar" />
+	</action-state>
+
+
+</flow>

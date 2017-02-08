@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c2="http://java.sun.com/jsf/composite/c2"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="contenido">
+
+		<h:form id="form-contenido">
+			<p:panel id="campos-consulta" styleClass="panel-formulario"
+				header="#{labelNotificacion.lbl_encabezado_notificacion}">
+				<p:fieldset styleClass="fieldset-formulario"
+					legend="#{lbComun.msg_fieldset_consultar}">
+
+					<h:panelGrid id="panel-formulario" styleClass="center-block"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+						<!--Componentes del formulario 2 o 4 columnas-->
+						<h:outputLabel value="#{labelNotificacion.label_tipo_proceso}" />
+						<p:selectOneMenu id="selTipoProceso"
+							value="#{notificacionProcesoHolderFL.notificacionProcesoDTO.tipoProceso}"
+							required="true">
+							<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+							<f:selectItems value="#{fachadaCatalogosMB.catTipoProceso()}" />
+						</p:selectOneMenu>
+
+						<h:outputLabel
+							value="#{labelNotificacion.label_fecha_inicio_proceso}" />
+						<p:calendar id="idFechaInicialProceso"
+							value="#{notificacionProcesoHolderFL.notificacionProcesoDTO.fechaInicio}"
+							navigator="true" pattern="#{utilidadMB.formatoFechaCompleta}"
+							required="true"
+							requiredMessage="#{labelGeneral.val_campo_requerido}">
+							<p:watermark for="idFechaInicialProceso"
+								value="#{utilidadMB.formatoFecha}" />
+						</p:calendar>
+						<h:outputLabel
+							value="#{labelNotificacion.label_fecha_fin_proceso}" />
+						<p:calendar id="idFechaFinalProceso"
+							value="#{notificacionProcesoHolderFL.notificacionProcesoDTO.fechaFin}"
+							navigator="true" pattern="#{utilidadMB.formatoFechaCompleta}"
+							required="true"
+							requiredMessage="#{labelGeneral.val_campo_requerido}">
+							<p:watermark for="idFechaFinalProceso"
+								value="#{utilidadMB.formatoFecha}" />
+						</p:calendar>
+					</h:panelGrid>
+
+
+					<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
+						<p:commandButton id="btnConsultar" styleClass="_op-CONSULTAR"
+							action="_op-CONSULTAR" icon="c2-icon-consultar" process="@form"
+							value="#{lbComun.btnConsultar}"
+							update=":messages :form-resultado :form-contenido">
+						</p:commandButton>
+					</h:panelGrid>
+
+
+				</p:fieldset>
+			</p:panel>
+		</h:form>
+
+		<h:form id="form-resultado">
+			<p:panel id="resultado-consulta" styleClass="panel-res-consulta"
+				rendered="#{true}">
+
+				<h:panelGrid id="acciones-top">
+					<p:commandButton id="btnEditar" styleClass="_op-CREAR"
+						action="_op-CREAR" icon="c2-icon-editar" process="@this"
+						value="#{lbComun.btnEditar}" disabled="#{notificacionProcesoHolderFL.notificaciones.isEmpty()}">
+					</p:commandButton>
+				</h:panelGrid>
+				<p:dataTable id="tabla-resultados"
+					value="#{notificacionProcesoHolderFL.notificaciones}"
+					var="registro" rowKey="#{registro.idProceso}"
+					selection="#{notificacionProcesoHolderFL.notificacionProcesoDTOSel}"
+					paginator="true"
+					paginatorTemplate="#{webPrm.param_paginator_template}"
+					rowsPerPageTemplate="#{webPrm.param_rows_per_page}"
+					rows="#{webPrm.param_initial_rows}" sortMode="multiple">
+
+					<p:ajax event="rowSelectRadio"
+						process=":form-resultado:tabla-resultados"
+						update=":form-resultado:acciones-top" global="false" />
+
+					<p:column selectionMode="single" />
+					<p:column headerText="#{labelNotificacion.label_numero_proceso}">
+						<p:outputLabel value="#{registro.numeroProceso}" />
+					</p:column>
+					<p:column headerText="#{labelNotificacion.label_tipo_proceso}">
+						<p:outputLabel value="#{registro.tipoProceso}" />
+					</p:column>
+					<p:column
+						headerText="#{labelNotificacion.label_fecha_inicio_proceso}">
+						<c2:outputDateLabel labelValue="#{registro.fechaInicio}"
+							fullFormat="true" />
+					</p:column>
+					<p:column headerText="#{labelNotificacion.label_estado_proceso}">
+						<p:outputLabel value="#{registro.estadoProceso}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+<!-- fecha inicio y fin, tipo_proceso -->

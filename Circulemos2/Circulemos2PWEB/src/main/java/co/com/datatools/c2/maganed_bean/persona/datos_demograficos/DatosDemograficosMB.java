@@ -312,6 +312,9 @@ public class DatosDemograficosMB extends AbstractC2ManagedBean {
             try {
                 datosDemograficosHolderFL.setArchivoNoUbiRegistrar(personaEJB.registrarArchivoPersona(
                         datosDemograficosHolderFL.getArchivoNoUbiRegistrar(), archivoCargado, true));
+                inicializarDatos(datosDemograficosHolderFL.getPersonaFiltro().getTipoIdentificacion().getId(),
+                        datosDemograficosHolderFL.getPersonaFiltro().getNumeroIdentificacion(),
+                        datosDemograficosHolderFL.getSubflujo());
                 datosDemograficosHolderFL.getArchivoNoUbiRegistrar().getTipoFuenteInformacion()
                         .setNombre(tiposFuenteInformacion.get(datosDemograficosHolderFL.getArchivoNoUbiRegistrar()
                                 .getTipoFuenteInformacion().getId()));

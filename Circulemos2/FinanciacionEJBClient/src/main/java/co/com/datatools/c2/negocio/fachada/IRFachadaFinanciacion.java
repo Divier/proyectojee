@@ -2,6 +2,9 @@ package co.com.datatools.c2.negocio.fachada;
 
 import javax.ejb.Remote;
 
+import co.com.datatools.c2.dto.DejarFirmeDTO;
+import co.com.datatools.c2.dto.DejarFirmeMetaDataDTO;
+import co.com.datatools.c2.dto.DetalleFinanciacionDTO;
 import co.com.datatools.c2.dto.FinanciacionDTO;
 import co.com.datatools.c2.dto.RespuestaReplicarFinanciacionDTO;
 import co.com.datatools.c2.dto.ValidaPagoFinanciacionDTO;
@@ -45,4 +48,20 @@ public interface IRFachadaFinanciacion {
      * @author divier.casas(2016-08-03)
      */
     public ValidaPagoFinanciacionDTO validarPagosFinanciaciones(Integer codigoOrganismo);
+
+    /**
+     * Deja en firme la financion cuando recibe el pago de la primer cuota
+     * 
+     * @param detalleFinanciacionDTO
+     * @throws CirculemosNegocioException
+     */
+    public DejarFirmeMetaDataDTO dejarFirmeFinanciacion(DejarFirmeDTO dejarFirmeDTO) throws CirculemosNegocioException;
+
+    /**
+     * Validar dejar en firme
+     * 
+     * @param detalleFinanciacionDTO
+     * @throws CirculemosNegocioException
+     */
+    public void validarDejarFirmePago(DetalleFinanciacionDTO detalleFinanciacionDTO) throws CirculemosNegocioException;
 }

@@ -57,6 +57,10 @@ public class VisualizarDocumentoMB extends AbstractSwfManagedBean {
 
     private boolean visible;
 
+    private String mensajeNotificacion;
+    private String tituloNotificacion;
+    private boolean visualizarNotificacion;
+
     @PostConstruct
     public void init() {
         logger.debug("VisualizarDocumentoMB::init()");
@@ -130,4 +134,27 @@ public class VisualizarDocumentoMB extends AbstractSwfManagedBean {
         return visible;
     }
 
+    public String getMensajeNotificacion() {
+        return mensajeNotificacion;
+    }
+
+    public void setMensajeNotificacion(String mensajeNotificacion) {
+        this.mensajeNotificacion = mensajeNotificacion;
+    }
+
+    public String getTituloNotificacion() {
+        return tituloNotificacion;
+    }
+
+    public void setTituloNotificacion(String tituloNotificacion) {
+        this.tituloNotificacion = tituloNotificacion;
+    }
+
+    public boolean isVisualizarNotificacion() {
+        return visualizarNotificacion;
+    }
+
+    public void setVisualizarNotificacion(boolean visualizarNotificacion) {
+        this.visualizarNotificacion = visualizarNotificacion;
+    }
 }

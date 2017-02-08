@@ -93,4 +93,15 @@ public interface ILImpugnacion {
      */
     public MotivacionImpugnacionDTO consultarMotivacionIpugnacion(Long idProceso);
 
+    /**
+     * @see IRImpugnacion#enviarCorreoEvaluarImpugnacion(Long, Long, Long)
+     */
+    public void enviarCorreoEvaluarImpugnacion(Long idProceso, Long idDocumento, Long idTraza)
+            throws CirculemosNegocioException;
+
+    /**
+     * @see IRImpugnacion#enviarCorreoFalloImpugnacion(Long, Long, TrazabilidadProcesoDTO)
+     */
+    public void enviarCorreoFalloImpugnacion(Long idProceso, Long ciComparendo, TrazabilidadProcesoDTO trazaProceso)
+            throws CirculemosNegocioException;
 }

@@ -2,7 +2,6 @@ package co.com.datatools.c2.negocio.ejb;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -194,6 +193,10 @@ public class WSENotificaEJB implements IRWSENotifica, ILWSENotifica {
             logger.error(e.getMessage());
             log.setRespuestaWebService(getRespuestaGenerica());
             throw new NotificacionException(e.getMessage());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            log.setRespuestaWebService(getRespuestaGenerica());
+            throw new NotificacionException(e.getMessage());
         } finally {
             log.setFechaRecepcion(UtilFecha.currentZeroTimeDate());
             // Guardar log llamado WS
@@ -248,6 +251,10 @@ public class WSENotificaEJB implements IRWSENotifica, ILWSENotifica {
             log.setRespuestaWebService(getRespuestaGenerica());
             throw new NotificacionException(e.getMessage());
         } catch (RemoteException e) {
+            logger.error(e.getMessage());
+            log.setRespuestaWebService(getRespuestaGenerica());
+            throw new NotificacionException(e.getMessage());
+        } catch (Exception e) {
             logger.error(e.getMessage());
             log.setRespuestaWebService(getRespuestaGenerica());
             throw new NotificacionException(e.getMessage());
@@ -358,6 +365,7 @@ public class WSENotificaEJB implements IRWSENotifica, ILWSENotifica {
 
                 if (tipoAplicacion == null || cCircuitoDTO.getTituloCircuito() == null || documentos == null
                         || destinatarios == null || metadataCircuit == null) {
+                    log.setRespuestaWebService(getRespuestaGenerica());
                     throw new NotificacionException(ERROR_PARAMETRO);
                 }
 
@@ -380,6 +388,10 @@ public class WSENotificaEJB implements IRWSENotifica, ILWSENotifica {
             log.setRespuestaWebService(getRespuestaGenerica());
             throw new NotificacionException(e.getMessage());
         } catch (RemoteException e) {
+            logger.error(e.getMessage());
+            log.setRespuestaWebService(getRespuestaGenerica());
+            throw new NotificacionException(e.getMessage());
+        } catch (Exception e) {
             logger.error(e.getMessage());
             log.setRespuestaWebService(getRespuestaGenerica());
             throw new NotificacionException(e.getMessage());
@@ -457,6 +469,10 @@ public class WSENotificaEJB implements IRWSENotifica, ILWSENotifica {
             logger.error(e.getMessage());
             log.setRespuestaWebService(getRespuestaGenerica());
             throw new NotificacionException(e.getMessage());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            log.setRespuestaWebService(getRespuestaGenerica());
+            throw new NotificacionException(e.getMessage());
         } finally {
             if (token != null) {
                 log.setFechaRecepcion(UtilFecha.currentZeroTimeDate());
@@ -529,6 +545,10 @@ public class WSENotificaEJB implements IRWSENotifica, ILWSENotifica {
             logger.error(e.getMessage());
             log.setRespuestaWebService(getRespuestaGenerica());
             throw new NotificacionException(e.getMessage());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            log.setRespuestaWebService(getRespuestaGenerica());
+            throw new NotificacionException(e.getMessage());
         } finally {
             if (token != null) {
                 log.setFechaRecepcion(UtilFecha.currentZeroTimeDate());
@@ -588,7 +608,7 @@ public class WSENotificaEJB implements IRWSENotifica, ILWSENotifica {
             logger.error(e.getMessage());
             log.setRespuestaWebService(getRespuestaGenerica());
             throw new NotificacionException(e.getMessage());
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
             log.setRespuestaWebService(getRespuestaGenerica());
             throw new NotificacionException(e.getMessage());

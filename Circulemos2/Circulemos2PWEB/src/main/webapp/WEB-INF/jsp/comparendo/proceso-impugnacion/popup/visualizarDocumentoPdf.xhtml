@@ -38,5 +38,18 @@
 				</p:commandButton>
 			</h:panelGrid>
 		</p:dialog>
+		
+		<p:dialog widgetVar="popUpMensajeAdicional"
+			id="popUpMensajeAdicional"
+			header="#{visualizarDocumentoMB.tituloNotificacion}"
+			resizable="false" modal="true" appendTo="@(body)" dynamic="true"
+			closable="true" closeOnEscape="false"
+			width="400" visible="#{visualizarDocumentoMB.visualizarNotificacion}" >
+			<p:outputLabel value="#{visualizarDocumentoMB.mensajeNotificacion}" />
+			<p:outputLabel value="" />
+			<br />
+			<br />
+		</p:dialog>
+		
 	</h:form>
 </ui:composition>

@@ -4,7 +4,7 @@
 
 	<groupId>co.com.datatools.c2</groupId>
 	<artifactId>Circulemos2Parent</artifactId>
-	<version>2.0.26</version>
+	<version>2.0.28</version>
 	<packaging>pom</packaging>
 
 	<name>Circulemos2 Parent POM</name>
@@ -187,50 +187,50 @@
 		<junit.version>4.11</junit.version>
 
 		<!-- Modulos Circulemos2 -->
-		<Circulemos2SQL.version>2.0.26</Circulemos2SQL.version>
-		<Circulemos2Utilidades.version>2.0.26</Circulemos2Utilidades.version>
-		<Circulemos2DTO.version>2.0.26</Circulemos2DTO.version>
-		<Circulemos2JPA.version>2.0.26</Circulemos2JPA.version>
-		<Circulemos2PWEB.version>2.0.26</Circulemos2PWEB.version>
-		<Circulemo2EAR.version>2.0.26</Circulemo2EAR.version>
+		<Circulemos2SQL.version>2.0.28</Circulemos2SQL.version>
+		<Circulemos2Utilidades.version>2.0.28</Circulemos2Utilidades.version>
+		<Circulemos2DTO.version>2.0.28</Circulemos2DTO.version>
+		<Circulemos2JPA.version>2.0.28</Circulemos2JPA.version>
+		<Circulemos2PWEB.version>2.0.28</Circulemos2PWEB.version>
+		<Circulemo2EAR.version>2.0.28</Circulemo2EAR.version>
 
-		<AdministracionEJB.version>2.0.26</AdministracionEJB.version>
-		<AuditoriaEJB.version>2.0.26</AuditoriaEJB.version>
-		<CarteraEJB.version>2.0.26</CarteraEJB.version>
-		<FormulariosEJB.version>2.0.26</FormulariosEJB.version>
-		<ParametrizacionEJB.version>2.0.26</ParametrizacionEJB.version>
+		<AdministracionEJB.version>2.0.28</AdministracionEJB.version>
+		<AuditoriaEJB.version>2.0.28</AuditoriaEJB.version>
+		<CarteraEJB.version>2.0.28</CarteraEJB.version>
+		<FormulariosEJB.version>2.0.28</FormulariosEJB.version>
+		<ParametrizacionEJB.version>2.0.28</ParametrizacionEJB.version>
 
-		<Circulemos2BaseEJB.version>2.0.26</Circulemos2BaseEJB.version>
-		<Circulemos2Test.version>2.0.26</Circulemos2Test.version>
-		<TareasProgramadasC2.version>2.0.26</TareasProgramadasC2.version>
-		<GestionDocumentosEJB.version>2.0.26</GestionDocumentosEJB.version>
-		<DocumentosC2EJB.version>2.0.26</DocumentosC2EJB.version>
-		<ResolucionEJB.version>2.0.26</ResolucionEJB.version>
-		<ProcesoEJB.version>2.0.26</ProcesoEJB.version>
-		<NotificacionTercerosC2EJB.version>2.0.26</NotificacionTercerosC2EJB.version>
-		<RecaudoEJB.version>2.0.26</RecaudoEJB.version>
-		<FinanciacionEJB.version>2.0.26</FinanciacionEJB.version>
-		<SacEJB.version>2.0.26</SacEJB.version>
-		<IntegracionTercerosEJB.version>2.0.26</IntegracionTercerosEJB.version>
+		<Circulemos2BaseEJB.version>2.0.28</Circulemos2BaseEJB.version>
+		<Circulemos2Test.version>2.0.28</Circulemos2Test.version>
+		<TareasProgramadasC2.version>2.0.28</TareasProgramadasC2.version>
+		<GestionDocumentosEJB.version>2.0.28</GestionDocumentosEJB.version>
+		<DocumentosC2EJB.version>2.0.28</DocumentosC2EJB.version>
+		<ResolucionEJB.version>2.0.28</ResolucionEJB.version>
+		<ProcesoEJB.version>2.0.28</ProcesoEJB.version>
+		<NotificacionTercerosC2EJB.version>2.0.28</NotificacionTercerosC2EJB.version>
+		<RecaudoEJB.version>2.0.28</RecaudoEJB.version>
+		<FinanciacionEJB.version>2.0.28</FinanciacionEJB.version>
+		<SacEJB.version>2.0.28</SacEJB.version>
+		<IntegracionTercerosEJB.version>2.0.28</IntegracionTercerosEJB.version>
 
-		<Adaptador.version>2.0.26</Adaptador.version>
+		<Adaptador.version>2.0.28</Adaptador.version>
 
-		<ComparendoEJB.version>2.0.26</ComparendoEJB.version>
-		<RegistroVehicularEJB.version>2.0.26</RegistroVehicularEJB.version>
-		<PatiosEJB.version>2.0.26</PatiosEJB.version>
-		<Circulemos2WSCXF.version>2.0.26</Circulemos2WSCXF.version>
-		<SimitEJB.version>2.0.26</SimitEJB.version>
-		<ClienteWSSIMITEJB.version>2.0.26</ClienteWSSIMITEJB.version>
-		<ClientesWS.version>2.0.26</ClientesWS.version>
-		<TimerCirculemos2Client.version>2.0.26</TimerCirculemos2Client.version>
-	    <TimerCirculemos2EJB.version>2.0.26</TimerCirculemos2EJB.version> 
-	    <ImpugnacionEJBClient.version>2.0.26</ImpugnacionEJBClient.version>
-	    <ImpugnacionEJB.version>2.0.26</ImpugnacionEJB.version> 
-	    <CoactivoEJBClient.version>2.0.26</CoactivoEJBClient.version>
-	    <CoactivoEJB.version>2.0.26</CoactivoEJB.version> 
-		<ClienteWSAXISEJB.version>2.0.26</ClienteWSAXISEJB.version>
-		<AccidentalidadEJBClient.version>2.0.26</AccidentalidadEJBClient.version>
-	    <AccidentalidadEJB.version>2.0.26</AccidentalidadEJB.version> 
+		<ComparendoEJB.version>2.0.28</ComparendoEJB.version>
+		<RegistroVehicularEJB.version>2.0.28</RegistroVehicularEJB.version>
+		<PatiosEJB.version>2.0.28</PatiosEJB.version>
+		<Circulemos2WSCXF.version>2.0.28</Circulemos2WSCXF.version>
+		<SimitEJB.version>2.0.28</SimitEJB.version>
+		<ClienteWSSIMITEJB.version>2.0.28</ClienteWSSIMITEJB.version>
+		<ClientesWS.version>2.0.28</ClientesWS.version>
+		<TimerCirculemos2Client.version>2.0.28</TimerCirculemos2Client.version>
+	    <TimerCirculemos2EJB.version>2.0.28</TimerCirculemos2EJB.version> 
+	    <ImpugnacionEJBClient.version>2.0.28</ImpugnacionEJBClient.version>
+	    <ImpugnacionEJB.version>2.0.28</ImpugnacionEJB.version> 
+	    <CoactivoEJBClient.version>2.0.28</CoactivoEJBClient.version>
+	    <CoactivoEJB.version>2.0.28</CoactivoEJB.version> 
+		<ClienteWSAXISEJB.version>2.0.28</ClienteWSAXISEJB.version>
+		<AccidentalidadEJBClient.version>2.0.28</AccidentalidadEJBClient.version>
+	    <AccidentalidadEJB.version>2.0.28</AccidentalidadEJB.version> 
 
 		<!-- Componentes -->
 		<EnvioCorreoEJB.version>1.0.3-SNAPSHOT</EnvioCorreoEJB.version>

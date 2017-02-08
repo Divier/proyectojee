@@ -1293,6 +1293,36 @@ public class FachadaCatalogosMB extends AbstractC2ManagedBean {
     }
 
     /**
+     * Consulta el catalogo de entidad bien
+     * 
+     * @return catalogo de fuentes de información
+     * @author giovanni.velandia
+     */
+    public List<SelectItem> catEntidadBien() {
+        List<SelectItem> itemsCatalogos = inicioAppCirculemos.getCatalogo(EnumCatalogo.EntidadBien);
+        if (itemsCatalogos == null) {
+            itemsCatalogos = consultarCatalogos(EnumCatalogo.EntidadBien, null);
+            inicioAppCirculemos.addCatalogo(EnumCatalogo.EntidadBien, itemsCatalogos);
+        }
+        return itemsCatalogos;
+    }
+
+    /**
+     * Consulta el catalogo de Tipo Bien
+     * 
+     * @return catalogo de fuentes de información
+     * @author giovanni.velandia
+     */
+    public List<SelectItem> catTipoBien() {
+        List<SelectItem> itemsCatalogos = inicioAppCirculemos.getCatalogo(EnumCatalogo.TipoBien);
+        if (itemsCatalogos == null) {
+            itemsCatalogos = consultarCatalogos(EnumCatalogo.TipoBien, null);
+            inicioAppCirculemos.addCatalogo(EnumCatalogo.TipoBien, itemsCatalogos);
+        }
+        return itemsCatalogos;
+    }
+
+    /**
      * Consulta el catalogo de fuentes de información
      * 
      * @return catalogo de fuentes de información

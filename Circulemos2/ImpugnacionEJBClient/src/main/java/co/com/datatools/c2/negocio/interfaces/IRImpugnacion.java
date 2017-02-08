@@ -141,4 +141,26 @@ public interface IRImpugnacion {
      * @return
      */
     public MotivacionImpugnacionDTO consultarMotivacionIpugnacion(Long idProceso);
+
+    /**
+     * Envia el correo de evaluacion de impugnacion
+     * 
+     * @param idProceso
+     * @param idDocumento
+     * @param idTraza
+     * @throws CirculemosNegocioException
+     */
+    public void enviarCorreoEvaluarImpugnacion(Long idProceso, Long idDocumento, Long idTraza)
+            throws CirculemosNegocioException;
+
+    /**
+     * Envia el correo del fallo de impugnacion
+     * 
+     * @param idProceso
+     * @param ciComparendo
+     * @param trazaProceso
+     * @throws CirculemosNegocioException
+     */
+    public void enviarCorreoFalloImpugnacion(Long idProceso, Long ciComparendo, TrazabilidadProcesoDTO trazaProceso)
+            throws CirculemosNegocioException;
 }

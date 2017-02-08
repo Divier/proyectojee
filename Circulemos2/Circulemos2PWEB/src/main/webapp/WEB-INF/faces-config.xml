@@ -350,9 +350,13 @@
 			<base-name>co.com.datatools.c2.bundle.administracion.entidad-embargo.Mensajes</base-name>
 			<var>labelConfiguracionEntidad</var>
 		</resource-bundle>
-				<resource-bundle>
+		<resource-bundle>
 			<base-name>co.com.datatools.c2.bundle.coactivo.bien.Mensajes</base-name>
 			<var>labelAdministracionBien</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>co.com.datatools.c2.bundle.administracion.notificacion.notificacion-proceso.Mensajes</base-name>
+			<var>labelNotificacion</var>
 		</resource-bundle>
 		<message-bundle>co.com.datatools.c2.bundle.general.MensajesFaces</message-bundle>
 		<system-event-listener>

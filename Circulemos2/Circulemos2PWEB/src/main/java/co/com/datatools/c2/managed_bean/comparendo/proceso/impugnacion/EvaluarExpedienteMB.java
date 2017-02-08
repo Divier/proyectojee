@@ -50,6 +50,8 @@ public class EvaluarExpedienteMB extends AbstractSwfManagedBean {
     private static final String NOMBRE_BUNDLE_IMPUGNACION = "labelProcesoImpugnacion";
     private static final String NOMBRE_ARCHIVO_EVALUACION = "Apertura de proceso de Impugnación.pdf";
 
+    private static final String MENSAJE_ERROR_ENVIO_NOTIFICACION = "JUR_004003";
+
     @ManagedProperty(value = "#{encabezadoImpugnacionMB}")
     EncabezadoImpugnacionMB encabezadoImpugnacion;
 
@@ -150,8 +152,9 @@ public class EvaluarExpedienteMB extends AbstractSwfManagedBean {
                 }
             }
 
+            Long idDocumento = null;
             if (evaluarImpugnacionDTO.getTrazabilidadProceso().getDocumentos() != null) {
-                Long idDocumento = evaluarImpugnacionDTO.getTrazabilidadProceso().getDocumentos().get(0)
+                idDocumento = evaluarImpugnacionDTO.getTrazabilidadProceso().getDocumentos().get(0)
                         .getNumeroDocumento();
 
                 List<Long> idDocumentos = new ArrayList<>();
@@ -175,9 +178,19 @@ public class EvaluarExpedienteMB extends AbstractSwfManagedBean {
             impugnacionHolderFL.getComparendoSeleccionado().setIdEstadoProceso(estadoActualizado.getValue());
             // Mensaje de guardado exitoso
             addInfoMessage(NOMBRE_BUNDLE_IMPUGNACION, "msg_evaluacion_expediente_guardado");
+            if (idDocumento != null) {
+                irImpugnacion.enviarCorreoEvaluarImpugnacion(trazabilidadProcesoDTO.getProceso().getId(), idDocumento,
+                        evaluarImpugnacionDTO.getTrazabilidadProceso().getId());
+            }
         } catch (CirculemosNegocioException e) {
-            CirculemosErrorHandler.handleException(e);
-
+            if (e.getErrorInfo().getCodigoError().equals(MENSAJE_ERROR_ENVIO_NOTIFICACION)) {
+                visualizarDocumentoMB
+                        .setTituloNotificacion(getBundle(NOMBRE_BUNDLE_IMPUGNACION).getString("label_advertencia"));
+                visualizarDocumentoMB.setMensajeNotificacion(e.getErrorInfo().getDescError());
+                visualizarDocumentoMB.setVisualizarNotificacion(true);
+            } else {
+                CirculemosErrorHandler.handleException(e);
+            }
         } catch (CirculemosAlertaException e) {
             CirculemosErrorHandler.handleException(e);
         }

@@ -8,6 +8,9 @@ import javax.ejb.TransactionAttributeType;
 
 import org.jboss.logging.Logger;
 
+import co.com.datatools.c2.dto.DejarFirmeDTO;
+import co.com.datatools.c2.dto.DejarFirmeMetaDataDTO;
+import co.com.datatools.c2.dto.DetalleFinanciacionDTO;
 import co.com.datatools.c2.dto.FinanciacionDTO;
 import co.com.datatools.c2.dto.RespuestaReplicarFinanciacionDTO;
 import co.com.datatools.c2.dto.ValidaPagoFinanciacionDTO;
@@ -47,5 +50,15 @@ public class FachadaFinanciacionEJB implements IRFachadaFinanciacion {
     public ValidaPagoFinanciacionDTO validarPagosFinanciaciones(Integer codigoOrganismo) {
         logger.debug("FachadaFinanciacionEJB::validarPagosFinanciaciones(Integer)");
         return iFinanciacion.validarPagosFinanciaciones(codigoOrganismo);
+    }
+
+    public DejarFirmeMetaDataDTO dejarFirmeFinanciacion(DejarFirmeDTO dejarFirmeDTO) throws CirculemosNegocioException {
+        logger.debug("FachadaFinanciacionEJB::dejarFirmeFinanciacion(DejarFirmeDTO)");
+        return iFinanciacion.dejarFirmeFinanciacion(dejarFirmeDTO);
+    }
+
+    public void validarDejarFirmePago(DetalleFinanciacionDTO detalleFinanciacionDTO) throws CirculemosNegocioException {
+        logger.debug("FachadaFinanciacionEJB::validarDejarFirmePago(FinanciacionDTO)");
+        iFinanciacion.validarDejarFirmePago(detalleFinanciacionDTO);
     }
 }

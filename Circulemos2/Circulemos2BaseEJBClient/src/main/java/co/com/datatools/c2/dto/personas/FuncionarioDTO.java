@@ -17,6 +17,8 @@ public class FuncionarioDTO implements EntidadDtoC2 {
     private Date fechaInicioVigencia;
     private Integer idCargo;
     private PersonaDTO persona;
+    private String memoNombramiento;
+    private Date fechaNombramiento;
 
     // --- Constructor
     public FuncionarioDTO() {
@@ -74,6 +76,22 @@ public class FuncionarioDTO implements EntidadDtoC2 {
 
     public void setPersona(PersonaDTO persona) {
         this.persona = persona;
+    }
+
+    public String getMemoNombramiento() {
+        return memoNombramiento;
+    }
+
+    public void setMemoNombramiento(String memoNombramiento) {
+        this.memoNombramiento = memoNombramiento;
+    }
+
+    public Date getFechaNombramiento() {
+        return fechaNombramiento;
+    }
+
+    public void setFechaNombramiento(Date fechaNombramiento) {
+        this.fechaNombramiento = fechaNombramiento;
     }
 
 }

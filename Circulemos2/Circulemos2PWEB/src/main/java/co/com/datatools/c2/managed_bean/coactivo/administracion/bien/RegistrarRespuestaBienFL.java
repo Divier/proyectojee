@@ -17,6 +17,7 @@ public class RegistrarRespuestaBienFL extends AbstractSwfManagedBean {
     private List<SolicitudOficioCoactivoDTO> solicitudOficioCoactivoDTOs;
     private SolicitudOficioCoactivoDTO solicitudOficioCoactivoDTO;
     private boolean activarSolCoactivo;
+    private boolean tieneBien;
 
     public List<SolicitudOficioCoactivoDTO> getSolicitudOficioCoactivoDTOs() {
         return solicitudOficioCoactivoDTOs;
@@ -48,6 +49,14 @@ public class RegistrarRespuestaBienFL extends AbstractSwfManagedBean {
 
     public void setSolicitudOficioCoactivoDTO(SolicitudOficioCoactivoDTO solicitudOficioCoactivoDTO) {
         this.solicitudOficioCoactivoDTO = solicitudOficioCoactivoDTO;
+    }
+
+    public boolean isTieneBien() {
+        return tieneBien;
+    }
+
+    public void setTieneBien(boolean tieneBien) {
+        this.tieneBien = tieneBien;
     }
 
 }

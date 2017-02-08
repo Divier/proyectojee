@@ -670,13 +670,7 @@ public class ImpugnacionEJB implements ILImpugnacion, IRImpugnacion {
                     documentoProceso = iRFachadaProceso.registrarDocumento(documentoProceso);
                     List<DocumentoProcesoDTO> documentos = new ArrayList<DocumentoProcesoDTO>();
                     documentos.add(documentoProceso);
-                    evaluarImpugnacionDTO.getTrazabilidadProceso().setDocumentos(documentos);// TODO
-
-                    // Envio de correo
-                    enviarCorreoEvaluarImpugnacion(evaluar.getTrazabilidadProceso().getProceso().getId(),
-                            organismo.getNombreOrganismo(), idDocumento,
-                            evaluarImpugnacionDTO.getTrazabilidadProceso().getId());
-
+                    evaluarImpugnacionDTO.getTrazabilidadProceso().setDocumentos(documentos);
                 } catch (CirculemosAlertaException e) {
                     logger.error("Error al generar documento de apertura de impugnacion", e);
                     throw new CirculemosNegocioException(ErrorImpugnacion.EvaluarExpediente.JUR_004002);
@@ -814,24 +808,23 @@ public class ImpugnacionEJB implements ILImpugnacion, IRImpugnacion {
                 iRFachadaComparendo.cambiarNumeroFactura(comparendoDTO.getCicomparendo(), nuevaFactura);
             }
         }
-
-        // Envio de correo
-        enviarCorreoFalloImpugnacion(idProceso, comparendoDTO, fallo, idDocumento);
         return traza;
     }
 
-    /**
-     * Envia el correo del fallo de impugnacion
-     * 
-     * @param idProceso
-     * @param comparendoDTO
-     * @author julio.pinzon 2016-06-16
-     * @param fallo
-     * @param idDocumento
-     */
-    private void enviarCorreoFalloImpugnacion(Long idProceso, ComparendoDTO comparendoDTO, FalloImpugnacionDTO fallo,
-            Long idDocumento) {
-        logger.debug("ImpugnacionEJB::enviarCorreoFalloImpugnacion(Long, ComparendoDTO, FalloImpugnacionDTO)");
+    @Override
+    public void enviarCorreoFalloImpugnacion(Long idProceso, Long ciComparendo, TrazabilidadProcesoDTO trazaProceso)
+            throws CirculemosNegocioException {
+        logger.debug("ImpugnacionEJB::enviarCorreoFalloImpugnacion(Long, ComparendoDTO, Long)");
+
+        FalloImpugnacionDTO falloImpugnacionDTO = consultarUltimoFalloImpugnacion(idProceso);
+        ComparendoDTO comparendoDTO = iRFachadaComparendo.consultarComparendo(ciComparendo);
+        List<TrazabilidadProcesoDTO> trazas = iRFachadaProceso.consultarTrazabilidad(trazaProceso);
+        Long idDocumento = null;
+
+        if (!trazas.isEmpty() && trazas.get(0).getDocumentos() != null && !trazas.get(0).getDocumentos().isEmpty()) {
+            idDocumento = trazas.get(0).getDocumentos().get(0).getNumeroDocumento();
+        }
+
         Map<String, Object> variables = new HashMap<>();
         String[] aDireccionesDestino = null;
         Proceso proceso = em.find(Proceso.class, idProceso);
@@ -853,7 +846,7 @@ public class ImpugnacionEJB implements ILImpugnacion, IRImpugnacion {
             aDireccionesDestino = correos.toArray(new String[correos.size()]);
         }
 
-        TipoFallo tipoFallo = em.find(TipoFallo.class, fallo.getTipoFallo().getId());
+        TipoFallo tipoFallo = em.find(TipoFallo.class, falloImpugnacionDTO.getTipoFallo().getId());
         variables.put("fallo", escapeHtml4(tipoFallo.getDescripcion()));
 
         OrganismoTransitoDTO organismo = new OrganismoTransitoDTO();
@@ -891,21 +884,24 @@ public class ImpugnacionEJB implements ILImpugnacion, IRImpugnacion {
                 notificacion.setLsCorreoElectronico(Arrays.asList(aDireccionesDestino));
                 notificacion.setNombreInfractor(persona.getNombreCompleto());
                 notificacion.setCodSeguimientoInt(idProceso);
-                notificacion.setExternalId(fallo.getTrazabilidadProceso().getId());
+                notificacion.setExternalId(falloImpugnacionDTO.getTrazabilidadProceso().getId());
                 notificacion.setLsArchivos(archivos);
                 lsNotificacion.add(notificacion);
                 envioNotificacion.setLsNotificaciones(lsNotificacion);
                 envioNotificacion.setTipoCorreo(EnumTipoCorreo.NOTIFICACION_FALLO_IMPUGNACION_ENOTIFICA);
                 envioNotificacion.setTipoNotificacion(EnumTipoNotificacion.NOTIFICACION_IMPUGNACIONES);
                 envioNotificacion.setVariablesMensaje(variables);
-                iRFachadaNotificaciones.enviaNotificaciones(envioNotificacion);
+                Integer[] aEstados = iRFachadaNotificaciones.enviaNotificaciones(envioNotificacion);
+                if (aEstados[0] > 0) {
+                    throw new CirculemosNegocioException(ErrorImpugnacion.ValidarFalloImpugnacion.JUR_014001);
+                }
             } else {
                 LogEnvioCorreoDTO log = iRCirculemosMailSender.enviarCorreo(
                         iRSeguridadCirculemos.obtenerOrganismoTransitoUsuario().getCodigoOrganismo(),
                         EnumTipoCorreo.NOTIFICACION_FALLO_IMPUGNACION, aDireccionesDestino, variables, archivos);
                 // Actualizacion de auditoria de correo
                 log.setTablaSolicitud("trazabilidad_proceso");
-                log.setIdTablaSolicitud(fallo.getTrazabilidadProceso().getId());
+                log.setIdTablaSolicitud(falloImpugnacionDTO.getTrazabilidadProceso().getId());
                 em.merge(LogEnvioCorreoHelper.toLevel1Entity(log, null));
             }
         }
@@ -1154,17 +1150,10 @@ public class ImpugnacionEJB implements ILImpugnacion, IRImpugnacion {
         return new ArrayList<AccionImpugnacionBackDTO>();
     }
 
-    /**
-     * Envia el correo del fallo de impugnacion
-     * 
-     * @param idProceso
-     * @param comparendoDTO
-     * @param fallo
-     * @param idDocumento
-     */
-    private void enviarCorreoEvaluarImpugnacion(Long idProceso, String nombreOrganismo, Long idDocumento,
-            Long idTraza) {
-        logger.debug("ImpugnacionEJB::enviarCorreoEvaluarImpugnacion(Long, ComparendoDTO, FalloImpugnacionDTO)");
+    @Override
+    public void enviarCorreoEvaluarImpugnacion(Long idProceso, Long idDocumento, Long idTraza)
+            throws CirculemosNegocioException {
+        logger.debug("ImpugnacionEJB::enviarCorreoEvaluarImpugnacion(Long, String, Long, Long)");
         Map<String, Object> variables = new HashMap<>();
         String[] aDireccionesDestino = null;
         Proceso proceso = em.find(Proceso.class, idProceso);
@@ -1187,7 +1176,8 @@ public class ImpugnacionEJB implements ILImpugnacion, IRImpugnacion {
             aDireccionesDestino = correos.toArray(new String[correos.size()]);
         }
 
-        variables.put("organismo", escapeHtml4(nombreOrganismo));
+        OrganismoTransitoDTO organismo = iRSeguridadCirculemos.obtenerOrganismoTransitoUsuario();
+        variables.put("organismo", escapeHtml4(organismo.getNombreOrganismo()));
 
         ValorParametroDTO parametro = iRFachadaNotificaciones.consultarParametroEnvioNotificaciones(
                 iRSeguridadCirculemos.obtenerOrganismoTransitoUsuario().getCodigoOrganismo());
@@ -1225,7 +1215,10 @@ public class ImpugnacionEJB implements ILImpugnacion, IRImpugnacion {
                 envioNotificacion.setTipoCorreo(EnumTipoCorreo.NOTIFICACION_EVALUACION_IMPUGNACION_ENOTIFICA);
                 envioNotificacion.setTipoNotificacion(EnumTipoNotificacion.NOTIFICACION_IMPUGNACIONES);
                 envioNotificacion.setVariablesMensaje(variables);
-                iRFachadaNotificaciones.enviaNotificaciones(envioNotificacion);
+                Integer[] aEstados = iRFachadaNotificaciones.enviaNotificaciones(envioNotificacion);
+                if (aEstados[0] > 0) {
+                    throw new CirculemosNegocioException(ErrorImpugnacion.EvaluarExpediente.JUR_004003);
+                }
             } else {
                 LogEnvioCorreoDTO log = iRCirculemosMailSender.enviarCorreo(
                         iRSeguridadCirculemos.obtenerOrganismoTransitoUsuario().getCodigoOrganismo(),

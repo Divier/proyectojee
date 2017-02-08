@@ -78,6 +78,8 @@ import co.com.datatools.c2.enumeraciones.EnumTipoRechazoRecaudo;
 import co.com.datatools.c2.excepciones.CirculemosNegocioException;
 import co.com.datatools.c2.log.ILog;
 import co.com.datatools.c2.log.LoggerC2;
+import co.com.datatools.c2.negocio.error.ErrorFinanciacion;
+import co.com.datatools.c2.negocio.error.ErrorFinanciacion.EnumErroDocumentoFinanciacion;
 import co.com.datatools.c2.negocio.error.ErrorRecaudo;
 import co.com.datatools.c2.negocio.error.ErrorRecaudo.ValidarReglaNegocioRecaudo;
 import co.com.datatools.c2.negocio.fachada.IRFachadaAdminGeneral;
@@ -105,6 +107,7 @@ import co.com.datatools.c2.util.log.LogReplicarPago;
 import co.com.datatools.util.GenericDao;
 import co.com.datatools.util.date.UtilFecha;
 import co.com.datatools.c2.dto.CoactivoDTO;
+import co.com.datatools.c2.dto.DejarFirmeDTO;
 
 @Stateless(mappedName = "RecaudoEJB")
 @LocalBean
@@ -349,6 +352,7 @@ public class RecaudoEJB implements IRRecaudo, ILRecaudo {
 
                     // Concilia el recaudo de obligacion de financiacion
                     detalleFinanciacionPago = conciliarFinanciacion(detallePago, movimientoCarteraDTO);
+
                 } else if (detallePago.getIdTipoRecaudo().equals(EnumTipoObligacion.COACTIVO.getValue())) {
                     detallePago.setIdConceptoCartera(EnumConceptoCartera.COMPARENDO_PAGADO.getId());
                     conciliarCoactivo(detallePago, movimientoCarteraDTO);
@@ -385,10 +389,16 @@ public class RecaudoEJB implements IRRecaudo, ILRecaudo {
                     // Registra el movimiento a la cartera
                     if (!detallePago.getIdTipoRecaudo().equals(EnumTipoObligacion.COACTIVO.getValue())) {
                         iRFachadaCartera.registrarMovimiento(movimientoCarteraDTO);
+
+                        if (detallePago.getIdTipoRecaudo().equals(EnumTipoObligacion.FINANCIACION.getValue())
+                                && detalleFinanciacionPago.getNumeroCuota().equals(CERO)) {
+                            // Valida la financiacion para dejar en firme la financiacion
+                            iFachadaFinanciacion.validarDejarFirmePago(detalleFinanciacionPago);
+                        }
+
                     } else {
                         CoactivoDTO coactivoDTO = iRFachadaCoactivo
                                 .consultarCoactivo(detallePago.getNumeroObligacion());
-
                         if (coactivoDTO != null) {
                             if (coactivoDTO.getObligacionCoactivos() != null
                                     && !coactivoDTO.getObligacionCoactivos().isEmpty()) {
@@ -1404,21 +1414,37 @@ public class RecaudoEJB implements IRRecaudo, ILRecaudo {
             RecaudoRechazoDTO itRecaudoRechazoDTO = ReplicarRecaudoTercerosHelper.toRecaudoRechazoDTO(recaudoDTO);
             // Guarda el reporte de los no enviados
             List<TipoRechazoRecaudoDTO> motivosRechazoRecaudo = new ArrayList<TipoRechazoRecaudoDTO>();
-            ValidarReglaNegocioRecaudo valReglaNegocio = (ValidarReglaNegocioRecaudo) e.getErrorInfo();
+
             TipoRechazoRecaudoDTO motivo = null;
 
-            switch (valReglaNegocio) {
+            if (e.getErrorInfo() instanceof ErrorRecaudo.ValidarReglaNegocioRecaudo) {
+                ValidarReglaNegocioRecaudo valReglaNegocio = (ValidarReglaNegocioRecaudo) e.getErrorInfo();
 
-            case REC_006_001:
-                motivo = new TipoRechazoRecaudoDTO(EnumTipoRechazoRecaudo.ORGANISMO_NO_EXISTE.getValue());
-                break;
-            case REC_006_002:
-                motivo = new TipoRechazoRecaudoDTO(EnumTipoRechazoRecaudo.FECHA_RECAUDO_SUPERIOR_ACTUAL.getValue());
-                break;
-            case REC_006_003:
-                motivo = new TipoRechazoRecaudoDTO(EnumTipoRechazoRecaudo.TOTAL_RECAUDO_NO_SUMA_MEDIOS_PAGO.getValue());
-                break;
+                switch (valReglaNegocio) {
+
+                case REC_006_001:
+                    motivo = new TipoRechazoRecaudoDTO(EnumTipoRechazoRecaudo.ORGANISMO_NO_EXISTE.getValue());
+                    break;
+                case REC_006_002:
+                    motivo = new TipoRechazoRecaudoDTO(EnumTipoRechazoRecaudo.FECHA_RECAUDO_SUPERIOR_ACTUAL.getValue());
+                    break;
+                case REC_006_003:
+                    motivo = new TipoRechazoRecaudoDTO(
+                            EnumTipoRechazoRecaudo.TOTAL_RECAUDO_NO_SUMA_MEDIOS_PAGO.getValue());
+                    break;
+                }
             }
+
+            if (e.getErrorInfo() instanceof ErrorFinanciacion.EnumErroDocumentoFinanciacion) {
+
+                EnumErroDocumentoFinanciacion errorFinanciacion = (EnumErroDocumentoFinanciacion) e.getErrorInfo();
+                switch (errorFinanciacion) {
+                case FIN_029003:
+                    motivo = new TipoRechazoRecaudoDTO(EnumTipoRechazoRecaudo.FIRMA_NO_ENCONTRADA.getValue());
+                    break;
+                }
+            }
+
             motivosRechazoRecaudo.add(motivo);
             itRecaudoRechazoDTO.setMotivoRechazoRecaudo(motivosRechazoRecaudo);
             rechazosRecaudoEJB.registrarRechazosRecaudos(itRecaudoRechazoDTO);

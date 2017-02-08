@@ -27,6 +27,8 @@ public class EvaluarExpedienteFL extends AbstractC2ManagedBean {
     private String codigoPlantilla;
     private String consideracionJuridica;
     private String resultadoGuardar;
+    private String mensajeAdv;
+    private boolean verMensajeAdv;
 
     public boolean isSolucionInmediata() {
         return solucionInmediata;
@@ -100,4 +102,19 @@ public class EvaluarExpedienteFL extends AbstractC2ManagedBean {
         this.resultadoGuardar = resultadoGuardar;
     }
 
+    public String getMensajeAdv() {
+        return mensajeAdv;
+    }
+
+    public void setMensajeAdv(String mensajeAdv) {
+        this.mensajeAdv = mensajeAdv;
+    }
+
+    public boolean isVerMensajeAdv() {
+        return verMensajeAdv;
+    }
+
+    public void setVerMensajeAdv(boolean verMensajeAdv) {
+        this.verMensajeAdv = verMensajeAdv;
+    }
 }

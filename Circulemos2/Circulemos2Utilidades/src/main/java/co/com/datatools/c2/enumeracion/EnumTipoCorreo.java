@@ -36,6 +36,7 @@ public enum EnumTipoCorreo implements SearchableEnumeration<Integer> {
     NOTIFICACION_FALLO_IMPUGNACION_ENOTIFICA(25), //
     NOTIFICACION_CIERRE_PRUEBAS_ENOTIFICA(26), //
     ENVIO_ACTUALIZACION_UBICABILIDAD_ENOTIFICA(27), //
+    PONER_FIRME_FINANCIACION_ENOTIFICA(28), //
     ;
 
     private int codigo;

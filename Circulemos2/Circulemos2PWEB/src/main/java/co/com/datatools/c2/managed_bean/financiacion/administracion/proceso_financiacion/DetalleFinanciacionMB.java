@@ -14,6 +14,7 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
 import co.com.datatools.c2.dto.ConsultaDetalleFinanciacionDTO;
+import co.com.datatools.c2.dto.DejarFirmeMetaDataDTO;
 import co.com.datatools.c2.dto.DocumentoProcesoDTO;
 import co.com.datatools.c2.dto.ProcesoDTO;
 import co.com.datatools.c2.dto.TrazabilidadProcesoDTO;
@@ -21,6 +22,7 @@ import co.com.datatools.c2.enumeraciones.EnumEstadoProceso;
 import co.com.datatools.c2.excepciones.CirculemosAlertaException;
 import co.com.datatools.c2.excepciones.CirculemosNegocioException;
 import co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion.VisualizarDocumentoMB;
+import co.com.datatools.c2.negocio.error.ErrorFinanciacion;
 import co.com.datatools.c2.negocio.interfaces.IRDocumentosCirculemos;
 import co.com.datatools.c2.negocio.interfaces.IRFinanciacion;
 import co.com.datatools.c2.negocio.interfaces.IRProceso;
@@ -65,6 +67,8 @@ public class DetalleFinanciacionMB extends AbstractC2ManagedBean {
     private static final String CONTENT_TYPE = "application/pdf";
     private final String NOMBRE_ARCHIVO = "CONVENIO POR MULTAS DE TRÁNSITO AMORTIZACIÓN MENSUAL.pdf";
     private final String NOMBRE_ARCHIVO_DETALLE = "Detalle Documento.pdf";
+
+    private static final String NOMBRE_BUNDLE_FINANCIACIONES = "labelFinanciaciones";
 
     /**
      * Metodo que se encarga de consultar una financiacion con su respectivo detalle
@@ -286,7 +290,9 @@ public class DetalleFinanciacionMB extends AbstractC2ManagedBean {
                 DetalleFinanciacionFL.NOMBRE_BEAN);
         try {
 
-            Long idDocumento = financiacionEJB.dejarFirmeFinanciacion(detalleFinanciacionFL.getDejarFirmeDTO());
+            DejarFirmeMetaDataDTO dejarFirmeMetaData = financiacionEJB
+                    .dejarFirmeFinanciacion(detalleFinanciacionFL.getDejarFirmeDTO());
+            Long idDocumento = dejarFirmeMetaData.getIdDocumento();
 
             List<Long> idDocumentos = new ArrayList<>();
             idDocumentos.add(idDocumento);
@@ -296,10 +302,17 @@ public class DetalleFinanciacionMB extends AbstractC2ManagedBean {
                 visualizarDocumentoMB.setVisualizar(true);
                 visualizarDocumentoMB.visualizarDocumento(archivo, NOMBRE_ARCHIVO, null, null);
             }
-
+            financiacionEJB.enviarCorreoDejarFirme(dejarFirmeMetaData);
         } catch (CirculemosNegocioException e) {
-            CirculemosErrorHandler.handleException(e);
-
+            if (e.getErrorInfo().getCodigoError()
+                    .equals(ErrorFinanciacion.EnumErrorEnvioNotificacionDejarEnFirme.FIN_027001.getCodigoError())) {
+                visualizarDocumentoMB
+                        .setTituloNotificacion(getBundle(NOMBRE_BUNDLE_FINANCIACIONES).getString("label_advertencia"));
+                visualizarDocumentoMB.setMensajeNotificacion(e.getErrorInfo().getDescError());
+                visualizarDocumentoMB.setVisualizarNotificacion(true);
+            } else {
+                CirculemosErrorHandler.handleException(e);
+            }
         } catch (CirculemosAlertaException e) {
             CirculemosErrorHandler.handleException(e);
         }
@@ -357,7 +370,5 @@ public class DetalleFinanciacionMB extends AbstractC2ManagedBean {
             CirculemosErrorHandler.handleException(e);
             return false;
         }
-
     }
-
 }

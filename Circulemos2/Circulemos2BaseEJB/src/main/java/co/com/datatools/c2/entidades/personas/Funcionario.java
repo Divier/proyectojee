@@ -48,6 +48,13 @@ public class Funcionario implements EntidadC2 {
     @ManyToOne(fetch = FetchType.LAZY)
     private Persona persona;
 
+    @Column(name = "memo_nombramiento")
+    private String memoNombramiento;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "fecha_nombramiento")
+    private Date fechaNombramiento;
+
     public Funcionario() {
     }
 
@@ -97,6 +104,22 @@ public class Funcionario implements EntidadC2 {
 
     public void setPersona(Persona persona) {
         this.persona = persona;
+    }
+
+    public String getMemoNombramiento() {
+        return memoNombramiento;
+    }
+
+    public void setMemoNombramiento(String memoNombramiento) {
+        this.memoNombramiento = memoNombramiento;
+    }
+
+    public Date getFechaNombramiento() {
+        return fechaNombramiento;
+    }
+
+    public void setFechaNombramiento(Date fechaNombramiento) {
+        this.fechaNombramiento = fechaNombramiento;
     }
 
 }

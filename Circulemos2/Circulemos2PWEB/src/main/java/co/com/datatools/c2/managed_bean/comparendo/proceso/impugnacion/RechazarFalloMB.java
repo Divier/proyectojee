@@ -3,6 +3,7 @@ package co.com.datatools.c2.managed_bean.comparendo.proceso.impugnacion;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -10,6 +11,7 @@ import org.jboss.logging.Logger;
 
 import co.com.datatools.c2.dto.ProcesoDTO;
 import co.com.datatools.c2.dto.RespuestaImpugnacionDTO;
+import co.com.datatools.c2.dto.TrazabilidadProcesoDTO;
 import co.com.datatools.c2.excepciones.CirculemosNegocioException;
 import co.com.datatools.c2.negocio.fachada.IRFachadaProceso;
 import co.com.datatools.c2.negocio.interfaces.IRImpugnacion;
@@ -29,6 +31,8 @@ public class RechazarFalloMB extends AbstractSwfManagedBean {
     private static final long serialVersionUID = 1L;
     private final static Logger logger = Logger.getLogger(RechazarFalloMB.class.getName());
     private static final String NOMBRE_BUNDLE_IMPUGNACION = "labelProcesoImpugnacion";
+
+    private static final String MENSAJE_ERROR_FALLO_IMPUGNACION = "JUR_014001";
 
     @EJB
     private IRImpugnacion iRImpugnacion;
@@ -65,10 +69,18 @@ public class RechazarFalloMB extends AbstractSwfManagedBean {
             if (!lsProcesoDTO.isEmpty()) {
                 ProcesoDTO proceso = lsProcesoDTO.get(0);
                 try {
-                    iRImpugnacion.aprobarImpugnacion(proceso, respuestaImpugnacionDTO.getIdComparendo());
+                    TrazabilidadProcesoDTO trazaProceso = iRImpugnacion.aprobarImpugnacion(proceso,
+                            respuestaImpugnacionDTO.getIdComparendo());
                     addInfoMessage(NOMBRE_BUNDLE_IMPUGNACION, "msg_aprobacion_fallo_satisfactorio");
+                    trazaProceso.setProceso(proceso);
+                    iRImpugnacion.enviarCorreoFalloImpugnacion(proceso.getId(),
+                            respuestaImpugnacionDTO.getIdComparendo(), trazaProceso);
                 } catch (CirculemosNegocioException e) {
-                    CirculemosErrorHandler.handleError(e.getErrorInfo());
+                    if (e.getErrorInfo().getCodigoError().equals(MENSAJE_ERROR_FALLO_IMPUGNACION)) {
+                        CirculemosErrorHandler.handleError(e.getErrorInfo(), FacesMessage.SEVERITY_WARN);
+                    } else {
+                        CirculemosErrorHandler.handleError(e.getErrorInfo());
+                    }
                 }
             }
         }

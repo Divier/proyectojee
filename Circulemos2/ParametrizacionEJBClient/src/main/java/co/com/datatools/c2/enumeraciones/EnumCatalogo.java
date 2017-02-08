@@ -93,10 +93,10 @@ public enum EnumCatalogo {
     Cargo, //
     TipoEntidad, //
     Dia, //
-    EntidadOficio,
-
-    TipoEvento, //
+    EntidadOficio, EntidadBien, TipoEvento, //
     TipoProcesoEvento, //
+    TipoBien, //
+
     /*
      * ************************************************************************* ******************************** DISTINTOS
      * ****************************** *************************************************************************

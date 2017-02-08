@@ -66,10 +66,11 @@ public class InteresEJB implements IRInteres, ILInteres {
             }
 
             if (consultaTasaInteresDTO.getFechaAplicacion() != null) {
-                jpql.append(" AND :fechaAplicacionInicial >= i.fechaInicial");
-                filtros.put("fechaAplicacionInicial", consultaTasaInteresDTO.getFechaAplicacion());
-                jpql.append(" AND :fechaAplicacionFinal <= i.fechaFinal");
-                filtros.put("fechaAplicacionFinal", consultaTasaInteresDTO.getFechaAplicacion());
+                // Si hoy es mayor igual a fecha inicial de vigencia, Y fecha final de vigencia menor o igual a hoy, O fecha final es nula
+                jpql.append(" AND :fechaAplicacion >= i.fechaInicial");
+                jpql.append(" AND (:fechaAplicacion <= i.fechaFinal OR i.fechaFinal IS NULL)");
+                filtros.put("fechaAplicacion", consultaTasaInteresDTO.getFechaAplicacion());
+
             }
         }
 

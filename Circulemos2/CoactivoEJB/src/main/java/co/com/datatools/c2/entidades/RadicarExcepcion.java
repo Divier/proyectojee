@@ -38,11 +38,11 @@ public class RadicarExcepcion implements EntidadC2 {
     @Column(name = "observaciones")
     private String observaciones;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(name = "fecha_excepcion")
     private Date fechaExcepcion;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(name = "fecha_fallo_excepcion")
     private Date fechaFalloExcepcion;
 

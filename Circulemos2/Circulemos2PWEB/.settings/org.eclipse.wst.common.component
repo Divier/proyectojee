@@ -16,7 +16,7 @@
         <dependent-module archiveName="GeneradorReportesC2-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/GeneradorReportesC2/GeneradorReportesC2">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="ClienteWSAXISEJBClient-2.0.26.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ClienteWSAXISEJBClient/ClienteWSAXISEJBClient">
+        <dependent-module archiveName="ClienteWSAXISEJBClient-2.0.27.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ClienteWSAXISEJBClient/ClienteWSAXISEJBClient">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="Circulemos2PWEB"/>

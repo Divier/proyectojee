@@ -12,49 +12,144 @@
 	<ui:define name="contenido">
 		<h:form id="form-contenido">
 			<p:panel id="campos-consulta" styleClass="panel-formulario"
-				header="#{labelCoactivo.titulo_consultar_seguimiento}">
+				header="#{labelAdministracionBien.tit_inf_bienes}">
 				<p:fieldset id="datos-principal" styleClass="fieldset-formulario"
-					legend="#{labelCoactivo.titulo_datos_basicos}">
+					legend="#{labelAdministracionBien.titulo_datos_basicos}">
 					<h:panelGrid id="panel-formulario" styleClass="center-block"
 						columns="4"
 						columnClasses="label-col,input-col,label-col,input-col">
 
-						<p:outputLabel value="#{labelCoactivo.label_numero_proceso_t}" />
 						<p:outputLabel
-							value="#{consultaSeguimientoHolderFL.segSeleccionado.numeroProceso}" />
+							value="#{labelAdministracionBien.label_numero_proceso_t}" />
+						<p:outputLabel
+							value="#{registrarRespuestaBienFL.solicitudOficioCoactivoDTO.numeroProceso}" />
 
-						<p:outputLabel value="#{labelCoactivo.label_fecha_proceso_t}" />
+						<p:outputLabel
+							value="#{labelAdministracionBien.label_fecha_proceso_t}" />
 						<c2:outputDateLabel
-							labelValue="#{consultaSeguimientoHolderFL.segSeleccionado.fechaProceso}"
+							labelValue="#{registrarRespuestaBienFL.solicitudOficioCoactivoDTO.fechaProceso}"
 							fullFormat="false" />
 
-						<p:outputLabel value="#{labelCoactivo.label_tipo_documento_t}" />
 						<p:outputLabel
-							value="#{consultaSeguimientoHolderFL.segSeleccionado.tipoDocDeudor}" />
+							value="#{labelAdministracionBien.label_tipo_documento_t}" />
+						<p:outputLabel
+							value="#{registrarRespuestaBienFL.solicitudOficioCoactivoDTO.tipoDocIdentificacion}" />
 
-						<p:outputLabel value="#{labelCoactivo.label_numero_documento_t}" />
 						<p:outputLabel
-							value="#{consultaSeguimientoHolderFL.segSeleccionado.numeroDocDeudor}" />
+							value="#{labelAdministracionBien.label_numero_documento_t}" />
+						<p:outputLabel
+							value="#{registrarRespuestaBienFL.solicitudOficioCoactivoDTO.numeroDocIdentificacion}" />
 
-						<p:outputLabel value="#{labelCoactivo.lbl_nombre_deudor_t}" />
 						<p:outputLabel
-							value="#{consultaSeguimientoHolderFL.segSeleccionado.nombreDeudor}" />
+							value="#{labelAdministracionBien.lbl_nombre_deudor_t}" />
+						<p:outputLabel
+							value="#{registrarRespuestaBienFL.solicitudOficioCoactivoDTO.nombres}" />
 					</h:panelGrid>
 				</p:fieldset>
 				<p:fieldset id="datos-excep" styleClass="fieldset-formulario"
-					legend="#{labelCoactivo.tit_rad_excp}">
+					legend="#{labelAdministracionBien.tit_reg_inf_bienes}">
 					<h:panelGrid id="panel-formulario-excep" styleClass="center-block"
-						columns="2" columnClasses="label-col,input-col">
-						<p:outputLabel value="#{labelCoactivo.lbl_observaciones}"
+						columns="4"
+						columnClasses="label-col,input-col,label-col,input-col">
+
+						<p:outputLabel value="#{labelAdministracionBien.lbl_tiene_bien}"
 							styleClass="campo-obligatorio" />
 						<h:panelGroup>
-							<p:inputTextarea id="txtAObs" maxlength="5000"
-								style="width: 400px; height: 100px;"
-								value="#{radicarExcepcionFL.registroRadicarExcepcionDTO.radicarExcepcionDTO.observaciones}"
-								required="true" />
-							<p:message for="txtAObs" />
+							<p:selectOneMenu id="selTBien" required="true">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}"
+									itemValue="" />
+								<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_yes}"
+									itemValue="true" />
+								<f:selectItem itemLabel="#{labelGeneral.val_sel_rad_no}"
+									itemValue="false" />
+								<p:ajax
+									listener="#{administracionBienMB.activarRegistroInformacionBien()}"
+									process="@this selTBien"></p:ajax>
+							</p:selectOneMenu>
+							<p:message for="selTBien" />
 						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdministracionBien.lbl_tip_entidad}"
+							styleClass="campo-obligatorio" rendered="{registrarRespuestaBienFL}" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOnTipEnti" required="true">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoEntidad()}" />
+							</p:selectOneMenu>
+							<p:message for="selOnTipEnti"></p:message>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdministracionBien.lbl_ent_bienes}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOnEntBien" required="true">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems value="#{fachadaCatalogosMB.catEntidadBien()}" />
+							</p:selectOneMenu>
+							<p:message for="selOnEntBien"></p:message>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdministracionBien.lbl_tip_bien}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:selectOneMenu id="selOnTipBien" required="true">
+								<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
+								<f:selectItems value="#{fachadaCatalogosMB.catTipoBien()}" />
+							</p:selectOneMenu>
+							<p:message for="selOnTipBien"></p:message>
+						</h:panelGroup>
+
+						<p:outputLabel value="#{labelAdministracionBien.lbl_num_ref_bien}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="txtNumRefBien" maxlength="20" required="true"
+								validatorMessage="#{labelGeneral.val_campo_numerico}">
+								<f:validateRegex
+									pattern="#{administracionBienMB.expresionNumerica}" />
+							</p:inputText>
+							<p:message for="txtNumRefBien"></p:message>
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdministracionBien.lbl_mont_retenido}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="txtNumRet" maxlength="20" required="true"
+								validatorMessage="#{labelGeneral.val_campo_numerico}">
+								<f:validateRegex
+									pattern="#{administracionBienMB.expresionNumerica}" />
+							</p:inputText>
+							<p:message for="txtNumRet"></p:message>
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdministracionBien.lbl_fch_respuesta}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:calendar id="fechaRespuesta"
+								pattern="#{utilidadMB.formatoFecha}" required="true">
+								<p:watermark for="fechaRespuesta"
+									value="#{utilidadMB.formatoFecha}" />
+							</p:calendar>
+							<p:message for="fechaRespuesta" />
+						</h:panelGroup>
+
+						<p:outputLabel
+							value="#{labelAdministracionBien.lbl_num_respuesta}"
+							styleClass="campo-obligatorio" />
+						<h:panelGroup>
+							<p:inputText id="txtNumResp" maxlength="20" required="true"
+								validatorMessage="#{labelGeneral.val_campo_numerico}">
+								<f:validateRegex
+									pattern="#{administracionBienMB.expresionNumerica}" />
+							</p:inputText>
+							<p:message for="txtNumResp"></p:message>
+						</h:panelGroup>
+
 					</h:panelGrid>
+				</p:fieldset>
+				<p:fieldset id="anex-docs" styleClass="fieldset-formulario"
+					legend="#{labelAdministracionBien.tit_anx_documentos}">
 
 					<p:fileUpload id="fupArchivo"
 						fileUploadListener="#{radicarExcepcionMB.cargaArchivo}"
@@ -107,7 +202,6 @@
 
 						</p:dataTable>
 					</h:panelGrid>
-
 				</p:fieldset>
 				<h:panelGrid styleClass="center-block" columns="2" cellpadding="5">
 					<!--Boton Guardar-->

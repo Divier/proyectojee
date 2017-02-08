@@ -14,7 +14,17 @@
 			modal="true" appendToBody="true" dynamic="true" closable="false"
 			height="250" width="600"
 			visible="#{registrarRespuestaBienFL.activarSolCoactivo}">
-
+			<h:panelGrid id="acciones-top">
+				<f:facet name="footer">
+					<!--Boton Radicar Expediente-->
+					<p:commandButton id="btnRegBien"
+						styleClass="_op-RADICAR_EXPEDIENTE" action="REG_BIENES"
+						icon="c2-icon-crear" process="@form"
+						value="#{labelAdministracionBien.btn_reg_bien}"
+						disabled="#{registrarRespuestaBienFL.solicitudOficioCoactivoSelDTO==null}">
+					</p:commandButton>
+				</f:facet>
+			</h:panelGrid>
 			<p:dataTable id="tabla-resultados" var="registro"
 				rowKey="#{registro.idCoactivoOficioBien}" paginator="true"
 				value="#{registrarRespuestaBienFL.solicitudOficioCoactivoDTOs}"
@@ -24,8 +34,8 @@
 				selection="#{registrarRespuestaBienFL.solicitudOficioCoactivoSelDTO}">
 
 				<p:ajax event="rowSelectRadio"
-					process=":form-resultado:tabla-resultados"
-					update=":form-resultado:acciones-top" global="false" />
+					process=":frmSolCoac:tabla-resultados"
+					update=":frmSolCoac:acciones-top" global="false" />
 
 				<p:column selectionMode="single" />
 
@@ -40,11 +50,15 @@
 
 			</p:dataTable>
 
-
 			<h:panelGrid styleClass="center-block" columns="1" cellpadding="5">
-				<!--Boton Aceptar-->
-				<p:commandButton action="ACEPTAR" process="@this"
-					value="#{lbComun.btnAceptar}">
+				<!--Boton Cancelar-->
+				<p:commandButton id="btnVolver" action="VOLVER"
+					icon="c2-icon-volver" process="@this" immediate="true"
+					value="#{lbComun.btnVolver}">
+					<p:tooltip for="btnVolver" value="#{lbComun.tooltip_volver}" />
+					<p:confirm header="#{lbComun.msg_tit_confirmar}"
+						message="#{lbComun.msg_confirm_volver_cancelar}"
+						icon="ui-icon-alert" />
 				</p:commandButton>
 			</h:panelGrid>
 		</p:dialog>

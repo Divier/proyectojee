@@ -77,7 +77,7 @@
 			<evaluate
 				expression="externalContext.sessionMap.simulacionFinanciacionMB.calcularFinanciacion(flowScope.simulacionFinanciacionFL.simulacionFinanciacionDTO)"></evaluate>
 		</transition>
-		<transition on="CONTINUAR" to="PARAMETRO_FIRMA_SIMULACION" />
+		<transition on="CONTINUAR" to="FIRMA_SIMULACION" />
 		<transition on="VOLVER" to="ingresar" />
 		<transition on="TERMINAR" to="ingresar">
 			<evaluate

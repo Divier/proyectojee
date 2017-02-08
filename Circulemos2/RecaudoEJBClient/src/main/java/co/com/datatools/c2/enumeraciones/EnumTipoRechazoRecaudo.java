@@ -33,7 +33,8 @@ public enum EnumTipoRechazoRecaudo implements SearchableEnumeration<Integer> {
     FECHA_TRANSACCION_INCORRECTA(26, "026", "La fecha no es correcta"), //
     HORA_TRANSACCION_INCORRECTA(27, "027", "La hora no es correcta"), //
     NUMERO_IDENTIFICACION_LONGITUD(28, "028", "El numero de identificacion excede el limite"), //
-    NUMERO_RECAUDO_INCORRECTO(29, "029", "El numero del recaudo no es correcto");
+    NUMERO_RECAUDO_INCORRECTO(29, "029", "El numero del recaudo no es correcto"), //
+    FIRMA_NO_ENCONTRADA(30, "030", "Firma de la persona no encontrada");
 
     private int id;
     private String codigo;

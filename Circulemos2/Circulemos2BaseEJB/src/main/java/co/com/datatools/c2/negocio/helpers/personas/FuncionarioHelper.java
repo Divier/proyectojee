@@ -20,6 +20,8 @@ public class FuncionarioHelper {
         dto.setFechaFinalVigencia(entidad.getFechaFinalVigencia());
         dto.setFechaInicioVigencia(entidad.getFechaInicioVigencia());
         dto.setIdCargo(entidad.getIdCargo());
+        dto.setMemoNombramiento(entidad.getMemoNombramiento());
+        dto.setFechaNombramiento(entidad.getFechaNombramiento());
 
         return dto;
     }
@@ -59,6 +61,8 @@ public class FuncionarioHelper {
         entidad.setFechaFinalVigencia(dto.getFechaFinalVigencia());
         entidad.setFechaInicioVigencia(dto.getFechaInicioVigencia());
         entidad.setIdCargo(dto.getIdCargo());
+        entidad.setMemoNombramiento(dto.getMemoNombramiento());
+        entidad.setFechaNombramiento(dto.getFechaNombramiento());
 
         return entidad;
     }

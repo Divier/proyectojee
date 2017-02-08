@@ -7,6 +7,8 @@ import javax.ejb.Local;
 import co.com.datatools.c2.dto.CondicionFinanciacionDTO;
 import co.com.datatools.c2.dto.ConsultaFinanciacionDTO;
 import co.com.datatools.c2.dto.DejarFirmeDTO;
+import co.com.datatools.c2.dto.DejarFirmeMetaDataDTO;
+import co.com.datatools.c2.dto.DetalleFinanciacionDTO;
 import co.com.datatools.c2.dto.FiltroConsultaFinanciacionDTO;
 import co.com.datatools.c2.dto.FinanciacionDTO;
 import co.com.datatools.c2.dto.RespuestaFinanciacionDTO;
@@ -81,9 +83,9 @@ public interface ILFinanciacion {
 
     /**
      * 
-     * @see IRFinanciacion#dejarFirmeFinanciacion(String)
+     * @see IRFinanciacion#dejarFirmeFinanciacion(DejarFirmeDTO)
      */
-    public Long dejarFirmeFinanciacion(DejarFirmeDTO dejarFirmeDTO) throws CirculemosNegocioException;
+    public DejarFirmeMetaDataDTO dejarFirmeFinanciacion(DejarFirmeDTO dejarFirmeDTO) throws CirculemosNegocioException;
 
     /**
      * 
@@ -136,4 +138,10 @@ public interface ILFinanciacion {
      */
     public boolean validarDejarEnFirme(DejarFirmeDTO dejarFirmeDTO) throws CirculemosNegocioException;
 
+    public void validarDejarFirmePago(DetalleFinanciacionDTO detalleFinanciacionDTO) throws CirculemosNegocioException;
+
+    /**
+     * @see IRFinanciacion#enviarCorreoDejarFirme(DejarFirmeMetaDataDTO)
+     */
+    public void enviarCorreoDejarFirme(DejarFirmeMetaDataDTO dejarFirmeMetaData) throws CirculemosNegocioException;
 }

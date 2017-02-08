@@ -670,7 +670,8 @@ public class ImpugnacionMB extends AbstractC2ManagedBean {
         participanteProcesoDTO.getPersona().setCorreoPersonaList(iRUbicabilidad.consultarCorreos(correoPersonaDTO));
 
         if (participanteProcesoDTO.getPersona() != null
-                && participanteProcesoDTO.getPersona().getCorreoPersonaList() != null) {
+                && participanteProcesoDTO.getPersona().getCorreoPersonaList() != null
+                && !participanteProcesoDTO.getPersona().getCorreoPersonaList().isEmpty()) {
             participanteProcesoDTO.getPersona().setCorreoElectronico(
                     participanteProcesoDTO.getPersona().getCorreoPersonaList().get(0).getCorreoElectronico());
         }
@@ -1553,4 +1554,5 @@ public class ImpugnacionMB extends AbstractC2ManagedBean {
     public String getMesErrLimitSize() {
         return MessageFormat.format(getBundle(NOMBRE_BUNDLE).getString("msg_error_tamanio_archivo"), tamanioMaximoArch);
     }
+
 }

@@ -173,6 +173,7 @@ public class ErrorFinanciacion {
     public enum EnumErroDocumentoFinanciacion implements ErrorInfo {
         FIN_029001("FIN_029001", "Error al generar documento de recibo de pago"), //
         FIN_029002("FIN_029002", "Error al generar documento de cuadro de amortizacion"), //
+        FIN_029003("FIN_029003", "Firma de la persona no encontrada"), //
         ;
 
         private String codigoError;
@@ -224,6 +225,30 @@ public class ErrorFinanciacion {
             // TODO Auto-generated method stub
             return descripcionError;
         }
+    }
 
+    public enum EnumErrorEnvioNotificacionDejarEnFirme implements ErrorInfo {
+        FIN_027001("FIN_027001", "No se ha podido enviar el documento de notificacion por correo."), //
+        ;
+
+        private String codigoError;
+        private String descripcionError;
+
+        private EnumErrorEnvioNotificacionDejarEnFirme(String codigoError, String descripcionError) {
+            this.codigoError = codigoError;
+            this.descripcionError = descripcionError;
+        }
+
+        @Override
+        public String getCodigoError() {
+            // TODO Auto-generated method stub
+            return codigoError;
+        }
+
+        @Override
+        public String getDescError() {
+            // TODO Auto-generated method stub
+            return descripcionError;
+        }
     }
 }

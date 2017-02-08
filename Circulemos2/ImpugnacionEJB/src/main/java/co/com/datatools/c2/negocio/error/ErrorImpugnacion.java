@@ -17,6 +17,7 @@ public final class ErrorImpugnacion {
 
         JUR_004001("JUR_004001", "El estado del proceso es diferente a IMPUGNADO"), //
         JUR_004002("JUR_004002", "Error al generar el documento"), //
+        JUR_004003("JUR_004003", "No se ha podido enviar el documento de notificacion por correo"),//
         ;
 
         private final String codigoError;
@@ -348,7 +349,34 @@ public final class ErrorImpugnacion {
         public String getDescError() {
             return descError;
         }
-
     }
 
+    /**
+     * Catalogo errores de negocio para JUR_014 Fallo Impugnacion
+     * 
+     * @author divier.casas
+     */
+    public enum ValidarFalloImpugnacion implements ErrorInfo {
+
+        JUR_014001("JUR_014001", "No se ha podido enviar el documento de notificacion por correo"), //
+        ;
+
+        private final String codigoError;
+        private final String descError;
+
+        private ValidarFalloImpugnacion(String codigoError, String descError) {
+            this.codigoError = codigoError;
+            this.descError = descError;
+        }
+
+        @Override
+        public String getCodigoError() {
+            return codigoError;
+        }
+
+        @Override
+        public String getDescError() {
+            return descError;
+        }
+    }
 }

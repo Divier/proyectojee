@@ -22,23 +22,29 @@
 			<evaluate
 				expression="externalContext.sessionMap.administracionBienMB.consultar()" />
 		</transition>
-		<transition on="REG_BIENES" to="REG_BIENES" />
+		<transition on="SEL_REG_BIENES" to="SEL_REG_BIENES" />
+		<transition on="REG_BIENES" to="REG_BIENES">
+			<evaluate
+				expression="externalContext.sessionMap.administracionBienMB.consultarSolicitudOficioCoactivo()" />
+		</transition>
 		<transition on="DIS_EMBARGO" to="DIS_EMBARGO">
-
 			<evaluate
 				expression="new co.com.datatools.c2.managed_bean.coactivo.administracion.bien.DisponerEmbargoFL()"
 				result="flowScope.disponerEmbargoFL" />
-				
+		</transition>
+		<transition on="VOLVER" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.administracionBienMB.cancelarSolicitudesOficioCoactivo()" />
 		</transition>
 	</view-state>
 
-	<action-state id="REG_BIENES">
+	<action-state id="SEL_REG_BIENES">
 		<evaluate
 			expression="externalContext.sessionMap.administracionBienMB.consultarSolicitudesOficioCoactivo()" />
 		<transition on="success" to="ingresar" />
 	</action-state>
 
-	<view-state id="REG_BIENES-j"
+	<view-state id="REG_BIENES"
 		view="/WEB-INF/jsp/coactivo/bien/registrarRespuetaBien.xhtml"></view-state>
 
 	<view-state id="DIS_EMBARGO"
@@ -47,7 +53,8 @@
 			<evaluate
 				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('disponerEmbargoMB')" />
 
-			<evaluate expression="externalContext.sessionMap.disponerEmbargoMB.consultarCoactivo()" />
+			<evaluate
+				expression="externalContext.sessionMap.disponerEmbargoMB.consultarCoactivo()" />
 
 		</on-entry>
 	</view-state>

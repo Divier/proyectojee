@@ -454,11 +454,10 @@ public class UbicabilidadMB extends AbstractC2ManagedBean {
                     actualizarDatosUbicabilidadFL.setConfirmarUbicabilidad(true);
                 }
             }
-
+            addInfoMessage("labelProcesoImpugnacion", "persona_actualizada");
             if (persona.getIdDocumento() != null) {
                 iRPersona.enviarCorreoUbicabilidad(persona);
             }
-            addInfoMessage("labelProcesoImpugnacion", "persona_actualizada");
         } catch (CirculemosNegocioException e) {
             if (e.getErrorInfo().getCodigoError()
                     .equals(ErrorAdministracion.Ubicabilidad.COB_015079.getCodigoError())) {
@@ -502,9 +501,14 @@ public class UbicabilidadMB extends AbstractC2ManagedBean {
         if (actualizarDatosUbicabilidadFL.isEsPersonaJuridica()) {
             direccionPersonaDTO.setPersona(actualizarDatosUbicabilidadFL.getPersonaJuridicaDTO());
         }
+        List<String> array = new ArrayList<>();
         for (DireccionPersonaDTO direccion : iRUbicabilidad.consultarDireccionPersona(direccionPersonaDTO)) {
-            actualizarDatosUbicabilidadFL.getDireccionesPersona()
-                    .add(new RegistroTablaVO<DireccionPersonaDTO>(direccion));
+            String direccionActual = direccion.getDireccion().getComplemento().toLowerCase();
+            if (!array.contains(direccionActual)) {
+                array.add(direccionActual);
+                actualizarDatosUbicabilidadFL.getDireccionesPersona()
+                        .add(new RegistroTablaVO<DireccionPersonaDTO>(direccion));
+            }
         }
     }
 
