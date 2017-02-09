@@ -174,6 +174,20 @@ public interface IRFinanciacion {
     public void validarDejarFirmePago(DetalleFinanciacionDTO detalleFinanciacionDTO) throws CirculemosNegocioException;
 
     /**
+     * Se encarga de dejar en firme masivamente
+     * 
+     * @author giovanni.velandia
+     */
+    public void dejarFirmeFinanciacionMasivo();
+
+    /**
+     * Se encarga de genarar documeto a financiaciones en firme
+     * 
+     * @author giovanni.velandia
+     */
+    public void generarDocumentoFirmeFinanciacionMasivo();
+
+    /**
      * Permite llamar al servicio de envios de correo
      * 
      * @param dejarFirmeMetaData

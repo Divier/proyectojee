@@ -234,7 +234,8 @@ public class FinanciacionEJB implements IRFinanciacion, ILFinanciacion {
         FinanciacionDTO financiacionFiltrosDTO = new FinanciacionDTO();
 
         // Año
-        if (filtroConsultaFinanciacionDTO.getAnoFinanciacion() > 0) {
+        if (filtroConsultaFinanciacionDTO.getAnoFinanciacion() != null
+                && filtroConsultaFinanciacionDTO.getAnoFinanciacion() > 0) {
             financiacionFiltrosDTO.setAnio(filtroConsultaFinanciacionDTO.getAnoFinanciacion());
         }
         // Numero de financiacion
@@ -343,7 +344,7 @@ public class FinanciacionEJB implements IRFinanciacion, ILFinanciacion {
         }
 
         // Año
-        if (financiacionDTO.getAnio() != 0) {
+        if (financiacionDTO.getAnio() != null && financiacionDTO.getAnio() != 0) {
             jpql.append(" AND f.anio = :anio");
         }
 
@@ -364,7 +365,7 @@ public class FinanciacionEJB implements IRFinanciacion, ILFinanciacion {
         }
 
         // Año
-        if (financiacionDTO.getAnio() != 0) {
+        if (financiacionDTO.getAnio() != null && financiacionDTO.getAnio() != 0) {
             query.setParameter("anio", financiacionDTO.getAnio());
         }
 
@@ -408,22 +409,44 @@ public class FinanciacionEJB implements IRFinanciacion, ILFinanciacion {
     public FinanciacionDTO registrarFinanciacion(FinanciacionDTO financiacionDTO) throws CirculemosNegocioException {
         logger.debug("FinanciacionEJB.registrarFinanciacion(FinanciacionDTO)");
 
-        // Estado dependiendo de la fuente de informacion
-        EnumEstadoProceso estadoFinanciacion = EnumEstadoProceso.ECUADOR_FINANCIACION_PREFINANCIADO;
-        if (EnumTipoFuenteInformacion.AXIS.getValue().equals(financiacionDTO.getFuenteInformacion().getId())) {
-            estadoFinanciacion = EnumEstadoProceso.ECUADOR_FINANCIACION_EN_FIRME;
-        }
         // Crea proceso de financiacion
-        RegistraProcesoDTO registro = new RegistraProcesoDTO();
-        registro.setObservacion(EnumTipoProceso.FINANCIACION_COMPARENDO.name());
-        registro.setTipoProceso(EnumTipoProceso.FINANCIACION_COMPARENDO);
-        registro.setEstado(estadoFinanciacion);
-        registro.setConsecutivo(EnumConsecutivo.NUMERO_FINANCIACION_ECUADOR);
-        registro.setFechaInicio(financiacionDTO.getFechaFinanciacion());
-        ProcesoDTO proceso = iRFachadaProceso.crearProceso(registro);
+        ProcesoDTO proceso = registrarProcesoFinanciacion(financiacionDTO.getFuenteInformacion().getId(),
+                financiacionDTO.getFechaFinanciacion());
         financiacionDTO.setProceso(proceso);
         financiacionDTO.setNumeroReferenciaTerceros(proceso.getNumeroProceso());
+        // Calcular numero de financiacion
+        financiacionDTO = calcularNumeroFinanciacion(financiacionDTO);
 
+        // Crea los participantes del proceso
+        crearParticipanteFinanciacion(financiacionDTO.getDeudor(), proceso);
+
+        // Persiste la financiacion
+        Financiacion financiacion = FinanciacionHelper.toLevel1Entity(financiacionDTO, null);
+        em.persist(financiacion);
+        financiacionDTO.setId(financiacion.getId());
+
+        // Guarda el detalle de las cuotas de la financiacion
+        registrarDetalleFinanciacion(financiacionDTO.getDetallesFinanciacion(), financiacionDTO);
+
+        // Guarda el detalle de las obligaciones de la financiacion
+        registrarDetalleObligaciones(financiacionDTO.getObligacionesFinanciacion(), financiacionDTO);
+
+        // Si es generado por AXIS realiza ajuste a cartera
+        ajustesCarteraAxis(financiacionDTO);
+
+        return financiacionDTO;
+    }
+
+    /**
+     * Calcula el numero de finnciacion
+     * 
+     * @author giovanni.velandia
+     * @param financiacionDTO
+     * @return
+     */
+    private FinanciacionDTO calcularNumeroFinanciacion(FinanciacionDTO financiacionDTO)
+            throws CirculemosNegocioException {
+        logger.debug("FinanciacionEJB.calcularNumeroFinanciacion(FinanciacionDTO)");
         if (EnumTipoFuenteInformacion.CIRCULEMOS2.getValue().equals(financiacionDTO.getFuenteInformacion().getId())) {
             // Valida si debe registrar la financiacion en axis
             ValorParametroDTO parametroFinanciacionTerceros = iFachadaAdminGeneral.consultarValorParametro(
@@ -438,27 +461,83 @@ public class FinanciacionEJB implements IRFinanciacion, ILFinanciacion {
             }
         }
 
-        // Crea los participantes
+        return financiacionDTO;
+    }
+
+    /**
+     * Ajustes de cartera de es de Axis la financiacion
+     * 
+     * @author giovanni.velandia
+     * @param financiacionDTO
+     * @throws CirculemosNegocioException
+     */
+    private void ajustesCarteraAxis(FinanciacionDTO financiacionDTO) throws CirculemosNegocioException {
+        logger.debug("FinanciacionEJB.ajustesCarteraAxis(FinanciacionDTO)");
+        if (financiacionDTO.getFuenteInformacion().getId().equals(EnumTipoFuenteInformacion.AXIS.getValue())) {
+            // Registra la cartera
+            Long idCartera = registrarCarteraFinanciacion(financiacionDTO);
+
+            // Activa la cartera
+            iRCarteraFinanciacion.activarCarteraFinanciacion(idCartera, financiacionDTO.getProceso().getFechaInicio());
+        } else if (financiacionDTO.getFuenteInformacion().getId()
+                .equals(EnumTipoFuenteInformacion.CIRCULEMOS2.getValue())) {
+
+            // Registra el moviemiento on los intereses
+            iRCarteraFinanciacion.registrarMovimientoCartera(financiacionDTO);
+        }
+    }
+
+    /**
+     * Se encarga de crear un participante para una financiacion
+     * 
+     * @author giovanni.velandia
+     */
+    private void crearParticipanteFinanciacion(PersonaDTO personaDTO, ProcesoDTO procesoDTO) {
+        logger.debug("FinanciacionEJB.crearParticipanteFinanciacion(PersonaDTO,ProcesoDTO)");
         ParticipanteProceso participante = new ParticipanteProceso();
-        participante.setPersona(PersonaHelper.toLevel0Entity(financiacionDTO.getDeudor(), null));
+        participante.setPersona(PersonaHelper.toLevel0Entity(personaDTO, null));
         participante.setTipoParticipante(em.find(TipoParticipante.class, EnumTipoParticipante.INFRACTOR.getValue()));
-        participante.setProceso(ProcesoHelper.toLevel0Entity(proceso, null));
+        participante.setProceso(ProcesoHelper.toLevel0Entity(procesoDTO, null));
         em.persist(participante);
+    }
 
-        // Persiste la financiacion
-        Financiacion financiacion = FinanciacionHelper.toLevel1Entity(financiacionDTO, null);
-        financiacion.setProceso(ProcesoHelper.toLevel0Entity(proceso, null));
-        em.persist(financiacion);
-        financiacionDTO.setId(financiacion.getId());
+    /**
+     * creacion de un proceso para una financiacion
+     * 
+     * @author giovanni.velandia
+     */
+    private ProcesoDTO registrarProcesoFinanciacion(Integer tipoFuenteInfo, Date fechaFinanciacion) {
+        logger.debug("FinanciacionEJB.crearParticipanteFinanciacion(Integer,Date)");
+        // Estado dependiendo de la fuente de informacion
+        EnumEstadoProceso estadoFinanciacion = EnumEstadoProceso.ECUADOR_FINANCIACION_PREFINANCIADO;
+        if (EnumTipoFuenteInformacion.AXIS.getValue().equals(tipoFuenteInfo)) {
+            estadoFinanciacion = EnumEstadoProceso.ECUADOR_FINANCIACION_EN_FIRME;
+        }
 
+        RegistraProcesoDTO registro = new RegistraProcesoDTO();
+        registro.setObservacion(EnumTipoProceso.FINANCIACION_COMPARENDO.name());
+        registro.setTipoProceso(EnumTipoProceso.FINANCIACION_COMPARENDO);
+        registro.setEstado(estadoFinanciacion);
+        registro.setConsecutivo(EnumConsecutivo.NUMERO_FINANCIACION_ECUADOR);
+        registro.setFechaInicio(fechaFinanciacion);
+        return iRFachadaProceso.crearProceso(registro);
+    }
+
+    /**
+     * // Guarda el detalle de las cuotas de la financiacion
+     * 
+     * @author giovanni.velandia
+     */
+    private void registrarDetalleFinanciacion(List<DetalleFinanciacionDTO> detalleFinanciacionDTOs,
+            FinanciacionDTO financiacionDTO) throws CirculemosNegocioException {
+        logger.debug("FinanciacionEJB.crearParticipanteFinanciacion(List<DetalleFinanciacionDTO>,FinanciacionDTO)");
         try {
-            List<DetalleFinanciacionDTO> detalles = Utilidades.safeList(financiacionDTO.getDetallesFinanciacion());
+            List<DetalleFinanciacionDTO> detalles = Utilidades.safeList(detalleFinanciacionDTOs);
 
-            // Guarda el detalle de las cuotas de la financiacion
             for (DetalleFinanciacionDTO detalleFinanciacionDTO : detalles) {
                 DetalleFinanciacion detalleFinanciacion = DetalleFinanciacionHelper
                         .toLevel1Entity(detalleFinanciacionDTO, null);
-                detalleFinanciacion.setFinanciacion(financiacion);
+                detalleFinanciacion.setFinanciacion(FinanciacionHelper.toLevel0Entity(financiacionDTO, null));
                 em.persist(detalleFinanciacion);
                 detalleFinanciacionDTO.setId(detalleFinanciacion.getId());
             }
@@ -469,17 +548,28 @@ public class FinanciacionEJB implements IRFinanciacion, ILFinanciacion {
                 throw e;
             }
         }
+    }
 
-        List<ObligacionFinanciacionDTO> obligaciones = Utilidades
-                .safeList(financiacionDTO.getObligacionesFinanciacion());
+    /**
+     * Guarda el detalle de las obligaciones de la financiacion
+     * 
+     * @author giovanni.velandia
+     * @param detalleFinanciacionDTOs
+     * @param financiacionDTO
+     * @throws CirculemosNegocioException
+     */
+    private void registrarDetalleObligaciones(List<ObligacionFinanciacionDTO> obligacionFinanciacionDTOs,
+            FinanciacionDTO financiacionDTO) throws CirculemosNegocioException {
+        logger.debug("FinanciacionEJB.registrarDetalleObligaciones(List<ObligacionFinanciacionDTO>,FinanciacionDTO)");
+        List<ObligacionFinanciacionDTO> obligaciones = Utilidades.safeList(obligacionFinanciacionDTOs);
+
         try {
 
-            // Guarda el detalle de las obligaciones de la financiacion
             for (ObligacionFinanciacionDTO obligacionFinanciacionDTO : obligaciones) {
                 // Persiste la obligacion
                 ObligacionFinanciacion obligacionFinanciacion = ObligacionFinanciacionHelper
                         .toLevel1Entity(obligacionFinanciacionDTO, null);
-                obligacionFinanciacion.setFinanciacion(financiacion);
+                obligacionFinanciacion.setFinanciacion(FinanciacionHelper.toLevel0Entity(financiacionDTO, null));
                 em.persist(obligacionFinanciacion);
                 obligacionFinanciacionDTO.setId(obligacionFinanciacion.getId());
 
@@ -487,7 +577,8 @@ public class FinanciacionEJB implements IRFinanciacion, ILFinanciacion {
                 if (financiacionDTO.getFuenteInformacion().getId().equals(EnumTipoFuenteInformacion.AXIS.getValue())) {
                     // Actualiza estados de comparendos a financiado y los asocia al proceso
                     iRComparendoFinanciacion.financiarComparendo(obligacionFinanciacionDTO.getNumeroObligacion(),
-                            financiacionDTO.getOrganismoTransito().getCodigoOrganismo(), new Date(), proceso.getId());
+                            financiacionDTO.getOrganismoTransito().getCodigoOrganismo(), new Date(),
+                            financiacionDTO.getProceso().getId());
                     // Cambia el estado de las obligaciones asociadas a financiadas
                     iRCarteraFinanciacion.financiarCarteraFinanciacion(obligacionFinanciacionDTO.getIdCartera(),
                             new Date());
@@ -495,7 +586,8 @@ public class FinanciacionEJB implements IRFinanciacion, ILFinanciacion {
                         .equals(EnumTipoFuenteInformacion.CIRCULEMOS2.getValue())) {
                     // Si es generado por C2 prefinancia el comparendo
                     iRComparendoFinanciacion.preFinanciarComparendo(obligacionFinanciacionDTO.getNumeroObligacion(),
-                            financiacionDTO.getOrganismoTransito().getCodigoOrganismo(), new Date(), proceso.getId());
+                            financiacionDTO.getOrganismoTransito().getCodigoOrganismo(), new Date(),
+                            financiacionDTO.getProceso().getId());
                     // Cambia el estado de las obligaciones asociadas a prefinanciadas
                     iRCarteraFinanciacion.preFinanciarCarteraFinanciacion(obligacionFinanciacionDTO.getIdCartera(),
                             new Date());
@@ -509,25 +601,11 @@ public class FinanciacionEJB implements IRFinanciacion, ILFinanciacion {
             }
         }
 
-        // Si es generado por AXIS realiza ajuste a cartera
-        if (financiacionDTO.getFuenteInformacion().getId().equals(EnumTipoFuenteInformacion.AXIS.getValue())) {
-            // Registra la cartera
-            Long idCartera = registrarCarteraFinanciacion(financiacionDTO);
-
-            // Activa la cartera
-            iRCarteraFinanciacion.activarCarteraFinanciacion(idCartera, financiacionDTO.getProceso().getFechaInicio());
-        } else if (financiacionDTO.getFuenteInformacion().getId()
-                .equals(EnumTipoFuenteInformacion.CIRCULEMOS2.getValue())) {
-
-            // Registra el moviemiento on los intereses
-            iRCarteraFinanciacion.registrarMovimientoCartera(financiacionDTO);
-        }
-
-        return financiacionDTO;
     }
 
     @Override
     public Long registrarCarteraFinanciacion(FinanciacionDTO financiacionDTO) throws CirculemosNegocioException {
+        logger.debug("FinanciacionEJB.registrarCarteraFinanciacion(FinanciacionDTO)");
         // Registra cartera
         RegistroCarteraFinanciacionDTO registroCarteraDTO = new RegistroCarteraFinanciacionDTO();
         if (financiacionDTO.getDeudor() != null) {
@@ -1410,11 +1488,15 @@ public class FinanciacionEJB implements IRFinanciacion, ILFinanciacion {
                     personaJuridica = (PersonaJuridicaDTO) persona;
                     variables.put("nombre_deudor", escapeHtml4(personaJuridica.getNombreComercial().toUpperCase()));
                 } else {
-                    variables.put("nombre_deudor",
-                            escapeHtml4((persona.getNombre1() + " "
-                                    + ((persona.getNombre2() == null) ? " " : persona.getNombre2() + " ")
-                                    + persona.getApellido1() + " "
-                                    + ((persona.getApellido2() == null) ? "" : persona.getApellido2())).toUpperCase()));
+                    variables
+                            .put("nombre_deudor",
+                                    escapeHtml4(
+                                            (persona.getNombre1() + " "
+                                                    + ((persona.getNombre2() == null) ? " "
+                                                            : persona.getNombre2() + " ")
+                                                    + persona.getApellido1() + " "
+                                                    + ((persona.getApellido2() == null) ? "" : persona.getApellido2()))
+                                                            .toUpperCase()));
                 }
             }
 
@@ -1840,4 +1922,181 @@ public class FinanciacionEJB implements IRFinanciacion, ILFinanciacion {
         }
         return;
     }
+
+    @Override
+    public void dejarFirmeFinanciacionMasivo() {
+        logger.debug("FinanciacionEJB.dejarFirmeFinanciacion()");
+
+        StringBuilder jpql = new StringBuilder();
+        jpql.append("SELECT fn FROM DetalleFinanciacion df");
+        jpql.append(" JOIN df.financiacion fn");
+        jpql.append(" JOIN fn.proceso p");
+        jpql.append(" WHERE p.estadoProceso.id = :idEstadoProceso");
+        jpql.append(" AND fn.fuenteInformacion.id = :idTipoFuenteInformacion");
+        jpql.append(" AND df.fechaPago IS NOT NULL");
+        jpql.append(" AND df.numeroCuota = :numeroCuota");
+
+        Query query = em.createQuery(jpql.toString());
+        query.setParameter("idEstadoProceso", EnumEstadoProceso.ECUADOR_FINANCIACION_PREFINANCIADO.getId());
+        query.setParameter("idTipoFuenteInformacion", EnumTipoFuenteInformacion.CIRCULEMOS2.getValue());
+        query.setParameter("numeroCuota", PRIMER_CUOTA);
+
+        @SuppressWarnings("unchecked")
+        List<Financiacion> financiacions = query.getResultList();
+        if (financiacions != null && !financiacions.isEmpty()) {
+            for (Financiacion financiacion : financiacions) {
+                DejarFirmeDTO dejarFirmeDTO = new DejarFirmeDTO();
+                // Id financiacion
+                dejarFirmeDTO.setIdFinanciacion(financiacion.getId());
+                financiacionEJB.dejarFirmeFinanciacionNT(dejarFirmeDTO);
+            }
+        }
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void dejarFirmeFinanciacionNT(DejarFirmeDTO dejarFirmeDTO) {
+        try {
+            financiacionEJB.dejarFirmeFinanciacionNEW(dejarFirmeDTO);
+        } catch (CirculemosNegocioException e) {
+            logger.error("Error en dejar en fiemre : " + dejarFirmeDTO.getIdFinanciacion(), e);
+        }
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void dejarFirmeFinanciacionNEW(DejarFirmeDTO dejarFirmeDTO) throws CirculemosNegocioException {
+        dejarFirmeFinanciacion(dejarFirmeDTO);
+
+    }
+
+    @Override
+    public void generarDocumentoFirmeFinanciacionMasivo() {
+        logger.debug("FinanciacionEJB.generarDocumentoFirmeFinanciacionMasivo()");
+
+        StringBuilder jpql = new StringBuilder();
+        jpql.append("SELECT f FROM Financiacion f");
+        jpql.append(" JOIN f.proceso p");
+        jpql.append(" JOIN p.trazabilidadProceso tp");
+        jpql.append(" LEFT JOIN tp.documentos dp");
+        jpql.append(" WHERE tp.estadoProceso.id = :idEstadoProceso");
+        jpql.append(" AND dp.tipoDocumento IS NULL");
+        jpql.append(" AND f.fuenteInformacion.id = :idTipoFuenteInformacion");
+
+        Query query = em.createQuery(jpql.toString());
+        query.setParameter("idEstadoProceso", EnumEstadoProceso.ECUADOR_FINANCIACION_EN_FIRME.getId());
+        query.setParameter("idTipoFuenteInformacion", EnumTipoFuenteInformacion.CIRCULEMOS2.getValue());
+
+        @SuppressWarnings("unchecked")
+        List<Financiacion> financiacions = query.getResultList();
+        if (financiacions != null && !financiacions.isEmpty()) {
+            for (Financiacion financiacion : financiacions) {
+                DejarFirmeDTO dejarFirmeDTO = new DejarFirmeDTO();
+                // Id financiacion
+                dejarFirmeDTO.setIdFinanciacion(financiacion.getId());
+                financiacionEJB.crearDocFirmeFinanciacionNT(dejarFirmeDTO);
+            }
+        }
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void crearDocFirmeFinanciacionNT(DejarFirmeDTO dejarFirmeDTO) {
+        logger.debug("FinanciacionEJB.crearDocFirmeFinanciacion(DejarFirmeDTO)");
+        try {
+            financiacionEJB.crearDocFirmeFinanciacion(dejarFirmeDTO);
+        } catch (CirculemosNegocioException e) {
+            logger.error("Error en dejar en fiemre : " + dejarFirmeDTO.getIdFinanciacion(), e);
+        }
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void crearDocFirmeFinanciacion(DejarFirmeDTO dejarFirmeDTO) throws CirculemosNegocioException {
+        logger.debug("FinanciacionEJB.crearDocFirmeFinanciacion(DejarFirmeDTO)");
+
+        // Se consulta la primera cuota de la financiacíon
+        StringBuilder jpql = new StringBuilder();
+        jpql.append("SELECT df FROM DetalleFinanciacion df");
+        jpql.append(" JOIN df.financiacion fn");
+        jpql.append(" WHERE fn.id=:idFinanciacion");
+        jpql.append(" AND df.fechaPago IS NOT NULL");
+        jpql.append(" AND df.numeroCuota=:numeroCuota");
+
+        Map<String, Object> filtros = new HashMap<>();
+        filtros.put("idFinanciacion", dejarFirmeDTO.getIdFinanciacion());
+        filtros.put("numeroCuota", PRIMER_CUOTA);
+
+        GenericDao<DetalleFinanciacion> dao = new GenericDao<DetalleFinanciacion>(DetalleFinanciacion.class, em);
+        List<DetalleFinanciacion> resultadoConsulta = dao.buildAndExecuteQuery(jpql, filtros);
+
+        Financiacion financiacion = resultadoConsulta.get(0).getFinanciacion();
+        try {
+
+            // Se consulta el estado del proceso de financiación a en firme
+            TrazabilidadProcesoDTO trazabilidadProcesoDTO = new TrazabilidadProcesoDTO();
+            // Estado proceso
+            EstadoProcesoDTO estadoProcesoDTO = new EstadoProcesoDTO();
+            estadoProcesoDTO.setId(EnumEstadoProceso.ECUADOR_FINANCIACION_EN_FIRME.getId());
+            // Proceso
+            trazabilidadProcesoDTO.setProceso(ProcesoHelper.toLevel0DTO(financiacion.getProceso()));
+
+            trazabilidadProcesoDTO.setEstadoProceso(estadoProcesoDTO);
+            List<TrazabilidadProcesoDTO> trazabilidadProcesoDTOs = iRFachadaProceso
+                    .consultarTrazabilidad(trazabilidadProcesoDTO);
+
+            TrazabilidadProcesoDTO trazaActual = null;
+            if (trazabilidadProcesoDTOs != null && !trazabilidadProcesoDTOs.isEmpty()) {
+                trazaActual = trazabilidadProcesoDTOs.get(0);
+            }
+
+            Date fechaSistema = UtilFecha.buildCalendar().getTime();
+            GeneraDocumentoDTO generaDocumento = new GeneraDocumentoDTO();
+            Map<String, Object> valoresVistaPreliminar = new HashMap<>();
+            valoresVistaPreliminar.put(ConstantesDocumentosC2.FECHA_SOLICITUD,
+                    financiacion.getProceso().getFechaInicio());
+
+            // Guarda la firma y obtiene Id de la firma para el doc
+            if (dejarFirmeDTO.getNumeroFirma() != null) {
+                // Cargo DTO con datos de la persona
+                PersonaDTO persona = new PersonaDTO();
+                persona.setId(financiacion.getDeudor().getId());
+                // Cardo DTO con info de la firma
+                CapturaFirmaDTO capturaFirma = new CapturaFirmaDTO();
+                capturaFirma.setFirma(dejarFirmeDTO.getNumeroFirma());
+                capturaFirma.setPersonaDTO(persona);
+                Long numeroFirma = iRfirma.registrarFirma(capturaFirma, true);
+                valoresVistaPreliminar.put(ConstantesDocumentosC2.IMAGEN_FIRMA, numeroFirma.toString());
+            } else {
+                // Consultar la firma de la persona
+                Long numeroFirma = iRfirma.consultarNumeroFirma(financiacion.getDeudor().getId());
+                if (numeroFirma == null) {
+                    throw new CirculemosNegocioException(EnumErroDocumentoFinanciacion.FIN_029003);
+                }
+                valoresVistaPreliminar.put(ConstantesDocumentosC2.IMAGEN_FIRMA, numeroFirma.toString());
+            }
+            // Genera documento Convenio por multas de tránsito amortización mensual sin interés
+            generaDocumento.setValoresVistaPreliminar(valoresVistaPreliminar);
+            generaDocumento.setFechaGeneracion(UtilFecha.buildCalendar().getTime());
+            generaDocumento.setIdTipoDocumentoGenerado(EnumTipoDocumentoGenerado.PONER_FIRME_FINANCIACION);
+            Object[] valoresParametros = { dejarFirmeDTO.getIdFinanciacion() };
+            generaDocumento.setValoresParametros(valoresParametros);
+
+            // Identificador de archivo generado por Documentos
+            Long idDocumento = iRDocumentosCirculemos.generarDocumento(generaDocumento);
+
+            // Guarda el documento generado
+            DocumentoProcesoDTO documentoProceso = new DocumentoProcesoDTO();
+            documentoProceso.setNumeroDocumento(idDocumento);
+            documentoProceso.setTrazabilidadProceso(trazaActual);
+            TipoDocumentoProcesoDTO tipoDocumento = new TipoDocumentoProcesoDTO();
+            tipoDocumento.setId(EnumTipoDocumentoProceso.FINANCIACION_PONER_FIRME.getValue());
+            documentoProceso.setTipoDocumento(tipoDocumento);
+            documentoProceso = iRFachadaProceso.registrarDocumento(documentoProceso);
+        } catch (CirculemosAlertaException e) {
+            throw new CirculemosRuntimeException("No se pudo generar el documento de dejar en firme la financiación");
+        }
+
+    }
+
 }

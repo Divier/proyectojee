@@ -4,7 +4,7 @@
 	<groupId>co.com.datatools.c2.util</groupId>
 	<artifactId>webjar-c2</artifactId>
 	<description>Recursos Web estaticos utilizados en los proyectos de C2</description>
-	<version>1.0.6</version>
+	<version>1.0.7</version>
 
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>

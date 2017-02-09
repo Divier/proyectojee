@@ -162,7 +162,7 @@
 		<primefaces-mobile.version>0.9.4</primefaces-mobile.version>
 		<primefaces-extensions.version>3.2.0</primefaces-extensions.version>
 		<all-themes.version>1.0.10</all-themes.version>
-		<webjar-c2.version>1.0.6</webjar-c2.version>
+		<webjar-c2.version>1.0.7</webjar-c2.version>
 		<commons-fileupload.version>1.3</commons-fileupload.version>
 		<commons-lang3.version>3.1</commons-lang3.version>
 		<commons-beanutils.version>1.9.2</commons-beanutils.version>

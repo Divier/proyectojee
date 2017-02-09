@@ -1,20 +1,23 @@
 package co.com.datatools.c2.managed_bean.financiacion.administracion.proceso_financiacion;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import org.jboss.logging.Logger;
 
 import co.com.datatools.c2.constantes.ExpresionesRegulares;
 import co.com.datatools.c2.dto.personas.PersonaDTO;
-import co.com.datatools.c2.managed_bean.administracion.calendario.DiaNoHabilFL;
 import co.com.datatools.c2.negocio.interfaces.IRFinanciacion;
 import co.com.datatools.c2.negocio.interfaces.IRPersona;
 import co.com.datatools.c2.web.util.AbstractC2ManagedBean;
 import co.com.datatools.c2.web.util.CirculemosAccesoBundleGeneral;
+import co.com.datatools.util.date.UtilFecha;
 
 /**
  * Se encarga de consultar las financiaciones
@@ -35,6 +38,12 @@ public class ConsultarFinanciacionMB extends AbstractC2ManagedBean {
     @EJB
     private IRPersona iRPersona;
 
+    @PostConstruct
+    public void init() {
+        LOGGER.debug("ConsultarFinanciacionMB::init()");
+        calcAniosSogit();
+    }
+
     /**
      * Cosnulta las financiaciones dependiendo de los filtros ingresados
      * 
@@ -49,19 +58,11 @@ public class ConsultarFinanciacionMB extends AbstractC2ManagedBean {
         consultaFinanciacionHolderFL.setConsultaFinanciacionSelecDTO(null);
         consultaFinanciacionHolderFL.setDetalle(false);
 
-        DiaNoHabilFL diaNoHabilFL = findFlowObject(DiaNoHabilFL.class, DiaNoHabilFL.NOMBRE_BEAN);
-        consultaFinanciacionHolderFL.getFiltroConsultaFinanciacionDTO()
-                .setAnoFinanciacion(diaNoHabilFL.getAnioSeleccionado());
-
         consultaFinanciacionHolderFL.setConsultaFinanciacionDTOs(iRFinanciacion
                 .consultarProcesoFinanciacion(consultaFinanciacionHolderFL.getFiltroConsultaFinanciacionDTO()));
 
-        if (diaNoHabilFL.getAnioSeleccionado() > Calendar.getInstance().getWeekYear()) {
-            CirculemosAccesoBundleGeneral.addMensajeAnoMayorActual();
-            return;
-        } else {
-            consultarPersona();
-        }
+        // Consulta persona
+        consultarPersona();
 
         if (consultaFinanciacionHolderFL.getConsultaFinanciacionDTOs() == null
                 || consultaFinanciacionHolderFL.getConsultaFinanciacionDTOs().isEmpty()) {
@@ -103,11 +104,35 @@ public class ConsultarFinanciacionMB extends AbstractC2ManagedBean {
                 consultaFinanciacionHolderFL.getFiltroConsultaFinanciacionDTO().getNumeroIdentificacion()));
     }
 
+    /**
+     * Metodo para la consulta de sogit, ya que se requiere que sea desde el inicio del sistema que es 2015 y que el año sea actual
+     * 
+     * @author giovanni.velandia
+     */
+    public void calcAniosSogit() {
+        LOGGER.debug("ConsultarFinanciacionMB::calcAniosSogit()");
+        ConsultaFinanciacionHolderFL consultaFinanciacionHolderFL = findFlowObject(ConsultaFinanciacionHolderFL.class,
+                ConsultaFinanciacionHolderFL.NOMBRE_BEAN);
+
+        /**
+         * Extraccion de fecha
+         */
+        Calendar calendar = Calendar.getInstance();
+        calendar = UtilFecha.resetTime(calendar);
+
+        int anioSeleccionadoActual = calendar.get(Calendar.YEAR);
+        int anioSeleccionadoInicioSistema = 2015;
+
+        consultaFinanciacionHolderFL.setAnios(new ArrayList<SelectItem>());
+        for (int i = anioSeleccionadoInicioSistema; i <= anioSeleccionadoActual; i++) {
+            consultaFinanciacionHolderFL.getAnios().add(new SelectItem(i, String.valueOf(i)));
+        }
+    }
+
     /**********************
      * Expresiones regulares
      **********************/
     public String getExpresionNumerica() {
         return ExpresionesRegulares.REGEX_NUMERICO_NO_OBLIGATORIO;
     }
-
 }

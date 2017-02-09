@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<view-state id="ingresar"
+		view="/WEB-INF/jsp/administracion/procesos-financiacion/opcionesFinanciacion.xhtml">
+		<on-entry>
+			<evaluate
+				expression="externalContext.sessionMap.circulemosUtilMB.instanciarMB('procesosFinanciacionMB')" />
+		</on-entry>
+		<transition on="DOCUMENTOS_EN_FIRME" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.procesosFinanciacionMB.generarDocumentoConveniosEnFirme()" />
+		</transition>
+		<transition on="PONER_EN_FIRME" to="ingresar">
+			<evaluate
+				expression="externalContext.sessionMap.procesosFinanciacionMB.generarConveniosEnFirme()" />
+		</transition>
+	</view-state>
+</flow>

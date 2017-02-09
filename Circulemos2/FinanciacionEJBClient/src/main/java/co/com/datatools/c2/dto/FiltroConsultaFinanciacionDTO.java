@@ -11,7 +11,7 @@ import co.com.datatools.c2.util.EntidadDtoC2;
 public class FiltroConsultaFinanciacionDTO implements EntidadDtoC2 {
     private static final long serialVersionUID = 1L;
 
-    private int anoFinanciacion;
+    private Integer anoFinanciacion;
     private String numeroFinanciacion;
     private Integer idTipoIdentificacion;
     private String numeroIdentificacion;
@@ -40,12 +40,11 @@ public class FiltroConsultaFinanciacionDTO implements EntidadDtoC2 {
         this.numeroIdentificacion = numeroIdentificacion;
     }
 
-    public int getAnoFinanciacion() {
+    public Integer getAnoFinanciacion() {
         return anoFinanciacion;
     }
 
-    public void setAnoFinanciacion(int anoFinanciacion) {
+    public void setAnoFinanciacion(Integer anoFinanciacion) {
         this.anoFinanciacion = anoFinanciacion;
     }
-
 }

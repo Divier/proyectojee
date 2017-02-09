@@ -141,7 +141,52 @@ public interface ILFinanciacion {
     public void validarDejarFirmePago(DetalleFinanciacionDTO detalleFinanciacionDTO) throws CirculemosNegocioException;
 
     /**
+     * Se encarga de dejar en firme
+     * 
+     * @author giovanni.velandia
+     * @param dejarFirmeDTO
+     */
+    public void dejarFirmeFinanciacionNT(DejarFirmeDTO dejarFirmeDTO);
+
+    /**
+     * @see IRFinanciacion#dejarFirmeFinanciacionMasivo()
+     */
+    public void dejarFirmeFinanciacionMasivo();
+
+    /**
+     * @see IRFinanciacion#generarDocumentoFirmeFinanciacionMasivo()
+     */
+    public void generarDocumentoFirmeFinanciacionMasivo();
+
+    /**
+     * Se encarga de dejar en firme
+     * 
+     * @author giovanni.velandia
+     * @param dejarFirmeDTO
+     */
+    public void crearDocFirmeFinanciacionNT(DejarFirmeDTO dejarFirmeDTO);
+
+    /**
+     * Genera documentos de financiaciones en firme
+     * 
+     * @author giovanni.velandia
+     * @param dejarFirmeDTO
+     * @throws CirculemosNegocioException
+     */
+    public void crearDocFirmeFinanciacion(DejarFirmeDTO dejarFirmeDTO) throws CirculemosNegocioException;
+
+    /**
+     * Genera documentos de financiaciones en firme
+     * 
+     * @author giovanni.velandia
+     * @param dejarFirmeDTO
+     * @throws CirculemosNegocioException
+     */
+    public void dejarFirmeFinanciacionNEW(DejarFirmeDTO dejarFirmeDTO) throws CirculemosNegocioException;
+
+    /**
      * @see IRFinanciacion#enviarCorreoDejarFirme(DejarFirmeMetaDataDTO)
      */
     public void enviarCorreoDejarFirme(DejarFirmeMetaDataDTO dejarFirmeMetaData) throws CirculemosNegocioException;
+
 }

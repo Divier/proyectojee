@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.model.SelectItem;
+
 import co.com.datatools.c2.dto.ConsultaFinanciacionDTO;
 import co.com.datatools.c2.dto.FiltroConsultaFinanciacionDTO;
 import co.com.datatools.c2.dto.personas.PersonaDTO;
@@ -27,6 +29,8 @@ public class ConsultaFinanciacionHolderFL implements Serializable {
     // Persona filtro
     private PersonaDTO personaFiltroDTO;
     private boolean detalle;
+
+    private List<SelectItem> anios;
 
     public ConsultaFinanciacionHolderFL() {
         filtroConsultaFinanciacionDTO = new FiltroConsultaFinanciacionDTO();
@@ -71,6 +75,14 @@ public class ConsultaFinanciacionHolderFL implements Serializable {
 
     public void setDetalle(boolean detalle) {
         this.detalle = detalle;
+    }
+
+    public List<SelectItem> getAnios() {
+        return anios;
+    }
+
+    public void setAnios(List<SelectItem> anios) {
+        this.anios = anios;
     }
 
 }

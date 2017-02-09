@@ -17,14 +17,10 @@
 					columnClasses="label-col,input-col,label-col,input-col,label-col,input-col"
 					columns="4">
 					<p:outputLabel value="#{labelFinanciaciones.label_ano_finan}"></p:outputLabel>
-					<p:selectOneMenu value="#{diaNoHabilFL.anioSeleccionado}"
-						required="true">
+					<p:selectOneMenu
+						value="#{consultaFinanciacionHolderFL.filtroConsultaFinanciacionDTO.anoFinanciacion}">
 						<f:selectItem itemLabel="#{labelGeneral.val_combo_primer_item}" />
-						<f:selectItems value="#{diaNoHabilFL.anios}" />
-						<p:ajax event="change"
-							listener="#{calendarioMB.cambioFechaConsultada()}"
-							update=":form-contenido:campos-consulta @this" process="@this"
-							global="false" />
+						<f:selectItems value="#{consultaFinanciacionHolderFL.anios}" />
 					</p:selectOneMenu>
 
 					<p:outputLabel value="#{labelFinanciaciones.label_num_finan}"></p:outputLabel>

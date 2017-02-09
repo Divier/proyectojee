@@ -7,11 +7,11 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c2="http://java.sun.com/jsf/composite/c2">
-	
+
 	<p:panel id="resultado-motivacion" styleClass="panel-res-consulta">
 		<p:fieldset styleClass="fieldset-formulario">
 			<h:panelGrid id="panel-info-cabecera" styleClass="center-block"
-				columnClasses="label-col,input-col" columns="2" >
+				columnClasses="label-col,input-col" columns="2">
 
 				<p:outputLabel value="#{labelProcesoImpugnacion.label_des_hechos}"
 					styleClass="campo-obligatorio"></p:outputLabel>
@@ -23,24 +23,28 @@
 				</h:panelGroup>
 
 				<!--Cargar escrito-->
-				<p:outputLabel value="#{labelProcesoImpugnacion.label_escrito}"></p:outputLabel>		
-				<h:panelGroup>			
-					<p:fileUpload id="fupArchivo"
-						fileUploadListener="#{impugnacionMB.cargarArchivoEscrito}"
-						label="#{lbComun.btnExaminar}" uploadLabel="#{lbComun.btnCargar}"
-						cancelLabel="#{lbComun.btnCancelar}" mode="advanced"
-						dragDropSupport="false" 
-						process="@form" multiple="true"
-						update="resultado-motivacion"
-						sizeLimit="#{impugnacionMB.tamanioMaximoArch}"
-						allowTypes="#{impugnacionMB.tiposArchivosPermitidos}"
-						invalidFileMessage="#{labelProcesoImpugnacion.msg_error_ext_pdf}"
-						invalidSizeMessage="#{impugnacionMB.mesErrLimitSize}" style="width: 400px !important"/>
-					<h:outputText id="msgFileUploaded"
-								value="#{impugnacionFL.radicarExpedienteDTO.adjunto.nombreArchivo}"
-								rendered="#{impugnacionFL.radicarExpedienteDTO.adjunto != null}"
-								style="font-weight: bold;" />
-				</h:panelGroup>
+				<p:outputLabel value="#{labelProcesoImpugnacion.label_escrito}"></p:outputLabel>
+				<h:panelGrid columns="2">
+					<h:panelGroup>
+						<p:fileUpload id="fupArchivo"
+							fileUploadListener="#{impugnacionMB.cargarArchivoEscrito}"
+							label="#{lbComun.btnExaminar}" uploadLabel="#{lbComun.btnCargar}"
+							cancelLabel="#{lbComun.btnCancelar}" mode="advanced"
+							dragDropSupport="false" process="@form" multiple="true"
+							update="resultado-motivacion"
+							sizeLimit="#{impugnacionMB.tamanioMaximoArch}"
+							allowTypes="#{impugnacionMB.tiposArchivosPermitidos}"
+							invalidFileMessage="#{labelProcesoImpugnacion.msg_error_ext_pdf}"
+							invalidSizeMessage="#{impugnacionMB.mesErrLimitSize}"
+							style="width: 400px !important" />
+						<h:outputText id="msgFileUploaded"
+							value="#{impugnacionFL.radicarExpedienteDTO.adjunto.nombreArchivo}"
+							rendered="#{impugnacionFL.radicarExpedienteDTO.adjunto != null}"
+							style="font-weight: bold;" />
+					</h:panelGroup>
+					<p:graphicImage library="img" name="static/info.png"
+						title="#{impugnacionMB.getToolTipDocumento()}" />
+				</h:panelGrid>
 
 				<p:outputLabel value="#{labelProcesoImpugnacion.label_peticion}"></p:outputLabel>
 				<h:panelGroup>

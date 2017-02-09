@@ -74,7 +74,7 @@ public class ConsultarInconsistenciasRecaudoMB extends AbstractC2ManagedBean {
                 EnumParametro.CANT_MEDIA_DIAS_REALIZAR_CONSULTA, getOrganismoTransito().getCodigoOrganismo(), true);
         diasMaximo = valorParametroDTO.getValorParamInt();
         mediaDiasMaximo = diasMaximo - 1;
-
+        calcularRangoConsultaFechaGeneracion();
     }
 
     /**
@@ -87,8 +87,10 @@ public class ConsultarInconsistenciasRecaudoMB extends AbstractC2ManagedBean {
         ConsultarInconsistenciasRecaudoHolderFL consultarInconsistenciasRecaudoHolderFL = findFlowObject(
                 OBJ_CONSULTAR_INCONSISTENCIAS_RECUADO_HOLDER_FL, CONSULTAR_INCONSISTENCIAS_RECAUDO_HOLDER_FL);
 
-        fechaGeneracionDiasMaximo = UtilFecha
-                .sumarDias(consultarInconsistenciasRecaudoHolderFL.getFechaInicialGeneracion(), mediaDiasMaximo);
+        if (consultarInconsistenciasRecaudoHolderFL.getFechaInicialGeneracion() != null) {
+            fechaGeneracionDiasMaximo = UtilFecha
+                    .sumarDias(consultarInconsistenciasRecaudoHolderFL.getFechaInicialGeneracion(), mediaDiasMaximo);
+        }
     }
 
     public void consultarInconsistenciasRecuado() {

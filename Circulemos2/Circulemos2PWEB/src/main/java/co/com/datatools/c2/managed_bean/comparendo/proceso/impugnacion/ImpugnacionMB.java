@@ -1555,4 +1555,8 @@ public class ImpugnacionMB extends AbstractC2ManagedBean {
         return MessageFormat.format(getBundle(NOMBRE_BUNDLE).getString("msg_error_tamanio_archivo"), tamanioMaximoArch);
     }
 
+    public String getToolTipDocumento() {
+        return MessageFormat.format(getBundle(NOMBRE_BUNDLE).getString("too_inf_documento"), tamanioMaximoArch);
+    }
+
 }
